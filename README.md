@@ -1,4 +1,4 @@
-MEDLEMMER [aazann,]
+MEDLEMMER [aazann,saleemti]
     
     INNHOLD
     Beskriver hvordan appen kjøres og avhengigheter (f.eks. krever
