@@ -1,6 +1,6 @@
 **MEDLEMMER AV TEAM 37**
 
-[aazann,saleemti,mikass,anisai,jacobhl]
+[aazann,saleemti,mikass,anisai,jacobhl,amwarsam]
     
     INNHOLD
     Beskriver hvordan appen kjøres og avhengigheter (f.eks. krever
