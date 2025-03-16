@@ -102,23 +102,50 @@ Class Diagram
     }
 
     class FrostApiDataSource {
-        +List<Temperatures> getTemperatureQuery(latLong: Pair<Double, Double>)
-        +List<Snows> getSnowCoverQuery(latLong: Pair<Double, Double>)
-        +List<Clouds> getCloudCoverQuery(latLong: Pair<Double, Double>)
+        +List<Temperature> getTemperatureQuery(latLong: Pair<Double, Double>)
+        +List<Snow> getSnowCoverQuery(latLong: Pair<Double, Double>)
+        +List<Cloud> getCloudCoverQuery(latLong: Pair<Double, Double>)
     }
 
     class PVGISApiDataSource {
         +List<Radation> getSolarRadiationQuery(latLong: Pair<Double, Double>)
         +List<EnergyProduction> getEnergyProducedQuery(latLong: Pair<Double, Double>)
     }
+    %% Data classes
+    class Temperature{
+        date 
+        value
 
+    }
+    class Snow{
+     date 
+        value
+    }
+    class Cloud{
+     date 
+        value
+    }
+    class Energy{
+     date 
+        value
+    }
+    class Radiation{
+     date 
+        value
+    }
+    class Price{
+     date 
+        value
+    }
     
     %% Relationships
     HomeScreen --> HomeViewModel
     ResultScreen --> WeatherDataViewModel
     MapScreen --> MapViewModel
     HomeViewModel --> ElectricityPriceRepository
+    
     ElectricityPriceRepository --> HvaErStrømprisenApiDataSource
+    HvaErStrømprisenApiDataSource --> Price
 
     MapViewModel --> AddressRepository
     MapViewModel --> MapRepository
@@ -137,5 +164,10 @@ Class Diagram
 
     SolarEnergyRepository --> PVGISApiDataSource
 
+    FrostApiDataSource --> Cloud
+    FrostApiDataSource --> Temperature
+    FrostApiDataSource --> Snow
 
+    PVGISApiDataSource --> Radiation
+    PVGISApiDataSource --> Energy
 ```
