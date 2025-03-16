@@ -1,4 +1,4 @@
-hello
+Class Diagram
 ```mermaid
 
     classDiagram
@@ -38,7 +38,7 @@ hello
         +List<Radiation> monthlyRadiation(SolarEnergyRepository)
         +List<EnergyProduction> monthlyEnergy(SolarEnergyRepository)
         +List<MonthlySavings> monthlySavings(SolarEnergyRepository)
-        //
+        
         fetchWeatherData(latLong: Pair<Double, Double>,TemperatureRepository,CloudCoverRepository,SnowCoverRepository,SolarEnergyRepository)
 
         
