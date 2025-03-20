@@ -11,7 +11,8 @@ class ElectricityPriceRepository(private val priceArea: String) {
         prices = api.fetchPrices(date, priceArea)
     }
 
-    fun getPrices(): List<ElectricityPrice> {
-        return prices
+    fun getPrices(date: LocalDate, region: String): List<ElectricityPrice> {
+        val dateString = date.toString()
+        return prices.filter { it.date == dateString && it.region == region }
     }
 }
