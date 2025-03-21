@@ -11,16 +11,29 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.navigation.NavController
-import no.solcellepaneller.BottomBar
-import no.solcellepaneller.TopBar
+import no.solcellepaneller.ui.navigation.BottomBar
+import no.solcellepaneller.ui.navigation.TopBar
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
+import no.solcellepaneller.ui.navigation.AppearanceBottomSheet
+import no.solcellepaneller.ui.navigation.HelpBottomSheet
+import no.solcellepaneller.ui.navigation.InformationBottomSheet
 
 @Composable
 fun WeatherStationsScreen(navController: NavController) {
-    val lastMainScreen="weather_stations'"
+    var showHelp by remember { mutableStateOf(false) }
+    var showInfo by remember { mutableStateOf(false) }
+    var showAppearance by remember { mutableStateOf(false) }
+
     Scaffold(
-        topBar = { TopBar { navController.popBackStack() } },
-        bottomBar = { BottomBar(navController,lastMainScreen) }
-    ){ contentPadding ->
+        topBar = { TopBar(navController) },
+        bottomBar = {
+            BottomBar(
+                onHelpClicked = { showHelp = true },
+                onInfoClicked = { showInfo = true },
+                onAppearanceClicked = { showAppearance = true }) } ){ contentPadding ->
         Column(
             modifier = Modifier.fillMaxSize().padding(contentPadding),
             horizontalAlignment = Alignment.CenterHorizontally,
@@ -28,6 +41,10 @@ fun WeatherStationsScreen(navController: NavController) {
         ) {
             Text("Værstasjon")
             Button(onClick = { navController.navigate("additional_input") }) { Text("Gå til Ekstra Inndata") }
+
+            HelpBottomSheet(visible = showHelp, onDismiss = { showHelp = false })
+            InformationBottomSheet(visible = showInfo, onDismiss = { showInfo = false })
+            AppearanceBottomSheet(visible = showAppearance, onDismiss = { showAppearance = false })
         }
     }
 }

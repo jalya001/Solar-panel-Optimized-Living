@@ -1,2 +1,51 @@
 package no.solcellepaneller.ui.home
 
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.padding
+import androidx.compose.material3.Button
+import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Text
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
+import androidx.navigation.NavController
+import no.solcellepaneller.ui.navigation.BottomBar
+import no.solcellepaneller.ui.navigation.HelpBottomSheet
+import no.solcellepaneller.ui.navigation.InformationBottomSheet
+import no.solcellepaneller.ui.navigation.AppearanceBottomSheet
+
+@Composable
+fun HomeScreen(navController: NavController) {
+    var showHelp by remember { mutableStateOf(false) }
+    var showInfo by remember { mutableStateOf(false) }
+    var showAppearance by remember { mutableStateOf(false) }
+
+    Scaffold(
+        bottomBar = {
+            BottomBar(
+            onHelpClicked = { showHelp = true },
+            onInfoClicked = { showInfo = true },
+            onAppearanceClicked = { showAppearance = true }) }
+    ) { contentPadding ->
+        Column(
+            modifier = Modifier.fillMaxSize().padding(contentPadding),
+            horizontalAlignment = Alignment.CenterHorizontally,
+            verticalArrangement = Arrangement.Center
+        ) {
+            Text("Hjem")
+            Button(onClick = { navController.navigate("install_panels") }) { Text("Installer Paneler") }
+            Button(onClick = { navController.navigate("saved_locations") }) { Text("Lagrede Posisjoner") }
+            Button(onClick = { navController.navigate("prices") }) { Text("Priser") }
+
+            HelpBottomSheet(visible = showHelp, onDismiss = { showHelp = false })
+            InformationBottomSheet(visible = showInfo, onDismiss = { showInfo = false })
+            AppearanceBottomSheet(visible = showAppearance, onDismiss = { showAppearance = false })
+        }
+    }
+}

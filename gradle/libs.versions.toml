@@ -1,21 +1,31 @@
 [versions]
 agp = "8.8.2"
-kotlin = "2.0.0"
+kotlin = "2.1.0"
 coreKtx = "1.15.0"
 junit = "4.13.2"
 junitVersion = "1.2.1"
 espressoCore = "3.6.1"
 ktorClientCio = "2.3.6"
+ktorClientCioVersion = "3.0.3"
 ktorClientContentNegotiation = "2.3.6"
-ktorClientCore = "2.3.6"
+ktorClientContentNegotiationVersion = "3.0.3"
+ktorClientCore = "3.0.3"
+ktorClientCoreVersion = "3.0.3"
 ktorClientOkhttp = "2.3.6"
+ktorClientOkhttpVersion = "2.3.6"
 ktorSerializationKotlinxJson = "2.3.6"
+ktorSerializationKotlinxJsonVersion = "3.0.3"
 lifecycleRuntimeKtx = "2.8.7"
 activityCompose = "1.10.1"
-composeBom = "2024.04.01"
+composeBom = "2025.03.00"
+material = "1.7.8"
+navigationRuntimeAndroid = "2.9.0-alpha08"
+navigationCompose = "2.8.9"
+protoliteWellKnownTypes = "18.0.0"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
+androidx-material = { module = "androidx.compose.material:material", version.ref = "material" }
 junit = { group = "junit", name = "junit", version.ref = "junit" }
 androidx-junit = { group = "androidx.test.ext", name = "junit", version.ref = "junitVersion" }
 androidx-espresso-core = { group = "androidx.test.espresso", name = "espresso-core", version.ref = "espressoCore" }
@@ -33,7 +43,14 @@ ktor-client-cio = { module = "io-ktor:ktor-client-cio", version.ref = "ktorClien
 ktor-client-content-negotiation = { module = "io-ktor:ktor-client-content-negotiation", version.ref = "ktorClientContentNegotiation" }
 ktor-client-core = { module = "io.ktor:ktor-client-core", version.ref = "ktorClientCore" }
 ktor-client-okhttp = { module = "io-ktor:ktor-client-okhttp", version.ref = "ktorClientOkhttp" }
+ktor-ktor-client-cio = { module = "io.ktor:ktor-client-cio", version.ref = "ktorClientCioVersion" }
+ktor-ktor-client-content-negotiation = { module = "io.ktor:ktor-client-content-negotiation", version.ref = "ktorClientContentNegotiationVersion" }
+ktor-ktor-client-okhttp = { module = "io.ktor:ktor-client-okhttp", version.ref = "ktorClientOkhttpVersion" }
+ktor-ktor-serialization-kotlinx-json = { module = "io.ktor:ktor-serialization-kotlinx-json", version.ref = "ktorSerializationKotlinxJsonVersion" }
 ktor-serialization-kotlinx-json = { module = "io-ktor:ktor-serialization-kotlinx-json", version.ref = "ktorSerializationKotlinxJson" }
+androidx-navigation-runtime-android = { group = "androidx.navigation", name = "navigation-runtime-android", version.ref = "navigationRuntimeAndroid" }
+androidx-navigation-compose = { group = "androidx.navigation", name = "navigation-compose", version.ref = "navigationCompose" }
+protolite-well-known-types = { group = "com.google.firebase", name = "protolite-well-known-types", version.ref = "protoliteWellKnownTypes" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }
