@@ -4,3 +4,10 @@ plugins {
     alias(libs.plugins.kotlin.android) apply false
     alias(libs.plugins.kotlin.compose) apply false
 }
+
+buildscript {
+    version = "1.3.0"
+    dependencies {
+        classpath(libs.kotlin.gradle.plugin)
+    }
+}

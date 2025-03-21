@@ -37,6 +37,10 @@ android {
     buildFeatures {
         compose = true
     }
+
+    composeOptions {
+        kotlinCompilerExtensionVersion = "1.5.15"
+    }
 }
 
 dependencies {
@@ -57,7 +61,7 @@ dependencies {
     debugImplementation(libs.androidx.ui.tooling)
     debugImplementation(libs.androidx.ui.test.manifest)
 
-    //Project independencies
+    //Project dependencies
     implementation(libs.ktor.client.core)
     implementation(libs.ktor.client.cio)
     implementation(libs.ktor.client.okhttp)
@@ -65,4 +69,11 @@ dependencies {
     implementation(libs.ktor.ktor.serialization.kotlinx.json)
     implementation(libs.ktor.ktor.client.content.negotiation)
     implementation(libs.kotlinx.serialization.json)
+    implementation(libs.ui)
+    implementation(libs.material3)
+    implementation(libs.ui.tooling.preview)
+    implementation(libs.androidx.lifecycle.viewmodel.compose)
+    implementation(libs.androidx.activity.compose.v140)
+    implementation(libs.kotlin.stdlib)
+    implementation(libs.androidx.runtime)
 }
