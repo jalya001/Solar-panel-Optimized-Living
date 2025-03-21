@@ -64,29 +64,16 @@ dependencies {
     debugImplementation(libs.androidx.ui.test.manifest)
 
     //Project independencies
-    implementation(libs.ktor.client.core)
-    implementation(libs.ktor.ktor.client.cio)
-    implementation(libs.androidx.material) // Latest stable version
-    implementation(libs.ktor.ktor.client.okhttp)
-    implementation(libs.ktor.ktor.client.content.negotiation)
-    implementation(libs.ktor.ktor.serialization.kotlinx.json)
 
-
-
-    implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.6.0")
-    implementation("io.ktor:ktor-client-core:2.3.6")
+    implementation ("io.ktor:ktor-client-core:2.3.6")
     implementation("io.ktor:ktor-client-cio:2.3.6")
     implementation("io.ktor:ktor-client-okhttp:2.3.6")
     implementation("io.ktor:ktor-client-content-negotiation:2.3.6")
-
-
-
-    implementation(libs.ktor.ktor.serialization.kotlinx.json)
-    implementation("io.ktor:ktor-client-core:2.3.6")
-    implementation("io.ktor:ktor-client-okhttp:2.3.6")
-    implementation("io.ktor:ktor-client-content-negotiation:2.3.6")
     implementation("io.ktor:ktor-serialization-kotlinx-json:2.3.6")
-    implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.6.0")
+
+
+
+
     implementation ("androidx.lifecycle:lifecycle-viewmodel-compose:2.8.7")
     implementation ("androidx.navigation:navigation-compose:2.8.9")
 
