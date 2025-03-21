@@ -14,6 +14,7 @@ import androidx.compose.material3.NavigationBarItem
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
@@ -23,6 +24,8 @@ import no.solcellepaneller.ui.drawPanels.DrawPanelsScreen
 import no.solcellepaneller.ui.home.HomeScreen
 import no.solcellepaneller.ui.installPanels.InstallPanelsScreen
 import no.solcellepaneller.ui.map.MapScreen
+import no.solcellepaneller.ui.map.MapScreenViewModel
+
 import no.solcellepaneller.ui.prices.PricesScreen
 import no.solcellepaneller.ui.result.ResultScreen
 import no.solcellepaneller.ui.savedLocations.SavedLocationsScreen
@@ -33,7 +36,9 @@ fun Nav(navController: NavHostController) {
     NavHost(navController, startDestination = "home") {
         composable("home") { HomeScreen(navController) }
         composable("install_panels") { InstallPanelsScreen(navController) }
-        composable("map") { MapScreen(navController) }
+        composable("map") { val viewModel: MapScreenViewModel = viewModel()
+            MapScreen(viewModel, navController)
+        }
         composable("weather_stations") { WeatherStationsScreen(navController) }
         composable("additional_input") { AdditionalInputScreen(navController) }
         composable("draw_panels") { DrawPanelsScreen(navController) }
