@@ -40,7 +40,12 @@ fun AdditionalInputScreen(navController: NavController) {
             verticalArrangement = Arrangement.Center
         ) {
             Text("Ekstra Inndata")
-            Button(onClick = { navController.navigate("draw_panels") }) { Text("Gå til Tegn Paneler") }
+            Text("Koordinatene fra sit map burde egt vært lagres her så det kan sendes til karet der tu tegner solcellepaneler")
+            Button(onClick = { navController.navigate("map") }) { Text("Tegn Paneler (på kartet)") }
+            Text("Angle:")
+            Text("Directions:")
+            Text("Map Coords")
+
 
             HelpBottomSheet(visible = showHelp, onDismiss = { showHelp = false })
             InformationBottomSheet(visible = showInfo, onDismiss = { showInfo = false })

@@ -1,4 +1,4 @@
-package no.solcellepaneller.ui.map
+package no.solcellepaneller.ui.mapSimple
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -51,12 +51,6 @@ import com.google.maps.android.compose.rememberMarkerState
 import no.solcellepaneller.ui.navigation.TopBar
 
 
-
-import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
-import androidx.compose.ui.window.Dialog
-import androidx.compose.ui.zIndex
-
 import com.google.maps.android.compose.GoogleMap
 
 import com.google.maps.android.compose.Marker
@@ -65,7 +59,7 @@ import com.google.maps.android.compose.rememberCameraPositionState
 import com.google.maps.android.compose.rememberMarkerState
 
 @Composable
-fun MapScreen(viewModel: MapScreenViewModel, navController: NavController) {
+fun MapScreenSimple(viewModel: MapScreenSimpleViewModel, navController: NavController) {
     Scaffold(
         topBar = { TopBar(navController) },
     ){ contentPadding ->
@@ -81,7 +75,7 @@ fun MapScreen(viewModel: MapScreenViewModel, navController: NavController) {
 
 
 @Composable
-fun DisplayScreen(viewModel: MapScreenViewModel ,navController: NavController) {
+fun DisplayScreen(viewModel: MapScreenSimpleViewModel, navController: NavController) {
     var address by remember { mutableStateOf("") }
     val coordinates by viewModel.coordinates.observeAsState()
     var slope by remember { mutableStateOf("") }
@@ -344,44 +338,10 @@ fun DisplayScreen(viewModel: MapScreenViewModel ,navController: NavController) {
 
                 ) {
                     Button(onClick = {
-                        if (polygonPoints.size > 3) {
-                            ispolygonvisible = !ispolygonvisible
-                            showPopUp = true
-                            arealatlong = cameraPositionState.position.target
-                        }
+                        navController.navigate("weather_stations")
 
-                    }, colors = ButtonDefaults.buttonColors(Color(color = 0xFF4CAF50))) {
-                        Text(color = Color.Black, text = "Show AREA")
-                    }
-                    if (polygonPoints.size >= 1) {
-                        Button(onClick = {
-                            viewModel.removeLastPoint()
-                            ispolygonvisible = false
-                            index -= 1
-                        }, colors = ButtonDefaults.buttonColors(Color.Yellow)) {
-                            Text(color = Color.Black, text = "Remove Last Point")
-                        }
-
-                        Button(onClick = {
-                            viewModel.removePoints()
-                            ispolygonvisible = false
-                            index = 0
-                        }, colors = ButtonDefaults.buttonColors(Color.Red)) {
-                            Text(color = Color.Black, text = "Remove Points")
-                        }
-                        Button(onClick = {
-//                            idk hva som skjer her
-
-//                            if (ispolygonvisible) {
-//                                Navigate back to the Hello screen
-//                                navController.navigate("result")
-//                            }
-
-                            navController.navigate("result")
-
-                        }) {
-                            Text(text = "Go To Result Screen")
-                        }
+                    }) {
+                        Text(text = "Go To weatherstations")
                     }
                 }
             }

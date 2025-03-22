@@ -1,8 +1,6 @@
-package no.solcellepaneller.ui.map
+package no.solcellepaneller.ui.mapSimple
 
 
-import android.content.Context
-import android.location.Geocoder
 import android.util.Log
 import androidx.compose.runtime.mutableStateListOf
 import androidx.lifecycle.LiveData
@@ -10,19 +8,15 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.google.android.gms.maps.model.LatLng
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import no.solcellepaneller.data.mapdata.AddressRepository
 import no.solcellepaneller.data.mapdata.AdressDataSource
-import no.solcellepaneller.model.map.AdressData
-import no.solcellepaneller.model.map.GeocodingResponse
-import java.util.Locale
 import kotlin.math.abs
 
 import com.google.maps.android.SphericalUtil
 import kotlin.math.ceil
 
-class MapScreenViewModel(
+class MapScreenSimpleViewModel(
     private val repository: AddressRepository = AddressRepository(AdressDataSource())
 ): ViewModel() {
 

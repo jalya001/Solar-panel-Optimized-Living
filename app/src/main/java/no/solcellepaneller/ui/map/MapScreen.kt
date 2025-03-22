@@ -57,10 +57,9 @@ import com.google.maps.android.compose.Marker
 import com.google.maps.android.compose.Polygon
 import com.google.maps.android.compose.rememberCameraPositionState
 import com.google.maps.android.compose.rememberMarkerState
-import no.solcellepaneller.ui.mapSimple.MapScreenSimpleViewModel
 
 @Composable
-fun MapScreen(viewModel: MapScreenSimpleViewModel, navController: NavController) {
+fun MapScreen(viewModel: MapScreenViewModel, navController: NavController) {
     Scaffold(
         topBar = { TopBar(navController) },
     ){ contentPadding ->
@@ -69,14 +68,14 @@ fun MapScreen(viewModel: MapScreenSimpleViewModel, navController: NavController)
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.Center
         ) {
-            no.solcellepaneller.ui.mapSimple.DisplayScreen(viewModel, navController)
+            no.solcellepaneller.ui.map.DisplayScreen(viewModel, navController)
         }
     }
 }
 
 
 @Composable
-fun DisplayScreen(viewModel: MapScreenSimpleViewModel, navController: NavController) {
+fun DisplayScreen(viewModel: MapScreenViewModel, navController: NavController) {
     var address by remember { mutableStateOf("") }
     val coordinates by viewModel.coordinates.observeAsState()
     var slope by remember { mutableStateOf("") }
@@ -174,7 +173,7 @@ fun DisplayScreen(viewModel: MapScreenSimpleViewModel, navController: NavControl
                 modifier = Modifier
 
             ) {
-                no.solcellepaneller.ui.mapSimple.InputField(
+                no.solcellepaneller.ui.map.InputField(
                     value = address,
                     onValueChange = { address = it },
                     label = "Enter Address"
@@ -392,13 +391,13 @@ fun DisplayScreen(viewModel: MapScreenSimpleViewModel, navController: NavControl
                         var temporaryslope by remember { mutableStateOf(slope) }
                         var temporaryefficency by remember { mutableStateOf(efficiency) }
                         Text(text = "Enter slope")
-                        no.solcellepaneller.ui.mapSimple.InputField(
+                        no.solcellepaneller.ui.map.InputField(
                             value = temporaryslope,
                             onValueChange = { temporaryslope = it },
                             label = "Enter Roof Slope (°)"
                         )
                         Text(text = "Enter efficiency")
-                        no.solcellepaneller.ui.mapSimple.InputField(
+                        no.solcellepaneller.ui.map.InputField(
                             value = temporaryefficency,
                             onValueChange = { temporaryefficency = it },
                             label = "Enter Panel Efficiency (%)"
