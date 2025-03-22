@@ -1,6 +1,5 @@
 package no.solcellepaneller.ui.home
 
-import android.content.res.Configuration
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
@@ -22,7 +21,6 @@ import no.solcellepaneller.ui.navigation.BottomBar
 import no.solcellepaneller.ui.navigation.HelpBottomSheet
 import no.solcellepaneller.ui.navigation.InformationBottomSheet
 import no.solcellepaneller.ui.navigation.AppearanceBottomSheet
-import no.solcellepaneller.ui.navigation.TopBar
 import no.solcellepaneller.ui.theme.SolcellepanellerTheme
 
 @Composable

@@ -1,6 +1,5 @@
 package no.solcellepaneller.ui.navigation
 
-import android.content.res.Configuration
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -20,9 +19,6 @@ import androidx.compose.material3.ElevatedCard
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.tooling.preview.Preview
-import no.solcellepaneller.App
-import no.solcellepaneller.ui.theme.SolcellepanellerTheme
 import no.solcellepaneller.ui.theme.ThemeState
 
 @OptIn(ExperimentalMaterial3Api::class)

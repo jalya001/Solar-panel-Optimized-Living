@@ -1,29 +1,21 @@
 package no.solcellepaneller.ui.theme
 
-import android.app.Activity
-import android.os.Build
-import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.darkColorScheme
-import androidx.compose.material3.dynamicDarkColorScheme
-import androidx.compose.material3.dynamicLightColorScheme
 import androidx.compose.material3.lightColorScheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.platform.LocalContext
-import androidx.core.graphics.toColorInt
-import androidx.xr.scenecore.Model
 
 // Må legge til 0xFF før HExveerdi
-val darkPrimary =Color(0xFF0c1618);
+val darkPrimary =Color(0xFF0c1618)
 val  darkSecondary =Color(0xFF111e21)
 
 val  orangeColor =Color(0xFFf3a712) //Må finne bedre navn
 
-val lightPrimary =Color(0xFFc5e3e4);
+val lightPrimary =Color(0xFFc5e3e4)
 val  lightSecondary =Color(0xFFa6d5d6)
 
 private val DarkColorScheme = darkColorScheme(
