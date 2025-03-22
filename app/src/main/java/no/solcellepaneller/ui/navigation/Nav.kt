@@ -9,10 +9,12 @@ import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.NavigationBar
 import androidx.compose.material3.NavigationBarItem
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
+import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.navigation.NavController
 import androidx.navigation.NavHostController
@@ -26,6 +28,7 @@ import no.solcellepaneller.ui.map.MapScreen
 import no.solcellepaneller.ui.prices.PricesScreen
 import no.solcellepaneller.ui.result.ResultScreen
 import no.solcellepaneller.ui.savedLocations.SavedLocationsScreen
+import no.solcellepaneller.ui.theme.SolcellepanellerTheme
 import no.solcellepaneller.ui.weatherStations.WeatherStationsScreen
 
 @Composable
@@ -49,7 +52,11 @@ fun BottomBar(
     onInfoClicked: () -> Unit,
     onAppearanceClicked: () -> Unit
 ) {
-    NavigationBar {
+    NavigationBar(
+            containerColor = MaterialTheme.colorScheme.secondary,
+            contentColor = MaterialTheme.colorScheme.tertiary,
+    ) {
+
         NavigationBarItem(
             icon = { Icon(Icons.Filled.Build, contentDescription = "Hjelp") },
             label = { Text("Hjelp") },
@@ -75,6 +82,11 @@ fun BottomBar(
 @Composable
 fun TopBar(navController: NavController) {
     TopAppBar(
+        colors = TopAppBarDefaults.topAppBarColors(
+            containerColor = MaterialTheme.colorScheme.secondary,
+            titleContentColor = MaterialTheme.colorScheme.tertiary,
+            navigationIconContentColor = MaterialTheme.colorScheme.tertiary
+        ),
         title = { Text("Tilbake") },
         navigationIcon = {
             IconButton(onClick = {

@@ -1,5 +1,6 @@
 package no.solcellepaneller.ui.home
 
+import android.content.res.Configuration
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
@@ -14,11 +15,15 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.navigation.NavController
+import no.solcellepaneller.App
 import no.solcellepaneller.ui.navigation.BottomBar
 import no.solcellepaneller.ui.navigation.HelpBottomSheet
 import no.solcellepaneller.ui.navigation.InformationBottomSheet
 import no.solcellepaneller.ui.navigation.AppearanceBottomSheet
+import no.solcellepaneller.ui.navigation.TopBar
+import no.solcellepaneller.ui.theme.SolcellepanellerTheme
 
 @Composable
 fun HomeScreen(navController: NavController) {
@@ -31,7 +36,9 @@ fun HomeScreen(navController: NavController) {
             BottomBar(
             onHelpClicked = { showHelp = true },
             onInfoClicked = { showInfo = true },
-            onAppearanceClicked = { showAppearance = true }) }
+            onAppearanceClicked = { showAppearance = true }
+            )
+        }
     ) { contentPadding ->
         Column(
             modifier = Modifier.fillMaxSize().padding(contentPadding),
@@ -47,5 +54,21 @@ fun HomeScreen(navController: NavController) {
             InformationBottomSheet(visible = showInfo, onDismiss = { showInfo = false })
             AppearanceBottomSheet(visible = showAppearance, onDismiss = { showAppearance = false })
         }
+    }
+}
+//Funker ikke lenger pga måten isDark er implementert
+//@Preview(
+//    uiMode = Configuration.UI_MODE_NIGHT_YES,
+//    name = "DefaultPreviewDark"
+//)
+@Preview(
+//    uiMode = Configuration.UI_MODE_NIGHT_NO,
+//    name = "DefaultPreviewLight"
+    name = "DefaultPreview"
+)
+@Composable
+fun AppPreview() {
+    SolcellepanellerTheme {
+        App()
     }
 }

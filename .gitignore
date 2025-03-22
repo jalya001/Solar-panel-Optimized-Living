@@ -154,3 +154,21 @@ fabric.properties
 !/gradle/wrapper/gradle-wrapper.jar
 
 # End of https://www.toptal.com/developers/gitignore/api/androidstudio,kotlin
+
+# Ignore Gradle cache and generated files
+!gradle/wrapper/gradle-wrapper.properties
+!gradle/wrapper/gradle-wrapper.jar
+
+# Ignore build outputs
+/build/
+**/build/
+
+# Ignore lock and hash files
+*.lock
+*.bin
+
+# IDE files
+.idea/
+
+# macOS
+.DS_Store
