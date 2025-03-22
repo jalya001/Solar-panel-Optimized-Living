@@ -20,15 +20,15 @@ import androidx.navigation.NavController
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
+import no.solcellepaneller.data.homedata.ElectricityPriceRepository
 import no.solcellepaneller.ui.additionalInput.AdditionalInputScreen
 import no.solcellepaneller.ui.drawPanels.DrawPanelsScreen
+import no.solcellepaneller.ui.electricity.PriceScreen
 import no.solcellepaneller.ui.home.HomeScreen
 import no.solcellepaneller.ui.installPanels.InstallPanelsScreen
 import no.solcellepaneller.ui.map.MapScreen
-import no.solcellepaneller.ui.prices.PricesScreen
 import no.solcellepaneller.ui.result.ResultScreen
 import no.solcellepaneller.ui.savedLocations.SavedLocationsScreen
-import no.solcellepaneller.ui.theme.SolcellepanellerTheme
 import no.solcellepaneller.ui.weatherStations.WeatherStationsScreen
 
 @Composable
@@ -42,7 +42,16 @@ fun Nav(navController: NavHostController) {
         composable("draw_panels") { DrawPanelsScreen(navController) }
         composable("result") { ResultScreen(navController) }
         composable("saved_locations") { SavedLocationsScreen(navController) }
-        composable("prices") { PricesScreen(navController) }
+        composable("prices") {
+            val mockRepository = ElectricityPriceRepository(
+                priceArea = "mockPrice"
+            )
+
+            PriceScreen(
+            repository = mockRepository,
+            navController = navController,
+            region = "Filler Region" //! TODO Finn ut en løsning her
+        ) }
     }
 }
 
