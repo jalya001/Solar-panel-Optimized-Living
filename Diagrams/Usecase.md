@@ -29,6 +29,7 @@ MapScreen: Find Adress
         AddressDataSource -->> AddressRepository: Return Error
         AddressRepository -->> MapViewModel: Return Error
         MapViewModel -->> MapScreen : Return Error Message
+        MapScreen ->> User: Display Error Message
 
     end
 
