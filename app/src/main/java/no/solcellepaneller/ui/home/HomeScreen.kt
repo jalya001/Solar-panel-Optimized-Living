@@ -39,7 +39,7 @@ fun HomeScreen(navController: NavController) {
             verticalArrangement = Arrangement.Center
         ) {
             Text("Hjem")
-            Button(onClick = { navController.navigate("install_panels") }) { Text("Installer Paneler") }
+            Button(onClick = { navController.navigate("map_simple") }) { Text("Installer Paneler") }
             Button(onClick = { navController.navigate("saved_locations") }) { Text("Lagrede Posisjoner") }
             Button(onClick = { navController.navigate("prices") }) { Text("Priser") }
 
