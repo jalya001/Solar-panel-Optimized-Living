@@ -77,7 +77,7 @@ MapScreen: DrawArea
     Nav ->> ResultScreen : Display Screen
     ResultScreen ->>User : Display Results
 
-    else 
+    else if polygon is not visible
     User ->> MapScreen : Click "Go to Results"
     MapScreen ->> User : Show Error Message
     end
