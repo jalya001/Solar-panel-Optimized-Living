@@ -166,7 +166,7 @@ fun DisplayScreen(viewModel: MapScreenViewModel, navController: NavController) {
                 modifier = Modifier
 
             ) {
-                no.solcellepaneller.ui.map.InputField(
+                InputField(
                     value = address,
                     onValueChange = { address = it },
                     label = "Enter Address"

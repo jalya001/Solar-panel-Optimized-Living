@@ -12,7 +12,7 @@ android {
 
     defaultConfig {
         applicationId = "no.solcellepaneller"
-        minSdk = 24
+        minSdk = 26
         targetSdk = 35
         versionCode = 1
         versionName = "1.0"
@@ -39,6 +39,10 @@ android {
     buildFeatures {
         compose = true
     }
+
+    composeOptions {
+        kotlinCompilerExtensionVersion = "1.5.15"
+    }
 }
 
 dependencies {
@@ -54,6 +58,7 @@ dependencies {
     implementation(libs.androidx.navigation.runtime.android)
     implementation(libs.androidx.navigation.compose)
     implementation(libs.protolite.well.known.types)
+    implementation(libs.androidx.scenecore)
     implementation(libs.androidx.runtime.livedata)
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
@@ -63,6 +68,29 @@ dependencies {
     debugImplementation(libs.androidx.ui.tooling)
     debugImplementation(libs.androidx.ui.test.manifest)
 
+    //Project dependencies
+    implementation(libs.ktor.client.core)
+    implementation(libs.ktor.client.cio)
+    implementation(libs.ktor.client.okhttp)
+    implementation(libs.ktor.client.content.negotiation)
+    implementation(libs.ktor.serialization.kotlinx.json)
+
+    implementation(libs.ktor.ktor.client.cio)
+    implementation(libs.androidx.material) // Latest stable version
+    implementation(libs.ktor.ktor.client.okhttp)
+    implementation(libs.ktor.ktor.client.content.negotiation)
+    implementation(libs.ktor.ktor.serialization.kotlinx.json)
+
+    implementation(libs.ktor.ktor.serialization.kotlinx.json)
+    implementation(libs.ktor.ktor.client.content.negotiation)
+    implementation(libs.kotlinx.serialization.json)
+    implementation(libs.ui)
+    implementation(libs.material3)
+    implementation(libs.ui.tooling.preview)
+    implementation(libs.androidx.lifecycle.viewmodel.compose)
+    implementation(libs.androidx.activity.compose.v140)
+    implementation(libs.kotlin.stdlib)
+    implementation(libs.androidx.runtime)
     //Project independencies
 
     implementation ("io.ktor:ktor-client-core:2.3.6")

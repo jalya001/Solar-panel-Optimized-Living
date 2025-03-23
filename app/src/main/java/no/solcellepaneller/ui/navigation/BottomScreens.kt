@@ -17,8 +17,9 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ElevatedCard
 import androidx.compose.ui.Alignment
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.style.TextAlign
-import org.intellij.lang.annotations.JdkConstants.HorizontalAlignment
+import no.solcellepaneller.ui.theme.ThemeState
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -28,7 +29,10 @@ fun HelpBottomSheet( //Kan enten velge å ha alt info her eller igjen navigate h
 ) {
     if (visible) {
         ModalBottomSheet(
-            onDismissRequest = onDismiss
+            onDismissRequest = onDismiss,
+            containerColor = MaterialTheme.colorScheme.background,
+            contentColor = MaterialTheme.colorScheme.tertiary,
+            scrimColor = Color.Black.copy(alpha = 0.8f)
         ) {
             Column(
                 modifier = Modifier
@@ -38,6 +42,10 @@ fun HelpBottomSheet( //Kan enten velge å ha alt info her eller igjen navigate h
                 Text("Hjelp", style = MaterialTheme.typography.titleLarge)
 
                 ElevatedCard(
+                    colors = CardDefaults.elevatedCardColors(
+                    contentColor = MaterialTheme.colorScheme.tertiary,
+                    containerColor = MaterialTheme.colorScheme.secondary
+                ),
                     elevation = CardDefaults.cardElevation(
                         defaultElevation = 2.dp
                     ),
@@ -54,6 +62,10 @@ fun HelpBottomSheet( //Kan enten velge å ha alt info her eller igjen navigate h
                 Spacer(modifier = Modifier.height(16.dp))
 
                 ElevatedCard(
+                    colors = CardDefaults.elevatedCardColors(
+                        contentColor = MaterialTheme.colorScheme.tertiary,
+                        containerColor = MaterialTheme.colorScheme.secondary
+                    ),
                     elevation = CardDefaults.cardElevation(
                         defaultElevation = 2.dp
                     ),
@@ -87,7 +99,10 @@ fun InformationBottomSheet(
 ) {
     if (visible) {
         ModalBottomSheet(
-            onDismissRequest = onDismiss
+            onDismissRequest = onDismiss,
+            containerColor = MaterialTheme.colorScheme.background,
+            contentColor = MaterialTheme.colorScheme.tertiary,
+            scrimColor = Color.Black.copy(alpha = 0.8f)
         ) {
             Column(
                 modifier = Modifier
@@ -116,23 +131,31 @@ fun AppearanceBottomSheet(
 ) {
     if (visible) {
         ModalBottomSheet(
-            onDismissRequest = onDismiss
+            onDismissRequest = onDismiss,
+            containerColor = MaterialTheme.colorScheme.background,
+            contentColor = MaterialTheme.colorScheme.tertiary,
+            scrimColor = Color.Black.copy(alpha = 0.8f)
         ) {
             Column(
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(16.dp), horizontalAlignment = Alignment.CenterHorizontally
             ) {
-                Text("Hjelp", style = MaterialTheme.typography.titleLarge)
+                Text("Utseende", style = MaterialTheme.typography.titleLarge)
 
                 ElevatedCard(
+                    colors = CardDefaults.elevatedCardColors(
+                        contentColor = MaterialTheme.colorScheme.tertiary,
+                        containerColor = MaterialTheme.colorScheme.secondary
+                    ),
                     elevation = CardDefaults.cardElevation(
                         defaultElevation = 2.dp
                     ),
                     modifier = Modifier.size(width = 240.dp, height = 60.dp),
+                    onClick = {ThemeState.isDark = !ThemeState.isDark}
                 ) {
                     Text(
-                        text = "Bytt til nattmodus",
+                        text = if (ThemeState.isDark) "Bytt til lysmodus" else "Bytt til mørkmodus",
                         modifier = Modifier
                             .padding(16.dp).align(Alignment.CenterHorizontally),
                     )
@@ -140,6 +163,10 @@ fun AppearanceBottomSheet(
 
                 Spacer(modifier = Modifier.height(10.dp))
                 ElevatedCard(
+                    colors = CardDefaults.elevatedCardColors(
+                    contentColor = MaterialTheme.colorScheme.tertiary,
+                    containerColor = MaterialTheme.colorScheme.secondary
+                ),
                     elevation = CardDefaults.cardElevation(
                         defaultElevation = 2.dp
                     ),
@@ -155,6 +182,10 @@ fun AppearanceBottomSheet(
                 Spacer(modifier = Modifier.height(10.dp))
 
                 ElevatedCard(
+                    colors = CardDefaults.elevatedCardColors(
+                        contentColor = MaterialTheme.colorScheme.tertiary,
+                        containerColor = MaterialTheme.colorScheme.secondary
+                    ),
                     elevation = CardDefaults.cardElevation(
                         defaultElevation = 2.dp
                     ),
@@ -178,3 +209,17 @@ fun AppearanceBottomSheet(
         }
     }
 }
+//@Preview(
+//    uiMode = Configuration.UI_MODE_NIGHT_YES,
+//    name = "DefaultPreviewDark"
+//)
+//@Preview(
+//    uiMode = Configuration.UI_MODE_NIGHT_NO,
+//    name = "DefaultPreviewLight"
+//)
+//@Composable
+//    fun AppPreview() {
+//    SolcellepanellerTheme {
+//        App()
+//    }
+//}
