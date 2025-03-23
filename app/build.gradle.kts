@@ -70,10 +70,10 @@ dependencies {
 
     //Project dependencies
     implementation(libs.ktor.client.core)
-    implementation(libs.ktor.client.cio)
-    implementation(libs.ktor.client.okhttp)
-    implementation(libs.ktor.client.content.negotiation)
-    implementation(libs.ktor.serialization.kotlinx.json)
+//    implementation(libs.ktor.client.cio)
+//    implementation(libs.ktor.client.okhttp)
+//    implementation(libs.ktor.client.content.negotiation)
+//    implementation(libs.ktor.serialization.kotlinx.json)
 
     implementation(libs.ktor.ktor.client.cio)
     implementation(libs.androidx.material) // Latest stable version
@@ -88,16 +88,15 @@ dependencies {
     implementation(libs.material3)
     implementation(libs.ui.tooling.preview)
     implementation(libs.androidx.lifecycle.viewmodel.compose)
-    implementation(libs.androidx.activity.compose.v140)
+    implementation(libs.androidx.activity.compose)
     implementation(libs.kotlin.stdlib)
     implementation(libs.androidx.runtime)
-    //Project independencies
 
-    implementation ("io.ktor:ktor-client-core:2.3.6")
-    implementation("io.ktor:ktor-client-cio:2.3.6")
-    implementation("io.ktor:ktor-client-okhttp:2.3.6")
-    implementation("io.ktor:ktor-client-content-negotiation:2.3.6")
-    implementation("io.ktor:ktor-serialization-kotlinx-json:2.3.6")
+    implementation (libs.ktor.client.core)
+    implementation(libs.ktor.ktor.client.cio)
+    implementation(libs.ktor.ktor.client.okhttp)
+    implementation(libs.ktor.ktor.client.content.negotiation)
+    implementation(libs.ktor.ktor.serialization.kotlinx.json)
 
 
 
