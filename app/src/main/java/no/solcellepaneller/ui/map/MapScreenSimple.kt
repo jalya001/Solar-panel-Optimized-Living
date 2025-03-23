@@ -78,7 +78,7 @@ fun DisplaySimpleScreen(viewModel: MapScreenViewModel, navController: NavControl
                 val currentZoom = cameraPositionState.position.zoom
                 val currentBearing = cameraPositionState.position.bearing
 
-                cameraPositionState.move(
+                cameraPositionState.animate(
                     CameraUpdateFactory.newCameraPosition(
                         CameraPosition(newLatLng, currentZoom, 0f, currentBearing)
                     )
