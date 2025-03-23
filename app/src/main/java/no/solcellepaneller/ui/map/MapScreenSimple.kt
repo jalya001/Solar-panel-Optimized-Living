@@ -23,6 +23,7 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.neverEqualPolicy
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
@@ -33,16 +34,18 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.zIndex
 import androidx.navigation.NavController
+import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.model.CameraPosition
 import com.google.android.gms.maps.model.LatLng
 import com.google.maps.android.compose.GoogleMap
 import com.google.maps.android.compose.MapProperties
 import com.google.maps.android.compose.MapType
 import com.google.maps.android.compose.rememberCameraPositionState
+import com.google.maps.android.compose.rememberMarkerState
 import no.solcellepaneller.ui.navigation.TopBar
 
 @Composable
-fun MapScreenSimple(viewModel: MapScreenSimpleViewModel, navController: NavController) {
+fun MapScreenSimple(viewModel: MapScreenViewModel, navController: NavController) {
     Scaffold(
         topBar = { TopBar(navController) },
     ){ contentPadding ->
@@ -51,20 +54,59 @@ fun MapScreenSimple(viewModel: MapScreenSimpleViewModel, navController: NavContr
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.Center
         ) {
-           DisplayScreen(viewModel, navController)
+           DisplaySimpleScreen(viewModel, navController)
         }
     }
 }
 
 
 @Composable
-fun DisplayScreen(viewModel: MapScreenSimpleViewModel, navController: NavController) {
+fun DisplaySimpleScreen(viewModel: MapScreenViewModel, navController: NavController) {
     var address by remember { mutableStateOf("") }
     val coordinates by viewModel.coordinates.observeAsState()
+
+    var selectedCoordinates by remember { mutableStateOf<LatLng?>(null) }
+    //val markerState = rememberMarkerState(position = selectedCoordinates ?: LatLng(0.0, 0.0))
 
     val cameraPositionState = rememberCameraPositionState {
         position = CameraPosition.fromLatLngZoom(LatLng(2.804314, 45.175009), 20f)
     }
+
+
+
+
+    LaunchedEffect(cameraPositionState.position) {
+        val newPosition = cameraPositionState.position.target
+
+        if (selectedCoordinates != newPosition) {
+            selectedCoordinates = newPosition
+            viewModel.selectLocation(newPosition.latitude, newPosition.longitude)
+        }
+    }
+
+    LaunchedEffect(coordinates)  {
+        coordinates?.let { latLng ->
+           // markerState.position = LatLng(latLng.first, latLng.second)
+
+            val newLatLng = LatLng(latLng.first, latLng.second)
+            selectedCoordinates = newLatLng
+            val currentZoom = cameraPositionState.position.zoom
+            //val currentTilt= cameraPositionState.position.tilt
+            val currentBearing = cameraPositionState.position.bearing
+
+
+            /* cameraPositionState.position = CameraPosition.fromLatLngZoom(selectedCoordinates!!, currentZoom) */
+
+            cameraPositionState.move(CameraUpdateFactory.newCameraPosition( CameraPosition(
+                newLatLng,  // target
+                currentZoom,            // zoom
+                0f,            // tilt
+                currentBearing          // bearing
+            )))
+        }
+    }
+
+
 
     Box(modifier = Modifier.fillMaxWidth()) {
         GoogleMap(
@@ -75,13 +117,12 @@ fun DisplayScreen(viewModel: MapScreenSimpleViewModel, navController: NavControl
             properties = MapProperties(mapType = MapType.HYBRID),
             onMapClick = { latLng ->
                 viewModel.selectLocation(latLng.latitude, latLng.longitude)
+                selectedCoordinates = latLng
             }
         )
 
-        LaunchedEffect(cameraPositionState.position) {
-            val newPosition = cameraPositionState.position.target
-            viewModel.selectLocation(newPosition.latitude, newPosition.longitude)
-        }
+
+
 
         Column(
             modifier = Modifier
@@ -103,6 +144,8 @@ fun DisplayScreen(viewModel: MapScreenSimpleViewModel, navController: NavControl
                         .size(width = 100.dp, height = 50.dp),
                     onClick = {
                         viewModel.fetchCoordinates(address)
+
+
                     }
                 ) {
                     Icon(
@@ -122,14 +165,23 @@ fun DisplayScreen(viewModel: MapScreenSimpleViewModel, navController: NavControl
                     Column(modifier = Modifier.padding(8.dp)) {
                         Text(text = "Latitude: ${it.first}", style = TextStyle(fontSize = 20.sp))
                         Text(text = "Longitude: ${it.second}", style = TextStyle(fontSize = 20.sp))
+                        Text(text = "SIMPLIFIED SCREEN", style = TextStyle(fontSize = 50.sp), color = Color.Red)
                     }
                 }
 
-                LaunchedEffect(it) {
-                    cameraPositionState.position = CameraPosition.fromLatLngZoom(
-                        LatLng(it.first, it.second),
-                        cameraPositionState.position.zoom
-                    )
+//                LaunchedEffect(it) {
+//                    cameraPositionState.position = CameraPosition.fromLatLngZoom(
+//                        LatLng(it.first, it.second),
+//                        cameraPositionState.position.zoom
+//                    )
+//                }
+                LaunchedEffect(cameraPositionState.position) {
+                    val newPosition = cameraPositionState.position.target
+
+                    if (selectedCoordinates != newPosition) {
+                        selectedCoordinates = newPosition
+                        viewModel.selectLocation(newPosition.latitude, newPosition.longitude)
+                    }
                 }
             }
 

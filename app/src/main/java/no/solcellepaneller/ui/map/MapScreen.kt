@@ -55,6 +55,7 @@ import no.solcellepaneller.ui.navigation.TopBar
 fun MapScreen(viewModel: MapScreenViewModel, navController: NavController) {
     Scaffold(
         topBar = { TopBar(navController) },
+        //would also have onBackClick so that points are deleted when navigating back
     ){ contentPadding ->
         Column(
             modifier = Modifier.fillMaxSize().padding(contentPadding),
@@ -76,7 +77,8 @@ fun DisplayScreen(viewModel: MapScreenViewModel, navController: NavController) {
 
     var selectedCoordinates by remember { mutableStateOf<LatLng?>(null) }
     val cameraPositionState = rememberCameraPositionState {
-        position = CameraPosition.fromLatLngZoom(LatLng(2.804314, 45.175009), 20f)
+        position = coordinates?.let { LatLng(it.first, coordinates!!.second) }
+            ?.let { CameraPosition.fromLatLngZoom(it, 20f) }!!
     }
     val markerState = rememberMarkerState(position = selectedCoordinates ?: LatLng(0.0, 0.0))
     //polygon
@@ -162,47 +164,47 @@ fun DisplayScreen(viewModel: MapScreenViewModel, navController: NavController) {
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
 
-            Row(
-                modifier = Modifier
-
-            ) {
-                InputField(
-                    value = address,
-                    onValueChange = { address = it },
-                    label = "Enter Address"
-                )
-
-                Button(modifier = Modifier
-                    .padding(start = 8.dp)
-                    .size(width = 100.dp, height = 50.dp),
-                    onClick = {
-                        viewModel.fetchCoordinates(address)
-                        viewModel.removePoints()
-                        ispolygonvisible = false
-
-
-
-
-                        selectedCoordinates?.let { coordinates ->
-                            cameraPositionState.move(
-                                CameraUpdateFactory.newCameraPosition(
-                                    CameraPosition(
-                                        coordinates,  // target
-                                        20f,  // zoom
-                                        0f,  // tilt
-                                        0f // bearing
-                                    )
-                                )
-                            )
-                        }
-                    }) {
-                    Icon(
-                        imageVector = Icons.Filled.Search, // Set the icon here
-                        contentDescription = "Search Coordinates", // Optional, for accessibility
-                        modifier = Modifier.size(24.dp) // Adjust the icon size if needed
-                    )
-                }
-            }
+//            Row(
+//                modifier = Modifier
+//
+//            ) {
+//                InputField(
+//                    value = address,
+//                    onValueChange = { address = it },
+//                    label = "Enter Address"
+//                )
+//
+//                Button(modifier = Modifier
+//                    .padding(start = 8.dp)
+//                    .size(width = 100.dp, height = 50.dp),
+//                    onClick = {
+//                        viewModel.fetchCoordinates(address)
+//                        viewModel.removePoints()
+//                        ispolygonvisible = false
+//
+//
+//
+//
+//                        selectedCoordinates?.let { coordinates ->
+//                            cameraPositionState.move(
+//                                CameraUpdateFactory.newCameraPosition(
+//                                    CameraPosition(
+//                                        coordinates,  // target
+//                                        20f,  // zoom
+//                                        0f,  // tilt
+//                                        0f // bearing
+//                                    )
+//                                )
+//                            )
+//                        }
+//                    }) {
+//                    Icon(
+//                        imageVector = Icons.Filled.Search, // Set the icon here
+//                        contentDescription = "Search Coordinates", // Optional, for accessibility
+//                        modifier = Modifier.size(24.dp) // Adjust the icon size if needed
+//                    )
+//                }
+//            }
             LaunchedEffect(coordinates) {
                 selectedCoordinates?.let { latLng ->
                     markerState.position = latLng
@@ -244,6 +246,7 @@ fun DisplayScreen(viewModel: MapScreenViewModel, navController: NavController) {
                             "Longitude: ${it.second}",
                             style = TextStyle(fontSize = fontsize.sp)
                         )
+                        Text(text = "MAIN MAP SCREEN", style = TextStyle(fontSize = 50.sp), color = Color.Red)
                     }
                 }
 

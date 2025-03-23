@@ -35,12 +35,13 @@ import no.solcellepaneller.ui.weatherStations.WeatherStationsScreen
 
 @Composable
 fun Nav(navController: NavHostController) {
+        val viewModel: MapScreenViewModel = viewModel()
     NavHost(navController, startDestination = "home") {
         composable("home") { HomeScreen(navController) }
-        composable("map") { val viewModel: MapScreenViewModel = viewModel()
+        composable("map") {// val viewModel: MapScreenViewModel = viewModel()
             MapScreen(viewModel, navController)
         }
-        composable("map_simple") { val viewModel: MapScreenSimpleViewModel = viewModel()
+        composable("map_simple") { //val viewModel: MapScreenViewModel = viewModel()
             MapScreenSimple(viewModel, navController)
         }
         composable("weather_stations") { WeatherStationsScreen(navController) }

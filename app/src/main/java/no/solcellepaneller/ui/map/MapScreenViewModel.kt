@@ -93,7 +93,7 @@ class MapScreenViewModel(
     }
     // to change if map is clicked not used
     fun selectLocation(lat: Double, lon: Double) {
-        _coordinates.postValue(lat to lon)  // 🔹 Updates lat/lon
+        _coordinates.postValue(lat to lon)  //  Updates lat/lon
     }
 
 }
