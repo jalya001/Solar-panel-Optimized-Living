@@ -25,7 +25,6 @@ import no.solcellepaneller.ui.map.MapScreen
 import no.solcellepaneller.ui.map.MapScreenSimple
 import no.solcellepaneller.ui.map.MapScreenSimpleViewModel
 import no.solcellepaneller.ui.map.MapScreenViewModel
-
 import no.solcellepaneller.ui.prices.PricesScreen
 import no.solcellepaneller.ui.result.ResultScreen
 import no.solcellepaneller.ui.savedLocations.SavedLocationsScreen
