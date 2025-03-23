@@ -27,7 +27,6 @@ import no.solcellepaneller.ui.electricity.PriceScreen
 import no.solcellepaneller.ui.home.HomeScreen
 import no.solcellepaneller.ui.map.MapScreen
 import no.solcellepaneller.ui.map.MapScreenSimple
-import no.solcellepaneller.ui.map.MapScreenSimpleViewModel
 import no.solcellepaneller.ui.map.MapScreenViewModel
 import no.solcellepaneller.ui.result.ResultScreen
 import no.solcellepaneller.ui.savedLocations.SavedLocationsScreen
@@ -44,8 +43,8 @@ fun Nav(navController: NavHostController) {
         composable("map_simple") { //val viewModel: MapScreenViewModel = viewModel()
             MapScreenSimple(viewModel, navController)
         }
-        composable("weather_stations") { WeatherStationsScreen(navController) }
-        composable("additional_input") { AdditionalInputScreen(navController) }
+        composable("weather_stations") { WeatherStationsScreen(viewModel,navController) }
+        composable("additional_input") { AdditionalInputScreen(viewModel,navController) }
         composable("result") { ResultScreen(navController) }
         composable("saved_locations") { SavedLocationsScreen(navController) }
         composable("prices") {
@@ -95,7 +94,7 @@ fun BottomBar(
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun TopBar(navController: NavController) {
+fun TopBar(navController: NavController,onBackClick: (() -> Unit)? = null) {
     TopAppBar(
         colors = TopAppBarDefaults.topAppBarColors(
             containerColor = MaterialTheme.colorScheme.secondary,
@@ -105,6 +104,7 @@ fun TopBar(navController: NavController) {
         title = { Text("Tilbake") },
         navigationIcon = {
             IconButton(onClick = {
+                onBackClick?.invoke()
                 navController.popBackStack()
             }) {
                 Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "Tilbake")

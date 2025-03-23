@@ -15,6 +15,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.navigation.NavController
+import no.solcellepaneller.ui.map.MapScreenViewModel
 import no.solcellepaneller.ui.navigation.AppearanceBottomSheet
 import no.solcellepaneller.ui.navigation.BottomBar
 import no.solcellepaneller.ui.navigation.HelpBottomSheet
@@ -22,10 +23,11 @@ import no.solcellepaneller.ui.navigation.InformationBottomSheet
 import no.solcellepaneller.ui.navigation.TopBar
 
 @Composable
-fun AdditionalInputScreen(navController: NavController) {
+fun AdditionalInputScreen(viewModel: MapScreenViewModel, navController: NavController) {
     var showHelp by remember { mutableStateOf(false) }
     var showInfo by remember { mutableStateOf(false) }
     var showAppearance by remember { mutableStateOf(false) }
+    val coordinates = viewModel.coordinates.value
 
     Scaffold(
         topBar = { TopBar(navController) },
@@ -40,6 +42,13 @@ fun AdditionalInputScreen(navController: NavController) {
             verticalArrangement = Arrangement.Center
         ) {
             Text("Ekstra Inndata")
+            coordinates?.let {
+                Text("Valgt posisjon:")
+                Text("Lat: ${it.first}")
+                Text("Lng: ${it.second}")
+            } ?: Text("Ingen koordinater valgt")
+
+
             Button(onClick = { navController.navigate("map") }) { Text("Tegn Paneler") }
 
             HelpBottomSheet(visible = showHelp, onDismiss = { showHelp = false })

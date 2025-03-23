@@ -54,7 +54,9 @@ import no.solcellepaneller.ui.navigation.TopBar
 @Composable
 fun MapScreen(viewModel: MapScreenViewModel, navController: NavController) {
     Scaffold(
-        topBar = { TopBar(navController) },
+        topBar = { TopBar(navController){
+            viewModel.removePoints()
+        } },
         //would also have onBackClick so that points are deleted when navigating back
     ){ contentPadding ->
         Column(
@@ -78,7 +80,7 @@ fun DisplayScreen(viewModel: MapScreenViewModel, navController: NavController) {
     var selectedCoordinates by remember { mutableStateOf<LatLng?>(null) }
     val cameraPositionState = rememberCameraPositionState {
         position = coordinates?.let { LatLng(it.first, coordinates!!.second) }
-            ?.let { CameraPosition.fromLatLngZoom(it, 20f) }!!
+            ?.let { CameraPosition.fromLatLngZoom(it, 19f) }!!
     }
     val markerState = rememberMarkerState(position = selectedCoordinates ?: LatLng(0.0, 0.0))
     //polygon
@@ -147,14 +149,19 @@ fun DisplayScreen(viewModel: MapScreenViewModel, navController: NavController) {
         }
 
 
-        LaunchedEffect(cameraPositionState.position) {
-            val newPosition = cameraPositionState.position.target
+        LaunchedEffect(coordinates) {
+            coordinates?.let {
+                val newLatLng = LatLng(it.first, it.second)
+                selectedCoordinates = newLatLng
 
-            if (selectedCoordinates != newPosition) {
-                selectedCoordinates = newPosition
-                viewModel.selectLocation(newPosition.latitude, newPosition.longitude)
+                cameraPositionState.animate(
+                    CameraUpdateFactory.newCameraPosition(
+                        CameraPosition(newLatLng, 19f, 0f, 0f)
+                    )
+                )
             }
         }
+
 
         Column(
             modifier = Modifier
