@@ -1,5 +1,4 @@
 <resources>
     <string name="app_name">Solcellepaneller</string>
-    <string name="Test" >This app is in English</string>
-
+    <string name="Test" >Appen er i norsk</string>
 </resources>
