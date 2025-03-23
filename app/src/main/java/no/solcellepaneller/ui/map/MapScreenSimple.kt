@@ -59,56 +59,39 @@ fun MapScreenSimple(viewModel: MapScreenViewModel, navController: NavController)
     }
 }
 
-
 @Composable
 fun DisplaySimpleScreen(viewModel: MapScreenViewModel, navController: NavController) {
     var address by remember { mutableStateOf("") }
     val coordinates by viewModel.coordinates.observeAsState()
 
     var selectedCoordinates by remember { mutableStateOf<LatLng?>(null) }
-    //val markerState = rememberMarkerState(position = selectedCoordinates ?: LatLng(0.0, 0.0))
+    val markerState = rememberMarkerState(position = selectedCoordinates ?: LatLng(0.0, 0.0))
 
     val cameraPositionState = rememberCameraPositionState {
-        position = CameraPosition.fromLatLngZoom(LatLng(2.804314, 45.175009), 20f)
+        position = CameraPosition.fromLatLngZoom(LatLng(59.9436145, 10.7182883), 18f)
     }
-
-
-
-
-    LaunchedEffect(cameraPositionState.position) {
-        val newPosition = cameraPositionState.position.target
-
-        if (selectedCoordinates != newPosition) {
-            selectedCoordinates = newPosition
-            viewModel.selectLocation(newPosition.latitude, newPosition.longitude)
-        }
-    }
-
-    LaunchedEffect(coordinates)  {
+    LaunchedEffect(coordinates) {
         coordinates?.let { latLng ->
-           // markerState.position = LatLng(latLng.first, latLng.second)
-
             val newLatLng = LatLng(latLng.first, latLng.second)
-            selectedCoordinates = newLatLng
-            val currentZoom = cameraPositionState.position.zoom
-            //val currentTilt= cameraPositionState.position.tilt
-            val currentBearing = cameraPositionState.position.bearing
+            if (selectedCoordinates != newLatLng) {
+                selectedCoordinates = newLatLng
+                val currentZoom = cameraPositionState.position.zoom
+                val currentBearing = cameraPositionState.position.bearing
 
-
-            /* cameraPositionState.position = CameraPosition.fromLatLngZoom(selectedCoordinates!!, currentZoom) */
-
-            cameraPositionState.move(CameraUpdateFactory.newCameraPosition( CameraPosition(
-                newLatLng,  // target
-                currentZoom,            // zoom
-                0f,            // tilt
-                currentBearing          // bearing
-            )))
+                cameraPositionState.move(
+                    CameraUpdateFactory.newCameraPosition(
+                        CameraPosition(newLatLng, currentZoom, 0f, currentBearing)
+                    )
+                )
+            }
         }
     }
 
 
 
     Box(modifier = Modifier.fillMaxWidth()) {
+
+
         GoogleMap(
             modifier = Modifier
                 .fillMaxSize()
@@ -116,10 +99,28 @@ fun DisplaySimpleScreen(viewModel: MapScreenViewModel, navController: NavControl
             cameraPositionState = cameraPositionState,
             properties = MapProperties(mapType = MapType.HYBRID),
             onMapClick = { latLng ->
-                viewModel.selectLocation(latLng.latitude, latLng.longitude)
                 selectedCoordinates = latLng
+                viewModel.selectLocation(latLng.latitude, latLng.longitude)
+
+                cameraPositionState.move(
+                    CameraUpdateFactory.newCameraPosition(
+                        CameraPosition(latLng, cameraPositionState.position.zoom, 0f, 0f)
+                    )
+                )
             }
-        )
+
+        ) {
+            selectedCoordinates?.let {
+                markerState.position = it
+                com.google.maps.android.compose.Marker(
+                    state = markerState,
+                    title = "Valgt posisjon",
+                    snippet = "Lat: ${it.latitude}, Lng: ${it.longitude}"
+                )
+            }
+        }
+
+
 
 
 
@@ -169,20 +170,6 @@ fun DisplaySimpleScreen(viewModel: MapScreenViewModel, navController: NavControl
                     }
                 }
 
-//                LaunchedEffect(it) {
-//                    cameraPositionState.position = CameraPosition.fromLatLngZoom(
-//                        LatLng(it.first, it.second),
-//                        cameraPositionState.position.zoom
-//                    )
-//                }
-                LaunchedEffect(cameraPositionState.position) {
-                    val newPosition = cameraPositionState.position.target
-
-                    if (selectedCoordinates != newPosition) {
-                        selectedCoordinates = newPosition
-                        viewModel.selectLocation(newPosition.latitude, newPosition.longitude)
-                    }
-                }
             }
 
             Spacer(modifier = Modifier.height(16.dp))
