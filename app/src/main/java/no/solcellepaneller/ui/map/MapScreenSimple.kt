@@ -23,7 +23,6 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.neverEqualPolicy
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
@@ -42,6 +41,7 @@ import com.google.maps.android.compose.MapProperties
 import com.google.maps.android.compose.MapType
 import com.google.maps.android.compose.rememberCameraPositionState
 import com.google.maps.android.compose.rememberMarkerState
+import no.solcellepaneller.ui.navigation.AdditionalInputBottomSheet
 import no.solcellepaneller.ui.navigation.TopBar
 
 @Composable
@@ -87,11 +87,7 @@ fun DisplaySimpleScreen(viewModel: MapScreenViewModel, navController: NavControl
         }
     }
 
-
-
     Box(modifier = Modifier.fillMaxWidth()) {
-
-
         GoogleMap(
             modifier = Modifier
                 .fillMaxSize()
@@ -120,11 +116,6 @@ fun DisplaySimpleScreen(viewModel: MapScreenViewModel, navController: NavControl
             }
         }
 
-
-
-
-
-
         Column(
             modifier = Modifier
                 .fillMaxWidth()
@@ -133,7 +124,7 @@ fun DisplaySimpleScreen(viewModel: MapScreenViewModel, navController: NavControl
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             Row {
-                InputField(
+                no.solcellepaneller.ui.map.InputField(
                     value = address,
                     onValueChange = { address = it },
                     label = "Enter Address"
@@ -157,28 +148,34 @@ fun DisplaySimpleScreen(viewModel: MapScreenViewModel, navController: NavControl
                 }
             }
 
-            coordinates?.let {
-                Surface(
-                    modifier = Modifier.padding(top = 16.dp),
-                    color = Color.White.copy(alpha = 0.3f),
-                    shape = RoundedCornerShape(10.dp)
-                ) {
-                    Column(modifier = Modifier.padding(8.dp)) {
-                        Text(text = "Latitude: ${it.first}", style = TextStyle(fontSize = 20.sp))
-                        Text(text = "Longitude: ${it.second}", style = TextStyle(fontSize = 20.sp))
-                        Text(text = "SIMPLIFIED SCREEN", style = TextStyle(fontSize = 50.sp), color = Color.Red)
-                    }
-                }
+//            coordinates?.let {
+//                Surface(
+//                    modifier = Modifier.padding(top = 16.dp),
+//                    color = Color.White.copy(alpha = 0.3f),
+//                    shape = RoundedCornerShape(10.dp)
+//                ) {
+//                    Column(modifier = Modifier.padding(8.dp)) {
+//                        Text(text = "Latitude: ${it.first}", style = TextStyle(fontSize = 20.sp))
+//                        Text(text = "Longitude: ${it.second}", style = TextStyle(fontSize = 20.sp))
+//                        Text(text = "SIMPLIFIED SCREEN", style = TextStyle(fontSize = 50.sp), color = Color.Red)
+//                    }
+//                }
+//            }
 
-            }
+            var showBottomSheet by remember { mutableStateOf(false) }
 
+            AdditionalInputBottomSheet(
+                visible = showBottomSheet,
+                onDismiss = { showBottomSheet = false },navController,coordinates
+            )
             Spacer(modifier = Modifier.height(16.dp))
 
             Button(
-                onClick = { navController.navigate("weather_stations") }
+                onClick = { showBottomSheet = true }
             ) {
-                Text(text = "Gå til værstasjoner")
+                Text(text = "Legg til mer informasjon")
             }
+
         }
     }
 }

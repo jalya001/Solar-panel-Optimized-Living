@@ -16,6 +16,7 @@ import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
@@ -57,7 +58,6 @@ fun MapScreen(viewModel: MapScreenViewModel, navController: NavController) {
         topBar = { TopBar(navController){
             viewModel.removePoints()
         } },
-        //would also have onBackClick so that points are deleted when navigating back
     ){ contentPadding ->
         Column(
             modifier = Modifier.fillMaxSize().padding(contentPadding),
@@ -69,10 +69,8 @@ fun MapScreen(viewModel: MapScreenViewModel, navController: NavController) {
     }
 }
 
-
 @Composable
 fun DisplayScreen(viewModel: MapScreenViewModel, navController: NavController) {
-    var address by remember { mutableStateOf("") }
     val coordinates by viewModel.coordinates.observeAsState()
     var slope by remember { mutableStateOf("") }
     var efficiency by remember { mutableStateOf("") }
@@ -83,31 +81,20 @@ fun DisplayScreen(viewModel: MapScreenViewModel, navController: NavController) {
             ?.let { CameraPosition.fromLatLngZoom(it, 19f) }!!
     }
     val markerState = rememberMarkerState(position = selectedCoordinates ?: LatLng(0.0, 0.0))
-    //polygon
     val polygonPoints = viewModel.polygondata
-
-
-    // button polygon visible
     var ispolygonvisible by remember { mutableStateOf(false) }
     var showPopUp by remember { mutableStateOf(false) }
-
     val fontsize = 20
-
-    //index markers
     var index: Int by remember { mutableIntStateOf(0) }
-
     var arealatlong by remember { mutableStateOf<LatLng?>(null) }
 
-
     Box(modifier = Modifier.fillMaxWidth()) {
-        // test no need to use later Text(text = "her er jeg")
         GoogleMap(
             modifier = Modifier
                 .fillMaxSize()
                 .zIndex(0f),
             cameraPositionState = cameraPositionState,
             properties = MapProperties(mapType = MapType.HYBRID),
-
 
             onMapClick = { latLng ->
                 if (!ispolygonvisible) {
@@ -118,21 +105,11 @@ fun DisplayScreen(viewModel: MapScreenViewModel, navController: NavController) {
             }
         )
         {
-            selectedCoordinates?.let { latLng ->
-//            Marker(
-//            state = markerState,
-//            title = "Selected Location",
-//            snippet = "Lat: ${latLng.latitude}, Lng: ${latLng.longitude}")
-            }
             polygonPoints.forEach { latLng ->
-
                 Marker(
                     state = rememberMarkerState(position = latLng),
-
                     title = "Edge: $index"
-
                 )
-
             }
 
             if (ispolygonvisible) {
@@ -145,15 +122,12 @@ fun DisplayScreen(viewModel: MapScreenViewModel, navController: NavController) {
                 )
             }
 
-
         }
-
 
         LaunchedEffect(coordinates) {
             coordinates?.let {
                 val newLatLng = LatLng(it.first, it.second)
                 selectedCoordinates = newLatLng
-
                 cameraPositionState.animate(
                     CameraUpdateFactory.newCameraPosition(
                         CameraPosition(newLatLng, 19f, 0f, 0f)
@@ -162,67 +136,18 @@ fun DisplayScreen(viewModel: MapScreenViewModel, navController: NavController) {
             }
         }
 
-
         Column(
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(16.dp)
-                .zIndex(1f), // Place controls above the map
+                .zIndex(1f),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-
-//            Row(
-//                modifier = Modifier
-//
-//            ) {
-//                InputField(
-//                    value = address,
-//                    onValueChange = { address = it },
-//                    label = "Enter Address"
-//                )
-//
-//                Button(modifier = Modifier
-//                    .padding(start = 8.dp)
-//                    .size(width = 100.dp, height = 50.dp),
-//                    onClick = {
-//                        viewModel.fetchCoordinates(address)
-//                        viewModel.removePoints()
-//                        ispolygonvisible = false
-//
-//
-//
-//
-//                        selectedCoordinates?.let { coordinates ->
-//                            cameraPositionState.move(
-//                                CameraUpdateFactory.newCameraPosition(
-//                                    CameraPosition(
-//                                        coordinates,  // target
-//                                        20f,  // zoom
-//                                        0f,  // tilt
-//                                        0f // bearing
-//                                    )
-//                                )
-//                            )
-//                        }
-//                    }) {
-//                    Icon(
-//                        imageVector = Icons.Filled.Search, // Set the icon here
-//                        contentDescription = "Search Coordinates", // Optional, for accessibility
-//                        modifier = Modifier.size(24.dp) // Adjust the icon size if needed
-//                    )
-//                }
-//            }
             LaunchedEffect(coordinates) {
                 selectedCoordinates?.let { latLng ->
                     markerState.position = latLng
-
                     val currentZoom = cameraPositionState.position.zoom
-                    //val currentTilt= cameraPositionState.position.tilt
                     val currentBearing = cameraPositionState.position.bearing
-
-
-                    /* cameraPositionState.position = CameraPosition.fromLatLngZoom(selectedCoordinates!!, currentZoom) */
-
                     cameraPositionState.position = CameraPosition(
                         selectedCoordinates!!,  // target
                         currentZoom,            // zoom
@@ -234,64 +159,34 @@ fun DisplayScreen(viewModel: MapScreenViewModel, navController: NavController) {
             Spacer(modifier = Modifier.height(10.dp))
 
             coordinates?.let {
-
                 selectedCoordinates = LatLng(it.first, it.second)
-
-                Surface(
-                    modifier = Modifier,
-                    color = Color.White.copy(alpha = 0.3f), // Light background color for the surface
-                    shape = RoundedCornerShape(10.dp)
-                ) {
-                    Column {
-                        Text(
-                            text = "Latitude: ${it.first}",
-                            style = TextStyle(fontSize = fontsize.sp)
-                        )
-
-
-                        Text(
-                            "Longitude: ${it.second}",
-                            style = TextStyle(fontSize = fontsize.sp)
-                        )
-                        Text(text = "MAIN MAP SCREEN", style = TextStyle(fontSize = 50.sp), color = Color.Red)
-                    }
-                }
-
-
-
-
                 if (ispolygonvisible) {
-
                     Surface(
                         modifier = Modifier.padding(top = 10.dp),
-                        color = Color.White.copy(alpha = 0.3f),
+                        color = MaterialTheme.colorScheme.primary,
                         shape = RoundedCornerShape(10.dp)
-
                     ) {
                         Column(
                             modifier = Modifier.padding(16.dp),
-                            verticalArrangement = Arrangement.spacedBy(12.dp) // Increased space between elements
+                            verticalArrangement = Arrangement.spacedBy(12.dp)
                         ) {
                             Text(
                                 text = "The area of your roof is: ${
-                                    viewModel.calculateAreaOfPolygon(
-                                        polygonPoints
-                                    )
+                                    viewModel.calculateAreaOfPolygon(polygonPoints)
                                 } m²",
                                 style = TextStyle(
                                     fontSize = fontsize.sp,
                                     fontWeight = FontWeight.Bold,
-                                    color = Color(0xFF4CAF50) // Green color for the area text
+                                    color = MaterialTheme.colorScheme.tertiary
                                 )
                             )
-
                             arealatlong?.let {
                                 Text(
                                     text = "Latitude: ${it.latitude}",
                                     style = TextStyle(
                                         fontSize = fontsize.sp,
                                         fontWeight = FontWeight.Medium,
-                                        color = Color(0xFF2196F3) // Blue color for latitude
+                                        color = MaterialTheme.colorScheme.tertiary
                                     )
                                 )
                                 Text(
@@ -299,18 +194,22 @@ fun DisplayScreen(viewModel: MapScreenViewModel, navController: NavController) {
                                     style = TextStyle(
                                         fontSize = fontsize.sp,
                                         fontWeight = FontWeight.Medium,
-                                        color = Color(0xFF2196F3) // Blue color for longitude
+                                        color = MaterialTheme.colorScheme.tertiary
                                     )
                                 )
                             }
-
                             Text(
                                 text = "Efficiency: $efficiency %",
                                 style = TextStyle(
                                     fontSize = fontsize.sp,
                                     fontWeight = FontWeight.Normal,
-                                    color = Color(0xFF9C27B0) // Purple color for efficiency
+                                    color = MaterialTheme.colorScheme.tertiary
                                 )
+                            )
+                            TextField(
+                                value = efficiency,
+                                onValueChange = { efficiency = it },
+                                modifier = Modifier.fillMaxWidth()
                             )
 
                             Text(
@@ -318,104 +217,63 @@ fun DisplayScreen(viewModel: MapScreenViewModel, navController: NavController) {
                                 style = TextStyle(
                                     fontSize = fontsize.sp,
                                     fontWeight = FontWeight.Normal,
-                                    color = Color(0xFF9C27B0) // Purple color for slope
+                                    color = MaterialTheme.colorScheme.tertiary
                                 )
                             )
+                            TextField(
+                                value = slope,
+                                onValueChange = { slope = it },
+                                modifier = Modifier.fillMaxWidth()
+                            )
+
+                            Button(onClick = {
+                                navController.navigate("result")
+                            },
+                                colors = ButtonDefaults.buttonColors(MaterialTheme.colorScheme.tertiary))
+                                 {
+                                Text(text = "Go To Result Screen", color = MaterialTheme.colorScheme.primary)
+                            }
                         }
                     }
                 }
-            }
-            Spacer(modifier = Modifier.height(10.dp))
+                Spacer(modifier = Modifier.height(10.dp))
 
-
-
-            Box(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .align(alignment = Alignment.Start)
-                    .padding(16.dp)
-            ) {
-                Column(
+                Box(
                     modifier = Modifier
-                        .align(alignment = Alignment.BottomStart)
-
-                ) {
-                    Button(onClick = {
-                        if (polygonPoints.size > 3) {
-                            ispolygonvisible = !ispolygonvisible
-                            showPopUp = true
-                            arealatlong = cameraPositionState.position.target
-                        }
-
-                    }, colors = ButtonDefaults.buttonColors(Color(color = 0xFF4CAF50))) {
-                        Text(color = Color.Black, text = "Show AREA")
-                    }
-                    if (polygonPoints.size >= 1) {
-                        Button(onClick = {
-                            viewModel.removeLastPoint()
-                            ispolygonvisible = false
-                            index -= 1
-                        }, colors = ButtonDefaults.buttonColors(Color.Yellow)) {
-                            Text(color = Color.Black, text = "Remove Last Point")
-                        }
-
-                        Button(onClick = {
-                            viewModel.removePoints()
-                            ispolygonvisible = false
-                            index = 0
-                        }, colors = ButtonDefaults.buttonColors(Color.Red)) {
-                            Text(color = Color.Black, text = "Remove Points")
-                        }
-                        Button(onClick = {
-//                            idk hva som skjer her
-
-//                            if (ispolygonvisible) {
-//                                Navigate back to the Hello screen
-//                                navController.navigate("result")
-//                            }
-
-                            navController.navigate("result")
-
-                        }) {
-                            Text(text = "Go To Result Screen")
-                        }
-                    }
-                }
-            }
-
-        }
-        if (showPopUp) {
-            Dialog(onDismissRequest = { showPopUp = false }) {
-                Surface(
-                    modifier = Modifier
+                        .fillMaxSize()
+                        .align(alignment = Alignment.Start)
                         .padding(16.dp)
                 ) {
-                    Column {
-                        var temporaryslope by remember { mutableStateOf(slope) }
-                        var temporaryefficency by remember { mutableStateOf(efficiency) }
-                        Text(text = "Enter slope")
-                        no.solcellepaneller.ui.map.InputField(
-                            value = temporaryslope,
-                            onValueChange = { temporaryslope = it },
-                            label = "Enter Roof Slope (°)"
-                        )
-                        Text(text = "Enter efficiency")
-                        no.solcellepaneller.ui.map.InputField(
-                            value = temporaryefficency,
-                            onValueChange = { temporaryefficency = it },
-                            label = "Enter Panel Efficiency (%)"
-                        )
-
-                        Spacer(modifier = Modifier.height(16.dp))
-
-                        Row {
-                            Button(onClick = { showPopUp = false }) { Text("Cancel") }
-                        }
+                    Column(
+                        modifier = Modifier
+                            .align(alignment = Alignment.BottomStart)
+                    ) {
                         Button(onClick = {
-                            showPopUp = false
-                            slope = temporaryslope
-                            efficiency = temporaryefficency
-                        }) { Text("Save") }
+                            if (polygonPoints.size > 3) {
+                                ispolygonvisible = !ispolygonvisible
+                                showPopUp = true
+
+                                arealatlong = cameraPositionState.position.target
+                            }
+                        }, colors = ButtonDefaults.buttonColors(Color(color = 0xFF4CAF50))) {
+                            Text(color = Color.Black, text = "Show AREA")
+                        }
+                        if (polygonPoints.size >= 1) {
+                            Button(onClick = {
+                                viewModel.removeLastPoint()
+                                ispolygonvisible = false
+                                index -= 1
+                            }, colors = ButtonDefaults.buttonColors(Color.Yellow)) {
+                                Text(color = Color.Black, text = "Remove Last Point")
+                            }
+                            Button(onClick = {
+                                viewModel.removePoints()
+                                ispolygonvisible = false
+                                index = 0
+                            }, colors = ButtonDefaults.buttonColors(Color.Red)) {
+                                Text(color = Color.Black, text = "Remove Points")
+                            }
+                        }
                     }
                 }
             }
@@ -423,14 +281,10 @@ fun DisplayScreen(viewModel: MapScreenViewModel, navController: NavController) {
     }
 }
 
-
 @Composable
 fun InputField(value: String, onValueChange: (String) -> Unit, label: String) {
-
     TextField(
         value = value,
         onValueChange = onValueChange,
         label = { Text(label) })
 }
-
-

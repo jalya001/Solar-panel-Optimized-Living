@@ -5,6 +5,7 @@ import android.content.Context
 import android.location.Geocoder
 import android.util.Log
 import androidx.compose.runtime.mutableStateListOf
+import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -28,6 +29,9 @@ class MapScreenViewModel(
 
     private val _coordinates = MutableLiveData<Pair<Double, Double>>()
     val coordinates: LiveData<Pair<Double, Double>> = _coordinates
+    val slope = mutableStateOf("30") // placeholder default
+    val efficiency = mutableStateOf("18") // placeholder default
+    val calculatedArea = mutableStateOf("")
 
     //could add adress name
     var polygondata= mutableStateListOf<LatLng>()
