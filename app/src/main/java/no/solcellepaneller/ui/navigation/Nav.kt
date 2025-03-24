@@ -30,7 +30,6 @@ import no.solcellepaneller.ui.map.MapScreenSimple
 import no.solcellepaneller.ui.map.MapScreenViewModel
 import no.solcellepaneller.ui.result.ResultScreen
 import no.solcellepaneller.ui.savedLocations.SavedLocationsScreen
-import no.solcellepaneller.ui.weatherStations.WeatherStationsScreen
 
 @Composable
 fun Nav(navController: NavHostController) {
@@ -43,7 +42,6 @@ fun Nav(navController: NavHostController) {
         composable("map_simple") { //val viewModel: MapScreenViewModel = viewModel()
             MapScreenSimple(viewModel, navController)
         }
-        composable("weather_stations") { WeatherStationsScreen(viewModel,navController) }
         composable("additional_input") { AdditionalInputScreen(viewModel,navController) }
         composable("result") { ResultScreen(navController) }
         composable("saved_locations") { SavedLocationsScreen(navController) }

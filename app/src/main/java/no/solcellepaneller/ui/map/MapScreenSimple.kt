@@ -175,9 +175,9 @@ fun DisplaySimpleScreen(viewModel: MapScreenViewModel, navController: NavControl
             Spacer(modifier = Modifier.height(16.dp))
 
             Button(
-                onClick = { navController.navigate("weather_stations") }
+                onClick = { navController.navigate("additional_input") }
             ) {
-                Text(text = "Gå til værstasjoner")
+                Text(text = "Gi tilleggsinformasjon")
             }
         }
     }
