@@ -1,6 +1,5 @@
 package no.solcellepaneller.ui.electricity
 
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -21,7 +20,6 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
-import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -106,12 +104,6 @@ fun RegionDropdown(
             label = { Text("Velg distrikt", color = Color.Blue) },
             trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(expanded) },
             textStyle = TextStyle(color = Color.Black, fontSize = 18.sp),
-            colors = TextFieldDefaults.colors(
-                focusedContainerColor = Color(0xFFC3DFE0),
-                unfocusedContainerColor = Color.White,
-                unfocusedIndicatorColor = Color(0xFFE0E0E0),
-                focusedIndicatorColor = Color.Blue
-            ),
             modifier = Modifier
                 .fillMaxWidth()
                 .menuAnchor()
@@ -126,8 +118,7 @@ fun RegionDropdown(
                     onClick = {
                         onRegionSelected(region)
                         expanded = false
-                    },
-                    modifier = Modifier.background(Color(0xFFC3DFE0))
+                    }
                 )
             }
         }
@@ -144,11 +135,11 @@ fun PriceList(prices: List<ElectricityPrice>) {
         prices.forEach { price ->
             Text(
                 text = "Pris: ${price.NOK_per_kWh} NOK/kWh",
-                style = MaterialTheme.typography.bodyMedium,
+                style = MaterialTheme.typography.bodyMedium
             )
             Text(
                 text = "Tid: ${price.getTimeRange()}",
-                style = MaterialTheme.typography.bodySmall,
+                style = MaterialTheme.typography.bodySmall
             )
             Spacer(modifier = Modifier.height(8.dp))
         }
