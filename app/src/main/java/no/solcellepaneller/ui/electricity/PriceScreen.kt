@@ -23,7 +23,6 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.material3.TopAppBar
-import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -47,7 +46,6 @@ import no.solcellepaneller.model.electricity.Region
 fun PriceScreen(
     onBackClick: () -> Unit,
     repository: ElectricityPriceRepository,
-    isDarkMode: Boolean
 ) {
     var selectedRegion by remember { mutableStateOf(Region.OSLO) }
     val viewModel: PriceScreenViewModel = viewModel(
@@ -56,27 +54,22 @@ fun PriceScreen(
 
     val priceUiState by viewModel.priceUiState.collectAsStateWithLifecycle()
 
-    val backgroundColor = if (isDarkMode) Color(0xFF0C1618) else Color(0xFFC3DFE0)
-    val textColor = if (isDarkMode) Color(0xFFF3A712) else Color(0xFF0C1618)
-
     Scaffold(
         topBar = {
             TopAppBar(
-                title = { Text("Strømpriser", color = textColor) },
+                title = { Text("Strømpriser") },
                 navigationIcon = {
                     IconButton(onClick = onBackClick) {
-                        Icon(Icons.Filled.ArrowBack, contentDescription = "Hjem", tint = textColor)
+                        Icon(Icons.Filled.ArrowBack, contentDescription = "Hjem")
                     }
-                },
-                colors = TopAppBarDefaults.topAppBarColors(containerColor = backgroundColor)
+                }
             )
         }
     ) { padding ->
         Column(
             modifier = Modifier
                 .fillMaxSize()
-                .padding(padding)
-                .background(backgroundColor),
+                .padding(padding),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             RegionDropdown(selectedRegion) { newRegion ->
@@ -88,7 +81,7 @@ fun PriceScreen(
                 is PriceUiState.Error -> ErrorScreen()
                 is PriceUiState.Success -> {
                     val prices = (priceUiState as PriceUiState.Success).prices
-                    PriceList(prices, textColor)
+                    PriceList(prices)
                 }
             }
         }
@@ -142,7 +135,7 @@ fun RegionDropdown(
 }
 
 @Composable
-fun PriceList(prices: List<ElectricityPrice>, textColor: Color) {
+fun PriceList(prices: List<ElectricityPrice>) {
     Column(
         modifier = Modifier
             .fillMaxWidth()
@@ -152,12 +145,10 @@ fun PriceList(prices: List<ElectricityPrice>, textColor: Color) {
             Text(
                 text = "Pris: ${price.NOK_per_kWh} NOK/kWh",
                 style = MaterialTheme.typography.bodyMedium,
-                color = textColor
             )
             Text(
                 text = "Tid: ${price.getTimeRange()}",
                 style = MaterialTheme.typography.bodySmall,
-                color = textColor.copy(alpha = 0.7f)
             )
             Spacer(modifier = Modifier.height(8.dp))
         }
