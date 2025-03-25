@@ -15,9 +15,7 @@ class MainActivity : ComponentActivity() {
             val repository = ElectricityPriceRepository("NO1")
             PriceScreen(
                 onBackClick = { finish() },
-                repository = repository,
-                isDarkMode = false
-            )
+                repository = repository)
         }
     }
 }
