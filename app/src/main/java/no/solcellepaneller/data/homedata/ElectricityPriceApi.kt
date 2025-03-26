@@ -17,7 +17,9 @@ class ElectricityPriceApi {
     }
 
     suspend fun fetchPrices(date: LocalDate, priceArea: String): List<ElectricityPrice> {
-        val url = "https://www.hvakosterstrommen.no/api/v1/prices/${date.year}/${date.monthValue}-${date.dayOfMonth}_$priceArea.json"
+        val formattedMonth = String.format("%02d", date.monthValue)
+        val formattedDay = String.format("%02d", date.dayOfMonth)
+        val url = "https://www.hvakosterstrommen.no/api/v1/prices/${date.year}/${formattedMonth}-${formattedDay}_$priceArea.json"
         return try {
             client.get(url).body()
         } catch (e: Exception) {

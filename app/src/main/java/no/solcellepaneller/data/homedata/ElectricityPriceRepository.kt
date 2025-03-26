@@ -7,12 +7,17 @@ class ElectricityPriceRepository(private val priceArea: String) {
     private val api = ElectricityPriceApi()
     private var prices: List<ElectricityPrice> = emptyList()
 
-    suspend fun updatePrices(date: LocalDate) {
-        prices = api.fetchPrices(date, priceArea)
+    suspend fun updatePrices(date: LocalDate, region: String) {
+        prices = api.fetchPrices(date, region)
     }
 
-    fun getPrices(date: LocalDate, region: String): List<ElectricityPrice> {
-        val dateString = date.toString()
-        return prices.filter { it.date == dateString && it.region == region }
+    suspend fun getPrices(date: LocalDate, region: String): List<ElectricityPrice> {
+        val rawPrices = api.fetchPrices(date, region)
+        return rawPrices.map { price ->
+            price.copy(
+                region = region,
+                date = date.toString()
+            )
+        }
     }
 }

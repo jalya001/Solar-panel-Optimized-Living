@@ -1,5 +1,6 @@
 package no.solcellepaneller.ui.electricity
 
+import android.util.Log
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -37,6 +38,8 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import no.solcellepaneller.data.homedata.ElectricityPriceRepository
 import no.solcellepaneller.model.electricity.ElectricityPrice
 import no.solcellepaneller.model.electricity.Region
+import java.time.ZoneId
+import java.time.ZonedDateTime
 
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -47,7 +50,8 @@ fun PriceScreen(
 ) {
     var selectedRegion by remember { mutableStateOf(Region.OSLO) }
     val viewModel: PriceScreenViewModel = viewModel(
-        factory = PriceViewModelFactory(repository, selectedRegion.regionCode)
+        factory = PriceViewModelFactory(repository, selectedRegion.regionCode),
+        key = selectedRegion.regionCode
     )
 
     val priceUiState by viewModel.priceUiState.collectAsStateWithLifecycle()
@@ -127,22 +131,36 @@ fun RegionDropdown(
 
 @Composable
 fun PriceList(prices: List<ElectricityPrice>) {
+    val currentHour = ZonedDateTime.now(ZoneId.of("Europe/Oslo")).hour
+
+    val currentPrice = prices.find { price ->
+        val startTime = ZonedDateTime.parse(price.time_start)
+        startTime.hour == currentHour
+    } ?: run {
+        Log.e("ERROR", "Fant ingen pris for nåværende time!")
+        null
+    }
     Column(
         modifier = Modifier
             .fillMaxWidth()
             .padding(12.dp)
     ) {
-        prices.forEach { price ->
+        if (currentPrice != null) {
             Text(
-                text = "Pris: ${price.NOK_per_kWh} NOK/kWh",
+                text = "Pris: ${currentPrice.NOK_per_kWh} NOK/kWh",
                 style = MaterialTheme.typography.bodyMedium
             )
             Text(
-                text = "Tid: ${price.getTimeRange()}",
+                text = "Tid: ${currentPrice.getTimeRange()}",
                 style = MaterialTheme.typography.bodySmall
             )
-            Spacer(modifier = Modifier.height(8.dp))
+        } else {
+            Text(
+                text = "Ingen pris tilgjengelig for nåværende time",
+                style = MaterialTheme.typography.bodyLarge
+            )
         }
+        Spacer(modifier = Modifier.height(8.dp))
     }
 }
 
