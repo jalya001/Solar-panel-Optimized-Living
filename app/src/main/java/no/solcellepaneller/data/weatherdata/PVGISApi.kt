@@ -10,7 +10,7 @@ import no.solcellepaneller.model.weather.Energy
 import java.net.HttpURLConnection
 import java.net.URL
 
-class PVGISDataSource {
+class PVGISApi {
     suspend fun getSolarEnergy(): List<Energy> = withContext(Dispatchers.IO){
         // Test adresse: Gaustadalléen 23B
         // Latitude: 59.943
