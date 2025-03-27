@@ -43,7 +43,8 @@ fun HomeScreen(navController: NavController) {
             BottomBar(
             onHelpClicked = { showHelp = true },
             onInfoClicked = { showInfo = true },
-            onAppearanceClicked = { showAppearance = true }
+            onAppearanceClicked = { showAppearance = true },
+            navController = navController
             )
         }
     ) { contentPadding ->
@@ -60,7 +61,7 @@ fun HomeScreen(navController: NavController) {
             Button(onClick = { navController.navigate("prices") }) { Text("Priser") }
 
             HelpBottomSheet(visible = showHelp, onDismiss = { showHelp = false })
-            InformationBottomSheet(visible = showInfo, onDismiss = { showInfo = false })
+            //InformationBottomSheet(visible = showInfo, onDismiss = { showInfo = false })
             AppearanceBottomSheet(visible = showAppearance, onDismiss = { showAppearance = false })
         }
     }
