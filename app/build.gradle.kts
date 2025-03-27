@@ -71,10 +71,14 @@ dependencies {
     implementation(libs.ktor.ktor.client.content.negotiation)
     implementation(libs.kotlinx.serialization.json)
     implementation(libs.ui)
-    implementation(libs.material3)
-    implementation(libs.ui.tooling.preview)
     implementation(libs.androidx.lifecycle.viewmodel.compose)
     implementation(libs.androidx.activity.compose.v140)
     implementation(libs.kotlin.stdlib)
+
+    //Chart dependencies
+    implementation(libs.androidx.ui.v150)
+    implementation(libs.ui.tooling)
+    implementation(libs.androidx.foundation)
     implementation(libs.androidx.runtime)
+    implementation(libs.charts)
 }
