@@ -32,10 +32,8 @@ fun SavedLocationsScreen(navController: NavController) {
     Scaffold(
         topBar = { TopBar(navController) },
         bottomBar = {
-            BottomBar(
-                onHelpClicked = { showHelp = true },
-                onInfoClicked = { showInfo = true },
-                onAppearanceClicked = { showAppearance = true }) } ){ contentPadding ->
+
+ } ){ contentPadding ->
         Column(
             modifier = Modifier.fillMaxSize().padding(contentPadding),
             horizontalAlignment = Alignment.CenterHorizontally,

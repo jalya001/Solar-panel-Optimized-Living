@@ -1,4 +1,54 @@
 <resources>
     <string name="app_name">Solcellepaneller</string>
     <string name="Test" >Appen er i norsk</string>
+
+    <string name="info_title">Informasjon</string>
+
+    <string name='intro_title'>Introduksjon</string>
+    <string name="intro_content">
+        Å installere solcellepaneler kan være en smart investering både økonomisk og miljømessig – men det avhenger av hvor du bor, hvor mye sol du får, og hva strømprisene er der du bor.
+    Denne appen hjelper deg å vurdere om det lønner seg å bytte til solenergi, basert på værdata, strømpriser og beliggenhet. Her forklarer vi det viktigste du bør vite før du tar en beslutning.
+    </string>
+
+    <string name='price_title'>Strøm priser</string>
+    <string name='price_content'>
+        Strømprisene i Norge varierer avhengig av region, tid på året og det totale energibehovet.
+        Disse prisene kan i stor grad påvirke hvor raskt investeringen din i solcellepanel betaler seg.
+        Ved å sammenligne nåværende og historiske strømpriser, hjelper denne appen deg med å vurdere hvor mye penger du kan spare ved å produsere din egen strøm med solcellepaneler.
+        Prisene måles vanligvis i øre/kWh, og varierer på tvers av ulike prissoner i landet.
+    </string>
+
+    <string name='pros_and_cons_title'>Fordeler og ulemper </string>
+    <string name='pros_and_cons_content'>
+        Solcellepaneler har blitt et populært alternativ for mange som ønsker å produsere sin egen strøm, spare penger og bidra til et mer bærekraftig energiforbruk. Men som med alle investeringer, finnes det både fordeler og ulemper du bør være klar over.\n
+        \n
+        Fordeler:\n
+        • Miljøvennlig: Solcellepaneler produserer ren, fornybar energi og bidrar til å redusere klimagassutslipp.\n
+        • Reduserte strømregninger: Du kan spare penger over tid ved å produsere din egen elektrisitet.\n
+        • Støtteordninger: I Norge finnes det offentlige støtteordninger som kan dekke deler av installasjonskostnaden.\n
+        • Lite vedlikehold: Når systemet først er installert, krever det minimalt med vedlikehold.\n
+        • Økt verdi på boligen: Et solcellesystem kan gjøre boligen mer attraktiv ved videresalg.\n
+        \n
+        Ulemper:\n
+        • Høye startkostnader: Investeringen i solcellepaneler er fortsatt relativt høy.\n
+        • Lav produksjon om vinteren: Mørke vintre og snø kan redusere effektiviteten betydelig.\n
+        • Avhengig av beliggenhet: Hvor mye strøm du produserer avhenger av hvor du bor og hvor mye sol du får.\n
+        • Lang tilbakebetalingstid: Det kan ta mange år før investeringen betaler seg.\n
+        • Tekniske begrensninger: Ikke alle bygninger er like godt egnet for montering av solcellepaneler.\n
+    </string>
+
+    <string name="money_saved_title">Penger spart</string>
+    <string name="money_saved_content">
+        Appen beregner hvor mye penger du potensielt kan spare ved å installere solcellepaneler, basert på værforhold der du bor og historiske strømpriser.
+        Ved å sammenligne hvor mye strøm du kan produsere med solcellepaneler med hvor mye strøm koster i dag, får du et estimat på årlige besparelser.
+        Jo mer sol du får og jo høyere strømprisene er, desto mer kan du spare. Beregningen gir deg bedre grunnlag for å vurdere om investeringen i solceller er lønnsom for deg.
+</string>
+
+    <string name="cabin_title"> Hytte</string>
+    <string name="cabin_content">
+        For hytter uten tilkobling til strømnettet kan solcellepaneler være en effektiv og bærekraftig løsning for å dekke grunnleggende strømbehov.
+        Basert på beliggenhet og lokale solforhold kan du med solenergi få nok kapasitet til blant annet belysning, lading av elektroniske enheter, kjølebokser eller små vannpumper.
+        Denne appen hjelper deg med å vurdere hvor mye solenergi hytta di potensielt kan produsere, og om det er tilstrekkelig for dine behov.
+    </string>
+
 </resources>

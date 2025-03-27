@@ -35,7 +35,10 @@ fun AdditionalInputScreen(viewModel: MapScreenViewModel, navController: NavContr
             BottomBar(
                 onHelpClicked = { showHelp = true },
                 onInfoClicked = { showInfo = true },
-                onAppearanceClicked = { showAppearance = true }) }    ){ contentPadding ->
+                onAppearanceClicked = { showAppearance = true },navController
+            )
+
+        }    ){ contentPadding ->
         Column(
             modifier = Modifier.fillMaxSize().padding(contentPadding),
             horizontalAlignment = Alignment.CenterHorizontally,

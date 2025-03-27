@@ -80,7 +80,8 @@ fun PriceDetailScreen(prices: List<ElectricityPrice>,navController: NavControlle
             BottomBar(
                 onHelpClicked = { showHelp = true },
                 onInfoClicked = { showInfo = true },
-                onAppearanceClicked = { showAppearance = true }) }
+                onAppearanceClicked = { showAppearance = true },navController
+            ) }
     ) { padding ->
         Column(
             modifier = Modifier

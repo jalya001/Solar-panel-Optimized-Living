@@ -25,6 +25,7 @@ import no.solcellepaneller.data.homedata.ElectricityPriceRepository
 import no.solcellepaneller.ui.additionalInput.AdditionalInputScreen
 import no.solcellepaneller.ui.electricity.PriceScreen
 import no.solcellepaneller.ui.home.HomeScreen
+import no.solcellepaneller.ui.infoscreen.InfoScreen
 import no.solcellepaneller.ui.map.MapScreen
 import no.solcellepaneller.ui.map.MapScreenSimple
 import no.solcellepaneller.ui.map.MapScreenViewModel
@@ -55,6 +56,7 @@ fun Nav(navController: NavHostController) {
             navController = navController,
             region = "Filler Region" //! TODO Finn ut en løsning her
         ) }
+        composable("info_screen") { InfoScreen(navController)}
     }
 }
 
@@ -62,7 +64,8 @@ fun Nav(navController: NavHostController) {
 fun BottomBar(
     onHelpClicked: () -> Unit,
     onInfoClicked: () -> Unit,
-    onAppearanceClicked: () -> Unit
+    onAppearanceClicked: () -> Unit,
+    navController: NavController
 ) {
     NavigationBar(
             containerColor = MaterialTheme.colorScheme.secondary,
@@ -79,7 +82,7 @@ fun BottomBar(
             icon = { Icon(Icons.Filled.Info, contentDescription = "Informasjon") },
             label = { Text("Info") },
             selected = false,
-            onClick = onInfoClicked
+            onClick = { navController.navigate("info_screen") }
         )
         NavigationBarItem(
             icon = { Icon(Icons.Filled.Settings, contentDescription = "Utseende") },
