@@ -18,9 +18,11 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.res.stringResource
+import no.solcellepaneller.R
 import no.solcellepaneller.ui.navigation.AppearanceBottomSheet
 import no.solcellepaneller.ui.navigation.HelpBottomSheet
-import no.solcellepaneller.ui.navigation.InformationBottomSheet
+
 
 
 @Composable
@@ -39,10 +41,10 @@ fun SavedLocationsScreen(navController: NavController) {
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.Center
         ) {
-            Text("Lagrede lokasjoner")
+            Text(stringResource(id = R.string.saved_locations))
 
             HelpBottomSheet(visible = showHelp, onDismiss = { showHelp = false })
-            InformationBottomSheet(visible = showInfo, onDismiss = { showInfo = false })
+           
             AppearanceBottomSheet(visible = showAppearance, onDismiss = { showAppearance = false })
         }
     }

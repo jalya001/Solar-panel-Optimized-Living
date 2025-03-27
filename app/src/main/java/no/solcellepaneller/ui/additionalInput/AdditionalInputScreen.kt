@@ -19,7 +19,6 @@ import no.solcellepaneller.ui.map.MapScreenViewModel
 import no.solcellepaneller.ui.navigation.AppearanceBottomSheet
 import no.solcellepaneller.ui.navigation.BottomBar
 import no.solcellepaneller.ui.navigation.HelpBottomSheet
-import no.solcellepaneller.ui.navigation.InformationBottomSheet
 import no.solcellepaneller.ui.navigation.TopBar
 
 @Composable
@@ -55,7 +54,6 @@ fun AdditionalInputScreen(viewModel: MapScreenViewModel, navController: NavContr
             Button(onClick = { navController.navigate("map") }) { Text("Tegn Paneler") }
 
             HelpBottomSheet(visible = showHelp, onDismiss = { showHelp = false })
-            InformationBottomSheet(visible = showInfo, onDismiss = { showInfo = false })
             AppearanceBottomSheet(visible = showAppearance, onDismiss = { showAppearance = false })
         }
     }

@@ -2,6 +2,23 @@
     <string name="app_name">Solcellepaneller</string>
     <string name="Test" >This app is in English</string>
 
+    <string name="home"> Home</string>
+    <string name="install_panels"> Install solar panels</string>
+    <string name="saved_locations"> Saved locations</string>
+    <string name="prices"> Prices </string>
+    <string name="help"> Help</string>
+    <string name="appereance"> Appearance</string>
+    <string name="dark_mode"> Dark mode  </string>
+    <string name="light_mode"> Light mode  </string>
+    <string name="language"> Change to Norwegian</string>
+    <string name="font_size"> Change font size</string>
+    <string name="help_how"> Help (How to use the app) </string>
+    <string name="help_techinical"> Help (Technical help, Problems with the app)</string>
+    <string name="go_back"> Back </string>
+    <string name="close"> Close</string>
+
+
+
     <string name="info_title">Information</string>
 
     <string name='intro_title'>Introduction</string>

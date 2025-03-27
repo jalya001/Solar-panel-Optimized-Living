@@ -28,7 +28,6 @@ import no.solcellepaneller.App
 import no.solcellepaneller.R
 import no.solcellepaneller.ui.navigation.BottomBar
 import no.solcellepaneller.ui.navigation.HelpBottomSheet
-import no.solcellepaneller.ui.navigation.InformationBottomSheet
 import no.solcellepaneller.ui.navigation.AppearanceBottomSheet
 import no.solcellepaneller.ui.theme.SolcellepanellerTheme
 
@@ -53,12 +52,11 @@ fun HomeScreen(navController: NavController) {
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.Center
         ) {
-            Text(stringResource(id = R.string.Test),style = TextStyle(fontSize = 50.sp), color = Color.Red)
-            Spacer(modifier = Modifier.height(16.dp))
-            Text("Hjem")
-            Button(onClick = { navController.navigate("map_simple") }) { Text("Installer Paneler") }
-            Button(onClick = { navController.navigate("saved_locations") }) { Text("Lagrede Posisjoner") }
-            Button(onClick = { navController.navigate("prices") }) { Text("Priser") }
+            Text(stringResource(id = R.string.home))
+
+            Button(onClick = { navController.navigate("map_simple") }) { Text(stringResource(id = R.string.install_panels)) }
+            Button(onClick = { navController.navigate("saved_locations") }) { Text(stringResource(id = R.string.saved_locations)) }
+            Button(onClick = { navController.navigate("prices") }) { Text(stringResource(id = R.string.prices)) }
 
             HelpBottomSheet(visible = showHelp, onDismiss = { showHelp = false })
             //InformationBottomSheet(visible = showInfo, onDismiss = { showInfo = false })
