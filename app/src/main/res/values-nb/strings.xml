@@ -2,6 +2,22 @@
     <string name="app_name">Solcellepaneller</string>
     <string name="Test" >Appen er i norsk</string>
 
+    <string name="home"> Hjemme</string>
+    <string name="install_panels"> Installer paneler</string>
+    <string name="saved_locations"> Lagrede posisjoner</string>
+    <string name="prices"> Priser </string>
+    <string name="help"> Hjelp</string>
+    <string name="appereance"> Utseende</string>
+    <string name="dark_mode"> Mørkmodus  </string>
+    <string name="light_mode"> Lysmodus  </string>
+    <string name="language"> Bytt til Engelsk</string>
+    <string name="font_size"> Bytt skriftstørrelse</string>
+    <string name="help_how"> Hjelp (Hvordan bruke appen) </string>
+    <string name="help_techinical"> Hjelp (teknisk hjelp, problemer med appen)</string>
+    <string name="go_back"> Tilbake </string>
+    <string name="close"> Lukk</string>
+
+
     <string name="info_title">Informasjon</string>
 
     <string name='intro_title'>Introduksjon</string>
