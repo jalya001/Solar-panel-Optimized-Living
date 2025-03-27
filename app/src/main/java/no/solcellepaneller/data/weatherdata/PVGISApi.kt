@@ -6,22 +6,17 @@ import kotlinx.coroutines.withContext
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.json.Json
-import no.solcellepaneller.model.weather.Energy
+import no.solcellepaneller.model.weather.Radiation
 import java.net.HttpURLConnection
 import java.net.URL
 
 class PVGISApi {
-    suspend fun getSolarEnergy(): List<Energy> = withContext(Dispatchers.IO){
+    suspend fun getRadiation(lat: Double, long: Double, slope: Int): List<Radiation> = withContext(Dispatchers.IO){
         // Test adresse: Gaustadalléen 23B
         // Latitude: 59.943
         // Longitude: 10.718
         // Slope: 35
         // URL for grid connected solar energy: https://re.jrc.ec.europa.eu/api/v5_3/PVcalc?lat=59.943&lon=10.718&angle=35&azimuth=0&peakpower=1&loss=14&outputformat=json
-
-        // Test verdier:
-        val lat = 59.943
-        val long = 10.718
-        val slope = 35
 
         val apiUrl = "https://re.jrc.ec.europa.eu/api/v5_3/PVcalc?lat=$lat&lon=$long&angle=$slope&azimuth=0&peakpower=1&loss=14&outputformat=json"
         val url = URL(apiUrl)
@@ -36,25 +31,35 @@ class PVGISApi {
                 val json = Json { ignoreUnknownKeys = true }
                 val apiResponse = json.decodeFromString<ApiResponse>(jsonResponse)
 
-                apiResponse.monthlyEnergy.map { it.toEnergy() }
+                apiResponse.outputs.monthly.fixed.map { it.toRadiation() }
             }
-        } finally {
+        }
+        finally {
             connection.disconnect()
         }
     }
-
-    // URL for monthly irradiation data horizontal radiation: https://re.jrc.ec.europa.eu/api/v5_3/MRcalc?lat=59.943&lon=10.718&angle=35&startyear=2023&endyear=2023&horirrad=1&outputformat=json
 }
 
 @Serializable
 private data class ApiResponse(
-    val monthlyEnergy: List<ApiEnergy>
+    val outputs: Outputs
 )
 
 @Serializable
-private data class ApiEnergy(
+private data class Outputs(
+    val monthly: Monthly
+)
+
+@Serializable
+private data class Monthly(
+    val fixed: List<ApiVariables>
+)
+
+@Serializable
+private data class ApiVariables(
     @SerialName("month") val date: Int,
-    @SerialName("E_m") val energy: Double
+    @SerialName("E_m") val energy: Double,
+    @SerialName("H(i)_m") val radiation: Double
 ) {
-    fun toEnergy() = Energy(date, energy)
+    fun toRadiation() = Radiation(date, radiation)
 }
