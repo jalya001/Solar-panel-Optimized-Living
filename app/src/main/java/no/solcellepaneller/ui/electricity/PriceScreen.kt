@@ -140,14 +140,28 @@ fun PriceList(prices: List<ElectricityPrice>) {
         Log.e("ERROR", "Fant ingen pris for nåværende time!")
         null
     }
+
+    val highestPrice = prices.maxByOrNull { it.NOK_per_kWh }
+    val lowestPrice = prices.minByOrNull { it.NOK_per_kWh }
     Column(
         modifier = Modifier
             .fillMaxWidth()
             .padding(12.dp)
     ) {
+        lowestPrice?.let {
+            Text(
+                text = "Laveste pris i dag: ${it.NOK_per_kWh} NOK/kWh",
+                style = MaterialTheme.typography.bodyMedium
+            )
+            Text(
+                text = "Tid: ${it.getTimeRange()}",
+                style = MaterialTheme.typography.bodySmall
+            )
+        }
+
         if (currentPrice != null) {
             Text(
-                text = "Pris: ${currentPrice.NOK_per_kWh} NOK/kWh",
+                text = "Pris nå: ${currentPrice.NOK_per_kWh} NOK/kWh",
                 style = MaterialTheme.typography.bodyMedium
             )
             Text(
@@ -158,6 +172,17 @@ fun PriceList(prices: List<ElectricityPrice>) {
             Text(
                 text = "Ingen pris tilgjengelig for nåværende time",
                 style = MaterialTheme.typography.bodyLarge
+            )
+        }
+
+        highestPrice?.let {
+            Text(
+                text = "Høyeste pris i dag: ${it.NOK_per_kWh} NOK/kWh",
+                style = MaterialTheme.typography.bodyMedium
+            )
+            Text(
+                text = "Tid: ${it.getTimeRange()}",
+                style = MaterialTheme.typography.bodySmall
             )
         }
         Spacer(modifier = Modifier.height(8.dp))
