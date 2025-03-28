@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">Solcellepaneller</string>
+    <string name="app_name">Solcellepaneler</string>
     <string name="Test" >This app is in English</string>
 
     <string name="home"> Home</string>
@@ -64,4 +64,29 @@
         Based on location and local solar conditions, solar power can provide enough capacity for lighting, transporting electronic devices, cooling boxes, or small water pumps, among other things.
         This app helps you assess how much solar power you can potentially produce and whether it is sufficient for your needs.
     </string>
+
+    <!--Map Screen-->
+    <string name="enter_address">Enter Address</string>
+    <string name="search_coordinates">Search Coordinates</string>
+    <string name="confirm_location">Confirm Location</string>
+    <string name="show_area">Show Area</string>
+    <string name="confirm_drawing">Confirm Drawing</string>
+    <string name="remove_last_point">Remove Last Point</string>
+    <string name="remove_points">Remove Points</string>
+    <string name="selected_position">Selected Position</string>
+    <string name="latitude">Latitude</string>
+    <string name="longitude">Longitude</string>
+    <string name="point">Point</string>
+
+    <!--Additional Input-->
+    <string name="area_label">Area (m²)</string>
+    <string name="draw_area">Draw areal</string>
+    <string name="slope_label">Angle (°)</string>
+    <string name="direction_label">Direction</string>
+    <string name="efficiency_label">Efficiency (%)</string>
+    <string name="coordinates_label">Coordinates (from map): </string>
+    <string name="coordinates_unavailable">No coordinates available</string>
+    <string name="closest_weather_station">Closest weather station:</string>
+    <string name="go_to_results">Go to results</string>
+
 </resources>

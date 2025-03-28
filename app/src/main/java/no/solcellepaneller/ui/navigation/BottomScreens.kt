@@ -240,10 +240,10 @@ fun AdditionalInputBottomSheet(
                         Column {
                             Icon(
                                 imageVector = Icons.Filled.Create,
-                                contentDescription = "Draw area",
+                                contentDescription = stringResource(id = R.string.draw_area),
                                 modifier = Modifier.size(24.dp)
                             )
-                            Text("Tegn areal") //Kanksje lurt å legge til noe som hindrer bruker i å klikkevekk, men samtidig vil vi at de skal kunne bytte posisjon hvis ufornøyde
+                            Text(stringResource(id = R.string.draw_area)) //Kanksje lurt å legge til noe som hindrer bruker i å klikkevekk, men samtidig vil vi at de skal kunne bytte posisjon hvis ufornøyde
                         }
 //                        Text("Fyll ut area ved å tegne området")
 
@@ -252,7 +252,7 @@ fun AdditionalInputBottomSheet(
 
                 Spacer(modifier = Modifier.height(10.dp))
 
-                Text("Vinkel (°)", style = MaterialTheme.typography.labelLarge)
+                Text(stringResource(id = R.string.slope_label), style = MaterialTheme.typography.labelLarge)
                 TextField(
                     value = angle,
                     onValueChange = { angle = it },
@@ -261,7 +261,7 @@ fun AdditionalInputBottomSheet(
 
                 Spacer(modifier = Modifier.height(10.dp))
 
-                Text("Retning", style = MaterialTheme.typography.labelLarge)
+                Text(stringResource(id = R.string.direction_label), style = MaterialTheme.typography.labelLarge)
                 TextField(
                     value = direction,
                     onValueChange = { direction = it },
@@ -270,7 +270,7 @@ fun AdditionalInputBottomSheet(
 
                 Spacer(modifier = Modifier.height(10.dp))
 
-                Text("Effektivitet (%)", style = MaterialTheme.typography.labelLarge)
+                Text(stringResource(id = R.string.efficiency_label), style = MaterialTheme.typography.labelLarge)
                 TextField(
                     value = efficiency,
                     onValueChange = { efficiency = it },
@@ -279,16 +279,16 @@ fun AdditionalInputBottomSheet(
 
                 Spacer(modifier = Modifier.height(10.dp))
 
-                Text("Koordinater fra kart:", style = MaterialTheme.typography.labelLarge)
+                Text(stringResource(id = R.string.coordinates_label), style = MaterialTheme.typography.labelLarge)
                 if (coordinates != null) {
                     Text("Lat: ${coordinates.first}, Lon: ${coordinates.second}")
                 } else {
-                    Text("Ingen koordinater tilgjengelig")
+                    Text(stringResource(id = R.string.coordinates_unavailable))
                 }
 
                 Spacer(modifier = Modifier.height(10.dp))
 
-                Text("Nærmeste værstasjon:", style = MaterialTheme.typography.labelLarge)
+                Text(stringResource(id = R.string.closest_weather_station), style = MaterialTheme.typography.labelLarge)
                 Text(closestWeatherStation)
 
                 Spacer(modifier = Modifier.height(16.dp))
@@ -298,7 +298,7 @@ fun AdditionalInputBottomSheet(
                         onClick = { navController.navigate("result") },
                         modifier = Modifier.align(Alignment.CenterHorizontally)
                     ) {
-                        Text("Gå til resultater")
+                        Text(stringResource(id = R.string.go_to_results))
                     }
                 }
 

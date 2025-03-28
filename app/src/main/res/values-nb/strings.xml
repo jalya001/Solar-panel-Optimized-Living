@@ -67,4 +67,28 @@
         Denne appen hjelper deg med å vurdere hvor mye solenergi hytta di potensielt kan produsere, og om det er tilstrekkelig for dine behov.
     </string>
 
+    <!--Map Screen-->
+    <string name="enter_address">Skriv inn adresse</string>
+    <string name="search_coordinates">Søk koordinater</string>
+    <string name="confirm_location">Bekreft lokasjon</string>
+    <string name="show_area">Vis område</string>
+    <string name="confirm_drawing">Bekreft tegning</string>
+    <string name="remove_last_point">Fjern siste punkt</string>
+    <string name="remove_points">Fjern punkter</string>
+    <string name="selected_position">Valgt posisjon</string>
+    <string name="latitude">Breddegrad</string>
+    <string name="longitude">Lengdegrad</string>
+    <string name="point">Punkt</string>
+
+    <!--Additional Input-->
+    <string name="area_label">Areal (m²)</string>
+    <string name="draw_area">Tegn areal</string>
+    <string name="slope_label">Vinkel (°)</string>
+    <string name="direction_label">Retning</string>
+    <string name="efficiency_label">Effektivitet (%)</string>
+    <string name="coordinates_label">Koordinater (fra kart):</string>
+    <string name="coordinates_unavailable">Ingen koordinater tilgjengelig</string>
+    <string name="closest_weather_station">Nærmeste værstasjon:</string>
+    <string name="go_to_results">Gå til resultater</string>
+
 </resources>

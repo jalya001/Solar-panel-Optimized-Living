@@ -9,6 +9,7 @@ import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.zIndex
 import androidx.navigation.NavController
@@ -19,6 +20,7 @@ import com.google.maps.android.compose.*
 import kotlinx.coroutines.launch
 import no.solcellepaneller.ui.navigation.AdditionalInputBottomSheet
 import no.solcellepaneller.ui.navigation.TopBar
+import no.solcellepaneller.R
 
 @Composable
 fun MapScreen(viewModel: MapScreenViewModel, navController: NavController) {
@@ -83,7 +85,7 @@ fun DisplayScreen(viewModel: MapScreenViewModel, navController: NavController) {
                     markerState.position = it
                     Marker(
                         state = markerState,
-                        title = "Valgt posisjon",
+                        title = stringResource(id = R.string.selected_position),
                         snippet = "Lat: ${it.latitude}, Lng: ${it.longitude}"
                     )
                 }
@@ -91,7 +93,7 @@ fun DisplayScreen(viewModel: MapScreenViewModel, navController: NavController) {
                 polygonPoints.forEachIndexed { i, point ->
                     Marker(
                         state = rememberMarkerState(position = point),
-                        title = "Point ${i + 1}"
+                        title = stringResource(id = R.string.point) + " ${i + 1}"
                     )
                 }
                 if (ispolygonvisible) {
@@ -132,7 +134,7 @@ fun DisplayScreen(viewModel: MapScreenViewModel, navController: NavController) {
                 InputField(
                     value = address,
                     onValueChange = { address = it },
-                    label = "Enter Address"
+                    label = stringResource(id = R.string.enter_address)
                 )
 
                 Button(
@@ -145,24 +147,11 @@ fun DisplayScreen(viewModel: MapScreenViewModel, navController: NavController) {
                 ) {
                     Icon(
                         imageVector = Icons.Filled.Search,
-                        contentDescription = "Search Coordinates",
+                        contentDescription = stringResource(id = R.string.search_coordinates),
                         modifier = Modifier.size(24.dp)
                     )
                 }
             }
-
-//            coordinates?.let {
-//                Surface(
-//                    modifier = Modifier.padding(top = 16.dp),
-//                    color = Color.White.copy(alpha = 0.3f),
-//                    shape = RoundedCornerShape(10.dp)
-//                ) {
-//                    Column(modifier = Modifier.padding(8.dp)) {
-//                        Text(text = "Latitude: ${it.first}", style = TextStyle(fontSize = 20.sp))
-//                        Text(text = "Longitude: ${it.second}", style = TextStyle(fontSize = 20.sp))
-//                    }
-//                }
-//            }
 
             Spacer(modifier = Modifier.height(16.dp))
 
@@ -223,14 +212,14 @@ fun DisplayScreen(viewModel: MapScreenViewModel, navController: NavController) {
                         areaShown=true
                         }
                     , colors = ButtonDefaults.buttonColors(Color(color = 0xFF4CAF50))) {
-                        Text(color = Color.Black, text = "Show AREA")
+                        Text(text = stringResource(id = R.string.show_area))
                         }
 
                     if (areaShown && ispolygonvisible){
                     Button(onClick = {
                         showBottomSheet=true
                     }){
-                        Text(text = "Bekreft tegning") //
+                        Text(text = stringResource(id = R.string.confirm_drawing))
                     }}
                     }
 
@@ -240,14 +229,14 @@ fun DisplayScreen(viewModel: MapScreenViewModel, navController: NavController) {
                             ispolygonvisible = false
                             index -= 1
                         }, colors = ButtonDefaults.buttonColors(Color.Yellow)) {
-                            Text(color = Color.Black, text = "Remove Last Point")
+                            Text(text = stringResource(id = R.string.remove_last_point))
                         }
                         Button(onClick = {
                             viewModel.removePoints()
                             ispolygonvisible = false
                             index = 0
                         }, colors = ButtonDefaults.buttonColors(Color.Red)) {
-                            Text(color = Color.Black, text = "Remove Points")
+                            Text(text = stringResource(id = R.string.remove_points))
                         }
                     }
                 }
@@ -266,11 +255,11 @@ fun InputField(value: String, onValueChange: (String) -> Unit, label: String) {
 }
 
 @Composable
-fun BekreftLokasjon(
+fun BekreftLokasjon( //må huske å endre navn på funksjoner ogsånt til engelsk
     onClick: () -> Unit
 ) {
     Button(onClick = onClick) {
-        Text("Bekreft lokasjon")
+        Text(stringResource(id = R.string.confirm_location))
     }
 }
 
