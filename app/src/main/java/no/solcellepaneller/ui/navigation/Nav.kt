@@ -22,29 +22,21 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import no.solcellepaneller.data.homedata.ElectricityPriceRepository
-import no.solcellepaneller.ui.additionalInput.AdditionalInputScreen
 import no.solcellepaneller.ui.electricity.PriceScreen
 import no.solcellepaneller.ui.home.HomeScreen
 import no.solcellepaneller.ui.map.MapScreen
-import no.solcellepaneller.ui.map.MapScreenSimple
 import no.solcellepaneller.ui.map.MapScreenViewModel
 import no.solcellepaneller.ui.result.ResultScreen
 import no.solcellepaneller.ui.savedLocations.SavedLocationsScreen
-import no.solcellepaneller.ui.weatherStations.WeatherStationsScreen
 
 @Composable
 fun Nav(navController: NavHostController) {
         val viewModel: MapScreenViewModel = viewModel()
     NavHost(navController, startDestination = "home") {
         composable("home") { HomeScreen(navController) }
-        composable("map") {// val viewModel: MapScreenViewModel = viewModel()
+        composable("map") {
             MapScreen(viewModel, navController)
         }
-        composable("map_simple") { //val viewModel: MapScreenViewModel = viewModel()
-            MapScreenSimple(viewModel, navController)
-        }
-        composable("weather_stations") { WeatherStationsScreen(viewModel,navController) }
-        composable("additional_input") { AdditionalInputScreen(viewModel,navController) }
         composable("result") { ResultScreen(navController) }
         composable("saved_locations") { SavedLocationsScreen(navController) }
         composable("prices") {

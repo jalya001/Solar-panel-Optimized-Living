@@ -55,7 +55,7 @@ fun HomeScreen(navController: NavController) {
             Text(stringResource(id = R.string.Test),style = TextStyle(fontSize = 50.sp), color = Color.Red)
             Spacer(modifier = Modifier.height(16.dp))
             Text("Hjem")
-            Button(onClick = { navController.navigate("map_simple") }) { Text("Installer Paneler") }
+            Button(onClick = { navController.navigate("map") }) { Text("Installer Paneler") }
             Button(onClick = { navController.navigate("saved_locations") }) { Text("Lagrede Posisjoner") }
             Button(onClick = { navController.navigate("prices") }) { Text("Priser") }
 

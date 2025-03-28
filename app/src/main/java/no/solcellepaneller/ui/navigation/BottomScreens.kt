@@ -20,6 +20,12 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.style.TextAlign
 import no.solcellepaneller.ui.theme.ThemeState
+import androidx.compose.foundation.layout.*
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Create
+import androidx.compose.material3.*
+import androidx.compose.runtime.*
+import androidx.navigation.NavController
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -209,6 +215,126 @@ fun AppearanceBottomSheet(
         }
     }
 }
+
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun AdditionalInputBottomSheet(
+    visible: Boolean,
+    onDismiss: () -> Unit,
+    onStartDrawing: () -> Unit,
+    coordinates: Pair<Double, Double>?,
+    area: String,
+    navController: NavController
+) {
+    var angle by remember { mutableStateOf("") }
+//    var area by remember { mutableStateOf("") }
+    var areaState by remember { mutableStateOf(area) }
+
+    LaunchedEffect(area) {
+        areaState = area
+    }
+
+    var direction by remember { mutableStateOf("") }
+    var efficiency by remember { mutableStateOf("") }
+
+    val closestWeatherStation = "Filler"
+
+    if (visible) {
+        ModalBottomSheet(
+            onDismissRequest = onDismiss,
+            containerColor = MaterialTheme.colorScheme.background,
+            contentColor = MaterialTheme.colorScheme.tertiary,
+            scrimColor = Color.Black.copy(alpha = 0.8f)
+        ) {
+            Column(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(16.dp),
+                horizontalAlignment = Alignment.Start
+            ) {
+                Text("Areal (m²)", style = MaterialTheme.typography.labelLarge)
+
+                Row {
+                    TextField(
+                        value = areaState,
+                        onValueChange = { areaState = it }
+                    )
+                    Button(
+                        onClick = {
+                            onStartDrawing()
+                            onDismiss()
+                        }
+                    ) {
+                        Column {
+                            Icon(
+                                imageVector = Icons.Filled.Create,
+                                contentDescription = "Draw area",
+                                modifier = Modifier.size(24.dp)
+                            )
+                            Text("Tegn areal") //Kanksje lurt å legge til noe som hindrer bruker i å klikkevekk, men samtidig vil vi at de skal kunne bytte posisjon hvis ufornøyde
+                        }
+//                        Text("Fyll ut area ved å tegne området")
+
+                    }
+                }
+
+                Spacer(modifier = Modifier.height(10.dp))
+
+                Text("Vinkel (°)", style = MaterialTheme.typography.labelLarge)
+                TextField(
+                    value = angle,
+                    onValueChange = { angle = it },
+                    modifier = Modifier.fillMaxWidth()
+                )
+
+                Spacer(modifier = Modifier.height(10.dp))
+
+                Text("Retning", style = MaterialTheme.typography.labelLarge)
+                TextField(
+                    value = direction,
+                    onValueChange = { direction = it },
+                    modifier = Modifier.fillMaxWidth()
+                )
+
+                Spacer(modifier = Modifier.height(10.dp))
+
+                Text("Effektivitet (%)", style = MaterialTheme.typography.labelLarge)
+                TextField(
+                    value = efficiency,
+                    onValueChange = { efficiency = it },
+                    modifier = Modifier.fillMaxWidth()
+                )
+
+                Spacer(modifier = Modifier.height(10.dp))
+
+                Text("Koordinater fra kart:", style = MaterialTheme.typography.labelLarge)
+                if (coordinates != null) {
+                    Text("Lat: ${coordinates.first}, Lon: ${coordinates.second}")
+                } else {
+                    Text("Ingen koordinater tilgjengelig")
+                }
+
+                Spacer(modifier = Modifier.height(10.dp))
+
+                Text("Nærmeste værstasjon:", style = MaterialTheme.typography.labelLarge)
+                Text(closestWeatherStation)
+
+                Spacer(modifier = Modifier.height(16.dp))
+
+                if (area.isNotEmpty() && direction.isNotEmpty() && angle.isNotEmpty() && efficiency.isNotEmpty() && coordinates != null) {
+                    Button(
+                        onClick = { navController.navigate("result") },
+                        modifier = Modifier.align(Alignment.CenterHorizontally)
+                    ) {
+                        Text("Gå til resultater")
+                    }
+                }
+
+            }        }
+    }
+}
+
 //@Preview(
 //    uiMode = Configuration.UI_MODE_NIGHT_YES,
 //    name = "DefaultPreviewDark"
