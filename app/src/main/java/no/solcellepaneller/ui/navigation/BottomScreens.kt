@@ -30,6 +30,7 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.window.Dialog
 import androidx.navigation.NavController
 import no.solcellepaneller.ui.map.LocationNotSelectedDialog
+import no.solcellepaneller.ui.map.MapScreenViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -198,7 +199,8 @@ fun AdditionalInputBottomSheet(
     onStartDrawing: () -> Unit,
     coordinates: Pair<Double, Double>?,
     area: String,
-    navController: NavController
+    navController: NavController,
+    viewModel: MapScreenViewModel
 ) {
     var angle by remember { mutableStateOf("") }
 //    var area by remember { mutableStateOf("") }
@@ -294,12 +296,18 @@ fun AdditionalInputBottomSheet(
 
                 Spacer(modifier = Modifier.height(16.dp))
 
-                if (area.isNotEmpty() && direction.isNotEmpty() && angle.isNotEmpty() && efficiency.isNotEmpty() && coordinates != null) {
+                if (areaState.isNotEmpty() && direction.isNotEmpty() && angle.isNotEmpty() && efficiency.isNotEmpty() && coordinates != null) {
                     Button(
-                        onClick = { navController.navigate("result") },
+                        onClick = {
+                            viewModel.areaInput = areaState
+                            viewModel.angleInput = angle
+                            viewModel.directionInput = direction
+                            viewModel.efficiencyInput = efficiency
+                            navController.navigate("result")
+                        },
                         modifier = Modifier.align(Alignment.CenterHorizontally)
                     ) {
-                        Text(stringResource(id = R.string.go_to_results))
+                        Text("Gå til resultater")
                     }
                 }
 

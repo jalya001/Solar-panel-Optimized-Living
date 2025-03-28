@@ -40,7 +40,7 @@ fun Nav(navController: NavHostController) {
         composable("map") {
             MapScreen(viewModel, navController)
         }
-        composable("result") { ResultScreen(navController) }
+        composable("result") { ResultScreen(navController,viewModel) }
         composable("saved_locations") { SavedLocationsScreen(navController) }
         composable("prices") {
             val mockRepository = ElectricityPriceRepository(

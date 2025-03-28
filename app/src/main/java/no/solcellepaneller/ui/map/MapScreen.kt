@@ -206,7 +206,7 @@ fun DisplayScreen(viewModel: MapScreenViewModel, navController: NavController) {
                     selectedCoordinates = null
                     viewModel.removePoints()
                     index = 0
-                }, coordinates=coordinates, area=area, navController = navController
+                }, coordinates=coordinates, area=area, navController = navController, viewModel = viewModel
             )
             HelpBottomSheet( //kan evt vise til ulike hjelp skjermer
                 visible = showHelpSheet,

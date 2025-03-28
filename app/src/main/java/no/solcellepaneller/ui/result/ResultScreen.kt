@@ -15,6 +15,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.navigation.NavController
+import no.solcellepaneller.ui.map.MapScreenViewModel
 import no.solcellepaneller.ui.navigation.AppearanceBottomSheet
 import no.solcellepaneller.ui.navigation.BottomBar
 import no.solcellepaneller.ui.navigation.HelpBottomSheet
@@ -22,7 +23,7 @@ import no.solcellepaneller.ui.navigation.HelpBottomSheet
 import no.solcellepaneller.ui.navigation.TopBar
 
 @Composable
-fun ResultScreen(navController: NavController) {
+fun ResultScreen(navController: NavController,viewModel: MapScreenViewModel) {
     var showHelp by remember { mutableStateOf(false) }
     var showInfo by remember { mutableStateOf(false) }
     var showAppearance by remember { mutableStateOf(false) }
@@ -42,6 +43,12 @@ fun ResultScreen(navController: NavController) {
             verticalArrangement = Arrangement.Center
         ) {
             Text("Resultater")
+
+            Text(text = "Areal: ${viewModel.areaInput} m²")
+            Text(text = "Vinkel: ${viewModel.angleInput}°")
+            Text(text = "Retning: ${viewModel.directionInput}")
+            Text(text = "Effektivitet: ${viewModel.efficiencyInput} %")
+
             Button(onClick = {
                 navController.navigate("home") {
                     popUpTo("home") { inclusive = true }
