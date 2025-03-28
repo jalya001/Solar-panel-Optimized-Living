@@ -88,5 +88,9 @@
     <string name="coordinates_unavailable">No coordinates available</string>
     <string name="closest_weather_station">Closest weather station:</string>
     <string name="go_to_results">Go to results</string>
+    <string name="no_location_title">No location chosen</string>
+    <string name="no_location_message">Click on the map to choose location.</string>
+    <string name="dismiss">Close</string>
+    <string name="need_help">Need help?</string>
 
 </resources>

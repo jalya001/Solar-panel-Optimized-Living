@@ -90,5 +90,9 @@
     <string name="coordinates_unavailable">Ingen koordinater tilgjengelig</string>
     <string name="closest_weather_station">Nærmeste værstasjon:</string>
     <string name="go_to_results">Gå til resultater</string>
+    <string name="no_location_title">Ingen lokasjon valgt</string>
+    <string name="no_location_message">Klikk et sted på kartet for å velge en lokasjon.</string>
+    <string name="dismiss">Lukk</string>
+    <string name="need_help">Trenger hjelp?</string>
 
 </resources>

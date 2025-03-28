@@ -27,7 +27,9 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Create
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
+import androidx.compose.ui.window.Dialog
 import androidx.navigation.NavController
+import no.solcellepaneller.ui.map.LocationNotSelectedDialog
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -211,6 +213,8 @@ fun AdditionalInputBottomSheet(
 
     val closestWeatherStation = "Filler"
 
+
+
     if (visible) {
         ModalBottomSheet(
             onDismissRequest = onDismiss,
@@ -224,6 +228,12 @@ fun AdditionalInputBottomSheet(
                     .padding(16.dp),
                 horizontalAlignment = Alignment.Start
             ) {
+                Text(stringResource(id = R.string.coordinates_label), style = MaterialTheme.typography.labelLarge)
+                Text("Lat: ${coordinates?.first}, Lon: ${coordinates?.second}")
+
+
+                Spacer(modifier = Modifier.height(10.dp))
+                
                 Text("Areal (m²)", style = MaterialTheme.typography.labelLarge)
 
                 Row {
@@ -276,15 +286,6 @@ fun AdditionalInputBottomSheet(
                     onValueChange = { efficiency = it },
                     modifier = Modifier.fillMaxWidth()
                 )
-
-                Spacer(modifier = Modifier.height(10.dp))
-
-                Text(stringResource(id = R.string.coordinates_label), style = MaterialTheme.typography.labelLarge)
-                if (coordinates != null) {
-                    Text("Lat: ${coordinates.first}, Lon: ${coordinates.second}")
-                } else {
-                    Text(stringResource(id = R.string.coordinates_unavailable))
-                }
 
                 Spacer(modifier = Modifier.height(10.dp))
 

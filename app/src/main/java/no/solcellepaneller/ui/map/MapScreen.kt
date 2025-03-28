@@ -21,6 +21,7 @@ import kotlinx.coroutines.launch
 import no.solcellepaneller.ui.navigation.AdditionalInputBottomSheet
 import no.solcellepaneller.ui.navigation.TopBar
 import no.solcellepaneller.R
+import no.solcellepaneller.ui.navigation.HelpBottomSheet
 
 @Composable
 fun MapScreen(viewModel: MapScreenViewModel, navController: NavController) {
@@ -48,6 +49,9 @@ fun DisplayScreen(viewModel: MapScreenViewModel, navController: NavController) {
     var index by remember { mutableIntStateOf(0) }
     var showBottomSheet by remember { mutableStateOf(false) }
     var arealatlong by remember { mutableStateOf<LatLng?>(null) }
+    var showMissingLocationDialog by remember { mutableStateOf(false) }
+    var showHelpSheet by remember { mutableStateOf(false) }
+
 
     val cameraPositionState = rememberCameraPositionState {
         position = CameraPosition.fromLatLngZoom(LatLng(59.9436145, 10.7182883), 18f)
@@ -159,11 +163,11 @@ fun DisplayScreen(viewModel: MapScreenViewModel, navController: NavController) {
 
             BekreftLokasjon(
                 onClick = {
-                    showBottomSheet = true // må legge til null checks
+                    if (coordinates!=null){
+                        showBottomSheet = true
                     selectedCoordinates = null
                     viewModel.removePoints()
                     index = 0
-
                     coroutineScope.launch {
                         cameraPositionState.animate(
                             CameraUpdateFactory.newCameraPosition(
@@ -175,8 +179,23 @@ fun DisplayScreen(viewModel: MapScreenViewModel, navController: NavController) {
                                 )
                             )
                         )}
+                }else{
+                        showMissingLocationDialog= true
+                    }
                 }
             )
+
+            if (showMissingLocationDialog) {
+                LocationNotSelectedDialog(
+                    coordinates = coordinates,
+                    onDismiss = { showMissingLocationDialog = false },
+                    onHelpClick = {
+                        showHelpSheet = true
+                        showMissingLocationDialog = false
+                    }
+                )
+            }
+
             var area by remember { mutableStateOf("") }
 
             AdditionalInputBottomSheet(
@@ -189,7 +208,10 @@ fun DisplayScreen(viewModel: MapScreenViewModel, navController: NavController) {
                     index = 0
                 }, coordinates=coordinates, area=area, navController = navController
             )
-
+            HelpBottomSheet( //kan evt vise til ulike hjelp skjermer
+                visible = showHelpSheet,
+                onDismiss = { showHelpSheet = false }
+            )
             if(drawingEnabled){
             Box(
                 modifier = Modifier
@@ -244,6 +266,7 @@ fun DisplayScreen(viewModel: MapScreenViewModel, navController: NavController) {
             }}
         }
     }
+
 }
 
 @Composable
@@ -260,6 +283,41 @@ fun BekreftLokasjon( //må huske å endre navn på funksjoner ogsånt til engels
 ) {
     Button(onClick = onClick) {
         Text(stringResource(id = R.string.confirm_location))
+    }
+}
+
+@Composable
+fun LocationNotSelectedDialog(
+    coordinates: Pair<Double, Double>?,
+    onDismiss: () -> Unit,
+    onHelpClick: () -> Unit
+) {
+    var showDialog by remember { mutableStateOf(coordinates == null) }
+
+    if (showDialog && coordinates == null) {
+        AlertDialog(
+            onDismissRequest = onDismiss,
+            title = {
+                Text(stringResource(id = R.string.no_location_title))
+            },
+            text = {
+                Text(stringResource(id = R.string.no_location_message))
+            },
+            confirmButton = {
+                Button(
+                    onClick = onHelpClick
+                ) {
+                    Text(stringResource(id = R.string.need_help))
+                }
+            },
+            dismissButton = {
+                Button(
+                    onClick = onDismiss
+                ) {
+                    Text(stringResource(id = R.string.dismiss))
+                }
+            }
+        )
     }
 }
 
