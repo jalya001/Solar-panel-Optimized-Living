@@ -18,7 +18,9 @@ import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ElevatedCard
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
+import no.solcellepaneller.R
 import no.solcellepaneller.ui.theme.ThemeState
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.icons.Icons
@@ -45,7 +47,7 @@ fun HelpBottomSheet( //Kan enten velge å ha alt info her eller igjen navigate h
                     .fillMaxWidth()
                     .padding(16.dp), horizontalAlignment = Alignment.CenterHorizontally
             ) {
-                Text("Hjelp", style = MaterialTheme.typography.titleLarge)
+                Text(stringResource(id = R.string.help), style = MaterialTheme.typography.titleLarge)
 
                 ElevatedCard(
                     colors = CardDefaults.elevatedCardColors(
@@ -58,7 +60,7 @@ fun HelpBottomSheet( //Kan enten velge å ha alt info her eller igjen navigate h
                     modifier = Modifier.size(width = 240.dp, height = 100.dp)
                 ) {
                     Text(
-                        text = "Help (How to use the app)",
+                        stringResource(id = R.string.help_how),
                         modifier = Modifier
                             .padding(16.dp),
                         textAlign = TextAlign.Center,
@@ -78,7 +80,7 @@ fun HelpBottomSheet( //Kan enten velge å ha alt info her eller igjen navigate h
                     modifier = Modifier.size(width = 240.dp, height = 100.dp)
                 ) {
                     Text(
-                        text = "Help (Technical help, Problems with the app)",
+                        stringResource(id = R.string.help_techinical),
                         modifier = Modifier
                             .padding(16.dp),
                         textAlign = TextAlign.Center,
@@ -90,44 +92,13 @@ fun HelpBottomSheet( //Kan enten velge å ha alt info her eller igjen navigate h
                 Button(
                     onClick = onDismiss,
                 ) {
-                    Text("Lukk")
+                    Text(stringResource(id = R.string.close))
                 }
             }
         }
     }
 }
 
-@OptIn(ExperimentalMaterial3Api::class)
-@Composable
-fun InformationBottomSheet(
-    visible: Boolean,
-    onDismiss: () -> Unit
-) {
-    if (visible) {
-        ModalBottomSheet(
-            onDismissRequest = onDismiss,
-            containerColor = MaterialTheme.colorScheme.background,
-            contentColor = MaterialTheme.colorScheme.tertiary,
-            scrimColor = Color.Black.copy(alpha = 0.8f)
-        ) {
-            Column(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(16.dp), horizontalAlignment=Alignment.CenterHorizontally
-            ) {
-                Text("Informasjon", style = MaterialTheme.typography.titleLarge)
-                Spacer(modifier = Modifier.height(8.dp))
-                Text("Information about the electricity prices and what the pros and cons of installing solar panels in Norway is.  Should also inform about the savings in electricity bills. Maybe also some information about how the electricity prices, savings and the electricity production (in kWh) is calculated (in general).Also information about expected power production on a off-grid cabin. Further information about (almost) anything relevant for the user to know before deciding to install solar panels.")
-                Spacer(modifier = Modifier.height(16.dp))
-                Button(
-                    onClick = onDismiss,
-                ) {
-                    Text("Lukk")
-                }
-            }
-        }
-    }
-}
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -147,7 +118,7 @@ fun AppearanceBottomSheet(
                     .fillMaxWidth()
                     .padding(16.dp), horizontalAlignment = Alignment.CenterHorizontally
             ) {
-                Text("Utseende", style = MaterialTheme.typography.titleLarge)
+                Text(stringResource(id = R.string.appereance), style = MaterialTheme.typography.titleLarge)
 
                 ElevatedCard(
                     colors = CardDefaults.elevatedCardColors(
@@ -161,7 +132,7 @@ fun AppearanceBottomSheet(
                     onClick = {ThemeState.isDark = !ThemeState.isDark}
                 ) {
                     Text(
-                        text = if (ThemeState.isDark) "Bytt til lysmodus" else "Bytt til mørkmodus",
+                        text = if (ThemeState.isDark) stringResource(id = R.string.light_mode) else stringResource(id = R.string.dark_mode),
                         modifier = Modifier
                             .padding(16.dp).align(Alignment.CenterHorizontally),
                     )
@@ -179,7 +150,7 @@ fun AppearanceBottomSheet(
                     modifier = Modifier.size(width = 240.dp, height = 60.dp),
                 ) {
                     Text(
-                        text = "Bytt til engelsk",
+                        stringResource(id = R.string.language),
                         modifier = Modifier
                             .padding(16.dp).align(Alignment.CenterHorizontally),
                     )
@@ -198,7 +169,7 @@ fun AppearanceBottomSheet(
                     modifier = Modifier.size(width = 240.dp, height = 60.dp),
                 ) {
                     Text(
-                        text = "Bytt skriftstørrelse",
+                        stringResource(id = R.string.font_size),
                         modifier = Modifier
                             .padding(16.dp).align(Alignment.CenterHorizontally),
                     )
@@ -209,7 +180,7 @@ fun AppearanceBottomSheet(
                 Button(
                     onClick = onDismiss,
                 ) {
-                    Text("Lukk")
+                    Text(stringResource(id = R.string.close))
                 }
             }
         }

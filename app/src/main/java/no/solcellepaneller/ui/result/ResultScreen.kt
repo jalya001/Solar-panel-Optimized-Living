@@ -18,7 +18,7 @@ import androidx.navigation.NavController
 import no.solcellepaneller.ui.navigation.AppearanceBottomSheet
 import no.solcellepaneller.ui.navigation.BottomBar
 import no.solcellepaneller.ui.navigation.HelpBottomSheet
-import no.solcellepaneller.ui.navigation.InformationBottomSheet
+
 import no.solcellepaneller.ui.navigation.TopBar
 
 @Composable
@@ -33,7 +33,8 @@ fun ResultScreen(navController: NavController) {
             BottomBar(
                 onHelpClicked = { showHelp = true },
                 onInfoClicked = { showInfo = true },
-                onAppearanceClicked = { showAppearance = true }) }
+                onAppearanceClicked = { showAppearance = true },navController
+            ) }
     ){ contentPadding ->
         Column(
             modifier = Modifier.fillMaxSize().padding(contentPadding),
@@ -49,7 +50,7 @@ fun ResultScreen(navController: NavController) {
 
 
             HelpBottomSheet(visible = showHelp, onDismiss = { showHelp = false })
-            InformationBottomSheet(visible = showInfo, onDismiss = { showInfo = false })
+           
             AppearanceBottomSheet(visible = showAppearance, onDismiss = { showAppearance = false })
         }
     }

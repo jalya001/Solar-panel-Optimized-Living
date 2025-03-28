@@ -2,4 +2,66 @@
     <string name="app_name">Solcellepaneller</string>
     <string name="Test" >This app is in English</string>
 
+    <string name="home"> Home</string>
+    <string name="install_panels"> Install solar panels</string>
+    <string name="saved_locations"> Saved locations</string>
+    <string name="prices"> Prices </string>
+    <string name="help"> Help</string>
+    <string name="appereance"> Appearance</string>
+    <string name="dark_mode"> Dark mode  </string>
+    <string name="light_mode"> Light mode  </string>
+    <string name="language"> Change to Norwegian</string>
+    <string name="font_size"> Change font size</string>
+    <string name="help_how"> Help (How to use the app) </string>
+    <string name="help_techinical"> Help (Technical help, Problems with the app)</string>
+    <string name="go_back"> Back </string>
+    <string name="close"> Close</string>
+
+
+
+    <string name="info_title">Information</string>
+
+    <string name='intro_title'>Introduction</string>
+    <string name="intro_content">Installing solar panels can be a smart investment both financially and environmentally – but it depends on where you live, how much sun you get, and what the electricity prices are where you live.
+    This app helps you assess whether switching to solar energy is worth it, based on weather data, electricity prices, and location. Here we explain the most important things you should know before making a decision.</string>
+
+    <string name="price_title">Electricity Price</string>
+    <string name="price_content">
+        Electricity prices in Norway vary depending on region, time of year, and overall energy demand.
+        These prices can significantly affect how quickly your investment in solar panels pays off.
+        By comparing current and historical electricity prices, this app helps you evaluate how much money you could save by producing your own electricity with solar panels.
+        Prices are usually measured in øre/kWh, and vary across different price zones in the country.
+</string>
+
+
+    <string name='pros_and_cons_title'>Pros and Cons</string>
+    <string name='pros_and_cons_content'>
+        Solar panels have become a popular option for many people who want to produce their own electricity, save money and contribute to more sustainable energy consumption. But as with all investments, there are both advantages and disadvantages that you should be aware of.\n
+        \n
+        Pros:\n
+        • Environmentally friendly: Solar panels produce clean, renewable energy and help reduce greenhouse gas emissions.\n
+        • Reduced electricity bills: You can save money over time by producing your own electricity.\n
+        • Support schemes: In Norway, there are public support schemes that can cover part of the installation cost.\n
+        • Low maintenance: Once the system is installed, it requires little maintenance.\n
+        • Increased home value: A solar system can make the home more attractive when reselling.\n
+        \n
+        Cons:\n
+        • High initial costs: The investment in solar panels is still relatively high.\n
+        • Low production in winter: Dark winters and snow can significantly reduce efficiency.\n
+        •Location-dependent: How much electricity you produce depends on your location and sun exposure.\n
+        • Long payback period: It can take many years before the investment is repaid.\n
+        •Technical limitations: Not all buildings are equally suitable for the installation of panels.\n
+    </string>
+
+    <string name="money_saved_title">Money saved</string>
+    <string name="money_saved_content">
+        The app calculates how much money you could potentially save by installing solar panels, based on weather conditions, where you live and historical electricity prices. By comparing how much electricity you can produce with solar panels with how much electricity costs today, you get an estimate of annual savings. The more sun you get and the higher the electricity prices, the more you can save. The calculation gives you a better basis for assessing whether the investment in solar panels is profitable for you.
+</string>
+
+    <string name="cabin_title"> Off-grid cabins</string>
+    <string name="cabin_content">
+        For off-grid cabins, solar panels can be an efficient and sustainable solution to meet basic power needs.
+        Based on location and local solar conditions, solar power can provide enough capacity for lighting, transporting electronic devices, cooling boxes, or small water pumps, among other things.
+        This app helps you assess how much solar power you can potentially produce and whether it is sufficient for your needs.
+    </string>
 </resources>

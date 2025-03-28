@@ -16,14 +16,17 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.res.stringResource
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
+import no.solcellepaneller.R
 import no.solcellepaneller.data.homedata.ElectricityPriceRepository
 import no.solcellepaneller.ui.electricity.PriceScreen
 import no.solcellepaneller.ui.home.HomeScreen
+import no.solcellepaneller.ui.infoscreen.InfoScreen
 import no.solcellepaneller.ui.map.MapScreen
 import no.solcellepaneller.ui.map.MapScreenViewModel
 import no.solcellepaneller.ui.result.ResultScreen
@@ -49,6 +52,7 @@ fun Nav(navController: NavHostController) {
             navController = navController,
             region = "Filler Region" //! TODO Finn ut en løsning her
         ) }
+        composable("info_screen") { InfoScreen(navController)}
     }
 }
 
@@ -56,7 +60,8 @@ fun Nav(navController: NavHostController) {
 fun BottomBar(
     onHelpClicked: () -> Unit,
     onInfoClicked: () -> Unit,
-    onAppearanceClicked: () -> Unit
+    onAppearanceClicked: () -> Unit,
+    navController: NavController
 ) {
     NavigationBar(
             containerColor = MaterialTheme.colorScheme.secondary,
@@ -64,20 +69,20 @@ fun BottomBar(
     ) {
 
         NavigationBarItem(
-            icon = { Icon(Icons.Filled.Build, contentDescription = "Hjelp") },
-            label = { Text("Hjelp") },
+            icon = { Icon(Icons.Filled.Build, contentDescription = "Help") },
+            label = { Text(stringResource(id = R.string.help)) },
             selected = false,
             onClick = onHelpClicked
         )
         NavigationBarItem(
-            icon = { Icon(Icons.Filled.Info, contentDescription = "Informasjon") },
+            icon = { Icon(Icons.Filled.Info, contentDescription = "Information") },
             label = { Text("Info") },
             selected = false,
-            onClick = onInfoClicked
+            onClick = { navController.navigate("info_screen") }
         )
         NavigationBarItem(
-            icon = { Icon(Icons.Filled.Settings, contentDescription = "Utseende") },
-            label = { Text("Utseende") },
+            icon = { Icon(Icons.Filled.Settings, contentDescription = "Appearance") },
+            label = { Text(stringResource(id = R.string.appereance)) },
             selected = false,
             onClick = onAppearanceClicked
         )
@@ -93,13 +98,13 @@ fun TopBar(navController: NavController,onBackClick: (() -> Unit)? = null) {
             titleContentColor = MaterialTheme.colorScheme.tertiary,
             navigationIconContentColor = MaterialTheme.colorScheme.tertiary
         ),
-        title = { Text("Tilbake") },
+        title = { Text(stringResource(id = R.string.go_back)) },
         navigationIcon = {
             IconButton(onClick = {
                 onBackClick?.invoke()
                 navController.popBackStack()
             }) {
-                Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "Tilbake")
+                Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "Go back")
             }
         }
     )
