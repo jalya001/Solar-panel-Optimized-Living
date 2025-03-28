@@ -77,6 +77,7 @@
     <string name="latitude">Latitude</string>
     <string name="longitude">Longitude</string>
     <string name="point">Point</string>
+    <string name="cancel">Cancel</string>
 
     <!--Additional Input-->
     <string name="area_label">Area (m²)</string>

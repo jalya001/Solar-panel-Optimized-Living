@@ -225,6 +225,18 @@ fun DisplayScreen(viewModel: MapScreenViewModel, navController: NavController) {
                 ) {
                     var areaShown by remember { mutableStateOf(false) }
 
+                    Button(
+                        onClick = {
+
+                            drawingEnabled = false
+                            ispolygonvisible = false
+                            viewModel.removePoints()
+                            index = 0
+                        },
+                        colors = ButtonDefaults.buttonColors(Color.Gray)
+                    ) {
+                        Text(text = stringResource(id = R.string.cancel))
+                    }
                     if (polygonPoints.size > 3) {
                     Button(onClick = {
                             ispolygonvisible = !ispolygonvisible
