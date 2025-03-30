@@ -57,6 +57,7 @@ fun HomeScreen(navController: NavController) {
             Button(onClick = { navController.navigate("map") }) { Text(stringResource(id = R.string.install_panels)) }
             Button(onClick = { navController.navigate("saved_locations") }) { Text(stringResource(id = R.string.saved_locations)) }
             Button(onClick = { navController.navigate("prices") }) { Text(stringResource(id = R.string.prices)) }
+            Button(onClick = { navController.navigate("result") }) { Text("result test") }
 
             HelpBottomSheet(visible = showHelp, onDismiss = { showHelp = false })
             //InformationBottomSheet(visible = showInfo, onDismiss = { showInfo = false })
