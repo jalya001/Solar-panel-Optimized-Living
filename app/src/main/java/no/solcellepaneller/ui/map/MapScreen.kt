@@ -227,7 +227,7 @@ fun DisplayScreen(viewModel: MapScreenViewModel, navController: NavController) {
 
                     Button(
                         onClick = {
-
+                            area = ""
                             drawingEnabled = false
                             ispolygonvisible = false
                             viewModel.removePoints()
