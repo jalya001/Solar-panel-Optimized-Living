@@ -31,6 +31,11 @@ import no.solcellepaneller.ui.map.MapScreen
 import no.solcellepaneller.ui.map.MapScreenViewModel
 import no.solcellepaneller.ui.result.ResultScreen
 import no.solcellepaneller.ui.savedLocations.SavedLocationsScreen
+import android.os.Bundle
+import androidx.activity.ComponentActivity
+import androidx.activity.compose.setContent
+import androidx.activity.enableEdgeToEdge
+import no.solcellepaneller.ui.electricity.PriceScreen
 
 @Composable
 fun Nav(navController: NavHostController) {
@@ -43,14 +48,10 @@ fun Nav(navController: NavHostController) {
         composable("result") { ResultScreen(navController,viewModel) }
         composable("saved_locations") { SavedLocationsScreen(navController) }
         composable("prices") {
-            val mockRepository = ElectricityPriceRepository(
-                priceArea = "mockPrice"
-            )
-
+            val repository = ElectricityPriceRepository("NO1")
             PriceScreen(
-            repository = mockRepository,
+            repository = repository,
             navController = navController,
-            region = "Filler Region" //! TODO Finn ut en løsning her
         ) }
         composable("info_screen") { InfoScreen(navController)}
     }
@@ -59,7 +60,6 @@ fun Nav(navController: NavHostController) {
 @Composable
 fun BottomBar(
     onHelpClicked: () -> Unit,
-    onInfoClicked: () -> Unit,
     onAppearanceClicked: () -> Unit,
     navController: NavController
 ) {

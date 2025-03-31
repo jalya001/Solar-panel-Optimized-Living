@@ -213,10 +213,6 @@ fun AdditionalInputBottomSheet(
     var direction by remember { mutableStateOf("") }
     var efficiency by remember { mutableStateOf("") }
 
-    val closestWeatherStation = "Filler"
-
-
-
     if (visible) {
         ModalBottomSheet(
             onDismissRequest = onDismiss,

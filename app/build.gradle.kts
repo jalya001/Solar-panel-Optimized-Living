@@ -2,8 +2,9 @@ plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
     alias(libs.plugins.kotlin.compose)
-    id("org.jetbrains.kotlin.plugin.serialization") version "1.9.22" // Update this line
+//    id("org.jetbrains.kotlin.plugin.serialization") version "1.9.22" // Update this line
 
+    alias(libs.plugins.kotlin.serialization)
 }
 
 android {
@@ -39,6 +40,10 @@ android {
     buildFeatures {
         compose = true
     }
+
+    composeOptions {
+        kotlinCompilerExtensionVersion = "1.5.15"
+    }
 }
 
 dependencies {
@@ -63,6 +68,18 @@ dependencies {
     debugImplementation(libs.androidx.ui.tooling)
     debugImplementation(libs.androidx.ui.test.manifest)
 
+    //Project dependencies
+    implementation(libs.ktor.client.core)
+    implementation(libs.ktor.ktor.client.cio)
+    implementation(libs.ktor.ktor.client.okhttp)
+    implementation(libs.ktor.client.content.negotiation.v236)
+    implementation(libs.ktor.ktor.serialization.kotlinx.json)
+    implementation(libs.ktor.ktor.client.content.negotiation)
+//    implementation(libs.kotlinx.serialization.json)
+    implementation(libs.ui)
+    implementation(libs.androidx.lifecycle.viewmodel.compose)
+//    implementation(libs.androidx.activity.compose.v140)
+    implementation(libs.kotlin.stdlib)
     //Project independencies
 
     implementation ("io.ktor:ktor-client-core:2.3.6")

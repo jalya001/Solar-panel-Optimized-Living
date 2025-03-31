@@ -33,6 +33,7 @@ class PriceScreenViewModel(
             _priceUiState.value = PriceUiState.Loading
             Log.d("PriceScreenViewModel", "Henter strømpriser for region: $region")
             try {
+                repository.updatePrices(date, region)
                 val prices = repository.getPrices(date, region)
                 if (prices.isNotEmpty()) {
                     _priceUiState.value = PriceUiState.Success(prices)

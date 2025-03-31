@@ -24,7 +24,6 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
-import no.solcellepaneller.App
 import no.solcellepaneller.R
 import no.solcellepaneller.ui.navigation.BottomBar
 import no.solcellepaneller.ui.navigation.HelpBottomSheet
@@ -41,7 +40,6 @@ fun HomeScreen(navController: NavController) {
         bottomBar = {
             BottomBar(
             onHelpClicked = { showHelp = true },
-            onInfoClicked = { showInfo = true },
             onAppearanceClicked = { showAppearance = true },
             navController = navController
             )
@@ -63,21 +61,5 @@ fun HomeScreen(navController: NavController) {
             //InformationBottomSheet(visible = showInfo, onDismiss = { showInfo = false })
             AppearanceBottomSheet(visible = showAppearance, onDismiss = { showAppearance = false })
         }
-    }
-}
-//Funker ikke lenger pga måten isDark er implementert
-//@Preview(
-//    uiMode = Configuration.UI_MODE_NIGHT_YES,
-//    name = "DefaultPreviewDark"
-//)
-@Preview(
-//    uiMode = Configuration.UI_MODE_NIGHT_NO,
-//    name = "DefaultPreviewLight"
-    name = "DefaultPreview"
-)
-@Composable
-fun AppPreview() {
-    SolcellepanellerTheme {
-        App()
     }
 }

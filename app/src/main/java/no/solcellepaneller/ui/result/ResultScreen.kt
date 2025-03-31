@@ -38,7 +38,6 @@ fun ResultScreen(navController: NavController, viewModel: MapScreenViewModel, fr
         bottomBar = {
             BottomBar(
                 onHelpClicked = { showHelp = true },
-                onInfoClicked = { showInfo = true },
                 onAppearanceClicked = { showAppearance = true },navController
             ) }
     ){ contentPadding ->

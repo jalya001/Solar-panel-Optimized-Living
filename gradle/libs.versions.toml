@@ -1,17 +1,23 @@
 [versions]
-agp = "8.9.1"
-kotlin = "2.1.0"
+activityComposeVersion = "1.4.0"
+agp = "8.8.2"
+kotlin = "2.0.0"
+kotlinx-serialization-json = { group = "org.jetbrains.kotlinx", name = "kotlinx-serialization-json", version = "2.0.0" }
 coreKtx = "1.15.0"
 junit = "4.13.2"
 junitVersion = "1.2.1"
 espressoCore = "3.6.1"
-kotlinStdlib = "2.1.10"
-kotlinxSerializationJson = "1.7.3"
-ktorClientCioVersion = "3.0.3"
-ktorClientContentNegotiationVersion = "3.0.3"
-ktorClientCore = "3.0.3"
-ktorClientOkhttpVersion = "3.0.3"
-ktorSerializationKotlinxJsonVersion = "3.0.3"
+kotlinStdlib = "2.0.0"
+ktorClientCio = "2.3.6"
+ktorClientCioVersion = "2.3.6"
+ktorClientContentNegotiation = "2.3.6"
+ktorClientContentNegotiationVersion = "2.3.3"
+ktorClientCore = "2.3.6"
+ktorClientOkhttp = "2.3.6"
+ktorClientOkhttpVersion = "2.3.6"
+ktorKtorClientContentNegotiation = "2.3.6"
+ktorSerializationKotlinxJson = "2.3.6"
+ktorSerializationKotlinxJsonVersion = "2.0.0"
 lifecycleRuntimeKtx = "2.8.7"
 activityCompose = "1.10.1"
 composeBom = "2025.03.00"
@@ -50,9 +56,11 @@ androidx-ui-test-junit4 = { group = "androidx.compose.ui", name = "ui-test-junit
 androidx-material3 = { group = "androidx.compose.material3", name = "material3" }
 kotlin-gradle-plugin = { module = "org.jetbrains.kotlin:kotlin-gradle-plugin" }
 kotlin-stdlib = { module = "org.jetbrains.kotlin:kotlin-stdlib", version.ref = "kotlinStdlib" }
-kotlinx-serialization-json = { module = "org.jetbrains.kotlinx:kotlinx-serialization-json", version.ref = "kotlinxSerializationJson" }
+ktor-client-cio = { module = "io-ktor:ktor-client-cio", version.ref = "ktorClientCio" }
+ktor-client-content-negotiation = { module = "io-ktor:ktor-client-content-negotiation", version.ref = "ktorClientContentNegotiation" }
+ktor-client-content-negotiation-v236 = { module = "io.ktor:ktor-client-content-negotiation", version.ref = "ktorKtorClientContentNegotiation" }
 ktor-client-core = { module = "io.ktor:ktor-client-core", version.ref = "ktorClientCore" }
-
+ktor-client-okhttp = { module = "io-ktor:ktor-client-okhttp", version.ref = "ktorClientOkhttp" }
 ktor-ktor-client-cio = { module = "io.ktor:ktor-client-cio", version.ref = "ktorClientCioVersion" }
 ktor-ktor-client-content-negotiation = { module = "io.ktor:ktor-client-content-negotiation", version.ref = "ktorClientContentNegotiationVersion" }
 ktor-ktor-client-okhttp = { module = "io.ktor:ktor-client-okhttp", version.ref = "ktorClientOkhttpVersion" }
@@ -65,7 +73,6 @@ androidx-scenecore = { group = "androidx.xr.scenecore", name = "scenecore", vers
 
 material3 = { module = "androidx.compose.material3:material3", version.ref = "material3" }
 ui = { module = "androidx.compose.ui:ui", version.ref = "ui" }
-ui-tooling-preview = { module = "androidx.compose.ui:ui-tooling-preview", version.ref = "uiToolingPreview" }
 
 androidx-runtime-livedata = { group = "androidx.compose.runtime", name = "runtime-livedata", version.ref = "runtimeLivedata" }
 
@@ -73,4 +80,4 @@ androidx-runtime-livedata = { group = "androidx.compose.runtime", name = "runtim
 android-application = { id = "com.android.application", version.ref = "agp" }
 kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
 kotlin-compose = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "kotlin" }
-
+kotlin-serialization = { id = "org.jetbrains.kotlin.plugin.serialization", version.ref = "kotlin" }
