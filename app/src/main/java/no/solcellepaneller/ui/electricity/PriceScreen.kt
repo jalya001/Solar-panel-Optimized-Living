@@ -8,20 +8,15 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ExposedDropdownMenuBox
 import androidx.compose.material3.ExposedDropdownMenuDefaults
-import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
-import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -154,17 +149,6 @@ fun PriceList(prices: List<ElectricityPrice>) {
             .fillMaxWidth()
             .padding(12.dp)
     ) {
-        lowestPrice?.let {
-            Text(
-                text = "Laveste pris i dag: ${it.NOK_per_kWh} NOK/kWh",
-                style = MaterialTheme.typography.bodyMedium
-            )
-            Text(
-                text = "Tid: ${it.getTimeRange()}",
-                style = MaterialTheme.typography.bodySmall
-            )
-        }
-
         if (currentPrice != null) {
             Text(
                 text = "Pris nå: ${currentPrice.NOK_per_kWh} NOK/kWh",
@@ -180,6 +164,19 @@ fun PriceList(prices: List<ElectricityPrice>) {
                 style = MaterialTheme.typography.bodyLarge
             )
         }
+        Spacer(modifier = Modifier.height(16.dp))
+
+        lowestPrice?.let {
+            Text(
+                text = "Laveste pris i dag: ${it.NOK_per_kWh} NOK/kWh",
+                style = MaterialTheme.typography.bodyMedium
+            )
+            Text(
+                text = "Tid: ${it.getTimeRange()}",
+                style = MaterialTheme.typography.bodySmall
+            )
+        }
+        Spacer(modifier = Modifier.height(8.dp))
 
         highestPrice?.let {
             Text(
