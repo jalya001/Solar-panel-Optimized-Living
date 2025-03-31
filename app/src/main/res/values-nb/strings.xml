@@ -79,6 +79,7 @@
     <string name="latitude">Breddegrad</string>
     <string name="longitude">Lengdegrad</string>
     <string name="point">Punkt</string>
+    <string name="cancel">Tilbakestill</string>
 
     <!--Additional Input-->
     <string name="area_label">Areal (m²)</string>

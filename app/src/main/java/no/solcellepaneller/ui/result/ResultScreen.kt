@@ -43,7 +43,8 @@ fun ResultScreen(navController: NavController,viewModel: MapScreenViewModel) {
             verticalArrangement = Arrangement.Center
         ) {
             Text("Resultater")
-
+            Text(text = "Lat: ${viewModel.coordinates.value?.first}")
+            Text(text = "Long: ${viewModel.coordinates.value?.second}")
             Text(text = "Areal: ${viewModel.areaInput} m²")
             Text(text = "Vinkel: ${viewModel.angleInput}°")
             Text(text = "Retning: ${viewModel.directionInput}")

@@ -266,6 +266,7 @@ fun AdditionalInputBottomSheet(
 
                 Text(stringResource(id = R.string.slope_label), style = MaterialTheme.typography.labelLarge)
                 TextField(
+                    label = { Text(stringResource(id = R.string.slope_label)) },
                     value = angle,
                     onValueChange = { angle = it },
                     modifier = Modifier.fillMaxWidth()
@@ -275,6 +276,7 @@ fun AdditionalInputBottomSheet(
 
                 Text(stringResource(id = R.string.direction_label), style = MaterialTheme.typography.labelLarge)
                 TextField(
+                    label = { Text(stringResource(id = R.string.direction_label)) },
                     value = direction,
                     onValueChange = { direction = it },
                     modifier = Modifier.fillMaxWidth()
@@ -284,6 +286,7 @@ fun AdditionalInputBottomSheet(
 
                 Text(stringResource(id = R.string.efficiency_label), style = MaterialTheme.typography.labelLarge)
                 TextField(
+                    label = { Text(stringResource(id = R.string.efficiency_label)) },
                     value = efficiency,
                     onValueChange = { efficiency = it },
                     modifier = Modifier.fillMaxWidth()
