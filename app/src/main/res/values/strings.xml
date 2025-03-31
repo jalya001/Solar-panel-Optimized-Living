@@ -93,5 +93,10 @@
     <string name="no_location_message">Click on the map to choose location.</string>
     <string name="dismiss">Close</string>
     <string name="need_help">Need help?</string>
+    <string name="need_help_drawing">Need help with drawing?</string>
+    <string name="help_draw">Tegne i kartet</string>
+    <string name="tech_problems_title">Problems</string>
+    <string name="tech_problems_content">Problems with app</string>
+    <string name="how_to_draw">How to draw in the map</string>
 
 </resources>

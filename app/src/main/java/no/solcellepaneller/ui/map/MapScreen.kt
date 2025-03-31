@@ -29,7 +29,9 @@ fun MapScreen(viewModel: MapScreenViewModel, navController: NavController) {
         topBar = { TopBar(navController) },
     ) { contentPadding ->
         Column(
-            modifier = Modifier.fillMaxSize().padding(contentPadding),
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(contentPadding),
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.Center
         ) {
@@ -189,10 +191,7 @@ fun DisplayScreen(viewModel: MapScreenViewModel, navController: NavController) {
                 LocationNotSelectedDialog(
                     coordinates = coordinates,
                     onDismiss = { showMissingLocationDialog = false },
-                    onHelpClick = {
-                        showHelpSheet = true
-                        showMissingLocationDialog = false
-                    }
+                    navController = navController
                 )
             }
 
@@ -209,7 +208,7 @@ fun DisplayScreen(viewModel: MapScreenViewModel, navController: NavController) {
                 }, coordinates=coordinates, area=area, navController = navController, viewModel = viewModel
             )
             HelpBottomSheet( //kan evt vise til ulike hjelp skjermer
-                visible = showHelpSheet,
+                visible = showHelpSheet,navController=navController,
                 onDismiss = { showHelpSheet = false }
             )
             if(drawingEnabled){
@@ -302,7 +301,7 @@ fun BekreftLokasjon( //må huske å endre navn på funksjoner ogsånt til engels
 fun LocationNotSelectedDialog(
     coordinates: Pair<Double, Double>?,
     onDismiss: () -> Unit,
-    onHelpClick: () -> Unit
+    navController: NavController
 ) {
     var showDialog by remember { mutableStateOf(coordinates == null) }
 
@@ -317,9 +316,9 @@ fun LocationNotSelectedDialog(
             },
             confirmButton = {
                 Button(
-                    onClick = onHelpClick
+                    onClick ={navController.navigate("app_help?expandSection=draw")}//implementer d her
                 ) {
-                    Text(stringResource(id = R.string.need_help))
+                  Text(stringResource(id = R.string.need_help_drawing))
                 }
             },
             dismissButton = {

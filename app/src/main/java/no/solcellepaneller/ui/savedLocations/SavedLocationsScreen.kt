@@ -43,7 +43,7 @@ fun SavedLocationsScreen(navController: NavController) {
         ) {
             Text(stringResource(id = R.string.saved_locations))
 
-            HelpBottomSheet(visible = showHelp, onDismiss = { showHelp = false })
+            HelpBottomSheet(visible = showHelp, navController = navController, onDismiss = { showHelp = false })
            
             AppearanceBottomSheet(visible = showAppearance, onDismiss = { showAppearance = false })
         }

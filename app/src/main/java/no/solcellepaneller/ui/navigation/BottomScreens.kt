@@ -36,8 +36,10 @@ import no.solcellepaneller.ui.map.MapScreenViewModel
 @Composable
 fun HelpBottomSheet( //Kan enten velge å ha alt info her eller igjen navigate herfra til videre screeen
     visible: Boolean,
-    onDismiss: () -> Unit
-) {
+    onDismiss: () -> Unit,
+    navController: NavController,
+
+    ) {
     if (visible) {
         ModalBottomSheet(
             onDismissRequest = onDismiss,
@@ -60,7 +62,9 @@ fun HelpBottomSheet( //Kan enten velge å ha alt info her eller igjen navigate h
                     elevation = CardDefaults.cardElevation(
                         defaultElevation = 2.dp
                     ),
-                    modifier = Modifier.size(width = 240.dp, height = 100.dp)
+                    modifier = Modifier.size(width = 240.dp, height = 100.dp),
+                    onClick ={navController.navigate("app_help") }
+
                 ) {
                     Text(
                         stringResource(id = R.string.help_how),
@@ -80,7 +84,8 @@ fun HelpBottomSheet( //Kan enten velge å ha alt info her eller igjen navigate h
                     elevation = CardDefaults.cardElevation(
                         defaultElevation = 2.dp
                     ),
-                    modifier = Modifier.size(width = 240.dp, height = 100.dp)
+                    modifier = Modifier.size(width = 240.dp, height = 100.dp),
+                    onClick ={navController.navigate("tech_help")}
                 ) {
                     Text(
                         stringResource(id = R.string.help_techinical),

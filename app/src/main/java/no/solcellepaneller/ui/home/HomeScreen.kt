@@ -57,7 +57,7 @@ fun HomeScreen(navController: NavController) {
             Button(onClick = { navController.navigate("prices") }) { Text(stringResource(id = R.string.prices)) }
             Button(onClick = { navController.navigate("result") }) { Text("result test") }
 
-            HelpBottomSheet(visible = showHelp, onDismiss = { showHelp = false })
+            HelpBottomSheet(visible = showHelp, navController = navController, onDismiss = { showHelp = false })
             //InformationBottomSheet(visible = showInfo, onDismiss = { showInfo = false })
             AppearanceBottomSheet(visible = showAppearance, onDismiss = { showAppearance = false })
         }

@@ -82,7 +82,7 @@ fun ResultScreen(navController: NavController, viewModel: MapScreenViewModel, fr
                     Text("No data loaded")
                 }
             }
-            HelpBottomSheet(visible = showHelp, onDismiss = { showHelp = false })
+            HelpBottomSheet(visible = showHelp, navController = navController, onDismiss = { showHelp = false })
            
             AppearanceBottomSheet(visible = showAppearance, onDismiss = { showAppearance = false })
         }

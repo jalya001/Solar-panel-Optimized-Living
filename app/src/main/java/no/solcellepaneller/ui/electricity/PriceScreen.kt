@@ -90,7 +90,7 @@ fun PriceScreen(
                 }
             }
 
-            HelpBottomSheet(visible = showHelp, onDismiss = { showHelp = false })
+            HelpBottomSheet(visible = showHelp, navController = navController, onDismiss = { showHelp = false })
             AppearanceBottomSheet(visible = showAppearance, onDismiss = { showAppearance = false })
         }
     }

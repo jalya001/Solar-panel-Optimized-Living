@@ -95,5 +95,10 @@
     <string name="no_location_message">Klikk et sted på kartet for å velge en lokasjon.</string>
     <string name="dismiss">Lukk</string>
     <string name="need_help">Trenger hjelp?</string>
+    <string name="tech_problems_content">Problemer med appen</string>
+    <string name="how_to_draw">Hvordan tegne i kartet</string>
+    <string name="need_help_drawing">Trenger du hjelp med å tegne?</string>
+    <string name="help_draw">Draw on the map</string>
+    <string name="tech_problems_title">Problemer</string>
 
 </resources>

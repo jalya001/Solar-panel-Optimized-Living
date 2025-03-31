@@ -35,7 +35,10 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
+import androidx.navigation.navArgument
 import no.solcellepaneller.ui.electricity.PriceScreen
+import no.solcellepaneller.ui.help.AppHelp
+import no.solcellepaneller.ui.help.TechnicalHelp
 
 @Composable
 fun Nav(navController: NavHostController) {
@@ -54,6 +57,17 @@ fun Nav(navController: NavHostController) {
             navController = navController,
         ) }
         composable("info_screen") { InfoScreen(navController)}
+//        composable("app_help") { AppHelp(navController) }
+        composable(
+            "app_help?expandSection={expandSection}",
+            arguments = listOf(
+                navArgument("expandSection") { defaultValue = "" }
+            )
+        ) { backStackEntry ->
+            val expandSection = backStackEntry.arguments?.getString("expandSection") ?: ""
+            AppHelp(navController, expandSection)
+        }
+        composable("tech_help") { TechnicalHelp(navController) }
     }
 }
 
