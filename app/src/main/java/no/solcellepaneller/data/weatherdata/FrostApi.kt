@@ -19,7 +19,7 @@ import java.time.ZonedDateTime
 import java.time.ZoneId
 import java.time.format.DateTimeFormatter
 
-class FrostDataSource {
+class FrostApi {
     val baseUrl = "https://frost-beta.met.no/api/v1/obs/met.no/filter/get"
     val basicAuth = "4868c766-7477-484f-b767-6e5776a60a26:49ee1988-7461-4452-97a3-8ae5cbb133d7" // test auth
     val encodedAuth = java.util.Base64.getEncoder().encodeToString(basicAuth.toByteArray())

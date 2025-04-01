@@ -26,8 +26,9 @@ import no.solcellepaneller.ui.navigation.HelpBottomSheet
 import no.solcellepaneller.ui.navigation.TopBar
 
 @Composable
-fun ResultScreen(navController: NavController, viewModel: MapScreenViewModel, frostViewModel: FrostViewModel = FrostViewModel()) {
-    val frostData by frostViewModel.frostData.collectAsState()
+fun ResultScreen(navController: NavController, viewModel: MapScreenViewModel, weatherViewModel: WeatherViewModel = WeatherViewModel()) {
+    val frostData by weatherViewModel.frostData.collectAsState()
+    val radiationData by weatherViewModel.radiationData.collectAsState()
 
     var showHelp by remember { mutableStateOf(false) }
     var showInfo by remember { mutableStateOf(false) }
@@ -67,7 +68,7 @@ fun ResultScreen(navController: NavController, viewModel: MapScreenViewModel, fr
                 verticalArrangement = Arrangement.Center
             ) {
                 Button(onClick = {
-                    frostViewModel.loadFrostData(59.91, 10.75, listOf("mean(snow_coverage_type P1M)","mean(air_temperature P1M)", "mean(cloud_area_fraction P1M)"))
+                    weatherViewModel.fetchFrostData(59.91, 10.75, listOf("mean(snow_coverage_type P1M)","mean(air_temperature P1M)", "mean(cloud_area_fraction P1M)"))
                 }) {
                     Text("test frost")
                 }
@@ -79,7 +80,19 @@ fun ResultScreen(navController: NavController, viewModel: MapScreenViewModel, fr
                         }
                     }
                 } else {
-                    Text("No data loaded")
+                    Text("No frost data")
+                }
+
+                Button(onClick = {
+                    weatherViewModel.fetchRadiationInfo(59.91, 10.75, 35)
+                }) {
+                    Text("test pvgis")
+                }
+
+                if (radiationData.isNotEmpty()) {
+                    Text(radiationData.joinToString(", "))
+                } else {
+                    Text("No pvgis data")
                 }
             }
             HelpBottomSheet(visible = showHelp, navController = navController, onDismiss = { showHelp = false })
