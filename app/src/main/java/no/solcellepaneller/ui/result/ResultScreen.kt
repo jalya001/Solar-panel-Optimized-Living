@@ -39,6 +39,8 @@ fun ResultScreen(navController: NavController, viewModel: MapScreenViewModel, we
     val radiationData by weatherViewModel.radiationData.collectAsState()
     val radiationList = remember(radiationData) { radiationData.map { it.radiation } }
     val coordinates by viewModel.coordinates.observeAsState()
+    val loading by weatherViewModel.isLoading.collectAsState()
+    var startloading by remember {  mutableStateOf(false) }
     val slope = viewModel.angleInput.toIntOrNull()
     val panelArea = viewModel.areaInput.toDouble()
     val efficiency = viewModel.efficiencyInput.toDouble()
@@ -74,8 +76,11 @@ fun ResultScreen(navController: NavController, viewModel: MapScreenViewModel, we
             Text("📐 Vinkel: ${viewModel.angleInput}°")
             Text("🧭 Retning: ${viewModel.directionInput}")
             Text("⚡ Effektivitet: ${viewModel.efficiencyInput} %")
-
-            if (frostData.containsKey("mean(snow_coverage_type P1M)")) {
+            if(loading){
+                startloading = true
+            }
+            else if (frostData.containsKey("mean(snow_coverage_type P1M)")) {
+                startloading = false
                 val snowCoverData = frostData["mean(snow_coverage_type P1M)"] ?: emptyArray()
                 val airTempData = frostData["mean(air_temperature P1M)"] ?: emptyArray()
                 val cloudCoverData = frostData["mean(cloud_area_fraction P1M)"] ?: emptyArray()
@@ -128,14 +133,14 @@ fun ResultScreen(navController: NavController, viewModel: MapScreenViewModel, we
 
 
             } else {
-                Text("⚠ No snow coverage data available.")
+                Text("⚠ No snow coverage data available." )
             }
 
-            Button(onClick = {
-                navController.navigate("home") {
-                    popUpTo("home") { inclusive = true }
-                }
-            }) { Text("🏠 Tilbake til Start") }
+//            Button(onClick = {
+//                navController.navigate("home") {
+//                    popUpTo("home") { inclusive = true }
+//                }
+//            }) { Text("🏠 Tilbake til Start") }
 
             Button(onClick = {
                 coordinates?.let {
@@ -149,6 +154,10 @@ fun ResultScreen(navController: NavController, viewModel: MapScreenViewModel, we
             }) {
                 Text("📡 Hent Data")
             }
+            if (startloading) {
+            Column {
+                Text("⏳ Laster inn data, vennligst vent...", fontWeight = FontWeight.Bold)
+            }}
 
             HelpBottomSheet(visible = showHelp, navController = navController, onDismiss = { showHelp = false })
             AppearanceBottomSheet(visible = showAppearance, onDismiss = { showAppearance = false })
