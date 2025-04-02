@@ -39,6 +39,7 @@ import androidx.navigation.navArgument
 import no.solcellepaneller.ui.electricity.PriceScreen
 import no.solcellepaneller.ui.help.AppHelp
 import no.solcellepaneller.ui.help.TechnicalHelp
+import no.solcellepaneller.ui.result.WeatherViewModel
 
 @Composable
 fun Nav(navController: NavHostController) {
@@ -48,7 +49,9 @@ fun Nav(navController: NavHostController) {
         composable("map") {
             MapScreen(viewModel, navController)
         }
-        composable("result") { ResultScreen(navController,viewModel) }
+        composable("result") {
+            val WviewModel: WeatherViewModel = viewModel()
+            ResultScreen(navController,viewModel,WviewModel) }
         composable("saved_locations") { SavedLocationsScreen(navController) }
         composable("prices") {
             val repository = ElectricityPriceRepository("NO1")
