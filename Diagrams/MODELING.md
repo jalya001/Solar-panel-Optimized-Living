@@ -8,19 +8,29 @@ Class Diagram 1st draft
 ```mermaid
 
     classDiagram
+
     class HomeScreen{
-        +Composabele DisplayElectricityPrice(HomeViewModel)
-        +Composable DispalyInfo()
+        
+        +Composable HomeScreen
     }
      class MapScreen{
-        +Composable DisplayAdressFelt()
-        +Composable DispalyMap(MapViewModel)
-        +Composable SendAdressButton(MapViewModel,String Adress)
+        +Composable MapScreen(Navcontroller, MapviewModel)
+        +Composable DisplayScreen(NavController, MapviewModel)
+        +Composable InputField(value)
+        +Composable ConfirmLocation(onClick)
+        +Composable LocationNotSelectedDialog(coordinates,onDismiss,navController)
+        
+    
     }
     class ResultScreen{
-        +Composable DisplayInfo()
-        +Composable DispalyResults(WeatherDataViewModel)
-        +Composable Diplay MonthlySavings(WeatherDataViewModel)
+        +Composable ResultScreen(navController: NavController, viewModel: MapScreenViewModel, weatherViewModel: WeatherViewModel )
+        +fun CalculateMonthlyEnergy(avgTemp: Array<Double>,
+    cloudCover: Array<Double>,
+    snowCover: Array<Double>,
+    panelArea: Double,
+    efficiency: Double,
+    tempCoeff: Double,
+    radiation: List<Double>)
 
         
     }
