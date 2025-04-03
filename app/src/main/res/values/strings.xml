@@ -2,6 +2,7 @@
     <string name="app_name">Solcellepaneler</string>
     <string name="Test" >This app is in English</string>
 
+    <!--Home Screen-->
     <string name="home"> Home</string>
     <string name="install_panels"> Install solar panels</string>
     <string name="saved_locations"> Saved locations</string>
@@ -18,9 +19,6 @@
     <string name="close"> Close</string>
 
 
-
-    <string name="info_title">Information</string>
-
     <string name='intro_title'>Introduction</string>
     <string name="intro_content">Installing solar panels can be a smart investment both financially and environmentally – but it depends on where you live, how much sun you get, and what the electricity prices are where you live.
     This app helps you assess whether switching to solar energy is worth it, based on weather data, electricity prices, and location. Here we explain the most important things you should know before making a decision.</string>
@@ -31,7 +29,7 @@
         These prices can significantly affect how quickly your investment in solar panels pays off.
         By comparing current and historical electricity prices, this app helps you evaluate how much money you could save by producing your own electricity with solar panels.
         Prices are usually measured in øre/kWh, and vary across different price zones in the country.
-</string>
+    </string>
 
 
     <string name='pros_and_cons_title'>Pros and Cons</string>
@@ -56,7 +54,7 @@
     <string name="money_saved_title">Money saved</string>
     <string name="money_saved_content">
         The app calculates how much money you could potentially save by installing solar panels, based on weather conditions, where you live and historical electricity prices. By comparing how much electricity you can produce with solar panels with how much electricity costs today, you get an estimate of annual savings. The more sun you get and the higher the electricity prices, the more you can save. The calculation gives you a better basis for assessing whether the investment in solar panels is profitable for you.
-</string>
+    </string>
 
     <string name="cabin_title"> Off-grid cabins</string>
     <string name="cabin_content">
@@ -99,4 +97,21 @@
     <string name="tech_problems_content">Problems with app</string>
     <string name="how_to_draw">How to draw in the map</string>
 
+    <!--Result Screen-->
+    <string name="results"> Results  🔍</string>
+    <string name="angle">📐 Angle: </string>
+    <string name="direction"> 🧭 Direction: </string>
+    <string name="effectivity"> 🧭 Effectivity:  </string>
+    <string name="data_not_added"> Data not added: </string>
+    <string name="get_data"> 📡 Get data </string>
+    <string name="loading"> ⏳ Loading Data, please wait…</string>
+
+    <string name="month"> Month: </string>
+    <string name="global_radiation"> ☼ Global Radiation: </string>
+    <string name="avg_cloud_cover"> ☁️ Average Cloud Cover: </string>
+    <string name="avg_snow_cover"> ☃ Average Snow Cover: </string>
+    <string name="temp_factor"> 🔥 Temperature Factor: </string>
+    <string name="adj_radiation"> ⚡ Adjusted Radiation: </string>
+    <string name="estimated_energy_prod"> 🔋 Estimated Energy Produced: %.2f kWh </string>
+    <string name="estimated_powerpr_hour"> 📊 Estimated Power Produced per Hour: </string>
 </resources>

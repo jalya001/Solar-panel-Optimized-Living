@@ -22,10 +22,12 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
+import no.solcellepaneller.R
 import no.solcellepaneller.ui.map.MapScreenViewModel
 import no.solcellepaneller.ui.navigation.AppearanceBottomSheet
 import no.solcellepaneller.ui.navigation.BottomBar
@@ -68,14 +70,14 @@ fun ResultScreen(navController: NavController, viewModel: MapScreenViewModel, we
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.Top
         ) {
-            Text("🔎 Resultater", fontSize = 20.sp, fontWeight = FontWeight.Bold)
+            Text(stringResource(id = R.string.results), fontSize = 20.sp, fontWeight = FontWeight.Bold)
 
             Text("📍 Lat: ${coordinates?.first ?: "N/A"}")
             Text("📍 Long: ${coordinates?.second ?: "N/A"}")
             Text("📏 Areal: ${viewModel.areaInput} m²")
-            Text("📐 Vinkel: ${viewModel.angleInput}°")
-            Text("🧭 Retning: ${viewModel.directionInput}")
-            Text("⚡ Effektivitet: ${viewModel.efficiencyInput} %")
+            Text(text = "${stringResource(id = R.string.angle)} ${viewModel.angleInput}°")
+            Text(text = "${stringResource(id = R.string.direction)}  ${viewModel.directionInput}")
+            Text(text = "${stringResource(id = R.string.effectivity)} ${viewModel.efficiencyInput} %")
             if(loading){
                 startloading = true
             }
@@ -115,17 +117,17 @@ fun ResultScreen(navController: NavController, viewModel: MapScreenViewModel, we
                                 horizontalAlignment = Alignment.Start
                             ) {
                                 Text("📅 Month: ${months[month]}", fontWeight = FontWeight.Bold)
-                                Text("☼ Global Radiation: %.2f kWh/m²".format(radiationList[month]))
-                                Text("☁️ Average Cloud Cover: %.2f".format(cloudCoverData[month] / 8))
-                                Text("☃ Average Snow Cover: %.2f".format(snowCoverData[month] / 4))
-                                Text("🔥 Temperature Factor: %.2f".format(1 + (-0.44) * (airTempData[month] - 25)))
-                                Text("⚡ Adjusted Radiation: %.2f kWh/m²".format(monthlyEnergyOutput[month]))
+                                Text(stringResource(id = R.string.global_radiation)+ " %.2f".format(radiationList[month]))
+                                Text(stringResource(id = R.string.avg_cloud_cover)+ " %.2f".format(cloudCoverData[month] / 8))
+                                Text(stringResource(id = R.string.avg_snow_cover)+ " %.2f".format(snowCoverData[month] / 4))
+                                Text(stringResource(id = R.string.temp_factor)+ " %.2f °C".format(1 + (-0.44) * (airTempData[month] - 25)))
+                                Text(stringResource(id = R.string.adj_radiation)+ " %.2f kWh/m²\n".format(monthlyEnergyOutput[month]))
                                 Text(
-                                    "🔋 Estimated Energy Produced: %.2f kWh".format(
+                                    stringResource(id = R.string.estimated_energy_prod).format(
                                         monthlyEnergyOutput[month]
                                     ), fontWeight = FontWeight.Bold
                                 )
-                                Text("📊 Estimated Power Produced per Hour: %.2f kW".format(monthlyPowerOutput[month]))
+                                Text(stringResource(id = R.string.estimated_powerpr_hour) + " %.2f kW" .format(monthlyPowerOutput[month]))
                             }
                         }
                     }
@@ -133,7 +135,7 @@ fun ResultScreen(navController: NavController, viewModel: MapScreenViewModel, we
 
 
             } else {
-                Text("Data not yet loaded.")
+                Text(stringResource(id = R.string.data_not_added))
                 //Text("⚠ No snow coverage data available." )
             }
 
@@ -153,11 +155,11 @@ fun ResultScreen(navController: NavController, viewModel: MapScreenViewModel, we
                     }
                 }
             }) {
-                Text("📡 Hent Data")
+                Text(stringResource(id = R.string.get_data))
             }
             if (startloading) {
             Column {
-                Text("⏳ Laster inn data, vennligst vent...", fontWeight = FontWeight.Bold)
+                Text(stringResource(id = R.string.loading), fontWeight = FontWeight.Bold)
             }}
 
             HelpBottomSheet(visible = showHelp, navController = navController, onDismiss = { showHelp = false })
