@@ -79,7 +79,7 @@ fun ResultScreen(navController: NavController, viewModel: MapScreenViewModel, we
             if(loading){
                 startloading = true
             }
-            else if (frostData.containsKey("mean(snow_coverage_type P1M)")) {
+            else if (frostData.isNotEmpty()) {
                 startloading = false
                 val snowCoverData = frostData["mean(snow_coverage_type P1M)"] ?: emptyArray()
                 val airTempData = frostData["mean(air_temperature P1M)"] ?: emptyArray()
@@ -133,7 +133,8 @@ fun ResultScreen(navController: NavController, viewModel: MapScreenViewModel, we
 
 
             } else {
-                Text("⚠ No snow coverage data available." )
+                Text("Data not yet loaded.")
+                //Text("⚠ No snow coverage data available." )
             }
 
 //            Button(onClick = {
