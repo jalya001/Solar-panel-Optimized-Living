@@ -4,10 +4,14 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.darkColorScheme
 import androidx.compose.material3.lightColorScheme
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalDensity
+import androidx.compose.ui.unit.Density
+import no.solcellepaneller.ui.font.FontSizeState
 
 // Må legge til 0xFF før HExveerdi
 val darkPrimary =Color(0xFF0c1618)
@@ -73,9 +77,15 @@ fun SolcellepanellerTheme(
         DarkColorScheme
     }
 
+    val current = LocalDensity.current
+    val scale = FontSizeState.fontScale.value
+
+    CompositionLocalProvider(
+        LocalDensity provides Density(density = current.density, fontScale = scale)
+    ) {
     MaterialTheme(
         colorScheme = colors,
         typography = Typography,
         content = content
-    )
+    )}
 }

@@ -29,6 +29,7 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.window.Dialog
 import androidx.navigation.NavController
+import no.solcellepaneller.ui.font.FontSizeState
 import no.solcellepaneller.ui.language.langSwitch
 import no.solcellepaneller.ui.map.LocationNotSelectedDialog
 import no.solcellepaneller.ui.map.MapScreenViewModel
@@ -167,22 +168,36 @@ fun AppearanceBottomSheet(
 
                 Spacer(modifier = Modifier.height(10.dp))
 
-                ElevatedCard(
-                    colors = CardDefaults.elevatedCardColors(
-                        contentColor = MaterialTheme.colorScheme.tertiary,
-                        containerColor = MaterialTheme.colorScheme.secondary
-                    ),
-                    elevation = CardDefaults.cardElevation(
-                        defaultElevation = 2.dp
-                    ),
-                    modifier = Modifier.size(width = 240.dp, height = 60.dp),
-                ) {
-                    Text(
-                        stringResource(id = R.string.font_size),
-                        modifier = Modifier
-                            .padding(16.dp).align(Alignment.CenterHorizontally),
-                    )
+//                ElevatedCard(
+//                    colors = CardDefaults.elevatedCardColors(
+//                        contentColor = MaterialTheme.colorScheme.tertiary,
+//                        containerColor = MaterialTheme.colorScheme.secondary
+//                    ),
+//                    elevation = CardDefaults.cardElevation(
+//                        defaultElevation = 2.dp
+//                    ),
+//                    modifier = Modifier.size(width = 240.dp, height = 60.dp),
+//                ) {
+//                    Text(
+//                        stringResource(id = R.string.font_size),
+//                        modifier = Modifier
+//                            .padding(16.dp).align(Alignment.CenterHorizontally),
+//                    )
+//                }
+                Row(horizontalArrangement = Arrangement.SpaceEvenly, modifier = Modifier.fillMaxWidth()) {
+                    Button(onClick = {
+                        FontSizeState.fontScale.value = (FontSizeState.fontScale.value - 0.1f).coerceAtLeast(0.8f)
+                    }) {
+                        Text("- A")
+                    }
+
+                    Button(onClick = {
+                        FontSizeState.fontScale.value = (FontSizeState.fontScale.value + 0.1f).coerceAtMost(2.0f)
+                    }) {
+                        Text("+ A")
+                    }
                 }
+
 
                 Spacer(modifier = Modifier.height(16.dp))
 
