@@ -221,7 +221,6 @@ fun AdditionalInputBottomSheet(
 
     if (visible) {
         val sheetState = rememberModalBottomSheetState(
-//            initialValue = SheetValue.Expanded,
             skipPartiallyExpanded = true
         )
 
