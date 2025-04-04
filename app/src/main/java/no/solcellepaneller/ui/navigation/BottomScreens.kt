@@ -29,16 +29,16 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.window.Dialog
 import androidx.navigation.NavController
+import no.solcellepaneller.ui.language.langSwitch
 import no.solcellepaneller.ui.map.LocationNotSelectedDialog
 import no.solcellepaneller.ui.map.MapScreenViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun HelpBottomSheet( //Kan enten velge å ha alt info her eller igjen navigate herfra til videre screeen
+fun HelpBottomSheet(
     visible: Boolean,
     onDismiss: () -> Unit,
     navController: NavController,
-
     ) {
     if (visible) {
         ModalBottomSheet(
@@ -147,22 +147,23 @@ fun AppearanceBottomSheet(
                 }
 
                 Spacer(modifier = Modifier.height(10.dp))
-                ElevatedCard(
-                    colors = CardDefaults.elevatedCardColors(
-                    contentColor = MaterialTheme.colorScheme.tertiary,
-                    containerColor = MaterialTheme.colorScheme.secondary
-                ),
-                    elevation = CardDefaults.cardElevation(
-                        defaultElevation = 2.dp
-                    ),
-                    modifier = Modifier.size(width = 240.dp, height = 60.dp),
-                ) {
-                    Text(
-                        stringResource(id = R.string.language),
-                        modifier = Modifier
-                            .padding(16.dp).align(Alignment.CenterHorizontally),
-                    )
-                }
+//                ElevatedCard(
+//                    colors = CardDefaults.elevatedCardColors(
+//                    contentColor = MaterialTheme.colorScheme.tertiary,
+//                    containerColor = MaterialTheme.colorScheme.secondary
+//                ),
+//                    elevation = CardDefaults.cardElevation(
+//                        defaultElevation = 2.dp
+//                    ),
+//                    modifier = Modifier.size(width = 240.dp, height = 60.dp),
+//                ) {
+//                    Text(
+//                        stringResource(id = R.string.language),
+//                        modifier = Modifier
+//                            .padding(16.dp).align(Alignment.CenterHorizontally),
+//                    )
+//                }
+                langSwitch()
 
                 Spacer(modifier = Modifier.height(10.dp))
 

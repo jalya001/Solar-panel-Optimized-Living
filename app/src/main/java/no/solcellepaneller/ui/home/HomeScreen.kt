@@ -33,7 +33,6 @@ import no.solcellepaneller.ui.theme.SolcellepanellerTheme
 @Composable
 fun HomeScreen(navController: NavController) {
     var showHelp by remember { mutableStateOf(false) }
-    var showInfo by remember { mutableStateOf(false) }
     var showAppearance by remember { mutableStateOf(false) }
 
     Scaffold(
@@ -57,7 +56,6 @@ fun HomeScreen(navController: NavController) {
             Button(onClick = { navController.navigate("prices") }) { Text(stringResource(id = R.string.prices)) }
 
             HelpBottomSheet(visible = showHelp, navController = navController, onDismiss = { showHelp = false })
-            //InformationBottomSheet(visible = showInfo, onDismiss = { showInfo = false })
             AppearanceBottomSheet(visible = showAppearance, onDismiss = { showAppearance = false })
         }
     }

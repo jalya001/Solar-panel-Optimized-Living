@@ -22,10 +22,11 @@
         <activity
             android:name=".MainActivity"
             android:exported="true"
-            android:theme="@style/Theme.Solcellepaneller">
+            android:theme="@style/Theme.Solcellepaneller"
+            android:configChanges="locale|colorMode|layoutDirection"
+            >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
