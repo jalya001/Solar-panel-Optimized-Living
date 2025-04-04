@@ -197,6 +197,7 @@ fun AppearanceBottomSheet(
 }
 
 
+
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun AdditionalInputBottomSheet(
@@ -209,7 +210,6 @@ fun AdditionalInputBottomSheet(
     viewModel: MapScreenViewModel
 ) {
     var angle by remember { mutableStateOf("") }
-//    var area by remember { mutableStateOf("") }
     var areaState by remember { mutableStateOf(area) }
 
     LaunchedEffect(area) {
@@ -220,8 +220,14 @@ fun AdditionalInputBottomSheet(
     var efficiency by remember { mutableStateOf("") }
 
     if (visible) {
+        val sheetState = rememberModalBottomSheetState(
+//            initialValue = SheetValue.Expanded,
+            skipPartiallyExpanded = true
+        )
+
         ModalBottomSheet(
             onDismissRequest = onDismiss,
+            sheetState=sheetState,
             containerColor = MaterialTheme.colorScheme.background,
             contentColor = MaterialTheme.colorScheme.tertiary,
             scrimColor = Color.Black.copy(alpha = 0.8f)
