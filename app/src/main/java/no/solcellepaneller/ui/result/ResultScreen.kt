@@ -90,10 +90,12 @@ fun ResultScreen(navController: NavController, viewModel: MapScreenViewModel, we
                 val calculatedMonthly = calculateMonthlyEnergyOutput(
                     airTempData, cloudCoverData, snowCoverData, panelArea, efficiency, -0.44, radiationList
                 )
+
+                val adjustedRadiation = mutableListOf<Double>()
                 val monthlyEnergyOutput = radiationList.indices.map { month ->
-                    val adjustedRadiation = radiationList[month] * (1 - (cloudCoverData[month] / 8)) * (1 - (snowCoverData[month] / 4))
+                    adjustedRadiation.add(radiationList[month] * (1 - (cloudCoverData[month] / 8)) * (1 - (snowCoverData[month] / 4)))
                     val tempFactor = 1 + (-0.44) * (airTempData[month] - 25)
-                    adjustedRadiation * panelArea * (efficiency / 100.0) * tempFactor
+                    adjustedRadiation[month] * panelArea * (efficiency / 100.0) * tempFactor
                 }
 
 
@@ -121,7 +123,7 @@ fun ResultScreen(navController: NavController, viewModel: MapScreenViewModel, we
                                 Text(stringResource(id = R.string.avg_cloud_cover)+ " %.2f".format(cloudCoverData[month] / 8))
                                 Text(stringResource(id = R.string.avg_snow_cover)+ " %.2f".format(snowCoverData[month] / 4))
                                 Text(stringResource(id = R.string.temp_factor)+ " %.2f °C".format(1 + (-0.44) * (airTempData[month] - 25)))
-                                Text(stringResource(id = R.string.adj_radiation)+ " %.2f kWh/m²\n".format(monthlyEnergyOutput[month]))
+                                Text(stringResource(id = R.string.adj_radiation)+ " %.2f kWh/m²\n".format(adjustedRadiation[month]))
                                 Text(
                                     stringResource(id = R.string.estimated_energy_prod).format(
                                         monthlyEnergyOutput[month]

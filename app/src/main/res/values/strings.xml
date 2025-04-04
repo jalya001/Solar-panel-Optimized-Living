@@ -101,7 +101,7 @@
     <string name="results"> Results  🔍</string>
     <string name="angle">📐 Angle: </string>
     <string name="direction"> 🧭 Direction: </string>
-    <string name="effectivity"> 🧭 Effectivity:  </string>
+    <string name="effectivity"> ⚡ Effectivity:  </string>
     <string name="data_not_added"> Data not added: </string>
     <string name="get_data"> 📡 Get data </string>
     <string name="loading"> ⏳ Loading Data, please wait…</string>
