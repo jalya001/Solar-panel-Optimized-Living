@@ -240,6 +240,19 @@ fun AdditionalInputBottomSheet(
                 Text(stringResource(id = R.string.coordinates_label), style = MaterialTheme.typography.labelLarge)
                 Text("Lat: ${coordinates?.first}, Lon: ${coordinates?.second}")
 
+                Spacer(modifier = Modifier.height(10.dp))
+
+                Button(
+                    onClick = {
+                        areaState = "45"
+                        angle = "30"
+                        direction = "1"
+                        efficiency = "85"
+                    },
+                    modifier = Modifier.align(Alignment.CenterHorizontally)
+                ) {
+                    Text("Fyll ut testverdier")
+                }
 
                 Spacer(modifier = Modifier.height(10.dp))
                 
@@ -264,8 +277,6 @@ fun AdditionalInputBottomSheet(
                             )
                             Text(stringResource(id = R.string.draw_area)) //Kanksje lurt å legge til noe som hindrer bruker i å klikkevekk, men samtidig vil vi at de skal kunne bytte posisjon hvis ufornøyde
                         }
-//                        Text("Fyll ut area ved å tegne området")
-
                     }
                 }
 
