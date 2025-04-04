@@ -1,14 +1,12 @@
 package no.solcellepaneller.ui.electricity
 
 import android.util.Log
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ExposedDropdownMenuBox
@@ -34,6 +32,8 @@ import androidx.navigation.NavController
 import no.solcellepaneller.data.homedata.ElectricityPriceRepository
 import no.solcellepaneller.model.electricity.ElectricityPrice
 import no.solcellepaneller.model.electricity.Region
+import no.solcellepaneller.ui.handling.ErrorScreen
+import no.solcellepaneller.ui.handling.LoadingScreen
 import no.solcellepaneller.ui.navigation.AppearanceBottomSheet
 import no.solcellepaneller.ui.navigation.BottomBar
 import no.solcellepaneller.ui.navigation.HelpBottomSheet
@@ -196,31 +196,3 @@ fun PriceList(prices: List<ElectricityPrice>) {
     }
 }
 
-@Composable
-fun LoadingScreen() {
-    Box(
-        modifier = Modifier.fillMaxSize(),
-        contentAlignment = Alignment.Center
-    ) {
-        Column(
-            horizontalAlignment = Alignment.CenterHorizontally
-        ) {
-            CircularProgressIndicator()
-            Spacer(modifier = Modifier.height(8.dp))
-            Text("Laster inn data, vennligst vent...")
-        }
-    }
-}
-
-@Composable
-fun ErrorScreen() {
-    Box(
-        modifier = Modifier.fillMaxSize(),
-        contentAlignment = Alignment.Center
-    ) {
-        Text(
-            text = "Noe gikk galt! Prøv igjen senere.",
-            style = MaterialTheme.typography.bodyLarge
-        )
-    }
-}
