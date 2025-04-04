@@ -149,6 +149,10 @@ fun PriceList(prices: List<ElectricityPrice>) {
             .fillMaxWidth()
             .padding(12.dp)
     ) {
+        Spacer(modifier = Modifier.height(16.dp))
+        ElectricityPriceChart(prices = prices)
+        Spacer(modifier = Modifier.height(16.dp))
+
         if (currentPrice != null) {
             Text(
                 text = "Pris nå: ${currentPrice.NOK_per_kWh} NOK/kWh",
