@@ -22,12 +22,19 @@ import no.solcellepaneller.ui.navigation.BottomBar
 import no.solcellepaneller.ui.navigation.HelpBottomSheet
 import no.solcellepaneller.ui.navigation.AppearanceBottomSheet
 import no.solcellepaneller.ui.font.FontScaleViewModel
+import no.solcellepaneller.ui.handling.LoadingScreen
 
 @Composable
 fun HomeScreen(navController: NavController,    fontScaleViewModel: FontScaleViewModel
 ) {
     var showHelp by remember { mutableStateOf(false) }
     var showAppearance by remember { mutableStateOf(false) }
+    var isLoading by remember { mutableStateOf(false) }
+
+    if (isLoading) {
+        LoadingScreen()
+        return
+    }
 
     Scaffold(
         bottomBar = {

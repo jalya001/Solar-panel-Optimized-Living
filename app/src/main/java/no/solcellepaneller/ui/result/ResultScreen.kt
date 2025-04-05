@@ -34,6 +34,7 @@ import no.solcellepaneller.ui.navigation.HelpBottomSheet
 
 import no.solcellepaneller.ui.navigation.TopBar
 import no.solcellepaneller.ui.font.FontScaleViewModel
+import no.solcellepaneller.ui.handling.LoadingScreen
 
 @Composable
 fun ResultScreen(navController: NavController, viewModel: MapScreenViewModel, weatherViewModel: WeatherViewModel,    fontScaleViewModel: FontScaleViewModel
@@ -142,12 +143,6 @@ fun ResultScreen(navController: NavController, viewModel: MapScreenViewModel, we
                 //Text("⚠ No snow coverage data available." )
             }
 
-//            Button(onClick = {
-//                navController.navigate("home") {
-//                    popUpTo("home") { inclusive = true }
-//                }
-//            }) { Text("🏠 Tilbake til Start") }
-
             Button(onClick = {
                 coordinates?.let {
                     weatherViewModel.fetchFrostData(it.first, it.second, listOf(
@@ -162,7 +157,8 @@ fun ResultScreen(navController: NavController, viewModel: MapScreenViewModel, we
             }
             if (startloading) {
             Column {
-                Text(stringResource(id = R.string.loading), fontWeight = FontWeight.Bold)
+//                Text(stringResource(id = R.string.loading), fontWeight = FontWeight.Bold)
+                LoadingScreen()
             }}
 
             HelpBottomSheet(visible = showHelp, navController = navController, onDismiss = { showHelp = false })

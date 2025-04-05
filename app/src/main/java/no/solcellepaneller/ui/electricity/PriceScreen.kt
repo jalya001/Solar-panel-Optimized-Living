@@ -39,6 +39,8 @@ import no.solcellepaneller.ui.navigation.BottomBar
 import no.solcellepaneller.ui.navigation.HelpBottomSheet
 import no.solcellepaneller.ui.navigation.TopBar
 import no.solcellepaneller.ui.font.FontScaleViewModel
+import no.solcellepaneller.ui.handling.ErrorScreen
+import no.solcellepaneller.ui.handling.LoadingScreen
 import java.time.ZoneId
 import java.time.ZonedDateTime
 
@@ -191,34 +193,5 @@ fun PriceList(prices: List<ElectricityPrice>) {
             )
         }
         Spacer(modifier = Modifier.height(8.dp))
-    }
-}
-
-@Composable
-fun LoadingScreen() {
-    Box(
-        modifier = Modifier.fillMaxSize(),
-        contentAlignment = Alignment.Center
-    ) {
-        Column(
-            horizontalAlignment = Alignment.CenterHorizontally
-        ) {
-            CircularProgressIndicator()
-            Spacer(modifier = Modifier.height(8.dp))
-            Text("Laster inn data, vennligst vent...")
-        }
-    }
-}
-
-@Composable
-fun ErrorScreen() {
-    Box(
-        modifier = Modifier.fillMaxSize(),
-        contentAlignment = Alignment.Center
-    ) {
-        Text(
-            text = "Noe gikk galt! Prøv igjen senere.",
-            style = MaterialTheme.typography.bodyLarge
-        )
     }
 }
