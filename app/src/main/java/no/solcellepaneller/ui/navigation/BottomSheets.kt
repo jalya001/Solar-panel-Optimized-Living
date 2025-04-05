@@ -23,11 +23,13 @@ import androidx.compose.ui.text.style.TextAlign
 import no.solcellepaneller.R
 import no.solcellepaneller.ui.theme.ThemeState
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Create
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.platform.LocalDensity
+import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.Density
 import androidx.navigation.NavController
 import no.solcellepaneller.ui.font.FontSizeManager
@@ -269,8 +271,12 @@ fun AdditionalInputBottomSheet(
 
                 Row {
                     TextField(
+                        label = { Text(stringResource(id = R.string.area_label)) },
                         value = areaState,
-                        onValueChange = { areaState = it }
+                        onValueChange = { newValue ->
+                            areaState = newValue.filter { it.isDigit() } //Tillater ikke komma dessverre
+                        },
+                        keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number)
                     )
                     Button(
                         onClick = {
@@ -295,8 +301,11 @@ fun AdditionalInputBottomSheet(
                 TextField(
                     label = { Text(stringResource(id = R.string.slope_label)) },
                     value = angle,
-                    onValueChange = { angle = it },
-                    modifier = Modifier.fillMaxWidth()
+                    onValueChange = { newValue ->
+                        angle = newValue.filter { it.isDigit() }//Tillater ikke komma dessverre
+                    },
+                    modifier = Modifier.fillMaxWidth(),
+                    keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number)
                 )
 
                 Spacer(modifier = Modifier.height(10.dp))
@@ -315,8 +324,11 @@ fun AdditionalInputBottomSheet(
                 TextField(
                     label = { Text(stringResource(id = R.string.efficiency_label)) },
                     value = efficiency,
-                    onValueChange = { efficiency = it },
-                    modifier = Modifier.fillMaxWidth()
+                    onValueChange = { newValue ->
+                        efficiency = newValue.filter { it.isDigit() }//Tillater ikke komma dessverre
+                    },
+                    modifier = Modifier.fillMaxWidth(),
+                    keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number)
                 )
 
                 Spacer(modifier = Modifier.height(16.dp))
