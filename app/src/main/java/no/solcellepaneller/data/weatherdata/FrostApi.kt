@@ -4,6 +4,7 @@ import io.ktor.client.engine.cio.*
 import io.ktor.client.request.*
 import io.ktor.http.HttpHeaders
 import io.ktor.client.call.*
+import io.ktor.client.plugins.HttpTimeout
 import io.ktor.client.statement.*
 import java.net.URLEncoder
 import java.nio.charset.StandardCharsets
@@ -677,6 +678,12 @@ class FrostApi {
             install(ContentNegotiation) {
                 json()
             }
+//            install(HttpTimeout){
+//                requestTimeoutMillis = 200_000
+//                connectTimeoutMillis = 200_000
+//                socketTimeoutMillis = 200_000
+//            }
+
         }
         //val center = LocationValue(59.91, 10.75) // middle of oslo
         //val center = LocationValue(60.386163, 8.259478) // middle of the mountains
