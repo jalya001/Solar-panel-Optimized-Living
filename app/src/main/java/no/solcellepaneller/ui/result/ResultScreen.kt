@@ -78,7 +78,7 @@ fun ResultScreen(navController: NavController, viewModel: MapScreenViewModel, we
             Text("📍 Long: ${coordinates?.second ?: "N/A"}")
             Text("📏 Areal: ${viewModel.areaInput} m²")
             Text(text = "${stringResource(id = R.string.angle)} ${viewModel.angleInput}°")
-            Text(text = "${stringResource(id = R.string.direction)}  ${viewModel.directionInput}")
+//            Text(text = "${stringResource(id = R.string.direction)}  ${viewModel.directionInput}")
             Text(text = "${stringResource(id = R.string.effectivity)} ${viewModel.efficiencyInput} %")
             if(loading){
                 startloading = true

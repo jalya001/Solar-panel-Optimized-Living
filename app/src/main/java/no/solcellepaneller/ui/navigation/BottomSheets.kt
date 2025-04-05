@@ -219,7 +219,7 @@ fun AdditionalInputBottomSheet(
         areaState = area
     }
 
-    var direction by remember { mutableStateOf("") }
+//    var direction by remember { mutableStateOf("") }
     var efficiency by remember { mutableStateOf("") }
 
     if (visible) {
@@ -255,7 +255,7 @@ fun AdditionalInputBottomSheet(
                     onClick = {
                         areaState = "45"
                         angle = "30"
-                        direction = "1"
+//                        direction = "1"
                         efficiency = "85"
                     },
                     modifier = Modifier.align(Alignment.CenterHorizontally)
@@ -301,13 +301,13 @@ fun AdditionalInputBottomSheet(
 
                 Spacer(modifier = Modifier.height(10.dp))
 
-                Text(stringResource(id = R.string.direction_label), style = MaterialTheme.typography.labelLarge)
-                TextField(
-                    label = { Text(stringResource(id = R.string.direction_label)) },
-                    value = direction,
-                    onValueChange = { direction = it },
-                    modifier = Modifier.fillMaxWidth()
-                )
+//                Text(stringResource(id = R.string.direction_label), style = MaterialTheme.typography.labelLarge)
+//                TextField(
+//                    label = { Text(stringResource(id = R.string.direction_label)) },
+//                    value = direction,
+//                    onValueChange = { direction = it },
+//                    modifier = Modifier.fillMaxWidth()
+//                )
 
                 Spacer(modifier = Modifier.height(10.dp))
 
@@ -321,12 +321,11 @@ fun AdditionalInputBottomSheet(
 
                 Spacer(modifier = Modifier.height(16.dp))
 
-                if (areaState.isNotEmpty() && direction.isNotEmpty() && angle.isNotEmpty() && efficiency.isNotEmpty() && coordinates != null) {
+                if (areaState.isNotEmpty() && angle.isNotEmpty() && efficiency.isNotEmpty() && coordinates != null) {
                     Button(
                         onClick = {
                             viewModel.areaInput = areaState
                             viewModel.angleInput = angle
-                            viewModel.directionInput = direction
                             viewModel.efficiencyInput = efficiency
                             navController.navigate("result")
                         },
@@ -335,30 +334,21 @@ fun AdditionalInputBottomSheet(
                         Text("Gå til resultater")
                     }
                 }
+//                if (areaState.isNotEmpty() && direction.isNotEmpty() && angle.isNotEmpty() && efficiency.isNotEmpty() && coordinates != null) {
+//                    Button(
+//                        onClick = {
+//                            viewModel.areaInput = areaState
+//                            viewModel.angleInput = angle
+//                            viewModel.directionInput = direction
+//                            viewModel.efficiencyInput = efficiency
+//                            navController.navigate("result")
+//                        },
+//                        modifier = Modifier.align(Alignment.CenterHorizontally)
+//                    ) {
+//                        Text("Gå til resultater")
+//                    }
+//                }
 
             }        }
     }
 }}
-@Composable
-fun FontSizeControls() {
-    val currentScale = FontSizeManager.userFontScale
-
-    Column {
-        Text("Text Size")
-
-        Button(onClick = { FontSizeManager.setCustomScale(1.0f) }) {
-            Text("Default")
-        }
-        Button(onClick = { FontSizeManager.setCustomScale(1.2f) }) {
-            Text("Bigger")
-        }
-        Button(onClick = { FontSizeManager.setCustomScale(0.8f) }) {
-            Text("Smaller")
-        }
-        Button(onClick = { FontSizeManager.resetToSystem() }) {
-            Text("Use System")
-        }
-
-        Text("Current scale: ${currentScale ?: "System default"}")
-    }
-}

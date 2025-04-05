@@ -116,6 +116,5 @@
     <string name="estimated_energy_prod"> 🔋 Estimert produsert energi: %.2f kWh </string>
     <string name="estimated_powerpr_hour"> 📊 Estimert kraft produsert per time: </string>
     <string name="address_not_found">Addresse ikke funnet, prøv igjen</string>
-    <string name="address_not_found">A</string>
 
 </resources>
