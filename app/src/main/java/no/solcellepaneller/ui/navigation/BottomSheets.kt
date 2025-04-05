@@ -27,12 +27,14 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Create
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
-import androidx.compose.ui.window.Dialog
+import androidx.compose.ui.platform.LocalDensity
+import androidx.compose.ui.unit.Density
 import androidx.navigation.NavController
+import no.solcellepaneller.ui.font.FontSizeManager
 import no.solcellepaneller.ui.font.FontSizeState
 import no.solcellepaneller.ui.language.langSwitch
-import no.solcellepaneller.ui.map.LocationNotSelectedDialog
 import no.solcellepaneller.ui.map.MapScreenViewModel
+import no.solcellepaneller.ui.font.FontScaleViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -42,6 +44,12 @@ fun HelpBottomSheet(
     navController: NavController,
     ) {
     if (visible) {
+        val currentDensity = LocalDensity.current
+        val customDensity = Density(
+            density = currentDensity.density,
+            fontScale = FontSizeState.fontScale.value
+        )
+
         ModalBottomSheet(
             onDismissRequest = onDismiss,
             containerColor = MaterialTheme.colorScheme.background,
@@ -71,7 +79,7 @@ fun HelpBottomSheet(
                         stringResource(id = R.string.help_how),
                         modifier = Modifier
                             .padding(16.dp),
-                        textAlign = TextAlign.Center,
+                        textAlign = TextAlign.Center, style = MaterialTheme.typography.bodySmall
                     )
                 }
 
@@ -101,7 +109,7 @@ fun HelpBottomSheet(
                 Button(
                     onClick = onDismiss,
                 ) {
-                    Text(stringResource(id = R.string.close))
+                    Text(stringResource(id = R.string.close), style = MaterialTheme.typography.bodySmall)
                 }
             }
         }
@@ -113,15 +121,23 @@ fun HelpBottomSheet(
 @Composable
 fun AppearanceBottomSheet(
     visible: Boolean,
-    onDismiss: () -> Unit
+    onDismiss: () -> Unit,
+    fontScaleViewModel: FontScaleViewModel
 ) {
     if (visible) {
+        val currentDensity = LocalDensity.current
+        val customDensity = Density(
+            density = currentDensity.density,
+            fontScale = FontSizeState.fontScale.value
+        )
+
         ModalBottomSheet(
             onDismissRequest = onDismiss,
             containerColor = MaterialTheme.colorScheme.background,
             contentColor = MaterialTheme.colorScheme.tertiary,
             scrimColor = Color.Black.copy(alpha = 0.8f)
         ) {
+            CompositionLocalProvider(LocalDensity provides customDensity) {
             Column(
                 modifier = Modifier
                     .fillMaxWidth()
@@ -148,66 +164,38 @@ fun AppearanceBottomSheet(
                 }
 
                 Spacer(modifier = Modifier.height(10.dp))
-//                ElevatedCard(
-//                    colors = CardDefaults.elevatedCardColors(
-//                    contentColor = MaterialTheme.colorScheme.tertiary,
-//                    containerColor = MaterialTheme.colorScheme.secondary
-//                ),
-//                    elevation = CardDefaults.cardElevation(
-//                        defaultElevation = 2.dp
-//                    ),
-//                    modifier = Modifier.size(width = 240.dp, height = 60.dp),
-//                ) {
-//                    Text(
-//                        stringResource(id = R.string.language),
-//                        modifier = Modifier
-//                            .padding(16.dp).align(Alignment.CenterHorizontally),
-//                    )
-//                }
+
                 langSwitch()
 
                 Spacer(modifier = Modifier.height(10.dp))
 
-//                ElevatedCard(
-//                    colors = CardDefaults.elevatedCardColors(
-//                        contentColor = MaterialTheme.colorScheme.tertiary,
-//                        containerColor = MaterialTheme.colorScheme.secondary
-//                    ),
-//                    elevation = CardDefaults.cardElevation(
-//                        defaultElevation = 2.dp
-//                    ),
-//                    modifier = Modifier.size(width = 240.dp, height = 60.dp),
-//                ) {
-//                    Text(
-//                        stringResource(id = R.string.font_size),
-//                        modifier = Modifier
-//                            .padding(16.dp).align(Alignment.CenterHorizontally),
-//                    )
-//                }
                 Row(horizontalArrangement = Arrangement.SpaceEvenly, modifier = Modifier.fillMaxWidth()) {
                     Button(onClick = {
-                        FontSizeState.fontScale.value = (FontSizeState.fontScale.value - 0.1f).coerceAtLeast(0.8f)
+                        fontScaleViewModel.decreaseFontScale()
                     }) {
-                        Text("- A")
+                        Text("- A", style = MaterialTheme.typography.bodySmall)
                     }
-
                     Button(onClick = {
-                        FontSizeState.fontScale.value = (FontSizeState.fontScale.value + 0.1f).coerceAtMost(2.0f)
+                        fontScaleViewModel.resetFontScale()
                     }) {
-                        Text("+ A")
+                        Text("Reset", style = MaterialTheme.typography.bodySmall)
+                    }
+                    Button(onClick = {
+                        fontScaleViewModel.increaseFontScale()
+                    }) {
+                        Text("+ A", style = MaterialTheme.typography.bodySmall)
                     }
                 }
-
 
                 Spacer(modifier = Modifier.height(16.dp))
 
                 Button(
                     onClick = onDismiss,
                 ) {
-                    Text(stringResource(id = R.string.close))
+                    Text(stringResource(id = R.string.close), style = MaterialTheme.typography.bodySmall)
                 }
             }
-        }
+        }}
     }
 }
 
@@ -235,10 +223,16 @@ fun AdditionalInputBottomSheet(
     var efficiency by remember { mutableStateOf("") }
 
     if (visible) {
+        val currentDensity = LocalDensity.current
+        val customDensity = Density(
+            density = currentDensity.density,
+            fontScale = FontSizeState.fontScale.value
+        )
+
         val sheetState = rememberModalBottomSheetState(
             skipPartiallyExpanded = true
         )
-
+        CompositionLocalProvider(LocalDensity provides customDensity) {
         ModalBottomSheet(
             onDismissRequest = onDismiss,
             sheetState=sheetState,
@@ -344,19 +338,27 @@ fun AdditionalInputBottomSheet(
 
             }        }
     }
-}
+}}
+@Composable
+fun FontSizeControls() {
+    val currentScale = FontSizeManager.userFontScale
 
-//@Preview(
-//    uiMode = Configuration.UI_MODE_NIGHT_YES,
-//    name = "DefaultPreviewDark"
-//)
-//@Preview(
-//    uiMode = Configuration.UI_MODE_NIGHT_NO,
-//    name = "DefaultPreviewLight"
-//)
-//@Composable
-//    fun AppPreview() {
-//    SolcellepanellerTheme {
-//        App()
-//    }
-//}
+    Column {
+        Text("Text Size")
+
+        Button(onClick = { FontSizeManager.setCustomScale(1.0f) }) {
+            Text("Default")
+        }
+        Button(onClick = { FontSizeManager.setCustomScale(1.2f) }) {
+            Text("Bigger")
+        }
+        Button(onClick = { FontSizeManager.setCustomScale(0.8f) }) {
+            Text("Smaller")
+        }
+        Button(onClick = { FontSizeManager.resetToSystem() }) {
+            Text("Use System")
+        }
+
+        Text("Current scale: ${currentScale ?: "System default"}")
+    }
+}

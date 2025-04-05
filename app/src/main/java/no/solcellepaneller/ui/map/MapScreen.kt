@@ -9,7 +9,9 @@ import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.unit.Density
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.zIndex
 import androidx.navigation.NavController
@@ -21,6 +23,7 @@ import kotlinx.coroutines.launch
 import no.solcellepaneller.ui.navigation.AdditionalInputBottomSheet
 import no.solcellepaneller.ui.navigation.TopBar
 import no.solcellepaneller.R
+import no.solcellepaneller.ui.font.FontSizeState
 import no.solcellepaneller.ui.navigation.HelpBottomSheet
 
 @Composable
@@ -306,6 +309,13 @@ fun LocationNotSelectedDialog(
     var showDialog by remember { mutableStateOf(coordinates == null) }
 
     if (showDialog && coordinates == null) {
+        val currentDensity = LocalDensity.current
+        val customDensity = Density(
+            density = currentDensity.density,
+            fontScale = FontSizeState.fontScale.value
+        )
+
+        CompositionLocalProvider(LocalDensity provides customDensity) {
         AlertDialog(
             onDismissRequest = onDismiss,
             title = {
@@ -329,6 +339,6 @@ fun LocationNotSelectedDialog(
                 }
             }
         )
-    }
+    }}
 }
 

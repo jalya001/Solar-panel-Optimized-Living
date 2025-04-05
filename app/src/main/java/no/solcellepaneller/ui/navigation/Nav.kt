@@ -31,35 +31,31 @@ import no.solcellepaneller.ui.map.MapScreen
 import no.solcellepaneller.ui.map.MapScreenViewModel
 import no.solcellepaneller.ui.result.ResultScreen
 import no.solcellepaneller.ui.savedLocations.SavedLocationsScreen
-import android.os.Bundle
-import androidx.activity.ComponentActivity
-import androidx.activity.compose.setContent
-import androidx.activity.enableEdgeToEdge
 import androidx.navigation.navArgument
-import no.solcellepaneller.ui.electricity.PriceScreen
 import no.solcellepaneller.ui.help.AppHelp
 import no.solcellepaneller.ui.help.TechnicalHelp
 import no.solcellepaneller.ui.result.WeatherViewModel
+import no.solcellepaneller.ui.font.FontScaleViewModel
 
 @Composable
-fun Nav(navController: NavHostController) {
+fun Nav(navController: NavHostController, fontScaleViewModel: FontScaleViewModel) {
         val viewModel: MapScreenViewModel = viewModel()
     NavHost(navController, startDestination = "home") {
-        composable("home") { HomeScreen(navController) }
+        composable("home") { HomeScreen(navController,fontScaleViewModel) }
         composable("map") {
             MapScreen(viewModel, navController)
         }
         composable("result") {
             val WviewModel: WeatherViewModel = viewModel()
-            ResultScreen(navController,viewModel,WviewModel) }
-        composable("saved_locations") { SavedLocationsScreen(navController) }
+            ResultScreen(navController,viewModel,WviewModel,fontScaleViewModel) }
+        composable("saved_locations") { SavedLocationsScreen(navController,fontScaleViewModel) }
         composable("prices") {
             val repository = ElectricityPriceRepository("NO1")
             PriceScreen(
             repository = repository,
-            navController = navController,
+            navController = navController,fontScaleViewModel
         ) }
-        composable("info_screen") { InfoScreen(navController)}
+        composable("info_screen") { InfoScreen(navController,fontScaleViewModel)}
 //        composable("app_help") { AppHelp(navController) }
         composable(
             "app_help?expandSection={expandSection}",
@@ -68,9 +64,9 @@ fun Nav(navController: NavHostController) {
             )
         ) { backStackEntry ->
             val expandSection = backStackEntry.arguments?.getString("expandSection") ?: ""
-            AppHelp(navController, expandSection)
+            AppHelp(navController, expandSection,fontScaleViewModel)
         }
-        composable("tech_help") { TechnicalHelp(navController) }
+        composable("tech_help") { TechnicalHelp(navController,fontScaleViewModel) }
     }
 }
 

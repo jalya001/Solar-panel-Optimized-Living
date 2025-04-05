@@ -8,20 +8,15 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ExposedDropdownMenuBox
 import androidx.compose.material3.ExposedDropdownMenuDefaults
-import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
-import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -43,6 +38,7 @@ import no.solcellepaneller.ui.navigation.AppearanceBottomSheet
 import no.solcellepaneller.ui.navigation.BottomBar
 import no.solcellepaneller.ui.navigation.HelpBottomSheet
 import no.solcellepaneller.ui.navigation.TopBar
+import no.solcellepaneller.ui.font.FontScaleViewModel
 import java.time.ZoneId
 import java.time.ZonedDateTime
 
@@ -50,7 +46,7 @@ import java.time.ZonedDateTime
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun PriceScreen(
-    repository: ElectricityPriceRepository,navController: NavController
+    repository: ElectricityPriceRepository,navController: NavController,    fontScaleViewModel: FontScaleViewModel
 ) {
     var showHelp by remember { mutableStateOf(false) }
     var showAppearance by remember { mutableStateOf(false) }
@@ -91,8 +87,11 @@ fun PriceScreen(
             }
 
             HelpBottomSheet(visible = showHelp, navController = navController, onDismiss = { showHelp = false })
-            AppearanceBottomSheet(visible = showAppearance, onDismiss = { showAppearance = false })
-        }
+AppearanceBottomSheet(
+    visible = showAppearance,
+    onDismiss = { showAppearance = false },
+    fontScaleViewModel = fontScaleViewModel
+)        }
     }
 }
 
@@ -111,7 +110,7 @@ fun RegionDropdown(
             value = selectedRegion.displayName,
             onValueChange = {},
             readOnly = true,
-            label = { Text("Velg distrikt", color = Color.Blue) },
+            label = { Text("Velg distrikt", color = Color.Blue, style = MaterialTheme.typography.bodySmall) },
             trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(expanded) },
             textStyle = TextStyle(color = Color.Black, fontSize = 18.sp),
             modifier = Modifier
@@ -124,7 +123,7 @@ fun RegionDropdown(
         ) {
             Region.entries.forEach { region ->
                 DropdownMenuItem(
-                    text = { Text(region.displayName) },
+                    text = { Text(region.displayName, style = MaterialTheme.typography.bodySmall) },
                     onClick = {
                         onRegionSelected(region)
                         expanded = false

@@ -1,6 +1,5 @@
 package no.solcellepaneller.ui.result
 
-import android.util.Log
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
@@ -34,9 +33,11 @@ import no.solcellepaneller.ui.navigation.BottomBar
 import no.solcellepaneller.ui.navigation.HelpBottomSheet
 
 import no.solcellepaneller.ui.navigation.TopBar
+import no.solcellepaneller.ui.font.FontScaleViewModel
 
 @Composable
-fun ResultScreen(navController: NavController, viewModel: MapScreenViewModel, weatherViewModel: WeatherViewModel ) {
+fun ResultScreen(navController: NavController, viewModel: MapScreenViewModel, weatherViewModel: WeatherViewModel,    fontScaleViewModel: FontScaleViewModel
+) {
     val frostData by weatherViewModel.frostData.collectAsState()
     val radiationData by weatherViewModel.radiationData.collectAsState()
     val radiationList = remember(radiationData) { radiationData.map { it.radiation } }
@@ -165,8 +166,11 @@ fun ResultScreen(navController: NavController, viewModel: MapScreenViewModel, we
             }}
 
             HelpBottomSheet(visible = showHelp, navController = navController, onDismiss = { showHelp = false })
-            AppearanceBottomSheet(visible = showAppearance, onDismiss = { showAppearance = false })
-        }
+AppearanceBottomSheet(
+    visible = showAppearance,
+    onDismiss = { showAppearance = false },
+    fontScaleViewModel = fontScaleViewModel
+)        }
     }
 }
 

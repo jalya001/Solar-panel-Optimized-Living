@@ -2,7 +2,6 @@ package no.solcellepaneller.ui.infoscreen
 
 
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
@@ -22,22 +21,32 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import no.solcellepaneller.R
+import no.solcellepaneller.ui.navigation.AppearanceBottomSheet
+import no.solcellepaneller.ui.navigation.BottomBar
+import no.solcellepaneller.ui.navigation.HelpBottomSheet
 import no.solcellepaneller.ui.navigation.TopBar
+import no.solcellepaneller.ui.font.FontScaleViewModel
 import no.solcellepaneller.ui.theme.SolcellepanellerTheme
 
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun InfoScreen(navController: NavController) {
+fun InfoScreen(navController: NavController, fontScaleViewModel: FontScaleViewModel
+) {
     SolcellepanellerTheme {
-    Scaffold(
-        topBar = {
-            TopBar(
-                navController
-            )
-        },
+        var showHelp by remember { mutableStateOf(false) }
+        var showAppearance by remember { mutableStateOf(false) }
 
-    ) { padding ->
+        Scaffold(
+            topBar = { TopBar(navController) },
+            bottomBar = {
+                BottomBar(
+                    onHelpClicked = { showHelp = true },
+                    onAppearanceClicked = { showAppearance = true },
+                    navController = navController
+                )
+            }
+        ) { padding ->
         LazyColumn (
             modifier = Modifier
                 .padding(padding)
@@ -84,6 +93,12 @@ fun InfoScreen(navController: NavController) {
 
                 }
             }
+            HelpBottomSheet(visible = showHelp, navController = navController, onDismiss = { showHelp = false })
+            AppearanceBottomSheet(
+                visible = showAppearance,
+                onDismiss = { showAppearance = false },
+                fontScaleViewModel = fontScaleViewModel
+            )
         }
     }
 }

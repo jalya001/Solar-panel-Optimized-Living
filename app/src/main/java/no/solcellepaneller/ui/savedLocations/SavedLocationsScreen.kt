@@ -1,6 +1,5 @@
 package no.solcellepaneller.ui.savedLocations
 
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
@@ -22,30 +21,38 @@ import androidx.compose.ui.res.stringResource
 import no.solcellepaneller.R
 import no.solcellepaneller.ui.navigation.AppearanceBottomSheet
 import no.solcellepaneller.ui.navigation.HelpBottomSheet
-
+import no.solcellepaneller.ui.font.FontScaleViewModel
 
 
 @Composable
-fun SavedLocationsScreen(navController: NavController) {
+fun SavedLocationsScreen(navController: NavController,    fontScaleViewModel: FontScaleViewModel
+) {
     var showHelp by remember { mutableStateOf(false) }
-    var showInfo by remember { mutableStateOf(false) }
     var showAppearance by remember { mutableStateOf(false) }
 
     Scaffold(
         topBar = { TopBar(navController) },
         bottomBar = {
-
- } ){ contentPadding ->
+            BottomBar(
+                onHelpClicked = { showHelp = true },
+                onAppearanceClicked = { showAppearance = true },
+                navController = navController
+            )
+        }
+    ){ contentPadding ->
         Column(
             modifier = Modifier.fillMaxSize().padding(contentPadding),
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.Center
         ) {
-            Text(stringResource(id = R.string.saved_locations))
+            Text(stringResource(id = R.string.saved_locations), style = MaterialTheme.typography.bodyMedium)
 
             HelpBottomSheet(visible = showHelp, navController = navController, onDismiss = { showHelp = false })
            
-            AppearanceBottomSheet(visible = showAppearance, onDismiss = { showAppearance = false })
-        }
+AppearanceBottomSheet(
+    visible = showAppearance,
+    onDismiss = { showAppearance = false },
+    fontScaleViewModel = fontScaleViewModel
+)        }
     }
 }
