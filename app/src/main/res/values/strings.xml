@@ -114,4 +114,7 @@
     <string name="adj_radiation"> ⚡ Adjusted Radiation: </string>
     <string name="estimated_energy_prod"> 🔋 Estimated Energy Produced: %.2f kWh </string>
     <string name="estimated_powerpr_hour"> 📊 Estimated Power Produced per Hour: </string>
+
+
+    <string name="address_not_found">Address not found, try again</string>
 </resources>

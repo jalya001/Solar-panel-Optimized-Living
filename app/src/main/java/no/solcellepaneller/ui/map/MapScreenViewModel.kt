@@ -38,6 +38,8 @@ class MapScreenViewModel(
     private val _coordinates = MutableLiveData<Pair<Double, Double>>()
     val coordinates: LiveData<Pair<Double, Double>> = _coordinates
 
+
+
     //could add adress name
     var polygondata= mutableStateListOf<LatLng>()
 
@@ -84,6 +86,9 @@ class MapScreenViewModel(
 
     }
 
+    val addressFetchError = mutableStateOf(false)
+    val snackbarMessageTrigger = mutableStateOf(0)
+
     fun fetchCoordinates(address: String) {
         viewModelScope.launch {
             try {
@@ -91,15 +96,17 @@ class MapScreenViewModel(
                 if (result.isNotEmpty()) {
                     val coordinate = result[0]
                     _coordinates.postValue(Pair(coordinate.lat.toDouble(), coordinate.lon.toDouble()))
-
+                } else {
+                    snackbarMessageTrigger.value++
                 }
-
             } catch (e: Exception) {
-                // Handle error, like no network, etc.
                 Log.e("MyViewModel", "Error fetching coordinates", e)
+                snackbarMessageTrigger.value++
             }
         }
     }
+
+
     // to change if map is clicked not used
     fun selectLocation(lat: Double, lon: Double) {
         _coordinates.postValue(lat to lon)  //  Updates lat/lon

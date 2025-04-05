@@ -28,7 +28,20 @@ import no.solcellepaneller.ui.navigation.HelpBottomSheet
 
 @Composable
 fun MapScreen(viewModel: MapScreenViewModel, navController: NavController) {
+    val snackbarHostState = remember { SnackbarHostState() }
+    val trigger by viewModel.snackbarMessageTrigger
+
+    var lastShownTrigger by remember { mutableStateOf(0) }
+
+    LaunchedEffect(trigger) {
+        if (trigger > lastShownTrigger) {
+            snackbarHostState.showSnackbar("Address not found, try again")
+            lastShownTrigger = trigger
+        }
+    }
+
     Scaffold(
+        snackbarHost={SnackbarHost(hostState = snackbarHostState)},
         topBar = { TopBar(navController) },
     ) { contentPadding ->
         Column(
@@ -142,7 +155,10 @@ fun DisplayScreen(viewModel: MapScreenViewModel, navController: NavController) {
             Row {
                 InputField(
                     value = address,
-                    onValueChange = { address = it },
+                    onValueChange = {
+                        address = it
+                        viewModel.addressFetchError.value = false
+                    },
                     label = stringResource(id = R.string.enter_address)
                 )
 
