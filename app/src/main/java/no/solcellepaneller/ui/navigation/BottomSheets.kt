@@ -32,12 +32,18 @@ import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.Density
 import androidx.navigation.NavController
-import no.solcellepaneller.ui.font.FontSizeManager
 import no.solcellepaneller.ui.font.FontSizeState
 import no.solcellepaneller.ui.language.langSwitch
 import no.solcellepaneller.ui.map.MapScreenViewModel
 import no.solcellepaneller.ui.font.FontScaleViewModel
 import no.solcellepaneller.ui.theme.ThemeMode
+import androidx.compose.ui.text.AnnotatedString
+import androidx.compose.ui.text.input.OffsetMapping
+import androidx.compose.ui.text.input.TransformedText
+import androidx.compose.ui.text.input.VisualTransformation
+import no.solcellepaneller.ui.handling.DecimalFormatter
+import no.solcellepaneller.ui.handling.DecimalInputField
+import java.text.DecimalFormatSymbols
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -298,17 +304,17 @@ fun AdditionalInputBottomSheet(
 
                 Spacer(modifier = Modifier.height(10.dp))
                 
-                Text("Areal (m²)", style = MaterialTheme.typography.labelLarge)
+                Text(stringResource(id = R.string.area_label), style = MaterialTheme.typography.labelLarge)
+
+                val decimalFormatter = DecimalFormatter()
 
                 Row {
-                    TextField(
-                        label = { Text(stringResource(id = R.string.area_label)) },
+                    DecimalInputField(
+                        decimalFormatter = decimalFormatter,
                         value = areaState,
-                        onValueChange = { newValue ->
-                            areaState = newValue.filter { it.isDigit() } //Tillater ikke komma dessverre
-                        },
-                        keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number)
+                        label = stringResource(id=R.string.area_label)
                     )
+
                     Button(
                         onClick = {
                             onStartDrawing()
@@ -329,38 +335,12 @@ fun AdditionalInputBottomSheet(
                 Spacer(modifier = Modifier.height(10.dp))
 
                 Text(stringResource(id = R.string.slope_label), style = MaterialTheme.typography.labelLarge)
-                TextField(
-                    label = { Text(stringResource(id = R.string.slope_label)) },
-                    value = angle,
-                    onValueChange = { newValue ->
-                        angle = newValue.filter { it.isDigit() }//Tillater ikke komma dessverre
-                    },
-                    modifier = Modifier.fillMaxWidth(),
-                    keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number)
-                )
-
-                Spacer(modifier = Modifier.height(10.dp))
-
-//                Text(stringResource(id = R.string.direction_label), style = MaterialTheme.typography.labelLarge)
-//                TextField(
-//                    label = { Text(stringResource(id = R.string.direction_label)) },
-//                    value = direction,
-//                    onValueChange = { direction = it },
-//                    modifier = Modifier.fillMaxWidth()
-//                )
+                DecimalInputField(label =stringResource(id=R.string.slope_label) ,modifier = Modifier.fillMaxWidth(), value = angle, decimalFormatter = decimalFormatter)
 
                 Spacer(modifier = Modifier.height(10.dp))
 
                 Text(stringResource(id = R.string.efficiency_label), style = MaterialTheme.typography.labelLarge)
-                TextField(
-                    label = { Text(stringResource(id = R.string.efficiency_label)) },
-                    value = efficiency,
-                    onValueChange = { newValue ->
-                        efficiency = newValue.filter { it.isDigit() }//Tillater ikke komma dessverre
-                    },
-                    modifier = Modifier.fillMaxWidth(),
-                    keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number)
-                )
+                DecimalInputField(label = stringResource(id=R.string.efficiency_label), modifier = Modifier.fillMaxWidth(), value = efficiency, decimalFormatter = decimalFormatter)
 
                 Spacer(modifier = Modifier.height(16.dp))
 
@@ -377,20 +357,6 @@ fun AdditionalInputBottomSheet(
                         Text("Gå til resultater")
                     }
                 }
-//                if (areaState.isNotEmpty() && direction.isNotEmpty() && angle.isNotEmpty() && efficiency.isNotEmpty() && coordinates != null) {
-//                    Button(
-//                        onClick = {
-//                            viewModel.areaInput = areaState
-//                            viewModel.angleInput = angle
-//                            viewModel.directionInput = direction
-//                            viewModel.efficiencyInput = efficiency
-//                            navController.navigate("result")
-//                        },
-//                        modifier = Modifier.align(Alignment.CenterHorizontally)
-//                    ) {
-//                        Text("Gå til resultater")
-//                    }
-//                }
 
             }        }
     }
