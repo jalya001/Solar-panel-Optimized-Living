@@ -117,5 +117,6 @@
     <string name="estimated_powerpr_hour"> 📊 Estimert kraft produsert per time: </string>
     <string name="address_not_found">Addresse ikke funnet, prøv igjen</string>
     <string name="follow_system">Følg systemtema</string>
+    <string name="navigate_results">Gå til resultater</string>
 
 </resources>
