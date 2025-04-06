@@ -1,5 +1,6 @@
 package no.solcellepaneller.ui.theme
 
+import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Typography
 import androidx.compose.material3.darkColorScheme
@@ -54,8 +55,12 @@ private val LightColorScheme = lightColorScheme(
 //    onSurface = Color.White,
 )
 
+enum class ThemeMode {
+    LIGHT, DARK, SYSTEM
+}
+
 object ThemeState {
-    var isDark by mutableStateOf(false)
+    var themeMode by mutableStateOf(ThemeMode.SYSTEM)
 }
 
 @Composable
@@ -63,11 +68,15 @@ fun SolcellepanellerTheme(
     fontScale: Float = LocalDensity.current.fontScale,
     content: @Composable () -> Unit
 ) {
-    val colors = if (!ThemeState.isDark) {
-        LightColorScheme
-    } else {
-        DarkColorScheme
+    val systemInDarkTheme = isSystemInDarkTheme()
+
+    val isDark = when (ThemeState.themeMode) {
+        ThemeMode.DARK -> true
+        ThemeMode.LIGHT -> false
+        ThemeMode.SYSTEM -> systemInDarkTheme
     }
+
+    val colors = if (isDark) DarkColorScheme else LightColorScheme
 
     val baseTypography = Typography()
 

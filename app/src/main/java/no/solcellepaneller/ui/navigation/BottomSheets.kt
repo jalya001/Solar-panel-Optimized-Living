@@ -37,6 +37,7 @@ import no.solcellepaneller.ui.font.FontSizeState
 import no.solcellepaneller.ui.language.langSwitch
 import no.solcellepaneller.ui.map.MapScreenViewModel
 import no.solcellepaneller.ui.font.FontScaleViewModel
+import no.solcellepaneller.ui.theme.ThemeMode
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -46,12 +47,6 @@ fun HelpBottomSheet(
     navController: NavController,
     ) {
     if (visible) {
-        val currentDensity = LocalDensity.current
-        val customDensity = Density(
-            density = currentDensity.density,
-            fontScale = FontSizeState.fontScale.value
-        )
-
         ModalBottomSheet(
             onDismissRequest = onDismiss,
             containerColor = MaterialTheme.colorScheme.background,
@@ -140,68 +135,104 @@ fun AppearanceBottomSheet(
             scrimColor = Color.Black.copy(alpha = 0.8f)
         ) {
             CompositionLocalProvider(LocalDensity provides customDensity) {
-            Column(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(16.dp), horizontalAlignment = Alignment.CenterHorizontally
-            ) {
-                Text(stringResource(id = R.string.appereance), style = MaterialTheme.typography.titleLarge)
-
-                ElevatedCard(
-                    colors = CardDefaults.elevatedCardColors(
-                        contentColor = MaterialTheme.colorScheme.tertiary,
-                        containerColor = MaterialTheme.colorScheme.secondary
-                    ),
-                    elevation = CardDefaults.cardElevation(
-                        defaultElevation = 2.dp
-                    ),
-                    modifier = Modifier.size(width = 240.dp, height = 60.dp),
-                    onClick = {ThemeState.isDark = !ThemeState.isDark}
+                Column(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(16.dp), horizontalAlignment = Alignment.CenterHorizontally
                 ) {
                     Text(
-                        text = if (ThemeState.isDark) stringResource(id = R.string.light_mode) else stringResource(id = R.string.dark_mode),
-                        modifier = Modifier
-                            .padding(16.dp).align(Alignment.CenterHorizontally),
+                        stringResource(id = R.string.appereance),
+                        style = MaterialTheme.typography.titleLarge
                     )
-                }
 
-                Spacer(modifier = Modifier.height(10.dp))
+                    var followSystem by remember { mutableStateOf(ThemeState.themeMode == ThemeMode.SYSTEM) }
 
-                langSwitch()
-
-                Spacer(modifier = Modifier.height(10.dp))
-
-                Row(horizontalArrangement = Arrangement.SpaceEvenly, modifier = Modifier.fillMaxWidth()) {
-                    Button(onClick = {
-                        fontScaleViewModel.decreaseFontScale()
-                    }) {
-                        Text("- A", style = MaterialTheme.typography.bodySmall)
+                    Row(verticalAlignment = Alignment.CenterVertically) {
+                        Checkbox(
+                            checked = followSystem,
+                            onCheckedChange = { checked ->
+                                followSystem = checked
+                                ThemeState.themeMode = if (checked) ThemeMode.SYSTEM
+                                else ThemeMode.LIGHT
+                            }
+                        )
+                        Text(stringResource(id = R.string.follow_system))
                     }
-                    Button(onClick = {
-                        fontScaleViewModel.resetFontScale()
-                    }) {
-                        Text("Reset", style = MaterialTheme.typography.bodySmall)
-                    }
-                    Button(onClick = {
-                        fontScaleViewModel.increaseFontScale()
-                    }) {
-                        Text("+ A", style = MaterialTheme.typography.bodySmall)
-                    }
-                }
 
-                Spacer(modifier = Modifier.height(16.dp))
+                    if(!followSystem) {
+                        ElevatedCard(
+                            colors = CardDefaults.elevatedCardColors(
+                                contentColor = MaterialTheme.colorScheme.tertiary,
+                                containerColor = MaterialTheme.colorScheme.secondary
+                            ),
+                            elevation = CardDefaults.cardElevation(defaultElevation = 2.dp),
+                            modifier = Modifier.size(width = 240.dp, height = 60.dp),
+                            onClick = {
+                                    ThemeState.themeMode = when (ThemeState.themeMode) {
+                                        ThemeMode.LIGHT -> ThemeMode.DARK
+                                        ThemeMode.DARK -> ThemeMode.LIGHT
+                                        ThemeMode.SYSTEM -> ThemeMode.LIGHT
+                                    }
+                            },
+                            enabled = !followSystem
+                        ) {
+                            val text = when (ThemeState.themeMode) {
+                                ThemeMode.LIGHT -> stringResource(id = R.string.dark_mode)
+                                ThemeMode.DARK -> stringResource(id = R.string.light_mode)
+                                ThemeMode.SYSTEM -> stringResource(id = R.string.dark_mode)
+                            }
 
-                Button(
-                    onClick = onDismiss,
-                ) {
-                    Text(stringResource(id = R.string.close), style = MaterialTheme.typography.bodySmall)
+                            Text(
+                                text = text,
+                                modifier = Modifier
+                                    .padding(16.dp)
+                                    .align(Alignment.CenterHorizontally)
+                            )
+                        }
+                    }
+
+                    Spacer(modifier = Modifier.height(10.dp))
+
+                    langSwitch()
+
+                    Spacer(modifier = Modifier.height(10.dp))
+
+                    Row(
+                        horizontalArrangement = Arrangement.SpaceEvenly,
+                        modifier = Modifier.fillMaxWidth()
+                    ) {
+                        Button(onClick = {
+                            fontScaleViewModel.decreaseFontScale()
+                        }) {
+                            Text("- A", style = MaterialTheme.typography.bodySmall)
+                        }
+                        Button(onClick = {
+                            fontScaleViewModel.resetFontScale()
+                        }) {
+                            Text("Reset", style = MaterialTheme.typography.bodySmall)
+                        }
+                        Button(onClick = {
+                            fontScaleViewModel.increaseFontScale()
+                        }) {
+                            Text("+ A", style = MaterialTheme.typography.bodySmall)
+                        }
+                    }
+
+                    Spacer(modifier = Modifier.height(16.dp))
+
+                    Button(
+                        onClick = onDismiss,
+                    ) {
+                        Text(
+                            stringResource(id = R.string.close),
+                            style = MaterialTheme.typography.bodySmall
+                        )
+                    }
                 }
             }
-        }}
+        }
     }
 }
-
-
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
