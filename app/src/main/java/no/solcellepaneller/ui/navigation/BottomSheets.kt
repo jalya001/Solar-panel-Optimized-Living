@@ -312,7 +312,8 @@ fun AdditionalInputBottomSheet(
                     DecimalInputField(
                         decimalFormatter = decimalFormatter,
                         value = areaState,
-                        label = stringResource(id=R.string.area_label)
+                        label = stringResource(id = R.string.area_label),
+                        onValueChange = { areaState=it }
                     )
 
                     Button(
@@ -335,12 +336,12 @@ fun AdditionalInputBottomSheet(
                 Spacer(modifier = Modifier.height(10.dp))
 
                 Text(stringResource(id = R.string.slope_label), style = MaterialTheme.typography.labelLarge)
-                DecimalInputField(label =stringResource(id=R.string.slope_label) ,modifier = Modifier.fillMaxWidth(), value = angle, decimalFormatter = decimalFormatter)
+                DecimalInputField(onValueChange = { angle=it },label =stringResource(id=R.string.slope_label) ,modifier = Modifier.fillMaxWidth(), value = angle, decimalFormatter = decimalFormatter)
 
                 Spacer(modifier = Modifier.height(10.dp))
 
                 Text(stringResource(id = R.string.efficiency_label), style = MaterialTheme.typography.labelLarge)
-                DecimalInputField(label = stringResource(id=R.string.efficiency_label), modifier = Modifier.fillMaxWidth(), value = efficiency, decimalFormatter = decimalFormatter)
+                DecimalInputField(onValueChange = { efficiency=it },label = stringResource(id=R.string.efficiency_label), modifier = Modifier.fillMaxWidth(), value = efficiency, decimalFormatter = decimalFormatter)
 
                 Spacer(modifier = Modifier.height(16.dp))
 

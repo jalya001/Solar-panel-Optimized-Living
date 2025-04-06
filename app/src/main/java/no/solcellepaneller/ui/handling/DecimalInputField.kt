@@ -96,17 +96,16 @@ fun DecimalInputField(
     modifier: Modifier = Modifier,
     decimalFormatter: DecimalFormatter,
     value: String,
+    onValueChange: (String) -> Unit,
     label: String
 ) {
-
-    var text = value
-
     OutlinedTextField(
-       label= {Text(text=label)},
+        label = { Text(text = label) },
         modifier = modifier,
-        value = text,
+        value = value,
         onValueChange = {
-            text = decimalFormatter.cleanup(it)
+            val cleaned = decimalFormatter.cleanup(it)
+            onValueChange(cleaned)
         },
         keyboardOptions = KeyboardOptions(
             keyboardType = KeyboardType.Decimal,
