@@ -45,7 +45,6 @@ import no.solcellepaneller.ui.savedLocations.SavedLocationsScreen
 import androidx.navigation.navArgument
 import no.solcellepaneller.ui.result.WeatherViewModel
 import no.solcellepaneller.ui.font.FontScaleViewModel
-import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.material3.OutlinedIconButton
 import no.solcellepaneller.ui.help.HelpScreen
 

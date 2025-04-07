@@ -5,6 +5,7 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.foundation.text.selection.TextSelectionColors
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.*
@@ -13,6 +14,8 @@ import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.Color.Companion.Green
+import androidx.compose.ui.graphics.Color.Companion.Red
 import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.input.key.key
 import androidx.compose.ui.input.key.onKeyEvent
@@ -93,7 +96,7 @@ fun DisplayScreen(viewModel: MapScreenViewModel, navController: NavController) {
     var showBottomSheet by remember { mutableStateOf(false) }
     var arealatlong by remember { mutableStateOf<LatLng?>(null) }
     var showMissingLocationDialog by remember { mutableStateOf(false) }
-    var showHelpSheet by remember { mutableStateOf(false) }
+
 
 
     val cameraPositionState = rememberCameraPositionState {
@@ -170,6 +173,12 @@ fun DisplayScreen(viewModel: MapScreenViewModel, navController: NavController) {
             }
         }
 
+        val customTextSelectionColors = TextSelectionColors(
+            handleColor = Green,
+            backgroundColor = Red
+        )
+
+
         Card(
             modifier = Modifier.fillMaxWidth(),
             shape = RectangleShape,
@@ -199,7 +208,7 @@ fun DisplayScreen(viewModel: MapScreenViewModel, navController: NavController) {
                         focusedLabelColor = MaterialTheme.colorScheme.tertiary,
                         cursorColor = MaterialTheme.colorScheme.tertiary,
                         unfocusedTextColor = MaterialTheme.colorScheme.tertiary,
-                        unfocusedBorderColor = MaterialTheme.colorScheme.tertiary
+                        unfocusedBorderColor = MaterialTheme.colorScheme.tertiary,
                     )
                 )
 
