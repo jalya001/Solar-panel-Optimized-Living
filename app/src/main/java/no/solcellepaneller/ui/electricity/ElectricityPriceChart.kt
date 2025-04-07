@@ -39,8 +39,8 @@ fun ElectricityPriceChart(prices: List<ElectricityPrice>) {
     var chartType by remember { mutableStateOf(ChartType.LINE) }
 
     val points = prices.map { price ->
-        val hour = ZonedDateTime.parse(price.time_start).hour.toFloat() / 2
-        Point(hour, price.NOK_per_kWh.toFloat())
+        val hour = ZonedDateTime.parse(price.time_start).hour / 2
+        Point(hour.toFloat(), price.NOK_per_kWh.toFloat())
     }
 
     val bars = prices.map { price ->
@@ -48,19 +48,15 @@ fun ElectricityPriceChart(prices: List<ElectricityPrice>) {
         BarData(
             point = Point(hour.toFloat(), price.NOK_per_kWh.toFloat()) ,
             label = "$hour:00",
-            color = when {
-                price.NOK_per_kWh > 1.0 -> Color.Red
-                price.NOK_per_kWh > 0.7 -> Color.Yellow
-                else -> Color.Green
-            }
+            color = Color.Cyan
         )
     }
 
     //Prepare X-axis (hours)
     val xAxisData = AxisData.Builder()
         .axisStepSize(20.dp)
-        .steps(prices.size - 1)
-        .labelData { i -> "${i}:00" }
+        .steps(prices.size / 2)
+        .labelData { i -> "${(i * 2) % 24}:00" }
         .axisLabelAngle(45f)
         .build()
 
