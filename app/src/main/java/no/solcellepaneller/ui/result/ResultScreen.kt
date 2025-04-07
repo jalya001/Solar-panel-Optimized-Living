@@ -27,6 +27,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import no.solcellepaneller.R
+import no.solcellepaneller.ui.electricity.ShowSavings
 import no.solcellepaneller.ui.map.MapScreenViewModel
 import no.solcellepaneller.ui.navigation.AppearanceBottomSheet
 import no.solcellepaneller.ui.navigation.BottomBar
@@ -105,6 +106,12 @@ fun ResultScreen(navController: NavController, viewModel: MapScreenViewModel, we
                     val totalHours = daysInMonth[index] * 24 // Total hours in the month
                     energyKWh / totalHours // Convert kWh to kW
                 }
+
+                Button(onClick = {
+                    navController.navigate("savings")
+                }) {
+                    Text("Show yearly savings")
+                }
                 LazyColumn(
                     modifier = Modifier
                         .fillMaxSize()
@@ -132,6 +139,11 @@ fun ResultScreen(navController: NavController, viewModel: MapScreenViewModel, we
                                     ), fontWeight = FontWeight.Bold
                                 )
                                 Text(stringResource(id = R.string.estimated_powerpr_hour) + " %.2f kW" .format(monthlyPowerOutput[month]))
+                                Button(onClick = {
+                                    navController.navigate("savings")
+                                }) {
+                                    Text("Show savings ${months[month]}")
+                                }
                             }
                         }
                     }
