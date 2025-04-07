@@ -13,8 +13,6 @@
     <string name="light_mode">☀️ Bytt til lysmodus </string>
     <string name="language">Bytt til Engelsk🇬🇧</string>
     <string name="font_size"> Bytt skriftstørrelse</string>
-    <string name="help_how"> Hjelp (Hvordan bruke appen) </string>
-    <string name="help_techinical"> Hjelp (teknisk hjelp, problemer med appen)</string>
     <string name="go_back"> Tilbake </string>
     <string name="close"> Lukk</string>
 

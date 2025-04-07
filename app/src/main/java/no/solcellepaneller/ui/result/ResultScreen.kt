@@ -34,7 +34,6 @@ import no.solcellepaneller.R
 import no.solcellepaneller.ui.map.MapScreenViewModel
 import no.solcellepaneller.ui.navigation.AppearanceBottomSheet
 import no.solcellepaneller.ui.navigation.BottomBar
-import no.solcellepaneller.ui.navigation.HelpBottomSheet
 
 import no.solcellepaneller.ui.navigation.TopBar
 import no.solcellepaneller.ui.font.FontScaleViewModel
@@ -184,7 +183,6 @@ fun ResultScreen(navController: NavController, viewModel: MapScreenViewModel, we
                 LoadingScreen()
             }}
 
-            HelpBottomSheet(visible = showHelp, navController = navController, onDismiss = { showHelp = false })
 AppearanceBottomSheet(
     visible = showAppearance,
     onDismiss = { showAppearance = false },

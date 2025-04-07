@@ -35,7 +35,6 @@ import no.solcellepaneller.ui.font.FontScaleViewModel
 import no.solcellepaneller.ui.font.FontSizeState
 import no.solcellepaneller.ui.navigation.AppearanceBottomSheet
 import no.solcellepaneller.ui.navigation.BottomBar
-import no.solcellepaneller.ui.navigation.HelpBottomSheet
 import org.intellij.lang.annotations.JdkConstants
 
 @Composable
@@ -75,7 +74,6 @@ fun MapScreen(viewModel: MapScreenViewModel, navController: NavController, fontS
             DisplayScreen(viewModel, navController)
         }
     }
-    HelpBottomSheet(visible = showHelp, navController = navController, onDismiss = { showHelp = false })
     AppearanceBottomSheet(
         visible = showAppearance,
         onDismiss = { showAppearance = false },
@@ -277,10 +275,7 @@ fun DisplayScreen(viewModel: MapScreenViewModel, navController: NavController) {
                     index = 0
                 }, coordinates=coordinates, area=area, navController = navController, viewModel = viewModel
             )
-            HelpBottomSheet( //kan evt vise til ulike hjelp skjermer
-                visible = showHelpSheet,navController=navController,
-                onDismiss = { showHelpSheet = false }
-            )
+
             if(drawingEnabled){
             Box(
                 modifier = Modifier

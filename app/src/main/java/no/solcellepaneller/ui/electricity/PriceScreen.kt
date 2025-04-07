@@ -38,7 +38,6 @@ import no.solcellepaneller.model.electricity.ElectricityPrice
 import no.solcellepaneller.model.electricity.Region
 import no.solcellepaneller.ui.navigation.AppearanceBottomSheet
 import no.solcellepaneller.ui.navigation.BottomBar
-import no.solcellepaneller.ui.navigation.HelpBottomSheet
 import no.solcellepaneller.ui.navigation.TopBar
 import no.solcellepaneller.ui.font.FontScaleViewModel
 import no.solcellepaneller.ui.handling.ErrorScreen
@@ -90,7 +89,6 @@ fun PriceScreen(
                 }
             }
 
-            HelpBottomSheet(visible = showHelp, navController = navController, onDismiss = { showHelp = false })
 AppearanceBottomSheet(
     visible = showAppearance,
     onDismiss = { showAppearance = false },

@@ -40,64 +40,64 @@ import no.solcellepaneller.ui.reusables.DecimalInputField
 import no.solcellepaneller.ui.reusables.MyCard
 import no.solcellepaneller.ui.reusables.MyNavCard
 
-@OptIn(ExperimentalMaterial3Api::class)
-@Composable
-fun HelpBottomSheet(
-    visible: Boolean,
-    onDismiss: () -> Unit,
-    navController: NavController,
-    ) {
-
-    val sheetState = rememberModalBottomSheetState(
-        skipPartiallyExpanded = true
-    )
-
-    if (visible) {
-        ModalBottomSheet(
-            onDismissRequest = onDismiss,
-            sheetState=sheetState,
-            containerColor = MaterialTheme.colorScheme.background,
-            contentColor = MaterialTheme.colorScheme.tertiary,
-            scrimColor = Color.Black.copy(alpha = 0.8f)
-        ) {
-            Column(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(16.dp), horizontalAlignment = Alignment.CenterHorizontally
-            ) {
-                Text(stringResource(id = R.string.help), style = MaterialTheme.typography.titleLarge)
-
-                MyNavCard(
-                    stringResource(id = R.string.help_how),
-                    "app_help",
-                    navController,
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .height(180.dp),
-                    style = "Large"
-                )
-
-                MyNavCard(
-                    stringResource(id = R.string.help_techinical),
-                    "tech_help",
-                    navController,
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .height(180.dp),
-                    style = "Large"
-                )
-
-                Spacer(modifier = Modifier.height(16.dp))
-
-                Button(
-                    onClick = onDismiss,
-                ) {
-                    Text(stringResource(id = R.string.close), style = MaterialTheme.typography.bodySmall)
-                }
-            }
-        }
-    }
-}
+//@OptIn(ExperimentalMaterial3Api::class)
+//@Composable
+//fun HelpBottomSheet(
+//    visible: Boolean,
+//    onDismiss: () -> Unit,
+//    navController: NavController,
+//    ) {
+//
+//    val sheetState = rememberModalBottomSheetState(
+//        skipPartiallyExpanded = true
+//    )
+//
+//    if (visible) {
+//        ModalBottomSheet(
+//            onDismissRequest = onDismiss,
+//            sheetState=sheetState,
+//            containerColor = MaterialTheme.colorScheme.background,
+//            contentColor = MaterialTheme.colorScheme.tertiary,
+//            scrimColor = Color.Black.copy(alpha = 0.8f)
+//        ) {
+//            Column(
+//                modifier = Modifier
+//                    .fillMaxWidth()
+//                    .padding(16.dp), horizontalAlignment = Alignment.CenterHorizontally
+//            ) {
+//                Text(stringResource(id = R.string.help), style = MaterialTheme.typography.titleLarge)
+//
+//                MyNavCard(
+//                    stringResource(id = R.string.help_how),
+//                    "app_help",
+//                    navController,
+//                    modifier = Modifier
+//                        .fillMaxWidth()
+//                        .height(180.dp),
+//                    style = "Large"
+//                )
+//
+//                MyNavCard(
+//                    stringResource(id = R.string.help_techinical),
+//                    "tech_help",
+//                    navController,
+//                    modifier = Modifier
+//                        .fillMaxWidth()
+//                        .height(180.dp),
+//                    style = "Large"
+//                )
+//
+//                Spacer(modifier = Modifier.height(16.dp))
+//
+//                Button(
+//                    onClick = onDismiss,
+//                ) {
+//                    Text(stringResource(id = R.string.close), style = MaterialTheme.typography.bodySmall)
+//                }
+//            }
+//        }
+//    }
+//}
 
 
 @OptIn(ExperimentalMaterial3Api::class)

@@ -7,14 +7,12 @@
     <string name="install_panels"> Install solar panels</string>
     <string name="saved_locations"> Saved locations</string>
     <string name="prices"> Electricity prices </string>
-    <string name="help"> Help</string>
+    <string name="help">Help</string>
     <string name="appereance"> Appearance</string>
     <string name="dark_mode">🌑 Change to darkmode </string>
     <string name="light_mode">☀️ Change to lightmode </string>
     <string name="language">Change to Norwegian🇳🇴</string>
     <string name="font_size">Change font size</string>
-    <string name="help_how"> Help (How to use the app) </string>
-    <string name="help_techinical"> Help (Technical help, Problems with the app)</string>
     <string name="go_back"> Back </string>
     <string name="close"> Close</string>
 

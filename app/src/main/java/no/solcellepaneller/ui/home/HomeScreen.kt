@@ -26,7 +26,6 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import no.solcellepaneller.R
 import no.solcellepaneller.ui.navigation.BottomBar
-import no.solcellepaneller.ui.navigation.HelpBottomSheet
 import no.solcellepaneller.ui.navigation.AppearanceBottomSheet
 import no.solcellepaneller.ui.font.FontScaleViewModel
 import no.solcellepaneller.ui.handling.LoadingScreen
@@ -94,7 +93,6 @@ fun HomeScreen(navController: NavController,    fontScaleViewModel: FontScaleVie
                 )
             }
 
-            HelpBottomSheet(visible = showHelp, navController = navController, onDismiss = { showHelp = false })
 AppearanceBottomSheet(
     visible = showAppearance,
     onDismiss = { showAppearance = false },

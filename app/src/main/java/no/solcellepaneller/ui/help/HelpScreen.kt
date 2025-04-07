@@ -17,22 +17,22 @@ import androidx.navigation.NavController
 import no.solcellepaneller.R
 import no.solcellepaneller.ui.navigation.AppearanceBottomSheet
 import no.solcellepaneller.ui.navigation.BottomBar
-import no.solcellepaneller.ui.navigation.HelpBottomSheet
 import no.solcellepaneller.ui.navigation.TopBar
 import no.solcellepaneller.ui.font.FontScaleViewModel
+import no.solcellepaneller.ui.reusables.ExpandInfoSection
 import no.solcellepaneller.ui.theme.SolcellepanellerTheme
 
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun TechnicalHelp(navController: NavController   , fontScaleViewModel: FontScaleViewModel
+fun HelpScreen(navController: NavController, expandSection: String="",  fontScaleViewModel: FontScaleViewModel
 ) {
     SolcellepanellerTheme {
         var showHelp by remember { mutableStateOf(false) }
         var showAppearance by remember { mutableStateOf(false) }
 
         Scaffold(
-            topBar = { TopBar(navController) },
+            topBar = { TopBar(navController,text = stringResource(id=R.string.help)) },
             bottomBar = {
                 BottomBar(
                     onHelpClicked = { showHelp = true },
@@ -46,16 +46,21 @@ fun TechnicalHelp(navController: NavController   , fontScaleViewModel: FontScale
                     .padding(padding)
                     .padding(16.dp)
             ) {
-
                 item {
+                    ExpandInfoSection(
+                        title = stringResource(id = R.string.help_draw),
 
+                        content = stringResource(id = R.string.how_to_draw),
+                        initiallyExpanded = expandSection == "draw"
+                    )
+                }
+                item {
                     ExpandInfoSection(
                         title = stringResource(id = R.string.tech_problems_title),
                         content =stringResource(id = R.string.tech_problems_content)
                     )
                 }
             }
-            HelpBottomSheet(visible = showHelp, navController = navController, onDismiss = { showHelp = false })
             AppearanceBottomSheet(
                 visible = showAppearance,
                 onDismiss = { showAppearance = false },
@@ -63,35 +68,3 @@ fun TechnicalHelp(navController: NavController   , fontScaleViewModel: FontScale
             )
         }
     }}
-
-//
-//@Composable
-//fun ExpandInfoSection(title: String,content: String ){
-//    var expanded by remember { mutableStateOf(false) }
-//
-//    Card(
-//        colors = CardDefaults.elevatedCardColors(
-//        contentColor = MaterialTheme.colorScheme.tertiary,
-//        containerColor = MaterialTheme.colorScheme.secondary),
-//        onClick = {expanded = !expanded},
-//        modifier = Modifier
-//            .fillMaxWidth()
-//            .padding(vertical = 8.dp),
-//    )
-//    {
-//        Column (modifier = Modifier.padding(16.dp)){
-//
-//            Text(
-//                text = title, style = MaterialTheme.typography.titleMedium
-//            )
-//
-//            if(expanded){
-//                Text(
-//                    text = content,
-//                    style = MaterialTheme.typography.bodyMedium,
-//                    modifier = Modifier.padding(top = 8.dp)
-//                )
-//            }
-//        }
-//    }
-//}

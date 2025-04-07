@@ -23,9 +23,9 @@ import androidx.navigation.NavController
 import no.solcellepaneller.R
 import no.solcellepaneller.ui.navigation.AppearanceBottomSheet
 import no.solcellepaneller.ui.navigation.BottomBar
-import no.solcellepaneller.ui.navigation.HelpBottomSheet
 import no.solcellepaneller.ui.navigation.TopBar
 import no.solcellepaneller.ui.font.FontScaleViewModel
+import no.solcellepaneller.ui.reusables.ExpandInfoSection
 import no.solcellepaneller.ui.theme.SolcellepanellerTheme
 
 
@@ -93,44 +93,11 @@ fun InfoScreen(navController: NavController, fontScaleViewModel: FontScaleViewMo
 
                 }
             }
-            HelpBottomSheet(visible = showHelp, navController = navController, onDismiss = { showHelp = false })
             AppearanceBottomSheet(
                 visible = showAppearance,
                 onDismiss = { showAppearance = false },
                 fontScaleViewModel = fontScaleViewModel
             )
-        }
-    }
-}
-
-
-@Composable
-fun ExpandInfoSection(title: String,content: String ){
-    var expanded by remember { mutableStateOf(false) }
-
-    Card(
-        colors = CardDefaults.elevatedCardColors(
-        contentColor = MaterialTheme.colorScheme.tertiary,
-        containerColor = MaterialTheme.colorScheme.secondary),
-        onClick = {expanded = !expanded},
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(vertical = 8.dp),
-    )
-    {
-        Column (modifier = Modifier.padding(16.dp)){
-
-            Text(
-                text = title, style = MaterialTheme.typography.titleMedium
-            )
-
-            if(expanded){
-                Text(
-                    text = content,
-                    style = MaterialTheme.typography.bodyMedium,
-                    modifier = Modifier.padding(top = 8.dp)
-                )
-            }
         }
     }
 }

@@ -43,12 +43,11 @@ import no.solcellepaneller.ui.map.MapScreenViewModel
 import no.solcellepaneller.ui.result.ResultScreen
 import no.solcellepaneller.ui.savedLocations.SavedLocationsScreen
 import androidx.navigation.navArgument
-import no.solcellepaneller.ui.help.AppHelp
-import no.solcellepaneller.ui.help.TechnicalHelp
 import no.solcellepaneller.ui.result.WeatherViewModel
 import no.solcellepaneller.ui.font.FontScaleViewModel
 import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.material3.OutlinedIconButton
+import no.solcellepaneller.ui.help.HelpScreen
 
 @Composable
 fun Nav(navController: NavHostController, fontScaleViewModel: FontScaleViewModel) {
@@ -71,15 +70,14 @@ fun Nav(navController: NavHostController, fontScaleViewModel: FontScaleViewModel
         composable("info_screen") { InfoScreen(navController,fontScaleViewModel)}
 //        composable("app_help") { AppHelp(navController) }
         composable(
-            "app_help?expandSection={expandSection}",
+            "help?expandSection={expandSection}",
             arguments = listOf(
                 navArgument("expandSection") { defaultValue = "" }
             )
         ) { backStackEntry ->
             val expandSection = backStackEntry.arguments?.getString("expandSection") ?: ""
-            AppHelp(navController, expandSection,fontScaleViewModel)
+            HelpScreen(navController, expandSection,fontScaleViewModel)
         }
-        composable("tech_help") { TechnicalHelp(navController,fontScaleViewModel) }
     }
 }
 
@@ -98,7 +96,7 @@ fun BottomBar(
             icon = { Icon(Icons.Filled.Build, contentDescription = "Help") },
             label = { Text(stringResource(id = R.string.help)) },
             selected = false,
-            onClick = onHelpClicked
+            onClick = { navController.navigate("help") }
         )
         NavigationBarItem(
             icon = { Icon(Icons.Filled.Info, contentDescription = "Information") },
