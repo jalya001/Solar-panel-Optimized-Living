@@ -6,13 +6,13 @@
     <string name="home"> Home</string>
     <string name="install_panels"> Install solar panels</string>
     <string name="saved_locations"> Saved locations</string>
-    <string name="prices"> Prices </string>
+    <string name="prices"> Electricity prices </string>
     <string name="help"> Help</string>
     <string name="appereance"> Appearance</string>
-    <string name="dark_mode"> Dark mode  </string>
-    <string name="light_mode"> Light mode  </string>
-    <string name="language"> Change to Norwegian</string>
-    <string name="font_size"> Change font size</string>
+    <string name="dark_mode">🌑 Change to darkmode </string>
+    <string name="light_mode">☀️ Change to lightmode </string>
+    <string name="language">Change to Norwegian🇳🇴</string>
+    <string name="font_size">Change font size</string>
     <string name="help_how"> Help (How to use the app) </string>
     <string name="help_techinical"> Help (Technical help, Problems with the app)</string>
     <string name="go_back"> Back </string>
@@ -98,7 +98,7 @@
     <string name="how_to_draw">How to draw in the map</string>
 
     <!--Result Screen-->
-    <string name="results"> Results  🔍</string>
+    <string name="results"> Results </string>
     <string name="angle">📐 Angle: </string>
     <string name="direction"> 🧭 Direction: </string>
     <string name="effectivity"> ⚡ Effectivity:  </string>
@@ -119,5 +119,8 @@
     <string name="address_not_found">Address not found, try again</string>
     <string name="follow_system">Follow system theme</string>
     <string name="navigate_results">Go to results</string>
+    <string name="map_title">Map</string>
+    <string name="info_title">Information</string>
+    <string name="additional_input">Additional input</string>
 
 </resources>

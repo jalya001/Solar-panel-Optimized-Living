@@ -16,20 +16,18 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.material3.Button
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ElevatedCard
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.style.TextAlign
 import no.solcellepaneller.R
 import no.solcellepaneller.ui.theme.ThemeState
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Create
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.platform.LocalDensity
-import androidx.compose.ui.text.input.KeyboardType
+import androidx.compose.ui.text.font.FontWeight.Companion.Bold
 import androidx.compose.ui.unit.Density
 import androidx.navigation.NavController
 import no.solcellepaneller.ui.font.FontSizeState
@@ -37,13 +35,10 @@ import no.solcellepaneller.ui.language.langSwitch
 import no.solcellepaneller.ui.map.MapScreenViewModel
 import no.solcellepaneller.ui.font.FontScaleViewModel
 import no.solcellepaneller.ui.theme.ThemeMode
-import androidx.compose.ui.text.AnnotatedString
-import androidx.compose.ui.text.input.OffsetMapping
-import androidx.compose.ui.text.input.TransformedText
-import androidx.compose.ui.text.input.VisualTransformation
-import no.solcellepaneller.ui.handling.DecimalFormatter
-import no.solcellepaneller.ui.handling.DecimalInputField
-import java.text.DecimalFormatSymbols
+import no.solcellepaneller.ui.reusables.DecimalFormatter
+import no.solcellepaneller.ui.reusables.DecimalInputField
+import no.solcellepaneller.ui.reusables.MyCard
+import no.solcellepaneller.ui.reusables.MyNavCard
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -52,9 +47,15 @@ fun HelpBottomSheet(
     onDismiss: () -> Unit,
     navController: NavController,
     ) {
+
+    val sheetState = rememberModalBottomSheetState(
+        skipPartiallyExpanded = true
+    )
+
     if (visible) {
         ModalBottomSheet(
             onDismissRequest = onDismiss,
+            sheetState=sheetState,
             containerColor = MaterialTheme.colorScheme.background,
             contentColor = MaterialTheme.colorScheme.tertiary,
             scrimColor = Color.Black.copy(alpha = 0.8f)
@@ -66,46 +67,25 @@ fun HelpBottomSheet(
             ) {
                 Text(stringResource(id = R.string.help), style = MaterialTheme.typography.titleLarge)
 
-                ElevatedCard(
-                    colors = CardDefaults.elevatedCardColors(
-                    contentColor = MaterialTheme.colorScheme.tertiary,
-                    containerColor = MaterialTheme.colorScheme.secondary
-                ),
-                    elevation = CardDefaults.cardElevation(
-                        defaultElevation = 2.dp
-                    ),
-                    modifier = Modifier.size(width = 240.dp, height = 100.dp),
-                    onClick ={navController.navigate("app_help") }
+                MyNavCard(
+                    stringResource(id = R.string.help_how),
+                    "app_help",
+                    navController,
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .height(180.dp),
+                    style = "Large"
+                )
 
-                ) {
-                    Text(
-                        stringResource(id = R.string.help_how),
-                        modifier = Modifier
-                            .padding(16.dp),
-                        textAlign = TextAlign.Center, style = MaterialTheme.typography.bodySmall
-                    )
-                }
-
-                Spacer(modifier = Modifier.height(16.dp))
-
-                ElevatedCard(
-                    colors = CardDefaults.elevatedCardColors(
-                        contentColor = MaterialTheme.colorScheme.tertiary,
-                        containerColor = MaterialTheme.colorScheme.secondary
-                    ),
-                    elevation = CardDefaults.cardElevation(
-                        defaultElevation = 2.dp
-                    ),
-                    modifier = Modifier.size(width = 240.dp, height = 100.dp),
-                    onClick ={navController.navigate("tech_help")}
-                ) {
-                    Text(
-                        stringResource(id = R.string.help_techinical),
-                        modifier = Modifier
-                            .padding(16.dp),
-                        textAlign = TextAlign.Center,
-                    )
-                }
+                MyNavCard(
+                    stringResource(id = R.string.help_techinical),
+                    "tech_help",
+                    navController,
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .height(180.dp),
+                    style = "Large"
+                )
 
                 Spacer(modifier = Modifier.height(16.dp))
 
@@ -134,8 +114,13 @@ fun AppearanceBottomSheet(
             fontScale = FontSizeState.fontScale.value
         )
 
+        val sheetState = rememberModalBottomSheetState(
+            skipPartiallyExpanded = true
+        )
+
         ModalBottomSheet(
             onDismissRequest = onDismiss,
+            sheetState=sheetState,
             containerColor = MaterialTheme.colorScheme.background,
             contentColor = MaterialTheme.colorScheme.tertiary,
             scrimColor = Color.Black.copy(alpha = 0.8f)
@@ -192,7 +177,6 @@ fun AppearanceBottomSheet(
                                 text = text,
                                 modifier = Modifier
                                     .padding(16.dp)
-                                    .align(Alignment.CenterHorizontally)
                             )
                         }
                     }
@@ -283,12 +267,13 @@ fun AdditionalInputBottomSheet(
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(16.dp),
-                horizontalAlignment = Alignment.Start
+                horizontalAlignment = Alignment.CenterHorizontally
             ) {
-                Text(stringResource(id = R.string.coordinates_label), style = MaterialTheme.typography.labelLarge)
-                Text("Lat: ${coordinates?.first}, Lon: ${coordinates?.second}")
-
-                Spacer(modifier = Modifier.height(10.dp))
+                Text(stringResource(id = R.string.additional_input), style = MaterialTheme.typography.titleLarge, fontWeight = Bold)
+//                Text(stringResource(id = R.string.coordinates_label), style = MaterialTheme.typography.labelLarge)
+//                Text("Lat: ${coordinates?.first}, Lon: ${coordinates?.second}")
+//
+//                Spacer(modifier = Modifier.height(10.dp))
 
                 Button(
                     onClick = {
@@ -304,7 +289,7 @@ fun AdditionalInputBottomSheet(
 
                 Spacer(modifier = Modifier.height(10.dp))
                 
-                Text(stringResource(id = R.string.area_label), style = MaterialTheme.typography.labelLarge)
+//                Text(stringResource(id = R.string.area_label), style = MaterialTheme.typography.labelLarge)
 
                 val decimalFormatter = DecimalFormatter()
 
@@ -313,34 +298,36 @@ fun AdditionalInputBottomSheet(
                         decimalFormatter = decimalFormatter,
                         value = areaState,
                         label = stringResource(id = R.string.area_label),
-                        onValueChange = { areaState=it }
+                        onValueChange = { areaState=it },
+                        modifier = Modifier.weight(1f).padding(end = 4.dp)
                     )
 
                     Button(
                         onClick = {
                             onStartDrawing()
                             onDismiss()
-                        }
+                        },
+                        modifier = Modifier.height(70.dp)
                     ) {
-                        Column {
+                        Row {
                             Icon(
                                 imageVector = Icons.Filled.Create,
                                 contentDescription = stringResource(id = R.string.draw_area),
                                 modifier = Modifier.size(24.dp)
                             )
-                            Text(stringResource(id = R.string.draw_area)) //Kanksje lurt å legge til noe som hindrer bruker i å klikkevekk, men samtidig vil vi at de skal kunne bytte posisjon hvis ufornøyde
+                            Text(stringResource(id = R.string.draw_area), style = MaterialTheme.typography.bodyMedium) //Kanksje lurt å legge til noe som hindrer bruker i å klikkevekk, men samtidig vil vi at de skal kunne bytte posisjon hvis ufornøyde
                         }
                     }
                 }
 
                 Spacer(modifier = Modifier.height(10.dp))
 
-                Text(stringResource(id = R.string.slope_label), style = MaterialTheme.typography.labelLarge)
+//                Text(stringResource(id = R.string.slope_label), style = MaterialTheme.typography.labelLarge)
                 DecimalInputField(onValueChange = { angle=it },label =stringResource(id=R.string.slope_label) ,modifier = Modifier.fillMaxWidth(), value = angle, decimalFormatter = decimalFormatter)
 
                 Spacer(modifier = Modifier.height(10.dp))
 
-                Text(stringResource(id = R.string.efficiency_label), style = MaterialTheme.typography.labelLarge)
+//                Text(stringResource(id = R.string.efficiency_label), style = MaterialTheme.typography.labelLarge)
                 DecimalInputField(onValueChange = { efficiency=it },label = stringResource(id=R.string.efficiency_label), modifier = Modifier.fillMaxWidth(), value = efficiency, decimalFormatter = decimalFormatter)
 
                 Spacer(modifier = Modifier.height(16.dp))

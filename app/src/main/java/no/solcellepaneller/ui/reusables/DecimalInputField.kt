@@ -1,16 +1,22 @@
-package no.solcellepaneller.ui.handling
+package no.solcellepaneller.ui.reusables
 
 import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
+import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextFieldColors
+import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.OffsetMapping
 import androidx.compose.ui.text.input.TransformedText
 import androidx.compose.ui.text.input.VisualTransformation
 import java.text.DecimalFormatSymbols
+import kotlin.text.iterator
 
 
 //hentet fra https://dev.to/tuvakov/decimal-input-formatting-with-jetpack-composes-visualtransformation-110n
@@ -110,6 +116,14 @@ fun DecimalInputField(
         keyboardOptions = KeyboardOptions(
             keyboardType = KeyboardType.Decimal,
         ),
-        visualTransformation = DecimalInputVisualTransformation(decimalFormatter)
+        visualTransformation = DecimalInputVisualTransformation(decimalFormatter),
+        colors = OutlinedTextFieldDefaults.colors(
+            unfocusedContainerColor = MaterialTheme.colorScheme.background,
+            unfocusedBorderColor = MaterialTheme.colorScheme.tertiary,
+            focusedBorderColor = MaterialTheme.colorScheme.tertiary,
+            focusedLabelColor = MaterialTheme.colorScheme.tertiary,
+            cursorColor = MaterialTheme.colorScheme.tertiary,
+            unfocusedTextColor = MaterialTheme.colorScheme.tertiary
+        )
     )
 }

@@ -25,12 +25,14 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
+import no.solcellepaneller.R
 import no.solcellepaneller.data.homedata.ElectricityPriceRepository
 import no.solcellepaneller.model.electricity.ElectricityPrice
 import no.solcellepaneller.model.electricity.Region
@@ -62,7 +64,7 @@ fun PriceScreen(
     val priceUiState by viewModel.priceUiState.collectAsStateWithLifecycle()
 
     Scaffold(
-        topBar = { TopBar(navController) },
+        topBar = { TopBar(navController, text = stringResource(id = R.string.prices)) },
         bottomBar = {
             BottomBar(
                 onHelpClicked = { showHelp = true },

@@ -2,12 +2,18 @@ package no.solcellepaneller.ui.home
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.Button
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
+import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -16,6 +22,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import no.solcellepaneller.R
 import no.solcellepaneller.ui.navigation.BottomBar
@@ -23,7 +30,11 @@ import no.solcellepaneller.ui.navigation.HelpBottomSheet
 import no.solcellepaneller.ui.navigation.AppearanceBottomSheet
 import no.solcellepaneller.ui.font.FontScaleViewModel
 import no.solcellepaneller.ui.handling.LoadingScreen
+import no.solcellepaneller.ui.navigation.TopBar
+import no.solcellepaneller.ui.reusables.MyCard
+import no.solcellepaneller.ui.reusables.MyNavCard
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun HomeScreen(navController: NavController,    fontScaleViewModel: FontScaleViewModel
 ) {
@@ -37,6 +48,7 @@ fun HomeScreen(navController: NavController,    fontScaleViewModel: FontScaleVie
     }
 
     Scaffold(
+        topBar = { TopBar(navController=navController, text ="*IKON og APPNAVN*" ,backClick = false, height = 150.dp) },
         bottomBar = {
             BottomBar(
             onHelpClicked = { showHelp = true },
@@ -46,15 +58,41 @@ fun HomeScreen(navController: NavController,    fontScaleViewModel: FontScaleVie
         }
     ) { contentPadding ->
         Column(
-            modifier = Modifier.fillMaxSize().padding(contentPadding),
+            modifier = Modifier.fillMaxSize().padding(contentPadding).padding(5.dp),
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.Center
         ) {
-            Text(stringResource(id = R.string.home), style = MaterialTheme.typography.titleLarge)
+            MyNavCard(
+                text = stringResource(id = R.string.install_panels),
+                route = "map",
+                navController = navController,
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(250.dp),
+                style = "Large"
+            )
 
-            Button(onClick = { navController.navigate("map") }) { Text(stringResource(id = R.string.install_panels), style = MaterialTheme.typography.bodySmall) }
-            Button(onClick = { navController.navigate("saved_locations") }) { Text(stringResource(id = R.string.saved_locations), style = MaterialTheme.typography.bodySmall) }
-            Button(onClick = { navController.navigate("prices") }) { Text(stringResource(id = R.string.prices), style = MaterialTheme.typography.bodySmall) }
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.spacedBy(1.dp)
+            ) {
+                MyNavCard(
+                    text = stringResource(id = R.string.saved_locations),
+                    route = "saved_locations",
+                    navController = navController,
+                    modifier = Modifier.weight(1f).height(400.dp),
+                    style = "Large"
+                )
+
+                MyNavCard(
+                    text = stringResource(id = R.string.prices),
+                    route = "prices",
+                    navController = navController,
+                    modifier = Modifier.weight(1f)
+                        .height(400.dp),
+                    style = "Large"
+                )
+            }
 
             HelpBottomSheet(visible = showHelp, navController = navController, onDismiss = { showHelp = false })
 AppearanceBottomSheet(

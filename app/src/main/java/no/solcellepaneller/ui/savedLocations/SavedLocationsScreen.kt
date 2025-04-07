@@ -25,13 +25,13 @@ import no.solcellepaneller.ui.font.FontScaleViewModel
 
 
 @Composable
-fun SavedLocationsScreen(navController: NavController,    fontScaleViewModel: FontScaleViewModel
+fun SavedLocationsScreen(navController: NavController,fontScaleViewModel: FontScaleViewModel
 ) {
     var showHelp by remember { mutableStateOf(false) }
     var showAppearance by remember { mutableStateOf(false) }
 
     Scaffold(
-        topBar = { TopBar(navController) },
+        topBar = { TopBar(navController,text = stringResource(id = R.string.saved_locations)) },
         bottomBar = {
             BottomBar(
                 onHelpClicked = { showHelp = true },

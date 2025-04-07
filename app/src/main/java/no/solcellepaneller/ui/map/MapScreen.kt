@@ -1,6 +1,10 @@
 package no.solcellepaneller.ui.map
 
+import androidx.compose.foundation.gestures.snapping.SnapPosition
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.text.KeyboardActions
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.*
@@ -9,8 +13,12 @@ import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.RectangleShape
+import androidx.compose.ui.input.key.key
+import androidx.compose.ui.input.key.onKeyEvent
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.unit.Density
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.zIndex
@@ -23,15 +31,19 @@ import kotlinx.coroutines.launch
 import no.solcellepaneller.ui.navigation.AdditionalInputBottomSheet
 import no.solcellepaneller.ui.navigation.TopBar
 import no.solcellepaneller.R
+import no.solcellepaneller.ui.font.FontScaleViewModel
 import no.solcellepaneller.ui.font.FontSizeState
+import no.solcellepaneller.ui.navigation.AppearanceBottomSheet
+import no.solcellepaneller.ui.navigation.BottomBar
 import no.solcellepaneller.ui.navigation.HelpBottomSheet
+import org.intellij.lang.annotations.JdkConstants
 
 @Composable
-fun MapScreen(viewModel: MapScreenViewModel, navController: NavController) {
+fun MapScreen(viewModel: MapScreenViewModel, navController: NavController, fontScaleViewModel: FontScaleViewModel) {
     val snackbarHostState = remember { SnackbarHostState() }
     val trigger by viewModel.snackbarMessageTrigger
 
-    var lastShownTrigger by remember { mutableStateOf(0) }
+    var lastShownTrigger by remember { mutableIntStateOf(0) }
 
     LaunchedEffect(trigger) {
         if (trigger > lastShownTrigger) {
@@ -39,10 +51,19 @@ fun MapScreen(viewModel: MapScreenViewModel, navController: NavController) {
             lastShownTrigger = trigger
         }
     }
+    var showHelp by remember { mutableStateOf(false) }
+    var showAppearance by remember { mutableStateOf(false) }
 
     Scaffold(
         snackbarHost={SnackbarHost(hostState = snackbarHostState)},
-        topBar = { TopBar(navController) },
+        topBar = { TopBar(navController=navController, text = stringResource(id = R.string.map_title)) },
+        bottomBar = {
+            BottomBar(
+                onHelpClicked = { showHelp = true },
+                onAppearanceClicked = { showAppearance = true },
+                navController = navController
+            )
+        }
     ) { contentPadding ->
         Column(
             modifier = Modifier
@@ -54,6 +75,12 @@ fun MapScreen(viewModel: MapScreenViewModel, navController: NavController) {
             DisplayScreen(viewModel, navController)
         }
     }
+    HelpBottomSheet(visible = showHelp, navController = navController, onDismiss = { showHelp = false })
+    AppearanceBottomSheet(
+        visible = showAppearance,
+        onDismiss = { showAppearance = false },
+        fontScaleViewModel = fontScaleViewModel
+    )
 }
 
 @Composable
@@ -145,27 +172,42 @@ fun DisplayScreen(viewModel: MapScreenViewModel, navController: NavController) {
             }
         }
 
-        Column(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(16.dp)
-                .zIndex(1f),
-            horizontalAlignment = Alignment.CenterHorizontally
+        Card(
+            modifier = Modifier.fillMaxWidth(),
+            shape = RectangleShape,
+            colors = CardDefaults.cardColors(
+                containerColor = MaterialTheme.colorScheme.secondary
+            )
+
         ) {
-            Row {
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.Center,
+                verticalAlignment = Alignment.CenterVertically
+            ){
                 InputField(
                     value = address,
                     onValueChange = {
                         address = it
                         viewModel.addressFetchError.value = false
                     },
-                    label = stringResource(id = R.string.enter_address)
+                    address=address,
+                    viewModel = viewModel,
+                    label = stringResource(id = R.string.enter_address),
+                    colors = OutlinedTextFieldDefaults.colors(
+                        unfocusedContainerColor = MaterialTheme.colorScheme.secondary,
+                        focusedBorderColor = MaterialTheme.colorScheme.tertiary,
+                        focusedContainerColor = MaterialTheme.colorScheme.background,
+                        focusedLabelColor = MaterialTheme.colorScheme.tertiary,
+                        cursorColor = MaterialTheme.colorScheme.tertiary,
+                        unfocusedTextColor = MaterialTheme.colorScheme.tertiary,
+                        unfocusedBorderColor = MaterialTheme.colorScheme.tertiary
+                    )
                 )
 
                 Button(
-                    modifier = Modifier
-                        .padding(start = 8.dp)
-                        .size(width = 100.dp, height = 50.dp),
+                    modifier = Modifier.fillMaxWidth().height(80.dp),
+                    shape = RectangleShape,
                     onClick = {
                         viewModel.fetchCoordinates(address)
                     }
@@ -177,8 +219,17 @@ fun DisplayScreen(viewModel: MapScreenViewModel, navController: NavController) {
                     )
                 }
             }
+        }
 
-            Spacer(modifier = Modifier.height(16.dp))
+        Column(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(16.dp)
+                .zIndex(1f),
+            horizontalAlignment = Alignment.CenterHorizontally
+        ) {
+
+            Spacer(modifier = Modifier.height(60.dp))
 
             val coroutineScope = rememberCoroutineScope()
 
@@ -300,11 +351,22 @@ fun DisplayScreen(viewModel: MapScreenViewModel, navController: NavController) {
 }
 
 @Composable
-fun InputField(value: String, onValueChange: (String) -> Unit, label: String) {
-    TextField(
+fun InputField(value: String, onValueChange: (String) -> Unit, label: String,colors: TextFieldColors,viewModel: MapScreenViewModel,address: String) {
+    OutlinedTextField(
         value = value,
         onValueChange = onValueChange,
-        label = { Text(label) })
+        label = { Text(label) },
+        colors=colors,
+        singleLine = true,
+        modifier = Modifier.width(300.dp).padding(bottom = 10.dp, start = 10.dp),
+        keyboardOptions = KeyboardOptions(imeAction = ImeAction.Done),
+        keyboardActions = KeyboardActions(
+            onDone = {
+                viewModel.fetchCoordinates(address)
+            }
+        ),
+        //burde egt ikke være hardkodet
+    )
 }
 
 @Composable

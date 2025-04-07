@@ -38,7 +38,7 @@ fun InfoScreen(navController: NavController, fontScaleViewModel: FontScaleViewMo
         var showAppearance by remember { mutableStateOf(false) }
 
         Scaffold(
-            topBar = { TopBar(navController) },
+            topBar = { TopBar(navController, text = stringResource(R.string.info_title)) },
             bottomBar = {
                 BottomBar(
                     onHelpClicked = { showHelp = true },

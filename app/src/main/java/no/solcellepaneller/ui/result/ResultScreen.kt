@@ -1,15 +1,21 @@
 package no.solcellepaneller.ui.result
 
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.material3.Button
-import androidx.compose.material3.Card
-import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.DropdownMenu
+import androidx.compose.material3.DropdownMenuItem
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -22,9 +28,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import no.solcellepaneller.R
 import no.solcellepaneller.ui.map.MapScreenViewModel
@@ -35,6 +39,8 @@ import no.solcellepaneller.ui.navigation.HelpBottomSheet
 import no.solcellepaneller.ui.navigation.TopBar
 import no.solcellepaneller.ui.font.FontScaleViewModel
 import no.solcellepaneller.ui.handling.LoadingScreen
+import no.solcellepaneller.ui.reusables.DataCard
+import no.solcellepaneller.ui.reusables.MyCard
 
 @Composable
 fun ResultScreen(navController: NavController, viewModel: MapScreenViewModel, weatherViewModel: WeatherViewModel,    fontScaleViewModel: FontScaleViewModel
@@ -56,7 +62,7 @@ fun ResultScreen(navController: NavController, viewModel: MapScreenViewModel, we
     var showAppearance by remember { mutableStateOf(false) }
 
     Scaffold(
-        topBar = { TopBar(navController) },
+        topBar = { TopBar(navController, text =stringResource(R.string.results)) },
         bottomBar = {
             BottomBar(
                 onHelpClicked = { showHelp = true },
@@ -72,14 +78,29 @@ fun ResultScreen(navController: NavController, viewModel: MapScreenViewModel, we
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.Top
         ) {
-            Text(stringResource(id = R.string.results), fontSize = 20.sp, fontWeight = FontWeight.Bold)
+            Row {
+                MyCard(
+                    text = "📏 Areal: ${viewModel.areaInput} m²",
+                    style = "",
+                    modifier = Modifier.weight(1f).height(120.dp)
+                )
+                MyCard(
+                    text = "${stringResource(id = R.string.angle)} ${viewModel.angleInput}°",
+                    style = "",
+                    modifier = Modifier.weight(1f).height(120.dp)
+                )
+                MyCard(
+                    text = "${stringResource(id = R.string.effectivity)} ${viewModel.efficiencyInput} %",
+                    style = "",
+                    modifier = Modifier.weight(1f).height(120.dp)
+                )
+            }
+//            Text("📍 Lat: ${coordinates?.first ?: "N/A"}")
+//            Text("📍 Long: ${coordinates?.second ?: "N/A"}")
 
-            Text("📍 Lat: ${coordinates?.first ?: "N/A"}")
-            Text("📍 Long: ${coordinates?.second ?: "N/A"}")
-            Text("📏 Areal: ${viewModel.areaInput} m²")
-            Text(text = "${stringResource(id = R.string.angle)} ${viewModel.angleInput}°")
+            //Trengs drection?
 //            Text(text = "${stringResource(id = R.string.direction)}  ${viewModel.directionInput}")
-            Text(text = "${stringResource(id = R.string.effectivity)} ${viewModel.efficiencyInput} %")
+
             if(loading){
                 startloading = true
             }
@@ -105,37 +126,40 @@ fun ResultScreen(navController: NavController, viewModel: MapScreenViewModel, we
                     val totalHours = daysInMonth[index] * 24 // Total hours in the month
                     energyKWh / totalHours // Convert kWh to kW
                 }
-                LazyColumn(
-                    modifier = Modifier
-                        .fillMaxSize()
-                        .padding(16.dp),
-                    verticalArrangement = Arrangement.spacedBy(8.dp)
-                ) {
-                    items(radiationList.indices.toList()) { month ->
-                        Card(
-                            modifier = Modifier.fillMaxWidth(),
-                            elevation = CardDefaults.cardElevation(4.dp)
-                        ) {
-                            Column(
-                                modifier = Modifier.padding(16.dp),
-                                horizontalAlignment = Alignment.Start
-                            ) {
-                                Text("📅 Month: ${months[month]}", fontWeight = FontWeight.Bold)
-                                Text(stringResource(id = R.string.global_radiation)+ " %.2f".format(radiationList[month]))
-                                Text(stringResource(id = R.string.avg_cloud_cover)+ " %.2f".format(cloudCoverData[month] / 8))
-                                Text(stringResource(id = R.string.avg_snow_cover)+ " %.2f".format(snowCoverData[month] / 4))
-                                Text(stringResource(id = R.string.temp_factor)+ " %.2f °C".format(1 + (-0.44) * (airTempData[month] - 25)))
-                                Text(stringResource(id = R.string.adj_radiation)+ " %.2f kWh/m²\n".format(adjustedRadiation[month]))
-                                Text(
-                                    stringResource(id = R.string.estimated_energy_prod).format(
-                                        monthlyEnergyOutput[month]
-                                    ), fontWeight = FontWeight.Bold
-                                )
-                                Text(stringResource(id = R.string.estimated_powerpr_hour) + " %.2f kW" .format(monthlyPowerOutput[month]))
-                            }
+
+                var expanded by remember { mutableStateOf(false) }
+                var selectedMonthIndex by remember { mutableStateOf(0) }
+
+                Box(modifier = Modifier.fillMaxWidth()) {
+
+                    DropdownMenu(
+                        expanded = expanded,
+                        onDismissRequest = { expanded = false }
+                    ) {
+                        months.forEachIndexed { index, month ->
+                            DropdownMenuItem(
+                                text = { Text(month) },
+                                onClick = {
+                                    selectedMonthIndex = index
+                                    expanded = false
+                                }
+                            )
                         }
                     }
                 }
+
+                MonthDataDisplay(
+                    radiationList = radiationList,
+                    cloudCoverData =cloudCoverData,
+                    snowCoverData = snowCoverData,
+                    airTempData = airTempData,
+                    adjustedRadiation = adjustedRadiation,
+                    monthlyEnergyOutput = monthlyEnergyOutput,
+                    monthlyPowerOutput = monthlyPowerOutput,
+                    months = months
+                )
+
+                MyCard("*VISUALISERING*")
 
 
             } else {
@@ -157,7 +181,6 @@ fun ResultScreen(navController: NavController, viewModel: MapScreenViewModel, we
             }
             if (startloading) {
             Column {
-//                Text(stringResource(id = R.string.loading), fontWeight = FontWeight.Bold)
                 LoadingScreen()
             }}
 
@@ -183,5 +206,81 @@ fun calculateMonthlyEnergyOutput(
         val adjustedRadiation = radiation[month] * (1 - cloudCover[month] / 8) * (1 - snowCover[month] / 4)
         val tempFactor = 1 + tempCoeff * (avgTemp[month] - 25)
         adjustedRadiation * panelArea * (efficiency / 100.0) * tempFactor
+    }
+}
+
+@Composable
+fun MonthDataDisplay(
+    radiationList: List<Double>,
+    cloudCoverData: Array<Double>,
+    snowCoverData: Array<Double>,
+    airTempData: Array<Double>,
+    adjustedRadiation: List<Double>,
+    monthlyEnergyOutput: List<Double>,
+    monthlyPowerOutput: List<Double>,
+    months: Array<String> // ["January", "February", ..., "December"]
+) {
+    var expanded by remember { mutableStateOf(false) }
+    var selectedMonthIndex by remember { mutableStateOf(0) }
+    var showAllMonths by remember { mutableStateOf(false) }
+
+    Column(modifier = Modifier.padding(10.dp)) {
+        Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween) {
+            if (!showAllMonths) {
+                OutlinedButton(onClick = { expanded = true }) {
+                    Text(text = "📅 ${months[selectedMonthIndex]}", color = MaterialTheme.colorScheme.tertiary)
+                }
+            }
+
+            Button(onClick = { showAllMonths = !showAllMonths }) {
+                Text(if (showAllMonths) "Show One Month" else "Show All Months")
+            }
+        }
+
+        DropdownMenu(
+            expanded = expanded,
+            onDismissRequest = { expanded = false }
+        ) {
+            months.forEachIndexed { index, month ->
+                DropdownMenuItem(
+                    text = { Text(month) },
+                    onClick = {
+                        selectedMonthIndex = index
+                        expanded = false
+                    }
+                )
+            }
+        }
+
+        if (showAllMonths) {
+            LazyColumn(
+                modifier = Modifier.fillMaxWidth()
+            ) {
+                items(months.size) { month ->
+                    DataCard(
+                        month = months[month],
+                        radiation = radiationList[month],
+                        cloud = cloudCoverData[month],
+                        snow = snowCoverData[month],
+                        temp = airTempData[month],
+                        adjusted = adjustedRadiation[month],
+                        energy = monthlyEnergyOutput[month],
+                        power = monthlyPowerOutput[month],
+                        isMultiMonth = true
+                    )
+                }
+            }
+        } else {
+            DataCard(
+                month = months[selectedMonthIndex],
+                radiation = radiationList[selectedMonthIndex],
+                cloud = cloudCoverData[selectedMonthIndex],
+                snow = snowCoverData[selectedMonthIndex],
+                temp = airTempData[selectedMonthIndex],
+                adjusted = adjustedRadiation[selectedMonthIndex],
+                energy = monthlyEnergyOutput[selectedMonthIndex],
+                power = monthlyPowerOutput[selectedMonthIndex],
+            )
+        }
     }
 }

@@ -6,12 +6,12 @@
     <string name="home"> Hjemme</string>
     <string name="install_panels"> Installer paneler</string>
     <string name="saved_locations"> Lagrede posisjoner</string>
-    <string name="prices"> Priser </string>
+    <string name="prices"> Strømpriser </string>
     <string name="help"> Hjelp</string>
     <string name="appereance"> Utseende</string>
-    <string name="dark_mode"> Mørkmodus  </string>
-    <string name="light_mode"> Lysmodus  </string>
-    <string name="language"> Bytt til Engelsk</string>
+    <string name="dark_mode">🌑 Bytt til mørkmodus </string>
+    <string name="light_mode">☀️ Bytt til lysmodus </string>
+    <string name="language">Bytt til Engelsk🇬🇧</string>
     <string name="font_size"> Bytt skriftstørrelse</string>
     <string name="help_how"> Hjelp (Hvordan bruke appen) </string>
     <string name="help_techinical"> Hjelp (teknisk hjelp, problemer med appen)</string>
@@ -99,7 +99,7 @@
     <string name="tech_problems_title">Problemer</string>
 
     <!--Result Screen-->
-    <string name="results"> Resultater  🔍</string>
+    <string name="results"> Resultater </string>
     <string name="angle"> 📐 Vinkel: </string>
     <string name="direction"> 🧭 Retning: </string>
     <string name="effectivity"> ⚡ Effektivitet: </string>
@@ -115,8 +115,13 @@
     <string name="adj_radiation"> ⚡ Justert stråling: </string>
     <string name="estimated_energy_prod"> 🔋 Estimert produsert energi: %.2f kWh </string>
     <string name="estimated_powerpr_hour"> 📊 Estimert kraft produsert per time: </string>
-    <string name="address_not_found">Addresse ikke funnet, prøv igjen</string>
+    <string name="address_not_found">Adresse ikke funnet, prøv igjen</string>
     <string name="follow_system">Følg systemtema</string>
     <string name="navigate_results">Gå til resultater</string>
+    <string name="map_title">Kart</string>
+    <string name="info_title">Informasjon</string>
+
+    <string name="additional_input">Tilleggsinformasjon</string>
+
 
 </resources>
