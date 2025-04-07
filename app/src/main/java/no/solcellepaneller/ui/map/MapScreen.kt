@@ -1,6 +1,8 @@
 package no.solcellepaneller.ui.map
 
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.text.KeyboardActions
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.*
@@ -10,7 +12,9 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalDensity
+import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.unit.Density
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.zIndex
@@ -69,7 +73,7 @@ fun DisplayScreen(viewModel: MapScreenViewModel, navController: NavController) {
     var arealatlong by remember { mutableStateOf<LatLng?>(null) }
     var showMissingLocationDialog by remember { mutableStateOf(false) }
     var showHelpSheet by remember { mutableStateOf(false) }
-
+    val keyboardController = LocalSoftwareKeyboardController.current
 
     val cameraPositionState = rememberCameraPositionState {
         position = CameraPosition.fromLatLngZoom(LatLng(59.9436145, 10.7182883), 18f)
@@ -159,7 +163,14 @@ fun DisplayScreen(viewModel: MapScreenViewModel, navController: NavController) {
                         address = it
                         viewModel.addressFetchError.value = false
                     },
-                    label = stringResource(id = R.string.enter_address)
+                    label = stringResource(id = R.string.enter_address),
+                    keyboardOptions = KeyboardOptions.Default.copy(imeAction = ImeAction.Done),
+                    keyboardActions = KeyboardActions(
+                        onDone = {
+                            keyboardController?.hide()
+                            viewModel.fetchCoordinates(address)
+                        }
+                    )
                 )
 
                 Button(
@@ -300,11 +311,15 @@ fun DisplayScreen(viewModel: MapScreenViewModel, navController: NavController) {
 }
 
 @Composable
-fun InputField(value: String, onValueChange: (String) -> Unit, label: String) {
+fun InputField(value: String, onValueChange: (String) -> Unit, label: String,
+               keyboardOptions: KeyboardOptions = KeyboardOptions.Default, keyboardActions: KeyboardActions = KeyboardActions.Default) {
     TextField(
         value = value,
         onValueChange = onValueChange,
-        label = { Text(label) })
+        label = { Text(label) },
+        keyboardOptions = keyboardOptions,
+        keyboardActions = keyboardActions
+        )
 }
 
 @Composable
