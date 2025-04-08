@@ -678,11 +678,11 @@ class FrostApi {
             install(ContentNegotiation) {
                 json()
             }
-//            install(HttpTimeout){
-//                requestTimeoutMillis = 200_000
-//                connectTimeoutMillis = 200_000
-//                socketTimeoutMillis = 200_000
-//            }
+           install(HttpTimeout){
+               requestTimeoutMillis = 200_000
+                connectTimeoutMillis = 200_000
+            socketTimeoutMillis = 200_000
+          }
 
         }
         //val center = LocationValue(59.91, 10.75) // middle of oslo

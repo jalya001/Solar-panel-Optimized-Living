@@ -48,8 +48,21 @@ fun ResultScreen(navController: NavController, viewModel: MapScreenViewModel, we
     val slope = viewModel.angleInput.toIntOrNull()
     val panelArea = viewModel.areaInput.toDouble()
     val efficiency = viewModel.efficiencyInput.toDouble()
-    val months = arrayOf("Januar", "Februar", "Mars", "April", "Mai", "Juni",
-        "Juli", "August", "September", "Oktober", "November", "Desember")
+    val months = listOf(
+        stringResource(R.string.month_january),
+        stringResource(R.string.month_february),
+        stringResource(R.string.month_march),
+        stringResource(R.string.month_april),
+        stringResource(R.string.month_may),
+        stringResource(R.string.month_june),
+        stringResource(R.string.month_july),
+        stringResource(R.string.month_august),
+        stringResource(R.string.month_september),
+        stringResource(R.string.month_october),
+        stringResource(R.string.month_november),
+        stringResource(R.string.month_december)
+    )
+
     val daysInMonth = arrayOf(31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31)
 
     var showHelp by remember { mutableStateOf(false) }
@@ -120,7 +133,7 @@ fun ResultScreen(navController: NavController, viewModel: MapScreenViewModel, we
                                 modifier = Modifier.padding(16.dp),
                                 horizontalAlignment = Alignment.Start
                             ) {
-                                Text("📅 Month: ${months[month]}", fontWeight = FontWeight.Bold)
+                                Text( stringResource(id = R.string.month)+ " " + months[month], fontWeight = FontWeight.Bold)
                                 Text(stringResource(id = R.string.global_radiation)+ " %.2f".format(radiationList[month]))
                                 Text(stringResource(id = R.string.avg_cloud_cover)+ " %.2f".format(cloudCoverData[month] / 8))
                                 Text(stringResource(id = R.string.avg_snow_cover)+ " %.2f".format(snowCoverData[month] / 4))

@@ -107,7 +107,7 @@
     <string name="get_data"> 📡 Hent data </string>
     <string name="loading"> ⏳ Laster inn data, vennligst vent… </string>
 
-    <string name="month"> Måned </string>
+    <string name="month"> 📅 Måned:  </string>
     <string name="global_radiation"> ☼ Global stråling: </string>
     <string name="avg_cloud_cover"> ☁️ Gjennomsnittlig skydekke: </string>
     <string name="avg_snow_cover"> ☃ Gjennomsnittlig snødekke: </string>
@@ -118,5 +118,20 @@
     <string name="address_not_found">Addresse ikke funnet, prøv igjen</string>
     <string name="follow_system">Følg systemtema</string>
     <string name="navigate_results">Gå til resultater</string>
+
+
+    <!-- Months -->
+    <string name="month_january">Januar</string>
+    <string name="month_february">Februar</string>
+    <string name="month_march">Mars</string>
+    <string name="month_april">April</string>
+    <string name="month_may">Mai</string>
+    <string name="month_june">Juni</string>
+    <string name="month_july">Juli</string>
+    <string name="month_august">August</string>
+    <string name="month_september">September</string>
+    <string name="month_october">Oktober</string>
+    <string name="month_november">November</string>
+    <string name="month_december">Desember</string>
 
 </resources>
