@@ -141,6 +141,7 @@ fun InfoScreen(navController: NavController, fontScaleViewModel: FontScaleViewMo
                 fontScaleViewModel = fontScaleViewModel
             )
         }
+
 }
 
 
