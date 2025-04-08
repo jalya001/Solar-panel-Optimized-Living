@@ -25,6 +25,7 @@ import no.solcellepaneller.ui.navigation.AppearanceBottomSheet
 import no.solcellepaneller.ui.navigation.BottomBar
 import no.solcellepaneller.ui.navigation.TopBar
 import no.solcellepaneller.ui.font.FontScaleViewModel
+import no.solcellepaneller.ui.navigation.HelpBottomSheet
 import no.solcellepaneller.ui.reusables.ExpandInfoSection
 import no.solcellepaneller.ui.theme.SolcellepanellerTheme
 
@@ -93,7 +94,12 @@ fun InfoScreen(navController: NavController, fontScaleViewModel: FontScaleViewMo
 
                 }
             }
-            AppearanceBottomSheet(
+
+            HelpBottomSheet(
+                visible = showHelp,
+                onDismiss ={ showHelp = false },
+            )
+AppearanceBottomSheet(
                 visible = showAppearance,
                 onDismiss = { showAppearance = false },
                 fontScaleViewModel = fontScaleViewModel

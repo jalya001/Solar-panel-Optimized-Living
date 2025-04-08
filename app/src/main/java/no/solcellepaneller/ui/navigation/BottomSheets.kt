@@ -21,6 +21,7 @@ import androidx.compose.ui.res.stringResource
 import no.solcellepaneller.R
 import no.solcellepaneller.ui.theme.ThemeState
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Create
 import androidx.compose.material3.*
@@ -34,70 +35,71 @@ import no.solcellepaneller.ui.font.FontSizeState
 import no.solcellepaneller.ui.language.langSwitch
 import no.solcellepaneller.ui.map.MapScreenViewModel
 import no.solcellepaneller.ui.font.FontScaleViewModel
+import no.solcellepaneller.ui.result.WeatherViewModel
 import no.solcellepaneller.ui.theme.ThemeMode
 import no.solcellepaneller.ui.reusables.DecimalFormatter
 import no.solcellepaneller.ui.reusables.DecimalInputField
+import no.solcellepaneller.ui.reusables.ExpandInfoSection
 import no.solcellepaneller.ui.reusables.MyCard
 import no.solcellepaneller.ui.reusables.MyNavCard
 
-//@OptIn(ExperimentalMaterial3Api::class)
-//@Composable
-//fun HelpBottomSheet(
-//    visible: Boolean,
-//    onDismiss: () -> Unit,
-//    navController: NavController,
-//    ) {
-//
-//    val sheetState = rememberModalBottomSheetState(
-//        skipPartiallyExpanded = true
-//    )
-//
-//    if (visible) {
-//        ModalBottomSheet(
-//            onDismissRequest = onDismiss,
-//            sheetState=sheetState,
-//            containerColor = MaterialTheme.colorScheme.background,
-//            contentColor = MaterialTheme.colorScheme.tertiary,
-//            scrimColor = Color.Black.copy(alpha = 0.8f)
-//        ) {
-//            Column(
-//                modifier = Modifier
-//                    .fillMaxWidth()
-//                    .padding(16.dp), horizontalAlignment = Alignment.CenterHorizontally
-//            ) {
-//                Text(stringResource(id = R.string.help), style = MaterialTheme.typography.titleLarge)
-//
-//                MyNavCard(
-//                    stringResource(id = R.string.help_how),
-//                    "app_help",
-//                    navController,
-//                    modifier = Modifier
-//                        .fillMaxWidth()
-//                        .height(180.dp),
-//                    style = "Large"
-//                )
-//
-//                MyNavCard(
-//                    stringResource(id = R.string.help_techinical),
-//                    "tech_help",
-//                    navController,
-//                    modifier = Modifier
-//                        .fillMaxWidth()
-//                        .height(180.dp),
-//                    style = "Large"
-//                )
-//
-//                Spacer(modifier = Modifier.height(16.dp))
-//
-//                Button(
-//                    onClick = onDismiss,
-//                ) {
-//                    Text(stringResource(id = R.string.close), style = MaterialTheme.typography.bodySmall)
-//                }
-//            }
-//        }
-//    }
-//}
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun HelpBottomSheet(
+    visible: Boolean,
+    onDismiss: () -> Unit,
+    expandSection: String = "",
+    ) {
+
+    val sheetState = rememberModalBottomSheetState(
+        skipPartiallyExpanded = true
+    )
+
+    if (visible) {
+        ModalBottomSheet(
+            onDismissRequest = onDismiss,
+            sheetState=sheetState,
+            containerColor = MaterialTheme.colorScheme.background,
+            contentColor = MaterialTheme.colorScheme.tertiary,
+            scrimColor = Color.Black.copy(alpha = 0.8f)
+        ) {
+            Column(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(16.dp), horizontalAlignment = Alignment.CenterHorizontally
+            ) {
+                Text(stringResource(id = R.string.help), style = MaterialTheme.typography.titleLarge)
+
+                LazyColumn (
+                    modifier = Modifier
+                        .padding(16.dp)
+                ) {
+                    item {
+                        ExpandInfoSection(
+                            title = stringResource(id = R.string.help_draw),
+
+                            content = stringResource(id = R.string.how_to_draw),
+                            initiallyExpanded = expandSection == "draw"
+                        )
+                    }
+                    item {
+                        ExpandInfoSection(
+                            title = stringResource(id = R.string.tech_problems_title),
+                            content =stringResource(id = R.string.tech_problems_content)
+                        )
+                    }
+                }
+                Spacer(modifier = Modifier.height(16.dp))
+
+                Button(
+                    onClick = onDismiss,
+                ) {
+                    Text(stringResource(id = R.string.close), style = MaterialTheme.typography.bodySmall)
+                }
+            }
+        }
+    }
+}
 
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -233,7 +235,8 @@ fun AdditionalInputBottomSheet(
     coordinates: Pair<Double, Double>?,
     area: String,
     navController: NavController,
-    viewModel: MapScreenViewModel
+    viewModel: MapScreenViewModel,
+    weatherViewModel: WeatherViewModel
 ) {
     var angle by remember { mutableStateOf("") }
     var areaState by remember { mutableStateOf(area) }
@@ -242,7 +245,7 @@ fun AdditionalInputBottomSheet(
         areaState = area
     }
 
-//    var direction by remember { mutableStateOf("") }
+    var direction by remember { mutableStateOf("") }
     var efficiency by remember { mutableStateOf("") }
 
     if (visible) {
@@ -270,16 +273,11 @@ fun AdditionalInputBottomSheet(
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
                 Text(stringResource(id = R.string.additional_input), style = MaterialTheme.typography.titleLarge, fontWeight = Bold)
-//                Text(stringResource(id = R.string.coordinates_label), style = MaterialTheme.typography.labelLarge)
-//                Text("Lat: ${coordinates?.first}, Lon: ${coordinates?.second}")
-//
-//                Spacer(modifier = Modifier.height(10.dp))
-
                 Button(
                     onClick = {
                         areaState = "45"
                         angle = "30"
-//                        direction = "1"
+                        direction = "1"
                         efficiency = "85"
                     },
                     modifier = Modifier.align(Alignment.CenterHorizontally)
@@ -288,8 +286,6 @@ fun AdditionalInputBottomSheet(
                 }
 
                 Spacer(modifier = Modifier.height(10.dp))
-                
-//                Text(stringResource(id = R.string.area_label), style = MaterialTheme.typography.labelLarge)
 
                 val decimalFormatter = DecimalFormatter()
 
@@ -322,23 +318,43 @@ fun AdditionalInputBottomSheet(
 
                 Spacer(modifier = Modifier.height(10.dp))
 
-//                Text(stringResource(id = R.string.slope_label), style = MaterialTheme.typography.labelLarge)
                 DecimalInputField(onValueChange = { angle=it },label =stringResource(id=R.string.slope_label) ,modifier = Modifier.fillMaxWidth(), value = angle, decimalFormatter = decimalFormatter)
 
                 Spacer(modifier = Modifier.height(10.dp))
 
-//                Text(stringResource(id = R.string.efficiency_label), style = MaterialTheme.typography.labelLarge)
+                DecimalInputField(onValueChange = { direction=it },label = stringResource(id=R.string.direction_label), modifier = Modifier.fillMaxWidth(), value = direction, decimalFormatter = decimalFormatter)
+
+                Spacer(modifier = Modifier.height(10.dp))
                 DecimalInputField(onValueChange = { efficiency=it },label = stringResource(id=R.string.efficiency_label), modifier = Modifier.fillMaxWidth(), value = efficiency, decimalFormatter = decimalFormatter)
 
                 Spacer(modifier = Modifier.height(16.dp))
 
-                if (areaState.isNotEmpty() && angle.isNotEmpty() && efficiency.isNotEmpty() && coordinates != null) {
+                if (areaState.isNotEmpty() && direction.isNotEmpty() && angle.isNotEmpty() && efficiency.isNotEmpty() && coordinates != null) {
                     Button(
                         onClick = {
                             viewModel.areaInput = areaState
                             viewModel.angleInput = angle
                             viewModel.efficiencyInput = efficiency
+                            viewModel.directionInput=direction
+
+                            val lat = coordinates.first
+                            val lon = coordinates.second
+                            val slope = angle.toIntOrNull()
+
+                            weatherViewModel.fetchFrostData(
+                                lat, lon,
+                                listOf(
+                                    "mean(snow_coverage_type P1M)",
+                                    "mean(air_temperature P1M)",
+                                    "mean(cloud_area_fraction P1M)"
+                                )
+                            )
+
+                            if (slope != null) {
+                                weatherViewModel.fetchRadiationInfo(lat, lon, slope)
+                            }
                             navController.navigate("result")
+
                         },
                         modifier = Modifier.align(Alignment.CenterHorizontally)
                     ) {

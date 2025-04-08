@@ -42,6 +42,7 @@ import no.solcellepaneller.ui.navigation.TopBar
 import no.solcellepaneller.ui.font.FontScaleViewModel
 import no.solcellepaneller.ui.handling.ErrorScreen
 import no.solcellepaneller.ui.handling.LoadingScreen
+import no.solcellepaneller.ui.navigation.HelpBottomSheet
 import java.time.ZoneId
 import java.time.ZonedDateTime
 
@@ -89,6 +90,10 @@ fun PriceScreen(
                 }
             }
 
+            HelpBottomSheet(
+                visible = showHelp,
+                onDismiss ={ showHelp = false },
+            )
 AppearanceBottomSheet(
     visible = showAppearance,
     onDismiss = { showAppearance = false },

@@ -21,6 +21,7 @@ import androidx.compose.ui.res.stringResource
 import no.solcellepaneller.R
 import no.solcellepaneller.ui.navigation.AppearanceBottomSheet
 import no.solcellepaneller.ui.font.FontScaleViewModel
+import no.solcellepaneller.ui.navigation.HelpBottomSheet
 
 
 @Composable
@@ -47,6 +48,10 @@ fun SavedLocationsScreen(navController: NavController,fontScaleViewModel: FontSc
             Text(stringResource(id = R.string.saved_locations), style = MaterialTheme.typography.bodyMedium)
 
            
+            HelpBottomSheet(
+                visible = showHelp,
+                onDismiss ={ showHelp = false },
+            )
 AppearanceBottomSheet(
     visible = showAppearance,
     onDismiss = { showAppearance = false },

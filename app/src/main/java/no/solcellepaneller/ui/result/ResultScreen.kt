@@ -1,10 +1,12 @@
 package no.solcellepaneller.ui.result
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -27,6 +29,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
@@ -38,8 +41,10 @@ import no.solcellepaneller.ui.navigation.BottomBar
 import no.solcellepaneller.ui.navigation.TopBar
 import no.solcellepaneller.ui.font.FontScaleViewModel
 import no.solcellepaneller.ui.handling.LoadingScreen
+import no.solcellepaneller.ui.navigation.HelpBottomSheet
 import no.solcellepaneller.ui.reusables.DataCard
 import no.solcellepaneller.ui.reusables.MyCard
+import org.intellij.lang.annotations.JdkConstants
 
 @Composable
 fun ResultScreen(navController: NavController, viewModel: MapScreenViewModel, weatherViewModel: WeatherViewModel,    fontScaleViewModel: FontScaleViewModel
@@ -53,7 +58,21 @@ fun ResultScreen(navController: NavController, viewModel: MapScreenViewModel, we
     val slope = viewModel.angleInput.toIntOrNull()
     val panelArea = viewModel.areaInput.toDouble()
     val efficiency = viewModel.efficiencyInput.toDouble()
-    val months = arrayOf("Januar", "Februar", "Mars", "April", "Mai", "Juni",
+//    val months = arrayOf(
+//        stringResource(id = R.string.january),
+//        stringResource(id = R.string.february),
+//        stringResource(id = R.string.march),
+//        stringResource(id = R.string.april),
+//        stringResource(id = R.string.may),
+//        stringResource(id = R.string.june),
+//        stringResource(id = R.string.july),
+//        stringResource(id = R.string.august),
+//        stringResource(id = R.string.september),
+//        stringResource(id = R.string.october),
+//        stringResource(id = R.string.november),
+//        stringResource(id = R.string.december)
+//    )
+    val months=arrayOf("Januar", "Februar", "Mars", "April", "Mai", "Juni",
         "Juli", "August", "September", "Oktober", "November", "Desember")
     val daysInMonth = arrayOf(31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31)
 
@@ -77,29 +96,6 @@ fun ResultScreen(navController: NavController, viewModel: MapScreenViewModel, we
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.Top
         ) {
-            Row {
-                MyCard(
-                    text = "📏 Areal: ${viewModel.areaInput} m²",
-                    style = "",
-                    modifier = Modifier.weight(1f).height(120.dp)
-                )
-                MyCard(
-                    text = "${stringResource(id = R.string.angle)} ${viewModel.angleInput}°",
-                    style = "",
-                    modifier = Modifier.weight(1f).height(120.dp)
-                )
-                MyCard(
-                    text = "${stringResource(id = R.string.effectivity)} ${viewModel.efficiencyInput} %",
-                    style = "",
-                    modifier = Modifier.weight(1f).height(120.dp)
-                )
-            }
-//            Text("📍 Lat: ${coordinates?.first ?: "N/A"}")
-//            Text("📍 Long: ${coordinates?.second ?: "N/A"}")
-
-            //Trengs drection?
-//            Text(text = "${stringResource(id = R.string.direction)}  ${viewModel.directionInput}")
-
             if(loading){
                 startloading = true
             }
@@ -120,32 +116,15 @@ fun ResultScreen(navController: NavController, viewModel: MapScreenViewModel, we
                     adjustedRadiation[month] * panelArea * (efficiency / 100.0) * tempFactor
                 }
 
-
                 val monthlyPowerOutput = monthlyEnergyOutput.mapIndexed { index, energyKWh ->
                     val totalHours = daysInMonth[index] * 24 // Total hours in the month
                     energyKWh / totalHours // Convert kWh to kW
                 }
 
-                var expanded by remember { mutableStateOf(false) }
-                var selectedMonthIndex by remember { mutableStateOf(0) }
-
-                Box(modifier = Modifier.fillMaxWidth()) {
-
-                    DropdownMenu(
-                        expanded = expanded,
-                        onDismissRequest = { expanded = false }
-                    ) {
-                        months.forEachIndexed { index, month ->
-                            DropdownMenuItem(
-                                text = { Text(month) },
-                                onClick = {
-                                    selectedMonthIndex = index
-                                    expanded = false
-                                }
-                            )
-                        }
-                    }
-                }
+                MyCard(
+                    "*VISUALISERING*",
+                    modifier = Modifier.height(100.dp)
+                    )
 
                 MonthDataDisplay(
                     radiationList = radiationList,
@@ -158,31 +137,52 @@ fun ResultScreen(navController: NavController, viewModel: MapScreenViewModel, we
                     months = months
                 )
 
-                MyCard("*VISUALISERING*")
-
 
             } else {
-                Text(stringResource(id = R.string.data_not_added))
+//                Row {
+//                MyCard(
+//                    text = "📏 Areal: ${viewModel.areaInput} m²",
+//                    style = "",
+//                    modifier = Modifier.weight(1f).height(120.dp)
+//                )
+//                MyCard(
+//                    text = "${stringResource(id = R.string.angle)} ${viewModel.angleInput}°",
+//                    style = "",
+//                    modifier = Modifier.weight(1f).height(120.dp)
+//                )
+//                MyCard(
+//                    text = "${stringResource(id = R.string.effectivity)} ${viewModel.efficiencyInput} %",
+//                    style = "",
+//                    modifier = Modifier.weight(1f).height(120.dp)
+//                )
+//            }
+
                 //Text("⚠ No snow coverage data available." )
             }
+//            if (!startloading && frostData.isEmpty()) {
+//                Button(onClick = {
+//                    coordinates?.let {
+//                        weatherViewModel.fetchFrostData(it.first, it.second, listOf(
+//                            "mean(snow_coverage_type P1M)", "mean(air_temperature P1M)", "mean(cloud_area_fraction P1M)"
+//                        ))
+//                        if (slope != null) {
+//                            weatherViewModel.fetchRadiationInfo(it.first, it.second, slope)
+//                        }
+//                    }
+//                }) {
+//                    Text(stringResource(id = R.string.get_data))
+//                }
+//            }
 
-            Button(onClick = {
-                coordinates?.let {
-                    weatherViewModel.fetchFrostData(it.first, it.second, listOf(
-                        "mean(snow_coverage_type P1M)", "mean(air_temperature P1M)", "mean(cloud_area_fraction P1M)"
-                    ))
-                    if (slope != null) {
-                        weatherViewModel.fetchRadiationInfo(it.first, it.second, slope)
-                    }
-                }
-            }) {
-                Text(stringResource(id = R.string.get_data))
-            }
             if (startloading) {
             Column {
                 LoadingScreen()
             }}
 
+            HelpBottomSheet(
+                visible = showHelp,
+                onDismiss ={ showHelp = false },
+            )
 AppearanceBottomSheet(
     visible = showAppearance,
     onDismiss = { showAppearance = false },
@@ -222,37 +222,47 @@ fun MonthDataDisplay(
     var selectedMonthIndex by remember { mutableStateOf(0) }
     var showAllMonths by remember { mutableStateOf(false) }
 
-    Column(modifier = Modifier.padding(10.dp)) {
-        Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween) {
-            if (!showAllMonths) {
-                OutlinedButton(onClick = { expanded = true }) {
-                    Text(text = "📅 ${months[selectedMonthIndex]}", color = MaterialTheme.colorScheme.tertiary)
+    Column(modifier = Modifier.padding(10.dp), horizontalAlignment = Alignment.CenterHorizontally) {
+
+        Button(onClick = { showAllMonths = !showAllMonths }) {
+            Text(if (showAllMonths) "Show One Month" else "Show All Months")
+        }
+
+        if (!showAllMonths) {
+            OutlinedButton(onClick = { expanded = true }) {
+                Text(text = "📅 ${months[selectedMonthIndex]}", color = MaterialTheme.colorScheme.tertiary)
+            }
+            DropdownMenu(
+                expanded = expanded,
+                onDismissRequest = { expanded = false }
+            ) {
+                months.forEachIndexed { index, month ->
+                    DropdownMenuItem(
+                        text = { Text(month) },
+                        onClick = {
+                            selectedMonthIndex = index
+                            expanded = false
+                        }
+                    )
                 }
             }
 
-            Button(onClick = { showAllMonths = !showAllMonths }) {
-                Text(if (showAllMonths) "Show One Month" else "Show All Months")
-            }
-        }
 
-        DropdownMenu(
-            expanded = expanded,
-            onDismissRequest = { expanded = false }
-        ) {
-            months.forEachIndexed { index, month ->
-                DropdownMenuItem(
-                    text = { Text(month) },
-                    onClick = {
-                        selectedMonthIndex = index
-                        expanded = false
-                    }
+            Column(modifier = Modifier.background(Color.Red).fillMaxHeight()) {
+                DataCard(
+                    month = months[selectedMonthIndex],
+                    radiation = radiationList[selectedMonthIndex],
+                    cloud = cloudCoverData[selectedMonthIndex],
+                    snow = snowCoverData[selectedMonthIndex],
+                    temp = airTempData[selectedMonthIndex],
+                    adjusted = adjustedRadiation[selectedMonthIndex],
+                    energy = monthlyEnergyOutput[selectedMonthIndex],
+                    power = monthlyPowerOutput[selectedMonthIndex],
                 )
             }
-        }
-
-        if (showAllMonths) {
+        }else{
             LazyColumn(
-                modifier = Modifier.fillMaxWidth()
+                modifier = Modifier.background(Color.Red).fillMaxHeight()
             ) {
                 items(months.size) { month ->
                     DataCard(
@@ -264,21 +274,9 @@ fun MonthDataDisplay(
                         adjusted = adjustedRadiation[month],
                         energy = monthlyEnergyOutput[month],
                         power = monthlyPowerOutput[month],
-                        isMultiMonth = true
                     )
                 }
             }
-        } else {
-            DataCard(
-                month = months[selectedMonthIndex],
-                radiation = radiationList[selectedMonthIndex],
-                cloud = cloudCoverData[selectedMonthIndex],
-                snow = snowCoverData[selectedMonthIndex],
-                temp = airTempData[selectedMonthIndex],
-                adjusted = adjustedRadiation[selectedMonthIndex],
-                energy = monthlyEnergyOutput[selectedMonthIndex],
-                power = monthlyPowerOutput[selectedMonthIndex],
-            )
         }
     }
 }

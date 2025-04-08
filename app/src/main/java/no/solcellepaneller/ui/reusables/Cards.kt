@@ -1,5 +1,6 @@
 package no.solcellepaneller.ui.reusables
 
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
@@ -42,7 +43,7 @@ fun MyCard(
         modifier = modifier.padding(8.dp).width(width),
     ) {
         Box(
-            modifier = Modifier.fillMaxSize(),
+            modifier = Modifier,
             contentAlignment = Alignment.Center
         ){
             if (content != null) {
@@ -124,22 +125,18 @@ fun DataCard(
     adjusted: Double,
     energy: Double,
     power: Double,
-    isMultiMonth: Boolean = false,
     modifier: Modifier = Modifier
 ) {
     val cardModifier = modifier
         .fillMaxWidth()
-        .padding(horizontal = 0.dp)
-        .then(
-            if (isMultiMonth) Modifier.padding(vertical = 6.dp)
-            else Modifier.padding(vertical = 130.dp)
-        )
 
     MyCard(
         modifier = cardModifier,
         elevation = 4.dp,
     ) {
-        Column(modifier = Modifier.padding(16.dp)) {
+        Column(modifier = Modifier.padding(16.dp)
+               , verticalArrangement = Arrangement.spacedBy(4.dp)
+        ) {
             Text("📅 $month", fontWeight = FontWeight.Bold, style = MaterialTheme.typography.titleLarge)
             Text("☀️ Global Radiation: %.2f".format(radiation), style = MaterialTheme.typography.bodyLarge)
             Text("☁️ Avg Cloud Cover: %.2f".format(cloud / 8), style = MaterialTheme.typography.bodyLarge)

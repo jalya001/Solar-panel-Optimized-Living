@@ -29,6 +29,7 @@ import no.solcellepaneller.ui.navigation.BottomBar
 import no.solcellepaneller.ui.navigation.AppearanceBottomSheet
 import no.solcellepaneller.ui.font.FontScaleViewModel
 import no.solcellepaneller.ui.handling.LoadingScreen
+import no.solcellepaneller.ui.navigation.HelpBottomSheet
 import no.solcellepaneller.ui.navigation.TopBar
 import no.solcellepaneller.ui.reusables.MyCard
 import no.solcellepaneller.ui.reusables.MyNavCard
@@ -93,10 +94,16 @@ fun HomeScreen(navController: NavController,    fontScaleViewModel: FontScaleVie
                 )
             }
 
+            HelpBottomSheet(
+                visible = showHelp,
+                onDismiss ={ showHelp = false },
+            )
 AppearanceBottomSheet(
     visible = showAppearance,
     onDismiss = { showAppearance = false },
     fontScaleViewModel = fontScaleViewModel
-)        }
+)
+
+        }
     }
 }

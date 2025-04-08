@@ -19,6 +19,7 @@ import kotlin.math.*
 import java.time.ZonedDateTime
 import java.time.ZoneId
 import java.time.format.DateTimeFormatter
+import java.util.Locale
 
 class FrostApi {
     val baseUrl = "https://frost-beta.met.no/api/v1/obs/met.no/filter/get"
@@ -197,7 +198,7 @@ class FrostApi {
             smallString += """{"type":"polygon","pos":["""
             coordinateList.forEachIndexed { index2, coordinates ->
                 if (index2 > 0) smallString += ","
-                smallString += """{"lat":${String.format("%.5f", coordinates.first).toDouble()},"lon":${String.format("%.5f", coordinates.second).toDouble()}}"""
+                smallString += """{"lat":${String.format(Locale.US,"%.5f", coordinates.first).toDouble()},"lon":${String.format(Locale.US,"%.5f", coordinates.second).toDouble()}}"""
             }
             smallString += "]}"
             bigString += smallString

@@ -1,11 +1,9 @@
 package no.solcellepaneller.ui.map
 
-import androidx.compose.foundation.gestures.snapping.SnapPosition
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
-import androidx.compose.foundation.text.selection.TextSelectionColors
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.*
@@ -17,8 +15,6 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Color.Companion.Green
 import androidx.compose.ui.graphics.Color.Companion.Red
 import androidx.compose.ui.graphics.RectangleShape
-import androidx.compose.ui.input.key.key
-import androidx.compose.ui.input.key.onKeyEvent
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.ImeAction
@@ -38,10 +34,11 @@ import no.solcellepaneller.ui.font.FontScaleViewModel
 import no.solcellepaneller.ui.font.FontSizeState
 import no.solcellepaneller.ui.navigation.AppearanceBottomSheet
 import no.solcellepaneller.ui.navigation.BottomBar
-import org.intellij.lang.annotations.JdkConstants
+import no.solcellepaneller.ui.navigation.HelpBottomSheet
+import no.solcellepaneller.ui.result.WeatherViewModel
 
 @Composable
-fun MapScreen(viewModel: MapScreenViewModel, navController: NavController, fontScaleViewModel: FontScaleViewModel) {
+fun MapScreen(viewModel: MapScreenViewModel, navController: NavController, fontScaleViewModel: FontScaleViewModel,weatherViewModel: WeatherViewModel) {
     val snackbarHostState = remember { SnackbarHostState() }
     val trigger by viewModel.snackbarMessageTrigger
 
@@ -74,10 +71,14 @@ fun MapScreen(viewModel: MapScreenViewModel, navController: NavController, fontS
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.Center
         ) {
-            DisplayScreen(viewModel, navController)
+            DisplayScreen(viewModel, navController,weatherViewModel)
         }
     }
-    AppearanceBottomSheet(
+                HelpBottomSheet(
+                visible = showHelp,
+                onDismiss ={ showHelp = false },
+            )
+AppearanceBottomSheet(
         visible = showAppearance,
         onDismiss = { showAppearance = false },
         fontScaleViewModel = fontScaleViewModel
@@ -85,7 +86,11 @@ fun MapScreen(viewModel: MapScreenViewModel, navController: NavController, fontS
 }
 
 @Composable
-fun DisplayScreen(viewModel: MapScreenViewModel, navController: NavController) {
+fun DisplayScreen(
+    viewModel: MapScreenViewModel,
+    navController: NavController,
+    weatherViewModel: WeatherViewModel
+) {
     var address by remember { mutableStateOf("") }
     val coordinates by viewModel.coordinates.observeAsState()
     var selectedCoordinates by remember { mutableStateOf<LatLng?>(null) }
@@ -149,8 +154,8 @@ fun DisplayScreen(viewModel: MapScreenViewModel, navController: NavController) {
                 if (ispolygonvisible) {
                     Polygon(
                         points = polygonPoints,
-                        fillColor = Color.Green.copy(0.3f),
-                        strokeColor = Color.Green,
+                        fillColor = Green.copy(0.3f),
+                        strokeColor = Green,
                         strokeWidth = 5f
                     )
                 }
@@ -173,19 +178,12 @@ fun DisplayScreen(viewModel: MapScreenViewModel, navController: NavController) {
             }
         }
 
-        val customTextSelectionColors = TextSelectionColors(
-            handleColor = Green,
-            backgroundColor = Red
-        )
-
-
         Card(
             modifier = Modifier.fillMaxWidth(),
             shape = RectangleShape,
             colors = CardDefaults.cardColors(
                 containerColor = MaterialTheme.colorScheme.secondary
             )
-
         ) {
             Row(
                 modifier = Modifier.fillMaxWidth(),
@@ -213,7 +211,9 @@ fun DisplayScreen(viewModel: MapScreenViewModel, navController: NavController) {
                 )
 
                 Button(
-                    modifier = Modifier.fillMaxWidth().height(80.dp),
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .height(80.dp),
                     shape = RectangleShape,
                     onClick = {
                         viewModel.fetchCoordinates(address)
@@ -268,7 +268,6 @@ fun DisplayScreen(viewModel: MapScreenViewModel, navController: NavController) {
                 LocationNotSelectedDialog(
                     coordinates = coordinates,
                     onDismiss = { showMissingLocationDialog = false },
-                    navController = navController
                 )
             }
 
@@ -282,7 +281,7 @@ fun DisplayScreen(viewModel: MapScreenViewModel, navController: NavController) {
                     selectedCoordinates = null
                     viewModel.removePoints()
                     index = 0
-                }, coordinates=coordinates, area=area, navController = navController, viewModel = viewModel
+                }, coordinates=coordinates, area=area, navController = navController, viewModel = viewModel, weatherViewModel = weatherViewModel
             )
 
             if(drawingEnabled){
@@ -342,7 +341,7 @@ fun DisplayScreen(viewModel: MapScreenViewModel, navController: NavController) {
                             viewModel.removePoints()
                             ispolygonvisible = false
                             index = 0
-                        }, colors = ButtonDefaults.buttonColors(Color.Red)) {
+                        }, colors = ButtonDefaults.buttonColors(Red)) {
                             Text(text = stringResource(id = R.string.remove_points))
                         }
                     }
@@ -362,7 +361,9 @@ fun InputField(value: String, onValueChange: (String) -> Unit, label: String,col
         label = { Text(label) },
         colors=colors,
         singleLine = true,
-        modifier = Modifier.width(300.dp).padding(bottom = 10.dp, start = 10.dp),
+        modifier = Modifier
+            .width(300.dp)
+            .padding(bottom = 10.dp, start = 10.dp),
         keyboardOptions = KeyboardOptions(imeAction = ImeAction.Done),
         keyboardActions = KeyboardActions(
             onDone = {
@@ -386,10 +387,16 @@ fun BekreftLokasjon( //må huske å endre navn på funksjoner ogsånt til engels
 fun LocationNotSelectedDialog(
     coordinates: Pair<Double, Double>?,
     onDismiss: () -> Unit,
-    navController: NavController
 ) {
     var showDialog by remember { mutableStateOf(coordinates == null) }
-
+    var showHelpBottomSheet by remember { mutableStateOf(false) }
+    if (showHelpBottomSheet) {
+        HelpBottomSheet(
+            visible = true,
+            onDismiss = { showHelpBottomSheet = false },
+            expandSection = "draw",
+        )
+    }
     if (showDialog && coordinates == null) {
         val currentDensity = LocalDensity.current
         val customDensity = Density(
@@ -407,11 +414,13 @@ fun LocationNotSelectedDialog(
                 Text(stringResource(id = R.string.no_location_message))
             },
             confirmButton = {
-                Button(
-                    onClick ={navController.navigate("app_help?expandSection=draw")}//implementer d her
-                ) {
-                  Text(stringResource(id = R.string.need_help_drawing))
-                }
+//                Button( //Ga ikke mening å ha det på denne skjermen
+//                    onClick ={
+//                        showHelpBottomSheet = true
+//                    }
+//                ) {
+//                  Text(stringResource(id = R.string.need_help_drawing))
+//                }
             },
             dismissButton = {
                 Button(
@@ -420,7 +429,11 @@ fun LocationNotSelectedDialog(
                     Text(stringResource(id = R.string.dismiss))
                 }
             }
+
+
         )
-    }}
+    }
+
+    }
 }
 

@@ -42,22 +42,21 @@ import no.solcellepaneller.ui.map.MapScreen
 import no.solcellepaneller.ui.map.MapScreenViewModel
 import no.solcellepaneller.ui.result.ResultScreen
 import no.solcellepaneller.ui.savedLocations.SavedLocationsScreen
-import androidx.navigation.navArgument
 import no.solcellepaneller.ui.result.WeatherViewModel
 import no.solcellepaneller.ui.font.FontScaleViewModel
 import androidx.compose.material3.OutlinedIconButton
-import no.solcellepaneller.ui.help.HelpScreen
 
 @Composable
 fun Nav(navController: NavHostController, fontScaleViewModel: FontScaleViewModel) {
         val viewModel: MapScreenViewModel = viewModel()
+    val WviewModel: WeatherViewModel = viewModel()
+
     NavHost(navController, startDestination = "home") {
         composable("home") { HomeScreen(navController,fontScaleViewModel) }
         composable("map") {
-            MapScreen(viewModel, navController,fontScaleViewModel)
+            MapScreen(viewModel, navController,fontScaleViewModel,WviewModel)
         }
         composable("result") {
-            val WviewModel: WeatherViewModel = viewModel()
             ResultScreen(navController,viewModel,WviewModel,fontScaleViewModel) }
         composable("saved_locations") { SavedLocationsScreen(navController,fontScaleViewModel) }
         composable("prices") {
@@ -67,16 +66,15 @@ fun Nav(navController: NavHostController, fontScaleViewModel: FontScaleViewModel
             navController = navController,fontScaleViewModel
         ) }
         composable("info_screen") { InfoScreen(navController,fontScaleViewModel)}
-//        composable("app_help") { AppHelp(navController) }
-        composable(
-            "help?expandSection={expandSection}",
-            arguments = listOf(
-                navArgument("expandSection") { defaultValue = "" }
-            )
-        ) { backStackEntry ->
-            val expandSection = backStackEntry.arguments?.getString("expandSection") ?: ""
-            HelpScreen(navController, expandSection,fontScaleViewModel)
-        }
+//        composable(
+//            "help?expandSection={expandSection}",
+//            arguments = listOf(
+//                navArgument("expandSection") { defaultValue = "" }
+//            )
+//        ) { backStackEntry ->
+//            val expandSection = backStackEntry.arguments?.getString("expandSection") ?: ""
+//            HelpScreen(navController, expandSection,fontScaleViewModel)
+//        }
     }
 }
 
@@ -95,7 +93,7 @@ fun BottomBar(
             icon = { Icon(Icons.Filled.Build, contentDescription = "Help") },
             label = { Text(stringResource(id = R.string.help)) },
             selected = false,
-            onClick = { navController.navigate("help") }
+            onClick = onHelpClicked
         )
         NavigationBarItem(
             icon = { Icon(Icons.Filled.Info, contentDescription = "Information") },
@@ -144,7 +142,7 @@ fun TopBar(
                         )
                     }
                 }
-            },
+            }
         )
 
         Box(

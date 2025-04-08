@@ -31,7 +31,7 @@ class MapScreenViewModel(
 
     var areaInput by mutableStateOf("")
     var angleInput by mutableStateOf("")
-//    var directionInput by mutableStateOf("")
+    var directionInput by mutableStateOf("")
     var efficiencyInput by mutableStateOf("")
 
 

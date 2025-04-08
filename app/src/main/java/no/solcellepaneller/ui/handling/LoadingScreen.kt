@@ -25,9 +25,8 @@ fun LoadingScreen() {
         Column(
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            CircularProgressIndicator()
+            CircularProgressIndicator(color = MaterialTheme.colorScheme.tertiary)
             Spacer(modifier = Modifier.height(8.dp))
-//            Text("Laster inn data, vennligst vent...")
             Text(stringResource(id = R.string.loading), fontWeight = FontWeight.Bold)
         }
     }
