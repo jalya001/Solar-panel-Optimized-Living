@@ -35,7 +35,6 @@ import no.solcellepaneller.ui.theme.SolcellepanellerTheme
 @Composable
 fun InfoScreen(navController: NavController, fontScaleViewModel: FontScaleViewModel
 ) {
-    SolcellepanellerTheme {
         var showHelp by remember { mutableStateOf(false) }
         var showAppearance by remember { mutableStateOf(false) }
 
@@ -61,7 +60,7 @@ fun InfoScreen(navController: NavController, fontScaleViewModel: FontScaleViewMo
                     title = stringResource(id = R.string.intro_title),
                     content = {
                         Column {
-                            Text(stringResource(id = R.string.intro_content))
+                            Text(stringResource(id = R.string.intro_content), style = MaterialTheme.typography.bodyMedium)
                         }
                     }
                 )
@@ -73,7 +72,7 @@ fun InfoScreen(navController: NavController, fontScaleViewModel: FontScaleViewMo
                     title = stringResource(id = R.string.price_title),
                     content = {
                         Column {
-                            Text(stringResource(id = R.string.price_content))
+                            Text(stringResource(id = R.string.price_content), style = MaterialTheme.typography.bodyMedium)
                         }
                     }
                 )
@@ -84,7 +83,7 @@ fun InfoScreen(navController: NavController, fontScaleViewModel: FontScaleViewMo
                     title = stringResource(id = R.string.pros_and_cons_title),
                     content = {
                         Column {
-                            Text(stringResource(id = R.string.pros_and_cons_content))
+                            Text(stringResource(id = R.string.pros_and_cons_content), style = MaterialTheme.typography.bodySmall)
                         }
                     }
                 )
@@ -96,7 +95,7 @@ fun InfoScreen(navController: NavController, fontScaleViewModel: FontScaleViewMo
                     title = stringResource(id = R.string.money_saved_title),
                     content = {
                         Column {
-                            Text(stringResource(id = R.string.money_saved_content))
+                            Text(stringResource(id = R.string.money_saved_content), style = MaterialTheme.typography.bodyMedium)
                         }
                     }
                 )
@@ -108,7 +107,7 @@ fun InfoScreen(navController: NavController, fontScaleViewModel: FontScaleViewMo
                     title = stringResource(id = R.string.cabin_title),
                     content = {
                         Column {
-                            Text(stringResource(id = R.string.cabin_content))
+                            Text(stringResource(id = R.string.cabin_content), style = MaterialTheme.typography.bodyMedium)
                         }
                     }
                 )
@@ -119,11 +118,12 @@ fun InfoScreen(navController: NavController, fontScaleViewModel: FontScaleViewMo
                     title = stringResource(id = R.string.support_title),
                     content = {
                         Column {
-                            Text(stringResource(id = R.string.support_content))
+                            Text(stringResource(id = R.string.support_content), style = MaterialTheme.typography.bodyMedium)
                             val uriHandler = LocalUriHandler.current
 
                             Text(
                                 text = "🌐 enova.no/privat",
+                                style = MaterialTheme.typography.bodyMedium,
                                 modifier = Modifier.clickable {
                                     uriHandler.openUri("https://www.enova.no/privat")
                                 }
@@ -141,7 +141,6 @@ fun InfoScreen(navController: NavController, fontScaleViewModel: FontScaleViewMo
                 fontScaleViewModel = fontScaleViewModel
             )
         }
-    }
 }
 
 
