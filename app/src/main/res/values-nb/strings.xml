@@ -57,12 +57,21 @@
         Jo mer sol du får og jo høyere strømprisene er, desto mer kan du spare. Beregningen gir deg bedre grunnlag for å vurdere om investeringen i solceller er lønnsom for deg.
     </string>
 
+
     <string name="cabin_title"> Hytte</string>
     <string name="cabin_content">
         For hytter uten tilkobling til strømnettet kan solcellepaneler være en effektiv og bærekraftig løsning for å dekke grunnleggende strømbehov.
         Basert på beliggenhet og lokale solforhold kan du med solenergi få nok kapasitet til blant annet belysning, lading av elektroniske enheter, kjølebokser eller små vannpumper.
         Denne appen hjelper deg med å vurdere hvor mye solenergi hytta di potensielt kan produsere, og om det er tilstrekkelig for dine behov.
     </string>
+
+    <string name="support_title">Støtteordninger</string>
+    <string name="support_content">
+        Du kan være kvalifisert for økonomisk støtte fra Enova, en statlig aktør som gir tilskudd til energieffektive tiltak – inkludert solcelleanlegg.
+        Gjennom sitt program for boligeiere kan du få inntil 32 500 kr i støtte totalt, avhengig av anleggets størrelse og effektivitet.
+        For mer informasjon og søknad, gå til:
+</string>
+
 
     <!--Map Screen-->
     <string name="enter_address">Skriv inn adresse</string>

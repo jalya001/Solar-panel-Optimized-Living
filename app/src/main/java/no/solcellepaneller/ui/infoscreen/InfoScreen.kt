@@ -1,6 +1,7 @@
 package no.solcellepaneller.ui.infoscreen
 
 
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -17,6 +18,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalUriHandler
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
@@ -57,7 +59,11 @@ fun InfoScreen(navController: NavController, fontScaleViewModel: FontScaleViewMo
 
                 ExpandInfoSection(
                     title = stringResource(id = R.string.intro_title),
-                    content = stringResource(id = R.string.intro_content)
+                    content = {
+                        Column {
+                            Text(stringResource(id = R.string.intro_content))
+                        }
+                    }
                 )
 
             }
@@ -65,14 +71,22 @@ fun InfoScreen(navController: NavController, fontScaleViewModel: FontScaleViewMo
             item {
                 ExpandInfoSection(
                     title = stringResource(id = R.string.price_title),
-                    content = stringResource(id = R.string.price_content)
+                    content = {
+                        Column {
+                            Text(stringResource(id = R.string.price_content))
+                        }
+                    }
                 )
             }
             item {
 
                 ExpandInfoSection(
                     title = stringResource(id = R.string.pros_and_cons_title),
-                    content = stringResource(id = R.string.pros_and_cons_content)
+                    content = {
+                        Column {
+                            Text(stringResource(id = R.string.pros_and_cons_content))
+                        }
+                    }
                 )
 
             }
@@ -80,7 +94,11 @@ fun InfoScreen(navController: NavController, fontScaleViewModel: FontScaleViewMo
 
                 ExpandInfoSection(
                     title = stringResource(id = R.string.money_saved_title),
-                    content = stringResource(id = R.string.money_saved_content)
+                    content = {
+                        Column {
+                            Text(stringResource(id = R.string.money_saved_content))
+                        }
+                    }
                 )
 
             }
@@ -88,10 +106,33 @@ fun InfoScreen(navController: NavController, fontScaleViewModel: FontScaleViewMo
 
                 ExpandInfoSection(
                     title = stringResource(id = R.string.cabin_title),
-                    content = stringResource(id = R.string.cabin_content)
+                    content = {
+                        Column {
+                            Text(stringResource(id = R.string.cabin_content))
+                        }
+                    }
                 )
 
                 }
+            item {
+                ExpandInfoSection(
+                    title = stringResource(id = R.string.support_title),
+                    content = {
+                        Column {
+                            Text(stringResource(id = R.string.support_content))
+                            val uriHandler = LocalUriHandler.current
+
+                            Text(
+                                text = "🌐 enova.no/privat",
+                                modifier = Modifier.clickable {
+                                    uriHandler.openUri("https://www.enova.no/privat")
+                                }
+                            )
+                        }
+                    }
+                )
+
+            }
             }
             HelpBottomSheet(visible = showHelp, navController = navController, onDismiss = { showHelp = false })
             AppearanceBottomSheet(
@@ -105,7 +146,7 @@ fun InfoScreen(navController: NavController, fontScaleViewModel: FontScaleViewMo
 
 
 @Composable
-fun ExpandInfoSection(title: String,content: String ){
+fun ExpandInfoSection(title: String,content: @Composable () -> Unit ){
     var expanded by remember { mutableStateOf(false) }
 
     Card(
@@ -125,11 +166,7 @@ fun ExpandInfoSection(title: String,content: String ){
             )
 
             if(expanded){
-                Text(
-                    text = content,
-                    style = MaterialTheme.typography.bodyMedium,
-                    modifier = Modifier.padding(top = 8.dp)
-                )
+                content()
             }
         }
     }

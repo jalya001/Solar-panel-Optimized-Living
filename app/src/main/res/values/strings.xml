@@ -63,6 +63,13 @@
         This app helps you assess how much solar power you can potentially produce and whether it is sufficient for your needs.
     </string>
 
+    <string name="support_title">Support Schemes</string>
+    <string name="support_content">
+        You may be eligible for financial support from Enova, a Norwegian government agency that provides funding for energy-efficient solutions such as solar panels.
+        Through their homeowner program, you can get up to 32,500 NOK in support for installing solar power systems, depending on system size and efficiency.
+        For more information and to apply, visit:
+    </string>
+
     <!--Map Screen-->
     <string name="enter_address">Enter Address</string>
     <string name="search_coordinates">Search Coordinates</string>
