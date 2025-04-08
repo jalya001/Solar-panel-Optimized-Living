@@ -1,9 +1,8 @@
 package no.solcellepaneller.ui.result
 
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material3.Button
@@ -21,9 +20,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import no.solcellepaneller.R
 import no.solcellepaneller.ui.font.FontScaleViewModel
@@ -73,8 +70,7 @@ fun ResultScreen(
 
             Column(
                 modifier = Modifier
-                    .padding(contentPadding)
-                    .background(Color.Red),
+                    .padding(contentPadding),
                 horizontalAlignment = Alignment.CenterHorizontally,
                 verticalArrangement = Arrangement.Top
             ) {
@@ -121,12 +117,6 @@ fun ResultScreen(
                     )
                 }
 
-            }
-            Column {
-                Text(
-                    "*VISUALISERING*",
-                    modifier = Modifier.height(100.dp)
-                )
             }
 
             if (startloading) {
@@ -182,7 +172,10 @@ fun MonthDataDisplay(
     var selectedMonthIndex by remember { mutableStateOf(0) }
     var showAllMonths by remember { mutableStateOf(false) }
 
-    Column(horizontalAlignment = Alignment.CenterHorizontally) {
+    Column(
+        horizontalAlignment = Alignment.CenterHorizontally,
+        modifier = Modifier.fillMaxHeight()
+    ) {
 
         Button(onClick = { showAllMonths = !showAllMonths }) {
             Text(if (showAllMonths) "Show One Month" else "Show All Months")
@@ -221,6 +214,12 @@ fun MonthDataDisplay(
                 navController = navController,
             )
 
+            Column {
+                Text(
+                    "*VISUALISERING*",
+                )
+            }
+
         } else {
             Button(
                 onClick = {
@@ -235,7 +234,6 @@ fun MonthDataDisplay(
                 Text("Show yearly savings")
             }
             LazyColumn(
-                modifier = Modifier.height(380.dp),
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
                 items(months.size) { month ->
