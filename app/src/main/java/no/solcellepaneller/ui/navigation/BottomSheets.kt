@@ -355,7 +355,7 @@ fun AdditionalInputBottomSheet(
                         },
                         modifier = Modifier.align(Alignment.CenterHorizontally)
                     ) {
-                        Text("Gå til resultater")
+                        Text(stringResource(id = R.string.go_to_results))
                     }
                 }
 
