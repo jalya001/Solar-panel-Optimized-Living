@@ -7,6 +7,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.MaterialTheme
@@ -116,6 +117,7 @@ fun ResultScreen(
                         monthlyEnergyOutput = monthlyEnergyOutput,
                         monthlyPowerOutput = monthlyPowerOutput,
                         months = months,
+                        navController = navController
                     )
                 }
 
@@ -174,6 +176,7 @@ fun MonthDataDisplay(
     monthlyEnergyOutput: List<Double>,
     monthlyPowerOutput: List<Double>,
     months: Array<String>,
+    navController: NavController,
 ) {
     var expanded by remember { mutableStateOf(false) }
     var selectedMonthIndex by remember { mutableStateOf(0) }
@@ -215,11 +218,24 @@ fun MonthDataDisplay(
                 adjusted = adjustedRadiation[selectedMonthIndex],
                 energy = monthlyEnergyOutput[selectedMonthIndex],
                 power = monthlyPowerOutput[selectedMonthIndex],
+                navController = navController,
             )
 
         } else {
+            Button(
+                onClick = {
+                    navController.navigate("savings")
+                },
+                colors = ButtonDefaults.buttonColors(
+                    containerColor = MaterialTheme.colorScheme.tertiary,
+                    contentColor = MaterialTheme.colorScheme.background
+                )
+
+            ) {
+                Text("Show yearly savings")
+            }
             LazyColumn(
-                modifier = Modifier.height(320.dp),
+                modifier = Modifier.height(380.dp),
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
                 items(months.size) { month ->
@@ -232,6 +248,7 @@ fun MonthDataDisplay(
                         adjusted = adjustedRadiation[month],
                         energy = monthlyEnergyOutput[month],
                         power = monthlyPowerOutput[month],
+                        navController = navController,
                     )
                 }
             }

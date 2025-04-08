@@ -198,7 +198,7 @@ class FrostApi {
             smallString += """{"type":"polygon","pos":["""
             coordinateList.forEachIndexed { index2, coordinates ->
                 if (index2 > 0) smallString += ","
-                smallString += """{"lat":${String.format(Locale.US,"%.5f", coordinates.first).toDouble()},"lon":${String.format(Locale.US,"%.5f", coordinates.second).toDouble()}}"""
+                smallString += """{"lat":${String.format(java.util.Locale.US, "%.4f", coordinates.first).toDouble()},"lon":${String.format(java.util.Locale.US, "%.4f", coordinates.second).toDouble()}}"""
             }
             smallString += "]}"
             bigString += smallString
