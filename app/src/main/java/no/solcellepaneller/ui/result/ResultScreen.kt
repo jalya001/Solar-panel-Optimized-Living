@@ -25,9 +25,15 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import no.solcellepaneller.R
-import no.solcellepaneller.ui.electricity.ShowSavings
+import no.solcellepaneller.data.homedata.ElectricityPriceRepository
+import no.solcellepaneller.model.electricity.Region
+import no.solcellepaneller.ui.electricity.PriceScreenViewModel
+import no.solcellepaneller.ui.electricity.PriceUiState
+import no.solcellepaneller.ui.electricity.PriceViewModelFactory
 import no.solcellepaneller.ui.map.MapScreenViewModel
 import no.solcellepaneller.ui.navigation.AppearanceBottomSheet
 import no.solcellepaneller.ui.navigation.BottomBar
@@ -36,10 +42,12 @@ import no.solcellepaneller.ui.navigation.HelpBottomSheet
 import no.solcellepaneller.ui.navigation.TopBar
 import no.solcellepaneller.ui.font.FontScaleViewModel
 import no.solcellepaneller.ui.handling.LoadingScreen
+import java.time.ZoneId
+import java.time.ZonedDateTime
 
 @Composable
-fun ResultScreen(navController: NavController, viewModel: MapScreenViewModel, weatherViewModel: WeatherViewModel,    fontScaleViewModel: FontScaleViewModel
-) {
+fun ResultScreen(navController: NavController, viewModel: MapScreenViewModel, weatherViewModel: WeatherViewModel,
+                 fontScaleViewModel: FontScaleViewModel, priceScreenViewModel: ElectricityPriceRepository) {
     val frostData by weatherViewModel.frostData.collectAsState()
     val radiationData by weatherViewModel.radiationData.collectAsState()
     val radiationList = remember(radiationData) { radiationData.map { it.radiation } }
@@ -52,6 +60,24 @@ fun ResultScreen(navController: NavController, viewModel: MapScreenViewModel, we
     val months = arrayOf("Januar", "Februar", "Mars", "April", "Mai", "Juni",
         "Juli", "August", "September", "Oktober", "November", "Desember")
     val daysInMonth = arrayOf(31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31)
+
+    var selectedRegion by remember { mutableStateOf(Region.OSLO) }
+
+    val priceScreenViewModel: PriceScreenViewModel = viewModel(
+        factory = PriceViewModelFactory(priceScreenViewModel, selectedRegion.regionCode),
+        key = selectedRegion.regionCode
+    )
+
+    val priceUiState by priceScreenViewModel.priceUiState.collectAsStateWithLifecycle()
+
+    val energyPrice = when (priceUiState) {
+        is PriceUiState.Success -> {
+            val prices = (priceUiState as PriceUiState.Success).prices
+            val currentHour = ZonedDateTime.now(ZoneId.of("Europe/Oslo")).hour
+            prices.find { price -> ZonedDateTime.parse(price.time_start).hour == currentHour }?.NOK_per_kWh ?: 0.0
+        }
+        else -> 0.0
+    }
 
     var showHelp by remember { mutableStateOf(false) }
     var showAppearance by remember { mutableStateOf(false) }
@@ -140,7 +166,9 @@ fun ResultScreen(navController: NavController, viewModel: MapScreenViewModel, we
                                 )
                                 Text(stringResource(id = R.string.estimated_powerpr_hour) + " %.2f kW" .format(monthlyPowerOutput[month]))
                                 Button(onClick = {
-                                    navController.navigate("savings")
+                                    navController.navigate(
+                                        "monthly_savings/${months[month]}/${monthlyEnergyOutput[month]}/$energyPrice"
+                                    )
                                 }) {
                                     Text("Show savings ${months[month]}")
                                 }

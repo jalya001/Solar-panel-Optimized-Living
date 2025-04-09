@@ -20,6 +20,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import androidx.navigation.NavHostController
+import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import no.solcellepaneller.R
@@ -32,6 +33,7 @@ import no.solcellepaneller.ui.map.MapScreenViewModel
 import no.solcellepaneller.ui.result.ResultScreen
 import no.solcellepaneller.ui.savedLocations.SavedLocationsScreen
 import androidx.navigation.navArgument
+import no.solcellepaneller.ui.electricity.ShowMonthlySavings
 import no.solcellepaneller.ui.help.AppHelp
 import no.solcellepaneller.ui.help.TechnicalHelp
 import no.solcellepaneller.ui.result.WeatherViewModel
@@ -47,7 +49,8 @@ fun Nav(navController: NavHostController, fontScaleViewModel: FontScaleViewModel
         }
         composable("result") {
             val WviewModel: WeatherViewModel = viewModel()
-            ResultScreen(navController,viewModel,WviewModel,fontScaleViewModel) }
+            val repository = ElectricityPriceRepository("NO1")
+            ResultScreen(navController,viewModel,WviewModel,fontScaleViewModel, repository) }
         composable("saved_locations") { SavedLocationsScreen(navController,fontScaleViewModel) }
         composable("prices") {
             val repository = ElectricityPriceRepository("NO1")
@@ -67,6 +70,20 @@ fun Nav(navController: NavHostController, fontScaleViewModel: FontScaleViewModel
             AppHelp(navController, expandSection,fontScaleViewModel)
         }
         composable("tech_help") { TechnicalHelp(navController,fontScaleViewModel) }
+        composable(
+            "monthly_savings/{month}/{energyProduced}/{energyPrice}",
+            arguments = listOf(
+                navArgument ("month") { type = NavType.StringType },
+                navArgument ("energyProduced") { type = NavType.StringType },
+                navArgument ("energyPrice") { type = NavType.StringType }
+            )
+        ) {backStackEntry ->
+            val month = backStackEntry.arguments?.getString("month") ?: ""
+            val energyProduced = backStackEntry.arguments?.getString("energyProduced")?.toDoubleOrNull() ?: 0.0
+            val energyPrice = backStackEntry.arguments?.getString("energyPrice")?.toDoubleOrNull() ?: 0.0
+
+            ShowMonthlySavings(month, energyProduced, energyPrice, navController, fontScaleViewModel)
+        }
     }
 }
 
