@@ -1,11 +1,15 @@
 # /////Solcellepaneller App 
+### MEDLEMMER AV TEAM 37
 
+#### [aazann,saleemti,mikass,anisai,jacobhl,amwarsam]
 ## 1. Introduksjon
 
-  Solcellepaneller App er en Android-applikasjon som hjelper brukere med å estimere solpanelers effektivitet og potensielle kostnadsbesparelser basert på klimadata.
-  Appen bruker eksterne API-er for å hente værdata og solenergiinformasjon for spesifikke lokasjoner. Brukeren kan legge inn detaljer om taket sitt,
-  hente gjennomsnittlig klimadata, og få estimater for solenergiutnyttelse.
-### 2. Funksjoner
+///Solcellepaneller App/// er en Android-applikasjon som er utviklet for å hjelpe brukere med å estimere effektiviteten og økonomiske besparelser ved installasjon av solcellepaneler. Appen kombinerer klimadata, takspesifikasjoner og solenergi-beregninger for å gi brukeren en nøyaktig vurdering av solcelleanleggets potensial.
+
+Ved å bruke ekstern API-integrasjon, som Frost API for værdata og andre relevante kilder for strømpriser og støtteordninger, kan brukeren få et godt grunnlag for å vurdere lønnsomheten ved solcelleinstallasjon på sin eiendom. Appen gir brukeren muligheten til å hente kartkoordinater for en spesifisert adresse, og deretter beregne forventet solenergiutnyttelse basert på takflatenes vinkel, areal, og den gjennomsnittlige solinnstrålingen i området.
+
+Appen kan være spesielt nyttig for boligeiere, hytteeiere og profesjonelle solcelleinstallatører som ønsker å få oversikt over den potensielle strømproduksjonen og besparelsene ved å investere i solenergi. Med funksjoner som kartvisualisering, beregning av energiproduksjon og besparelser på strømregningen, samt muligheten for å tegne takflater på kartet, gir Solcellepaneller App et praktisk og brukervennlig verktøy for å optimalisere bruken av solenergi.
+## 2. Funksjoner
 
     Kartvisning: Brukeren kan legge inn en adresse som konverteres til GPS-koordinater, og plassere en markør på kartet.
 
@@ -13,10 +17,10 @@
 
     API-integrasjon: Appen bruker eksterne API-er som Frost API for værdata og PVGIS API for solenergiestimat.
 
-### 3. Krav for å kjøre appen
+###  Krav for å kjøre appen
 
   For å kjøre appen på din lokale maskin, trenger du følgende:
-   ### Krav:
+   #### Krav:
 
     Android Studio.
 
@@ -26,7 +30,7 @@
 
     Internettilgang for API-forespørsler.
 
-### API:
+## 3. API:
 
 Appen bruker flere eksterne API-er som krever API-nøkler for tilgang:
 
@@ -40,62 +44,62 @@ Appen bruker flere eksterne API-er som krever API-nøkler for tilgang:
 
     PVGIS API for solenergiestimat.
 
-### 4. Kjøring av Appen
-#### Steg 1: Klon prosjektet
+## 4. Kjøring av Appen
+#### Steg a: Klon prosjektet
   ```
   git clone <repo-url>
   cd <project-folder>
 ```
 
-#### Steg 2: Åpne prosjektet i Android Studio
+#### Steg b: Åpne prosjektet i Android Studio
 
     Velg "Open" i Android Studio og pek på mappen der prosjektet er lagret.
 
-#### Steg 3: Synkroniser avhengigheter
+#### Steg c: Synkroniser avhengigheter
 
     Når prosjektet er åpnet, vil Android Studio automatisk prøve å laste ned alle nødvendige avhengigheter via Gradle. Hvis dette ikke skjer automatisk, klikk på Sync Now.
 
-#### Steg 4: Kjør appen
+#### Steg d: Kjør appen
 
     Velg en Android-emulator eller fysisk enhet, og klikk på "Run" i Android Studio for å kjøre appen.
-### 5. Libraries og APier
+## 5. In depth: Libraries og APier
 
 Appen bruker flere biblioteker for å håndtere ulike oppgaver som UI-komponenter, API-kommunikasjon og datalagring. Her er en liste over de viktigste avhengighetene:
-#### 1. Jetpack Compose
+#### a. Jetpack Compose
 
 Jetpack Compose er et deklarativt UI-rammeverk som gjør det enklere å bygge brukergrensesnitt i Android. Det lar utviklere definere UI-komponenter i Kotlin uten å bruke XML-layouts.
 
     Bruksområde: Hele brukergrensesnittet i appen er bygget med Jetpack Compose.
 
-#### 2. KTOR
+#### b. KTOR
 
 KTOR er et Kotlin-basert bibliotek for HTTP-baserte applikasjoner. Det brukes for å lage HTTP-forespørsler til eksterne API-er, som Frost API for værdata.
 
     Bruksområde: Håndtering av nettverksforespørsler til eksterne API-er.
 
-#### 3. ViewModel & LiveData
+#### c. ViewModel & LiveData
 
 ViewModel og LiveData fra Android Jetpack gir en arkitekturell tilnærming til å håndtere UI-relatert data. ViewModel holder på appens data og sikrer at den ikke går tapt ved endringer i UI (f.eks. skjermrotasjon). LiveData brukes til å observere data og automatisk oppdatere UI når data endres.
 
     Bruksområde: Brukes til tilstandshåndtering i appens ViewModel-lag for å sikre at UI er i synk med dataene.
 
-#### 4. Maps SDK
+#### d. Maps SDK
 
 Google Maps SDK for Android gir muligheten til å integrere Google Maps i Android-applikasjoner, som muliggjør visning av kart, geokoding (adresse til koordinater) og plassering av markører.
 
     Bruksområde: Vist på MapScreen, hvor brukeren kan søke etter adresser, vise kart og plassere markører.
 
-#### 5. Geocoder API
+#### e. Geocoder API
 
 Geocoder API brukes til å hente geografiske koordinater (breddegrad og lengdegrad) basert på en adresse, og omvendt.
 
     Bruksområde: Brukes i MapScreen for å konvertere brukerens adresse til koordinater.
-#### 5. HvaKosterStrømmen API
+#### f. HvaKosterStrømmen API
 
 API brukes til å hente strømpris for førkjellige områder.
 
     Bruksområde: Brukes i PriceScreen, og viser pris og brukes for å lage grafer med prisene.
-### 7. Forbedringsmuligheter
+## 6. Forbedringsmuligheter
 
 Dette prosjektet har potensiale til å implementere flere funksjoner som:
 
