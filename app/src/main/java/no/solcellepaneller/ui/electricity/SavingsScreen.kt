@@ -61,11 +61,47 @@ fun ShowMonthlySavings(month: String, energyProduced: Double, energyPrice: Doubl
             )
 
             HelpBottomSheet(visible = showHelp, navController = navController, onDismiss = { showHelp = false })
-            AppearanceBottomSheet(
-                visible = showAppearance,
-                onDismiss = { showAppearance = false },
-                fontScaleViewModel = fontScaleViewModel
+            AppearanceBottomSheet(visible = showAppearance, onDismiss = { showAppearance = false }, fontScaleViewModel = fontScaleViewModel)
+        }
+    }
+}
+
+@Composable
+fun ShowYearlySavings(energyProduced: Double, energyPrice: Double, navController: NavController, fontScaleViewModel: FontScaleViewModel){
+    val savings: Double = energyProduced * energyPrice
+    val fontScale = fontScaleViewModel.fontScale.floatValue.toFloat()
+
+    var showHelp by remember { mutableStateOf(false) }
+    var showAppearance by remember { mutableStateOf(false) }
+
+    Scaffold (
+        topBar = {TopBar(navController)},
+        bottomBar = {
+            BottomBar(
+                onHelpClicked = {showHelp = true},
+                onAppearanceClicked = {showAppearance = true},
+                navController = navController
             )
+        }
+    ){ paddingValues ->
+        Column (
+            modifier = Modifier.fillMaxWidth().padding(12.dp).padding(paddingValues),
+            verticalArrangement = Arrangement.Center,
+            horizontalAlignment = Alignment.CenterHorizontally
+        ){
+            Text(
+                text = "Hvor mye vil du spare årlig?",
+                fontSize = 20.sp,
+                fontWeight = FontWeight.Bold
+            )
+            Text(
+                text = "Du vil spare %.2f kroner i året på strøm fra solcellepaneler".format(savings),
+                fontSize = 18.sp * fontScale,
+                textAlign = TextAlign.Center
+            )
+
+            HelpBottomSheet(visible = showHelp, navController = navController, onDismiss = { showHelp = false })
+            AppearanceBottomSheet(visible = showAppearance, onDismiss = { showAppearance = false }, fontScaleViewModel = fontScaleViewModel)
         }
     }
 }

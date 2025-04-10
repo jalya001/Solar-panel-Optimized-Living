@@ -133,11 +133,16 @@ fun ResultScreen(navController: NavController, viewModel: MapScreenViewModel, we
                     energyKWh / totalHours // Convert kWh to kW
                 }
 
+                var yearlyEnergyOutput = 0.0
+                for (nums in 0..11){
+                    yearlyEnergyOutput += monthlyEnergyOutput[nums]
+                }
                 Button(onClick = {
-                    navController.navigate("savings")
+                    navController.navigate("yearly_savings/${yearlyEnergyOutput}/$energyPrice")
                 }) {
                     Text("Show yearly savings")
                 }
+
                 LazyColumn(
                     modifier = Modifier
                         .fillMaxSize()
@@ -166,9 +171,7 @@ fun ResultScreen(navController: NavController, viewModel: MapScreenViewModel, we
                                 )
                                 Text(stringResource(id = R.string.estimated_powerpr_hour) + " %.2f kW" .format(monthlyPowerOutput[month]))
                                 Button(onClick = {
-                                    navController.navigate(
-                                        "monthly_savings/${months[month]}/${monthlyEnergyOutput[month]}/$energyPrice"
-                                    )
+                                    navController.navigate("monthly_savings/${months[month]}/${monthlyEnergyOutput[month]}/$energyPrice")
                                 }) {
                                     Text("Show savings ${months[month]}")
                                 }

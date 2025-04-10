@@ -34,6 +34,7 @@ import no.solcellepaneller.ui.result.ResultScreen
 import no.solcellepaneller.ui.savedLocations.SavedLocationsScreen
 import androidx.navigation.navArgument
 import no.solcellepaneller.ui.electricity.ShowMonthlySavings
+import no.solcellepaneller.ui.electricity.ShowYearlySavings
 import no.solcellepaneller.ui.help.AppHelp
 import no.solcellepaneller.ui.help.TechnicalHelp
 import no.solcellepaneller.ui.result.WeatherViewModel
@@ -83,6 +84,17 @@ fun Nav(navController: NavHostController, fontScaleViewModel: FontScaleViewModel
             val energyPrice = backStackEntry.arguments?.getString("energyPrice")?.toDoubleOrNull() ?: 0.0
 
             ShowMonthlySavings(month, energyProduced, energyPrice, navController, fontScaleViewModel)
+        }
+        composable ("yearly_savings/{energyProduced}/{energyPrice}",
+        arguments = listOf(
+            navArgument ("energyProduced") { type = NavType.StringType },
+            navArgument ("energyPrice") { type = NavType.StringType }
+        )
+        ){ backStackEntry ->
+            val energyProduced = backStackEntry.arguments?.getString("energyProduced")?.toDoubleOrNull() ?: 0.0
+            val energyPrice = backStackEntry.arguments?.getString("energyPrice")?.toDoubleOrNull() ?: 0.0
+
+            ShowYearlySavings(energyProduced, energyPrice, navController, fontScaleViewModel)
         }
     }
 }
