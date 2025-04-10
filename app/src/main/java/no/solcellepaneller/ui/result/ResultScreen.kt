@@ -227,7 +227,7 @@ fun MonthDataDisplay(
 
             Column {
 
-                    sunAnimation(monthlyEnergyOutput[selectedMonthIndex])
+                    SunAnimation(monthlyEnergyOutput[selectedMonthIndex])
 
 
             }
@@ -266,7 +266,7 @@ fun MonthDataDisplay(
     }
 }
 @Composable
-fun sunAnimation( value: Double) {
+fun SunAnimation( value: Double) {
     val animationFile = when {
         value < 50.0 -> "solar_verylow.json"
         value in 50.0..500.0 -> "solar_low.json"
