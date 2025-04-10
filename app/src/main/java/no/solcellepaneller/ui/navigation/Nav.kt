@@ -45,6 +45,7 @@ import no.solcellepaneller.ui.savedLocations.SavedLocationsScreen
 import no.solcellepaneller.ui.result.WeatherViewModel
 import no.solcellepaneller.ui.font.FontScaleViewModel
 import androidx.compose.material3.OutlinedIconButton
+import no.solcellepaneller.ui.result.ShowProduce
 
 @Composable
 fun Nav(navController: NavHostController, fontScaleViewModel: FontScaleViewModel) {
@@ -66,6 +67,15 @@ fun Nav(navController: NavHostController, fontScaleViewModel: FontScaleViewModel
             navController = navController,fontScaleViewModel
         ) }
         composable("info_screen") { InfoScreen(navController,fontScaleViewModel)}
+
+        composable("produce/{energy}") { backStackEntry ->
+            val energy = backStackEntry.arguments?.getString("energy")?.toDoubleOrNull() ?: 0.0
+            ShowProduce(
+                energy = energy,
+                navController = navController,
+                fontScaleViewModel = fontScaleViewModel
+            )
+        }
 //        composable(
 //            "help?expandSection={expandSection}",
 //            arguments = listOf(

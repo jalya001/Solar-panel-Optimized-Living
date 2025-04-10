@@ -350,6 +350,7 @@ fun AdditionalInputBottomSheet(
                                 )
                             )
 
+
                             if (slope != null) {
                                 weatherViewModel.fetchRadiationInfo(lat, lon, slope)
                             }

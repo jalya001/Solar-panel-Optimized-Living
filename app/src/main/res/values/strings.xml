@@ -120,6 +120,7 @@
     <string name="map_title">Map</string>
     <string name="info_title">Information</string>
     <string name="additional_input">Additional input</string>
+    <string name="prod">Production</string>
 
     <string name="january">January</string>
     <string name="february">February</string>

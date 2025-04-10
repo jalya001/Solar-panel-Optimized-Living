@@ -1,8 +1,11 @@
 package no.solcellepaneller.ui.result
 
+import android.util.Log
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxHeight
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material3.Button
@@ -15,13 +18,20 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.key
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
+import com.airbnb.lottie.compose.LottieAnimation
+import com.airbnb.lottie.compose.LottieCompositionSpec
+import com.airbnb.lottie.compose.LottieConstants
+import com.airbnb.lottie.compose.animateLottieCompositionAsState
+import com.airbnb.lottie.compose.rememberLottieComposition
 import no.solcellepaneller.R
 import no.solcellepaneller.ui.font.FontScaleViewModel
 import no.solcellepaneller.ui.handling.LoadingScreen
@@ -40,6 +50,7 @@ fun ResultScreen(
     fontScaleViewModel: FontScaleViewModel,
 ) {
     val frostData by weatherViewModel.frostData.collectAsState()
+    Log.d("frostData", frostData.toString())
     val radiationData by weatherViewModel.radiationData.collectAsState()
     val radiationList = remember(radiationData) { radiationData.map { it.radiation } }
     val loading by weatherViewModel.isLoading.collectAsState()
@@ -215,9 +226,10 @@ fun MonthDataDisplay(
             )
 
             Column {
-                Text(
-                    "*VISUALISERING*",
-                )
+
+                    sunAnimation(monthlyEnergyOutput[selectedMonthIndex])
+
+
             }
 
         } else {
@@ -252,4 +264,36 @@ fun MonthDataDisplay(
             }
         }
     }
+}
+@Composable
+fun sunAnimation( value: Double) {
+    val animationFile = when {
+        value < 50.0 -> "solar_verylow.json"
+        value in 50.0..500.0 -> "solar_low.json"
+        value in 500.0..3000.0 -> "solar_half.json"
+        value > 3000.0 -> "solar_full.json"
+        else -> "solar_verylow.json" // Default animation
+    }
+
+    // Force new composition when value changes
+    val composition by rememberLottieComposition(
+        LottieCompositionSpec.Asset(animationFile)
+    )
+
+    // Reset animation state when value changes
+    val progress by animateLottieCompositionAsState(
+        composition = composition,
+        iterations = LottieConstants.IterateForever,
+        // Add a key to restart animation when value changes
+
+    )
+
+    LottieAnimation(
+        composition = composition,
+        progress = { progress },
+        modifier = Modifier
+            .height(400.dp)
+            .fillMaxWidth()
+    )
+    Log.d("SunAnimation", "Animating with value: $value")
 }

@@ -99,4 +99,5 @@ dependencies {
 
     implementation(libs.androidx.appcompat)
     implementation(libs.androidx.appcompat.resources)
+    implementation("com.airbnb.android:lottie-compose:6.1.0")
 }

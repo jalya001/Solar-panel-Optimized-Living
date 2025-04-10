@@ -32,6 +32,8 @@ class WeatherViewModel(
             _frostData.value = repository.getFrostData(lat, lon, elements)
             _isloading.value = false
         }
+
+
     }
 
     fun fetchWeatherData(lat: Double, lon: Double, slope: Int, elements: List<String>) {
