@@ -101,4 +101,7 @@ dependencies {
 
     //Chart dependencies
     implementation("co.yml:ycharts:2.1.0")
+
+    //Icons
+    implementation("androidx.compose.material:material-icons-extended-android:1.7.8")
 }

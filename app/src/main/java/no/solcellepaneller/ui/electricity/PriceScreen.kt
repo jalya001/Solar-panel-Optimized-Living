@@ -12,6 +12,7 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ExposedDropdownMenuBox
 import androidx.compose.material3.ExposedDropdownMenuDefaults
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
@@ -81,6 +82,8 @@ fun PriceScreen(
                 is PriceUiState.Error -> ErrorScreen()
                 is PriceUiState.Success -> {
                     val prices = (priceUiState as PriceUiState.Success).prices
+                    ElectricityPriceChart(prices = prices)
+                    Spacer(modifier = Modifier.height(16.dp))
                     PriceList(prices)
                 }
             }
@@ -106,12 +109,20 @@ fun RegionDropdown(
             value = selectedRegion.displayName,
             onValueChange = {},
             readOnly = true,
-            label = { Text("Velg distrikt", color = Color.Blue) },
+            label = { Text("Velg distrikt", color = MaterialTheme.colorScheme.tertiary) },
             trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(expanded) },
             textStyle = TextStyle(color = Color.Black, fontSize = 18.sp),
             modifier = Modifier
                 .fillMaxWidth()
-                .menuAnchor()
+                .menuAnchor(),
+            colors = OutlinedTextFieldDefaults.colors(
+                unfocusedContainerColor = MaterialTheme.colorScheme.secondary,
+                focusedBorderColor = MaterialTheme.colorScheme.tertiary,
+                focusedContainerColor = MaterialTheme.colorScheme.background,
+                focusedLabelColor = MaterialTheme.colorScheme.tertiary,
+                unfocusedTextColor = MaterialTheme.colorScheme.tertiary,
+                unfocusedBorderColor = MaterialTheme.colorScheme.tertiary,
+            )
         )
         ExposedDropdownMenu(
             expanded = expanded,
@@ -119,7 +130,7 @@ fun RegionDropdown(
         ) {
             Region.entries.forEach { region ->
                 DropdownMenuItem(
-                    text = { Text(region.displayName) },
+                    text = { Text(region.displayName, color = MaterialTheme.colorScheme.tertiary) },
                     onClick = {
                         onRegionSelected(region)
                         expanded = false
@@ -149,50 +160,7 @@ fun PriceList(prices: List<ElectricityPrice>) {
             .fillMaxWidth()
             .padding(12.dp)
     ) {
-        Spacer(modifier = Modifier.height(16.dp))
-        ElectricityPriceChart(prices = prices)
-        Spacer(modifier = Modifier.height(16.dp))
-
-        if (currentPrice != null) {
-            Text(
-                text = "Pris nå: ${currentPrice.NOK_per_kWh} NOK/kWh",
-                style = MaterialTheme.typography.bodyMedium
-            )
-            Text(
-                text = "Tid: ${currentPrice.getTimeRange()}",
-                style = MaterialTheme.typography.bodySmall
-            )
-        } else {
-            Text(
-                text = "Ingen pris tilgjengelig for nåværende time",
-                style = MaterialTheme.typography.bodyLarge
-            )
-        }
-        Spacer(modifier = Modifier.height(16.dp))
-
-        lowestPrice?.let {
-            Text(
-                text = "Laveste pris i dag: ${it.NOK_per_kWh} NOK/kWh",
-                style = MaterialTheme.typography.bodyMedium
-            )
-            Text(
-                text = "Tid: ${it.getTimeRange()}",
-                style = MaterialTheme.typography.bodySmall
-            )
-        }
-        Spacer(modifier = Modifier.height(8.dp))
-
-        highestPrice?.let {
-            Text(
-                text = "Høyeste pris i dag: ${it.NOK_per_kWh} NOK/kWh",
-                style = MaterialTheme.typography.bodyMedium
-            )
-            Text(
-                text = "Tid: ${it.getTimeRange()}",
-                style = MaterialTheme.typography.bodySmall
-            )
-        }
-        Spacer(modifier = Modifier.height(8.dp))
+        PriceCard(currentPrice, highestPrice, lowestPrice)
     }
 }
 

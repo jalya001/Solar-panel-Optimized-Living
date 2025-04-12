@@ -5,6 +5,8 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Button
+import androidx.compose.material3.Card
+import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -39,14 +41,14 @@ fun ElectricityPriceChart(prices: List<ElectricityPrice>) {
     var chartType by remember { mutableStateOf(ChartType.LINE) }
 
     val points = prices.map { price ->
-        val hour = ZonedDateTime.parse(price.time_start).hour / 2
+        val hour = ZonedDateTime.parse(price.time_start).hour
         Point(hour.toFloat(), price.NOK_per_kWh.toFloat())
     }
 
     val bars = prices.map { price ->
         val hour = ZonedDateTime.parse(price.time_start).hour / 2
         BarData(
-            point = Point(hour.toFloat(), price.NOK_per_kWh.toFloat()) ,
+            point = Point(hour.toFloat(), price.NOK_per_kWh.toFloat()),
             label = "$hour:00",
             color = Color.Cyan
         )
@@ -54,88 +56,100 @@ fun ElectricityPriceChart(prices: List<ElectricityPrice>) {
 
     //Prepare X-axis (hours)
     val xAxisData = AxisData.Builder()
-        .axisStepSize(20.dp)
+        .axisStepSize(10.3.dp)
         .steps(prices.size / 2)
-        .labelData { i -> "${(i * 2) % 24}:00" }
+        .labelData { i -> if (i % 2 == 0) "${i}:00" else "" }
         .axisLabelAngle(45f)
         .build()
 
     //Prepare Y-axis
     val maxPrice = prices.maxOf { it.NOK_per_kWh }
     val minPrice = prices.minOf { it.NOK_per_kWh }
+
+    val steps = 7
+    val stepSize = ((maxPrice - minPrice) / steps).coerceAtLeast(0.1)
+
     val yAxisData = AxisData.Builder()
+        .steps(steps)
         .topPadding(20.dp)
-        .labelData { i -> "%.2f".format(i.toFloat()) }
+        .labelData { i -> "%.2f".format((minPrice + stepSize * i).toFloat()) }
         .axisStepSize(((maxPrice - minPrice) / 5).toFloat().dp)
         .build()
 
-    Column {
-        Button(
-            onClick = {
-                chartType = if (chartType == ChartType.LINE) ChartType.BAR else ChartType.LINE
+    Button(
+        onClick = {
+            chartType = if (chartType == ChartType.LINE) ChartType.BAR else ChartType.LINE
             },
-            modifier = Modifier.padding(8.dp)
-        ) {
-            Text(text = if (chartType == ChartType.LINE) "Vis søylediagram" else "Vis linjediagram")
-        }
+        modifier = Modifier.padding(8.dp)
+    ) {
+        Text(text = if (chartType == ChartType.LINE) "Vis søylediagram" else "Vis linjediagram")
+    }
 
-        when (chartType) {
-            ChartType.LINE -> {
-                val lineChartData = LineChartData(
-                    linePlotData = LinePlotData(
-                        lines = listOf(
-                            Line(
-                                dataPoints = points,
-                                LineStyle(color = Color.Blue),
-                                IntersectionPoint(color = Color.Red),
-                                SelectionHighlightPoint(color = Color.Yellow),
-                                ShadowUnderLine(
-                                    alpha = 0.5f,
-                                    brush = Brush.verticalGradient(
-                                        colors = listOf(
-                                            Color.Cyan,
-                                            Color.Transparent
+    Card(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(4.dp),
+        elevation = CardDefaults.cardElevation(defaultElevation = 8.dp)
+    ) {
+        Column {
+            when (chartType) {
+                ChartType.LINE -> {
+                    val lineChartData = LineChartData(
+                        linePlotData = LinePlotData(
+                            lines = listOf(
+                                Line(
+                                    dataPoints = points,
+                                    LineStyle(color = Color.Blue),
+                                    IntersectionPoint(color = Color.Red),
+                                    SelectionHighlightPoint(color = Color.Yellow),
+                                    ShadowUnderLine(
+                                        alpha = 0.5f,
+                                        brush = Brush.verticalGradient(
+                                            colors = listOf(
+                                                Color.Cyan,
+                                                Color.Transparent
+                                            )
                                         )
-                                    )
-                                ),
-                                SelectionHighlightPopUp()
-                            )
+                                    ),
+                                    SelectionHighlightPopUp()
+                                )
+                            ),
                         ),
-                    ),
-                    xAxisData = xAxisData,
-                    yAxisData = yAxisData,
-                    gridLines = GridLines(color = Color.LightGray),
-                    backgroundColor = Color.White
-                )
+                        xAxisData = xAxisData,
+                        yAxisData = yAxisData,
+                        gridLines = GridLines(color = Color.LightGray),
+                        backgroundColor = Color.White
+                    )
 
-                LineChart(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .height(350.dp)
-                        .padding(16.dp),
-                    lineChartData = lineChartData
-                )
-            }
+                    LineChart(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .height(350.dp)
+                            .padding(16.dp),
+                        lineChartData = lineChartData
+                    )
+                }
 
-            ChartType.BAR -> {
-                val barChartData = BarChartData(
-                    chartData = bars,
-                    xAxisData = xAxisData,
-                    yAxisData = yAxisData,
-                    barStyle = BarStyle(
-                        paddingBetweenBars = 8.dp,
-                        barWidth = 20.dp
-                    ),
-                    backgroundColor = Color.White
-                )
+                ChartType.BAR -> {
+                    val barChartData = BarChartData(
+                        chartData = bars,
+                        xAxisData = xAxisData,
+                        yAxisData = yAxisData,
+                        barStyle = BarStyle(
+                            paddingBetweenBars = 8.dp,
+                            barWidth = 20.dp
+                        ),
+                        backgroundColor = Color.White
+                    )
 
-                BarChart(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .height(350.dp)
-                        .padding(16.dp),
-                    barChartData = barChartData
-                )
+                    BarChart(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .height(350.dp)
+                            .padding(16.dp),
+                        barChartData = barChartData
+                    )
+                }
             }
         }
     }
