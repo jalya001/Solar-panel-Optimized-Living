@@ -258,7 +258,7 @@ fun DataCard(
                 }
                 Button(
                     onClick = {
-                        navController.navigate("savings")
+                        navController.navigate("produce/${energy}")
                     },
                     colors = ButtonDefaults.buttonColors(
                         containerColor = MaterialTheme.colorScheme.tertiary,

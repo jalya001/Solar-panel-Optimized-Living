@@ -15,7 +15,7 @@
     <string name="font_size"> Bytt skriftstørrelse</string>
     <string name="go_back"> Tilbake </string>
     <string name="close"> Lukk</string>
-
+    <string name="prod">Produksjon</string>
 
     <!--Info Screen-->
     <string name='intro_title'>Introduksjon</string>
