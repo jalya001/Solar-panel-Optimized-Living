@@ -1,6 +1,6 @@
 <resources>
     <string name="app_name">Solcellepaneller</string>
-    <string name="Test" >Appen er i norsk</string>
+    <string name="Test">Appen er i norsk</string>
 
     <!--Home Screen-->
     <string name="home"> Hjemme</string>
@@ -103,7 +103,7 @@
     <string name="effectivity"> ⚡ Effektivitet: </string>
     <string name="data_not_added"> Data ikke lagt til</string>
     <string name="get_data"> 📡 Hent data </string>
-    <string name="loading"> ⏳ Laster inn data, vennligst vent… </string>
+    <string name="loading"> Laster inn data, vennligst vent… </string>
 
     <string name="month"> Måned </string>
     <string name="global_radiation"> ☼ Global stråling: </string>
@@ -133,7 +133,6 @@
     <string name="october">Oktober</string>
     <string name="november">November</string>
     <string name="december">Desember</string>
-
 
 
 </resources>

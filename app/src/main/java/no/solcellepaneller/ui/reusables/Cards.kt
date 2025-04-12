@@ -13,17 +13,20 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ElevatedCard
+import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.DpSize
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
+import no.solcellepaneller.R
 
 @Composable
 fun MyCard(
@@ -144,37 +147,101 @@ fun DataCard(
         Column(
             modifier = Modifier.padding(16.dp), verticalArrangement = Arrangement.spacedBy(4.dp)
         ) {
-            Text(
-                "📅 $month",
-                fontWeight = FontWeight.Bold,
-                style = MaterialTheme.typography.titleLarge
-            )
-            Text(
-                "☀️ Global Radiation: %.2f".format(radiation),
-                style = MaterialTheme.typography.bodyLarge
-            )
-            Text(
-                "☁️ Avg Cloud Cover: %.2f".format(cloud / 8),
-                style = MaterialTheme.typography.bodyLarge
-            )
-            Text(
-                "❄️ Avg Snow Cover: %.2f".format(snow / 4),
-                style = MaterialTheme.typography.bodyLarge
-            )
-            Text(
-                "🌡️ Temp Factor: %.2f °C".format(1 + (-0.44) * (temp - 25)),
-                style = MaterialTheme.typography.bodyLarge
-            )
-            Text(
-                "🔆 Adj. Radiation: %.2f kWh/m²".format(adjusted),
-                style = MaterialTheme.typography.bodyLarge
-            )
-            Text(
-                "⚡ Estimated Energy: %.2f kWh".format(energy),
-                fontWeight = FontWeight.Bold,
-                style = MaterialTheme.typography.bodyLarge
-            )
-            Text("🔌 Power/hour: %.2f kW".format(power), style = MaterialTheme.typography.bodyLarge)
+            Row {
+                Icon(
+                    painter = painterResource(id = R.drawable.baseline_calendar_month_24),
+                    modifier = modifier.size(30.dp),
+                    contentDescription = null
+                )
+                Text(
+                    "$month",
+                    fontWeight = FontWeight.Bold,
+                    style = MaterialTheme.typography.titleLarge
+                )
+            }
+
+            Row {
+                Icon(
+                    painter = painterResource(id = R.drawable.rounded_nest_sunblock_24),
+                    modifier = modifier.size(30.dp),
+                    contentDescription = null
+                )
+                Text(
+                    "Global Radiation: %.2f".format(radiation),
+                    style = MaterialTheme.typography.bodyLarge
+                )
+            }
+            Row {
+                Icon(
+                    painter = painterResource(id = R.drawable.baseline_cloud_24),
+                    modifier = modifier.size(30.dp),
+                    contentDescription = null
+                )
+                Text(
+                    "Avg Cloud Cover: %.2f".format(cloud / 8),
+                    style = MaterialTheme.typography.bodyLarge
+                )
+            }
+            Row {
+                Icon(
+                    painter = painterResource(id = R.drawable.outline_mode_cool_24),
+                    modifier = modifier.size(30.dp),
+                    contentDescription = null
+                )
+                Text(
+                    "Avg Snow Cover: %.2f".format(snow / 4),
+                    style = MaterialTheme.typography.bodyLarge
+                )
+            }
+            Row {
+                Icon(
+                    painter = painterResource(id = R.drawable.baseline_device_thermostat_24),
+                    modifier = modifier.size(30.dp),
+                    contentDescription = null
+                )
+                Text(
+                    "Temp Factor: %.2f °C".format(1 + (-0.44) * (temp - 25)),
+                    style = MaterialTheme.typography.bodyLarge
+                )
+            }
+            Row {
+                Icon(
+                    painter = painterResource(id = R.drawable.rounded_nest_sunblock_24),
+                    modifier = modifier.size(30.dp),
+                    contentDescription = null
+                )
+                Text(
+                    "Adj. Radiation: %.2f kWh/m²".format(adjusted),
+                    style = MaterialTheme.typography.bodyLarge
+                )
+            }
+            Row {
+                Icon(
+                    painter = painterResource(id = R.drawable.baseline_battery_6_bar_24),
+                    modifier = modifier.size(30.dp),
+                    contentDescription = null
+                )
+                Text(
+                    "Estimated Energy: %.2f kWh".format(energy),
+                    fontWeight = FontWeight.Bold,
+                    style = MaterialTheme.typography.bodyLarge
+                )
+            }
+            Row {
+                Icon(
+                    painter = painterResource(id = R.drawable.baseline_power_24),
+                    modifier = modifier.size(30.dp),
+                    contentDescription = null
+                )
+                Text(
+                    "Power/hour: %.2f kW".format(power),
+                    style = MaterialTheme.typography.bodyLarge
+                )
+            }
+
+
+
+
 
             Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
                 Button(

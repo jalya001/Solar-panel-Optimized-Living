@@ -1,6 +1,6 @@
 <resources>
     <string name="app_name">Solcellepaneler</string>
-    <string name="Test" >This app is in English</string>
+    <string name="Test">This app is in English</string>
 
     <!--Home Screen-->
     <string name="home"> Home</string>
@@ -102,7 +102,7 @@
     <string name="effectivity"> ⚡ Effectivity:  </string>
     <string name="data_not_added"> Data not added: </string>
     <string name="get_data"> 📡 Get data </string>
-    <string name="loading"> ⏳ Loading Data, please wait…</string>
+    <string name="loading"> Loading Data, please wait…</string>
 
     <string name="month"> Month: </string>
     <string name="global_radiation"> ☼ Global Radiation: </string>
@@ -133,7 +133,6 @@
     <string name="october">October</string>
     <string name="november">November</string>
     <string name="december">December</string>
-
 
 
 </resources>
