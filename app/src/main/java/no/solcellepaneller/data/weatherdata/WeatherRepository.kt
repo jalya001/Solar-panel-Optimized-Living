@@ -9,9 +9,10 @@ class WeatherRepository(
     suspend fun getRadiationInfo(
         lat: Double,
         long: Double,
-        slope: Int
+        slope: Int,
+        azimuth: Int
     ): List<Radiation>{
-        return pvgisDataSource.getRadiation(lat, long, slope)
+        return pvgisDataSource.getRadiation(lat, long, slope, azimuth)
     }
     suspend fun getFrostData(
         lat: Double,

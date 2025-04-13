@@ -48,6 +48,7 @@ fun ResultScreen(navController: NavController, viewModel: MapScreenViewModel, we
     val slope = viewModel.angleInput.toIntOrNull()
     val panelArea = viewModel.areaInput.toDouble()
     val efficiency = viewModel.efficiencyInput.toDouble()
+    val direction = viewModel.directionInput.toInt()
     val months = listOf(
         stringResource(R.string.month_january),
         stringResource(R.string.month_february),
@@ -91,7 +92,7 @@ fun ResultScreen(navController: NavController, viewModel: MapScreenViewModel, we
             Text("📍 Long: ${coordinates?.second ?: "N/A"}")
             Text("📏 Areal: ${viewModel.areaInput} m²")
             Text(text = "${stringResource(id = R.string.angle)} ${viewModel.angleInput}°")
-//            Text(text = "${stringResource(id = R.string.direction)}  ${viewModel.directionInput}")
+            Text(text = "${stringResource(id = R.string.direction)}  ${viewModel.directionInput} °")
             Text(text = "${stringResource(id = R.string.effectivity)} ${viewModel.efficiencyInput} %")
             if(loading){
                 startloading = true
@@ -162,7 +163,7 @@ fun ResultScreen(navController: NavController, viewModel: MapScreenViewModel, we
                         "mean(snow_coverage_type P1M)", "mean(air_temperature P1M)", "mean(cloud_area_fraction P1M)"
                     ))
                     if (slope != null) {
-                        weatherViewModel.fetchRadiationInfo(it.first, it.second, slope)
+                        weatherViewModel.fetchRadiationInfo(it.first, it.second, slope,direction)
                     }
                 }
             }) {
