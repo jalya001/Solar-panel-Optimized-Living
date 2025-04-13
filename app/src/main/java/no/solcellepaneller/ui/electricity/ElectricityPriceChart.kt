@@ -105,14 +105,14 @@ fun ElectricityPriceChart(prices: List<ElectricityPrice>) {
                         lines = listOf(
                             Line(
                                 dataPoints = points,
-                                LineStyle(color = Color.Blue),
-                                IntersectionPoint(color = Color.Red),
-                                SelectionHighlightPoint(color = Color.Yellow),
+                                LineStyle(color = if (ThemeState.isDark) MaterialTheme.colorScheme.tertiary else MaterialTheme.colorScheme.primary,),
+                                IntersectionPoint(color = if (ThemeState.isDark) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.tertiary,),
+                                SelectionHighlightPoint(color = if (ThemeState.isDark) MaterialTheme.colorScheme.tertiary else MaterialTheme.colorScheme.primary,),
                                 ShadowUnderLine(
                                     alpha = 0.5f,
                                     brush = Brush.verticalGradient(
                                         colors = listOf(
-                                            MaterialTheme.colorScheme.onTertiary,
+                                            if (ThemeState.isDark) MaterialTheme.colorScheme.tertiary else MaterialTheme.colorScheme.primary,
                                             Color.Transparent
                                         )
                                     )
