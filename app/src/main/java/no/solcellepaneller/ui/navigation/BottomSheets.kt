@@ -1,5 +1,6 @@
 package no.solcellepaneller.ui.navigation
 
+import android.graphics.drawable.Icon
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -25,6 +26,7 @@ import no.solcellepaneller.ui.theme.ThemeState
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.ArrowDropDown
 import androidx.compose.material.icons.filled.Create
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
@@ -258,7 +260,12 @@ fun AdditionalInputBottomSheet(
         areaState = area
     }
 
-//    var direction by remember { mutableStateOf("") }
+    var direction by remember { mutableStateOf("") }
+    val directions = listOf("North", "East", "South", "West")
+    val azimuthValues = listOf("0", "90", "180", "270")
+    var selectedIndex by remember { mutableStateOf(-1) } // nothing selected yet
+    var expanded by remember { mutableStateOf(false) }
+
     var efficiency by remember { mutableStateOf("") }
 
     if (visible) {
@@ -294,7 +301,7 @@ fun AdditionalInputBottomSheet(
                     onClick = {
                         areaState = "45"
                         angle = "30"
-//                        direction = "1"
+                      //  direction = "180" //south
                         efficiency = "85"
                     },
                     modifier = Modifier.align(Alignment.CenterHorizontally)
@@ -340,17 +347,56 @@ fun AdditionalInputBottomSheet(
 
                 Spacer(modifier = Modifier.height(10.dp))
 
+                Text(stringResource(id = R.string.direction_label), style = MaterialTheme.typography.labelLarge)
+                Box {
+                    Button(
+                        onClick = { expanded = true },
+                        modifier = Modifier.fillMaxWidth()
+                    ) {
+                        Text(
+                            text = if (selectedIndex >= 0)
+                                "(${azimuthValues[selectedIndex]}°)"
+                            else
+                                "Choose direction (°)"
+                        )
+
+                        Icon(
+                            imageVector = Icons.Default.ArrowDropDown,
+                            contentDescription = "Dropdown arrow"
+                        )
+                    }
+
+                    DropdownMenu(
+                        expanded = expanded,
+                        onDismissRequest = { expanded = false }
+                    ) {
+                        directions.forEachIndexed { index, dir ->
+                            DropdownMenuItem(
+                                text = { Text("$dir (${azimuthValues[index]}°)") },
+                                onClick = {
+                                    selectedIndex = index
+                                    direction = azimuthValues[index]
+                                    expanded = false
+                                }
+                            )
+                        }
+                    }
+                }
+
+                Spacer(modifier = Modifier.height(10.dp))
+
                 Text(stringResource(id = R.string.efficiency_label), style = MaterialTheme.typography.labelLarge)
                 DecimalInputField(onValueChange = { efficiency=it },label = stringResource(id=R.string.efficiency_label), modifier = Modifier.fillMaxWidth(), value = efficiency, decimalFormatter = decimalFormatter)
 
                 Spacer(modifier = Modifier.height(16.dp))
 
-                if (areaState.isNotEmpty() && angle.isNotEmpty() && efficiency.isNotEmpty() && coordinates != null) {
+                if (areaState.isNotEmpty() && angle.isNotEmpty() && efficiency.isNotEmpty() && direction.isNotEmpty() && coordinates != null) {
                     Button(
                         onClick = {
                             viewModel.areaInput = areaState
                             viewModel.angleInput = angle
                             viewModel.efficiencyInput = efficiency
+                            viewModel.directionInput = direction
                             navController.navigate("result")
                         },
                         modifier = Modifier.align(Alignment.CenterHorizontally)

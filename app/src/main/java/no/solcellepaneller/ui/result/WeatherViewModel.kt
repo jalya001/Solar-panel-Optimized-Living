@@ -18,10 +18,10 @@ class WeatherViewModel(
     private val _isloading = MutableStateFlow(false)
     val isLoading: StateFlow<Boolean> = _isloading
 
-    fun fetchRadiationInfo(lat: Double, long: Double, slope: Int) { // PRODUCTION: Set to private
+    fun fetchRadiationInfo(lat: Double, long: Double, slope: Int, azimuth: Int) { // PRODUCTION: Set to private
         viewModelScope.launch{
 
-            _radiationData.value = repository.getRadiationInfo(lat, long, slope)
+            _radiationData.value = repository.getRadiationInfo(lat, long, slope, azimuth)
 
         }
     }
@@ -34,9 +34,9 @@ class WeatherViewModel(
         }
     }
 
-    fun fetchWeatherData(lat: Double, lon: Double, slope: Int, elements: List<String>) {
+    fun fetchWeatherData(lat: Double, lon: Double, slope: Int, azimuth: Int, elements: List<String>) {
         viewModelScope.launch {
-            launch { fetchRadiationInfo(lat, lon, slope) }
+            launch { fetchRadiationInfo(lat, lon, slope, azimuth) }
             launch { fetchFrostData(lat, lon, elements) }
         }
     }

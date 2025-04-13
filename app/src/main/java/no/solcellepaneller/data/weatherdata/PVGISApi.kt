@@ -11,14 +11,14 @@ import java.net.HttpURLConnection
 import java.net.URL
 
 class PVGISApi {
-    suspend fun getRadiation(lat: Double, long: Double, slope: Int): List<Radiation> = withContext(Dispatchers.IO){
+    suspend fun getRadiation(lat: Double, long: Double, slope: Int, azimuth: Int): List<Radiation> = withContext(Dispatchers.IO){
         // Test adresse: Gaustadalléen 23B
         // Latitude: 59.943
         // Longitude: 10.718
         // Slope: 35
         // URL for grid connected solar energy: https://re.jrc.ec.europa.eu/api/v5_3/PVcalc?lat=59.943&lon=10.718&angle=35&azimuth=0&peakpower=1&loss=14&outputformat=json
 
-        val apiUrl = "https://re.jrc.ec.europa.eu/api/v5_3/PVcalc?lat=$lat&lon=$long&angle=$slope&azimuth=0&peakpower=1&loss=14&outputformat=json"
+        val apiUrl = "https://re.jrc.ec.europa.eu/api/v5_3/PVcalc?lat=$lat&lon=$long&angle=$slope&azimuth=azimuth&peakpower=1&loss=14&outputformat=json"
         val url = URL(apiUrl)
         val connection = url.openConnection() as HttpURLConnection
 
