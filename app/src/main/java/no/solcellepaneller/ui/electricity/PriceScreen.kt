@@ -12,6 +12,7 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ExposedDropdownMenuBox
 import androidx.compose.material3.ExposedDropdownMenuDefaults
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.MenuItemColors
 import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
@@ -120,7 +121,7 @@ fun RegionDropdown(
                 focusedContainerColor = MaterialTheme.colorScheme.background,
                 focusedLabelColor = MaterialTheme.colorScheme.tertiary,
                 unfocusedTextColor = MaterialTheme.colorScheme.tertiary,
-                unfocusedBorderColor = MaterialTheme.colorScheme.tertiary,
+                unfocusedBorderColor = MaterialTheme.colorScheme.tertiary
             )
         )
         ExposedDropdownMenu(
@@ -133,7 +134,15 @@ fun RegionDropdown(
                     onClick = {
                         onRegionSelected(region)
                         expanded = false
-                    }
+                    },
+                    colors = MenuItemColors(
+                        leadingIconColor = MaterialTheme.colorScheme.secondary,
+                        trailingIconColor = MaterialTheme.colorScheme.tertiary,
+                        textColor = MaterialTheme.colorScheme.tertiary,
+                        disabledTextColor = MaterialTheme.colorScheme.tertiary,
+                        disabledLeadingIconColor = MaterialTheme.colorScheme.primary,
+                        disabledTrailingIconColor = MaterialTheme.colorScheme.tertiary
+                    )
                 )
             }
         }
