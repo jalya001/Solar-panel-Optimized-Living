@@ -22,6 +22,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.unit.dp
 import no.solcellepaneller.model.electricity.ElectricityPrice
+import no.solcellepaneller.ui.theme.ThemeState
 
 @Composable
 fun PriceCard(
@@ -77,7 +78,7 @@ fun PriceRow(
         Icon(
             imageVector = icon,
             contentDescription = label,
-            tint = MaterialTheme.colorScheme.primary
+            tint = if (ThemeState.isDark) MaterialTheme.colorScheme.tertiary else MaterialTheme.colorScheme.primary
         )
         Spacer(modifier = Modifier.width(8.dp))
         Column {

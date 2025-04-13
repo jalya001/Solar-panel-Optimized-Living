@@ -23,7 +23,6 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -111,7 +110,7 @@ fun RegionDropdown(
             readOnly = true,
             label = { Text("Velg distrikt", color = MaterialTheme.colorScheme.tertiary) },
             trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(expanded) },
-            textStyle = TextStyle(color = Color.Black, fontSize = 18.sp),
+            textStyle = TextStyle(color = MaterialTheme.colorScheme.tertiary, fontSize = 18.sp),
             modifier = Modifier
                 .fillMaxWidth()
                 .menuAnchor(),
