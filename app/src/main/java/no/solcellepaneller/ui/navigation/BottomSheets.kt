@@ -276,135 +276,152 @@ fun AdditionalInputBottomSheet(
         )
 
         val sheetState = rememberModalBottomSheetState(
-            skipPartiallyExpanded = true
+            skipPartiallyExpanded = true,
         )
+
+
         CompositionLocalProvider(LocalDensity provides customDensity) {
-        ModalBottomSheet(
-            onDismissRequest = onDismiss,
-            sheetState=sheetState,
-            containerColor = MaterialTheme.colorScheme.background,
-            contentColor = MaterialTheme.colorScheme.tertiary,
-            scrimColor = Color.Black.copy(alpha = 0.8f)
-        ) {
-            Column(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(16.dp),
-                horizontalAlignment = Alignment.Start
+            ModalBottomSheet(
+                onDismissRequest = onDismiss,
+                sheetState = sheetState,
+                containerColor = MaterialTheme.colorScheme.background,
+                contentColor = MaterialTheme.colorScheme.tertiary,
+                scrimColor = Color.Black.copy(alpha = 0.8f)
             ) {
-                Text(stringResource(id = R.string.coordinates_label), style = MaterialTheme.typography.labelLarge)
-                Text("Lat: ${coordinates?.first}, Lon: ${coordinates?.second}")
-
-                Spacer(modifier = Modifier.height(10.dp))
-
-                Button(
-                    onClick = {
-                        areaState = "45"
-                        angle = "30"
-                      //  direction = "180" //south
-                        efficiency = "85"
-                    },
-                    modifier = Modifier.align(Alignment.CenterHorizontally)
+                Box(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .heightIn(max = 800.dp)
+                        .padding(16.dp)
                 ) {
-                    Text("Fyll ut testverdier")
-                }
-
-                Spacer(modifier = Modifier.height(10.dp))
-                
-                Text(stringResource(id = R.string.area_label), style = MaterialTheme.typography.labelLarge)
-
-                val decimalFormatter = DecimalFormatter()
-
-                Row {
-                    DecimalInputField(
-                        decimalFormatter = decimalFormatter,
-                        value = areaState,
-                        label = stringResource(id = R.string.area_label),
-                        onValueChange = { areaState=it }
-                    )
-
-                    Button(
-                        onClick = {
-                            onStartDrawing()
-                            onDismiss()
-                        }
+                    Column(
+                        modifier = Modifier.fillMaxSize(),
+                        horizontalAlignment = Alignment.Start
                     ) {
-                        Column {
-                            Icon(
-                                imageVector = Icons.Filled.Create,
-                                contentDescription = stringResource(id = R.string.draw_area),
-                                modifier = Modifier.size(24.dp)
-                            )
-                            Text(stringResource(id = R.string.draw_area)) //Kanksje lurt å legge til noe som hindrer bruker i å klikkevekk, men samtidig vil vi at de skal kunne bytte posisjon hvis ufornøyde
+                        Button(
+                            onClick = {
+                                areaState = "45"
+                                angle = "30"
+                                efficiency = "85"
+                            },
+                            modifier = Modifier.align(Alignment.CenterHorizontally)
+                        ) {
+                            Text("Fyll ut testverdier")
                         }
-                    }
-                }
 
-                Spacer(modifier = Modifier.height(10.dp))
+                        Spacer(modifier = Modifier.height(10.dp))
 
-                Text(stringResource(id = R.string.slope_label), style = MaterialTheme.typography.labelLarge)
-                DecimalInputField(onValueChange = { angle=it },label =stringResource(id=R.string.slope_label) ,modifier = Modifier.fillMaxWidth(), value = angle, decimalFormatter = decimalFormatter)
-
-                Spacer(modifier = Modifier.height(10.dp))
-
-                Text(stringResource(id = R.string.direction_label), style = MaterialTheme.typography.labelLarge)
-                Box {
-                    Button(
-                        onClick = { expanded = true },
-                        modifier = Modifier.fillMaxWidth()
-                    ) {
                         Text(
-                            text = if (selectedIndex >= 0)
-                                "(${azimuthValues[selectedIndex]}°)"
-                            else
-                                "Choose direction (°)"
+                            text = stringResource(id = R.string.area_label),
+                            style = MaterialTheme.typography.labelLarge
                         )
 
-                        Icon(
-                            imageVector = Icons.Default.ArrowDropDown,
-                            contentDescription = "Dropdown arrow"
-                        )
-                    }
+                        val decimalFormatter = DecimalFormatter()
 
-                    DropdownMenu(
-                        expanded = expanded,
-                        onDismissRequest = { expanded = false }
-                    ) {
-                        directions.forEachIndexed { index, dir ->
-                            DropdownMenuItem(
-                                text = { Text("$dir (${azimuthValues[index]}°)") },
-                                onClick = {
-                                    selectedIndex = index
-                                    direction = azimuthValues[index]
-                                    expanded = false
-                                }
+                        Row {
+                            DecimalInputField(
+                                decimalFormatter = decimalFormatter,
+                                value = areaState,
+                                label = stringResource(id = R.string.area_label),
+                                onValueChange = { areaState = it }
                             )
+
+                            Button(
+                                onClick = {
+                                    onStartDrawing()
+                                    onDismiss()
+                                }
+                            ) {
+                                Column {
+                                    Icon(
+                                        imageVector = Icons.Filled.Create,
+                                        contentDescription = stringResource(id = R.string.draw_area),
+                                        modifier = Modifier.size(24.dp)
+                                    )
+                                    Text(stringResource(id = R.string.draw_area))
+                                }
+                            }
+                        }
+
+                        Spacer(modifier = Modifier.height(10.dp))
+
+                        Text(stringResource(id = R.string.slope_label), style = MaterialTheme.typography.labelLarge)
+                        DecimalInputField(
+                            onValueChange = { angle = it },
+                            label = stringResource(id = R.string.slope_label),
+                            modifier = Modifier.fillMaxWidth(),
+                            value = angle,
+                            decimalFormatter = decimalFormatter
+                        )
+
+                        Spacer(modifier = Modifier.height(10.dp))
+
+                        Text(stringResource(id = R.string.efficiency_label), style = MaterialTheme.typography.labelLarge)
+                        DecimalInputField(
+                            onValueChange = { efficiency = it },
+                            label = stringResource(id = R.string.efficiency_label),
+                            modifier = Modifier.fillMaxWidth(),
+                            value = efficiency,
+                            decimalFormatter = decimalFormatter
+                        )
+
+                        Spacer(modifier = Modifier.height(10.dp))
+
+                        Text(stringResource(id = R.string.direction_label), style = MaterialTheme.typography.labelLarge)
+                        Box {
+                            Button(
+                                onClick = { expanded = true },
+                                modifier = Modifier.fillMaxWidth()
+                            ) {
+                                Text(
+                                    text = if (selectedIndex >= 0)
+                                        "(${azimuthValues[selectedIndex]}°)"
+                                    else
+                                        "Choose direction (°)"
+                                )
+
+                                Icon(
+                                    imageVector = Icons.Default.ArrowDropDown,
+                                    contentDescription = "Dropdown arrow"
+                                )
+                            }
+
+                            DropdownMenu(
+                                expanded = expanded,
+                                onDismissRequest = { expanded = false }
+                            ) {
+                                directions.forEachIndexed { index, dir ->
+                                    DropdownMenuItem(
+                                        text = { Text("$dir (${azimuthValues[index]}°)") },
+                                        onClick = {
+                                            selectedIndex = index
+                                            direction = azimuthValues[index]
+                                            expanded = false
+                                        }
+                                    )
+                                }
+                            }
+                        }
+
+                        Spacer(modifier = Modifier.height(20.dp))
+
+                        if (areaState.isNotEmpty() && angle.isNotEmpty() && efficiency.isNotEmpty() && direction.isNotEmpty() && coordinates != null) {
+                            Button(
+                                onClick = {
+                                    viewModel.areaInput = areaState
+                                    viewModel.angleInput = angle
+                                    viewModel.efficiencyInput = efficiency
+                                    viewModel.directionInput = direction
+                                    navController.navigate("result")
+                                },
+                                modifier = Modifier.align(Alignment.CenterHorizontally)
+                            ) {
+                                Text(stringResource(id = R.string.go_to_results))
+                            }
                         }
                     }
                 }
-
-                Spacer(modifier = Modifier.height(10.dp))
-
-                Text(stringResource(id = R.string.efficiency_label), style = MaterialTheme.typography.labelLarge)
-                DecimalInputField(onValueChange = { efficiency=it },label = stringResource(id=R.string.efficiency_label), modifier = Modifier.fillMaxWidth(), value = efficiency, decimalFormatter = decimalFormatter)
-
-                Spacer(modifier = Modifier.height(16.dp))
-
-                if (areaState.isNotEmpty() && angle.isNotEmpty() && efficiency.isNotEmpty() && direction.isNotEmpty() && coordinates != null) {
-                    Button(
-                        onClick = {
-                            viewModel.areaInput = areaState
-                            viewModel.angleInput = angle
-                            viewModel.efficiencyInput = efficiency
-                            viewModel.directionInput = direction
-                            navController.navigate("result")
-                        },
-                        modifier = Modifier.align(Alignment.CenterHorizontally)
-                    ) {
-                        Text(stringResource(id = R.string.go_to_results))
-                    }
-                }
-
-            }        }
+            }
+        }
     }
-}}
+}
