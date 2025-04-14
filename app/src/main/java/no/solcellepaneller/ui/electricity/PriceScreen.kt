@@ -33,6 +33,7 @@ import androidx.navigation.NavController
 import no.solcellepaneller.data.homedata.ElectricityPriceRepository
 import no.solcellepaneller.model.electricity.ElectricityPrice
 import no.solcellepaneller.model.electricity.Region
+import no.solcellepaneller.ui.font.FontScaleViewModel
 import no.solcellepaneller.ui.handling.ErrorScreen
 import no.solcellepaneller.ui.handling.LoadingScreen
 import no.solcellepaneller.ui.navigation.AppearanceBottomSheet
@@ -46,7 +47,9 @@ import java.time.ZonedDateTime
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun PriceScreen(
-    repository: ElectricityPriceRepository,navController: NavController
+    repository: ElectricityPriceRepository,
+    navController: NavController,
+    fontScaleViewModel: FontScaleViewModel
 ) {
     var showHelp by remember { mutableStateOf(false) }
     var showAppearance by remember { mutableStateOf(false) }
@@ -89,7 +92,7 @@ fun PriceScreen(
             }
 
             HelpBottomSheet(visible = showHelp, onDismiss = { showHelp = false })
-            AppearanceBottomSheet(visible = showAppearance, onDismiss = { showAppearance = false })
+            AppearanceBottomSheet(visible = showAppearance, onDismiss = { showAppearance = false }, fontScaleViewModel = fontScaleViewModel)
         }
     }
 }

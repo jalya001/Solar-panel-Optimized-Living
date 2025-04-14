@@ -34,6 +34,7 @@ import co.yml.charts.ui.linechart.model.SelectionHighlightPoint
 import co.yml.charts.ui.linechart.model.SelectionHighlightPopUp
 import co.yml.charts.ui.linechart.model.ShadowUnderLine
 import no.solcellepaneller.model.electricity.ElectricityPrice
+import no.solcellepaneller.ui.theme.ThemeMode
 import no.solcellepaneller.ui.theme.ThemeState
 import java.time.ZonedDateTime
 
@@ -46,7 +47,7 @@ fun ElectricityPriceChart(prices: List<ElectricityPrice>) {
         Point(hour.toFloat(), price.NOK_per_kWh.toFloat())
     }
 
-    val barColor = if (ThemeState.isDark) MaterialTheme.colorScheme.tertiary else MaterialTheme.colorScheme.primary
+    val barColor = if (ThemeState.themeMode == ThemeMode.DARK) MaterialTheme.colorScheme.tertiary else MaterialTheme.colorScheme.primary
 
     val bars = prices.map { price ->
         val hour = ZonedDateTime.parse(price.time_start).hour
@@ -105,14 +106,14 @@ fun ElectricityPriceChart(prices: List<ElectricityPrice>) {
                         lines = listOf(
                             Line(
                                 dataPoints = points,
-                                LineStyle(color = if (ThemeState.isDark) MaterialTheme.colorScheme.tertiary else MaterialTheme.colorScheme.primary,),
-                                IntersectionPoint(color = if (ThemeState.isDark) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.tertiary,),
-                                SelectionHighlightPoint(color = if (ThemeState.isDark) MaterialTheme.colorScheme.tertiary else MaterialTheme.colorScheme.primary,),
+                                LineStyle(color = if (ThemeState.themeMode == ThemeMode.DARK) MaterialTheme.colorScheme.tertiary else MaterialTheme.colorScheme.primary,),
+                                IntersectionPoint(color = if (ThemeState.themeMode == ThemeMode.DARK) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.tertiary,),
+                                SelectionHighlightPoint(color = if (ThemeState.themeMode == ThemeMode.DARK) MaterialTheme.colorScheme.tertiary else MaterialTheme.colorScheme.primary,),
                                 ShadowUnderLine(
                                     alpha = 0.5f,
                                     brush = Brush.verticalGradient(
                                         colors = listOf(
-                                            if (ThemeState.isDark) MaterialTheme.colorScheme.tertiary else MaterialTheme.colorScheme.primary,
+                                            if (ThemeState.themeMode == ThemeMode.DARK) MaterialTheme.colorScheme.tertiary else MaterialTheme.colorScheme.primary,
                                             Color.Transparent
                                         )
                                     )
