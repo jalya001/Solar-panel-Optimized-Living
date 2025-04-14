@@ -1,6 +1,5 @@
 package no.solcellepaneller.ui.electricity
 
-import android.util.Log
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -31,7 +30,6 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import no.solcellepaneller.data.homedata.ElectricityPriceRepository
-import no.solcellepaneller.model.electricity.ElectricityPrice
 import no.solcellepaneller.model.electricity.Region
 import no.solcellepaneller.ui.font.FontScaleViewModel
 import no.solcellepaneller.ui.handling.ErrorScreen
@@ -40,11 +38,7 @@ import no.solcellepaneller.ui.navigation.AppearanceBottomSheet
 import no.solcellepaneller.ui.navigation.BottomBar
 import no.solcellepaneller.ui.navigation.HelpBottomSheet
 import no.solcellepaneller.ui.navigation.TopBar
-import java.time.ZoneId
-import java.time.ZonedDateTime
 
-
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun PriceScreen(
     repository: ElectricityPriceRepository,
@@ -87,7 +81,7 @@ fun PriceScreen(
                     val prices = (priceUiState as PriceUiState.Success).prices
                     ElectricityPriceChart(prices = prices)
                     Spacer(modifier = Modifier.height(16.dp))
-                    PriceList(prices)
+                    PriceCard(prices)
                 }
             }
 
@@ -151,27 +145,3 @@ fun RegionDropdown(
         }
     }
 }
-
-@Composable
-fun PriceList(prices: List<ElectricityPrice>) {
-    val currentHour = ZonedDateTime.now(ZoneId.of("Europe/Oslo")).hour
-
-    val currentPrice = prices.find { price ->
-        val startTime = ZonedDateTime.parse(price.time_start)
-        startTime.hour == currentHour
-    } ?: run {
-        Log.e("ERROR", "Fant ingen pris for nåværende time!")
-        null
-    }
-
-    val highestPrice = prices.maxByOrNull { it.NOK_per_kWh }
-    val lowestPrice = prices.minByOrNull { it.NOK_per_kWh }
-    Column(
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(12.dp)
-    ) {
-        PriceCard(currentPrice, highestPrice, lowestPrice)
-    }
-}
-
