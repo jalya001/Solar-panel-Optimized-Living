@@ -136,6 +136,7 @@ fun DataCard(
     power: Double,
     modifier: Modifier = Modifier,
     navController: NavController,
+    energyPrice: Double
 ) {
     val cardModifier = modifier
         .fillMaxWidth()
@@ -154,7 +155,7 @@ fun DataCard(
                     contentDescription = null
                 )
                 Text(
-                    "$month",
+                    month,
                     fontWeight = FontWeight.Bold,
                     style = MaterialTheme.typography.titleLarge
                 )
@@ -246,7 +247,7 @@ fun DataCard(
             Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
                 Button(
                     onClick = {
-                        navController.navigate("savings")
+                        navController.navigate("monthly_savings/$month/${energy}/${energyPrice}")
                     },
                     colors = ButtonDefaults.buttonColors(
                         containerColor = MaterialTheme.colorScheme.tertiary,
