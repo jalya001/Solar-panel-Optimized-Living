@@ -12,9 +12,7 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Create
 import androidx.compose.material3.Button
-import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Checkbox
-import androidx.compose.material3.ElevatedCard
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
@@ -46,6 +44,7 @@ import no.solcellepaneller.ui.result.WeatherViewModel
 import no.solcellepaneller.ui.reusables.DecimalFormatter
 import no.solcellepaneller.ui.reusables.DecimalInputField
 import no.solcellepaneller.ui.reusables.ExpandInfoSection
+import no.solcellepaneller.ui.reusables.ModeCard
 import no.solcellepaneller.ui.theme.ThemeMode
 import no.solcellepaneller.ui.theme.ThemeState
 
@@ -152,6 +151,40 @@ fun AppearanceBottomSheet(
 
                     var followSystem by remember { mutableStateOf(ThemeState.themeMode == ThemeMode.SYSTEM) }
 
+                    Row(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(vertical = 8.dp),
+                        horizontalArrangement = Arrangement.SpaceEvenly
+                    ) {
+                        ModeCard(
+                            label = stringResource(id = R.string.light_mode),
+                            selected = ThemeState.themeMode == ThemeMode.LIGHT && !followSystem,
+                            onClick = {
+                                followSystem = false
+                                ThemeState.themeMode = ThemeMode.LIGHT
+                            }
+                        )
+
+                        ModeCard(
+                            label = stringResource(id = R.string.dark_mode),
+                            selected = ThemeState.themeMode == ThemeMode.DARK && !followSystem,
+                            onClick = {
+                                followSystem = false
+                                ThemeState.themeMode = ThemeMode.DARK
+                            }
+                        )
+
+                        ModeCard(
+                            label = stringResource(id = R.string.frost_mode),
+                            selected = ThemeState.themeMode == ThemeMode.FROST && !followSystem,
+                            onClick = {
+                                followSystem = false
+                                ThemeState.themeMode = ThemeMode.FROST
+                            }
+                        )
+                    }
+
                     Row(verticalAlignment = Alignment.CenterVertically) {
                         Checkbox(
                             checked = followSystem,
@@ -162,37 +195,6 @@ fun AppearanceBottomSheet(
                             }
                         )
                         Text(stringResource(id = R.string.follow_system))
-                    }
-
-                    if (!followSystem) {
-                        ElevatedCard(
-                            colors = CardDefaults.elevatedCardColors(
-                                contentColor = MaterialTheme.colorScheme.tertiary,
-                                containerColor = MaterialTheme.colorScheme.secondary
-                            ),
-                            elevation = CardDefaults.cardElevation(defaultElevation = 2.dp),
-                            modifier = Modifier.size(width = 240.dp, height = 60.dp),
-                            onClick = {
-                                ThemeState.themeMode = when (ThemeState.themeMode) {
-                                    ThemeMode.LIGHT -> ThemeMode.DARK
-                                    ThemeMode.DARK -> ThemeMode.LIGHT
-                                    ThemeMode.SYSTEM -> ThemeMode.LIGHT
-                                }
-                            },
-                            enabled = !followSystem
-                        ) {
-                            val text = when (ThemeState.themeMode) {
-                                ThemeMode.LIGHT -> stringResource(id = R.string.dark_mode)
-                                ThemeMode.DARK -> stringResource(id = R.string.light_mode)
-                                ThemeMode.SYSTEM -> stringResource(id = R.string.dark_mode)
-                            }
-
-                            Text(
-                                text = text,
-                                modifier = Modifier
-                                    .padding(16.dp)
-                            )
-                        }
                     }
 
                     Spacer(modifier = Modifier.height(10.dp))

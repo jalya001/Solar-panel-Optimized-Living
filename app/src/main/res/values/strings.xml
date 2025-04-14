@@ -9,9 +9,9 @@
     <string name="prices"> Electricity prices </string>
     <string name="help">Help</string>
     <string name="appereance"> Appearance</string>
-    <string name="dark_mode">🌑 Change to darkmode </string>
-    <string name="light_mode">☀️ Change to lightmode </string>
-    <string name="language">Change to Norwegian🇳🇴</string>
+    <string name="dark_mode">Theme:\nDark </string>
+    <string name="light_mode">Theme:\nLight </string>
+    <string name="language">Change to Norwegian</string>
     <string name="font_size">Change font size</string>
     <string name="go_back"> Back </string>
     <string name="close"> Close</string>
@@ -97,21 +97,21 @@
 
     <!--Result Screen-->
     <string name="results"> Results </string>
-    <string name="angle">📐 Angle: </string>
-    <string name="direction"> 🧭 Direction: </string>
-    <string name="effectivity"> ⚡ Effectivity:  </string>
+    <string name="angle">Angle: </string>
+    <string name="direction">Direction: </string>
+    <string name="effectivity">Effectivity:  </string>
     <string name="data_not_added"> Data not added: </string>
-    <string name="get_data"> 📡 Get data </string>
+    <string name="get_data">Get data </string>
     <string name="loading"> Loading Data, please wait…</string>
 
     <string name="month"> Month: </string>
-    <string name="global_radiation"> ☼ Global Radiation: </string>
-    <string name="avg_cloud_cover"> ☁️ Average Cloud Cover: </string>
-    <string name="avg_snow_cover"> ☃ Average Snow Cover: </string>
-    <string name="temp_factor"> 🔥 Temperature Factor: </string>
-    <string name="adj_radiation"> ⚡ Adjusted Radiation: </string>
-    <string name="estimated_energy_prod"> 🔋 Estimated Energy Produced: %.2f kWh </string>
-    <string name="estimated_powerpr_hour"> 📊 Estimated Power Produced per Hour: </string>
+    <string name="global_radiation">Global Radiation: </string>
+    <string name="avg_cloud_cover"> Average Cloud Cover: </string>
+    <string name="avg_snow_cover">Average Snow Cover: </string>
+    <string name="temp_factor">Temperature Factor: </string>
+    <string name="adj_radiation">Adjusted Radiation: </string>
+    <string name="estimated_energy_prod">Estimated Energy Produced: %.2f kWh </string>
+    <string name="estimated_powerpr_hour">Estimated Power Produced per Hour: </string>
 
 
     <string name="address_not_found">Address not found, try again</string>
@@ -134,6 +134,8 @@
     <string name="october">October</string>
     <string name="november">November</string>
     <string name="december">December</string>
+    <string name="frost_mode">Theme:\nFrost</string>
+    <string name="home_bottom_bar">Home</string>
 
 
 </resources>

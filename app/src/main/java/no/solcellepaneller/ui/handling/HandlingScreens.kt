@@ -41,3 +41,16 @@ fun ErrorScreen() {
         )
     }
 }
+
+@Composable
+fun InternetErrorScreen() {
+    Box(
+        modifier = Modifier.fillMaxSize(),
+        contentAlignment = Alignment.Center
+    ) {
+        Text(
+            text = "Nettverksfeil! Prøv å koble til igjen.",
+            style = MaterialTheme.typography.bodyLarge
+        )
+    }
+}

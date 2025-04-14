@@ -272,3 +272,36 @@ fun DataCard(
         }
     }
 }
+
+@Composable
+fun ModeCard(
+    label: String,
+    selected: Boolean,
+    onClick: () -> Unit,
+) {
+//    val border = if (selected) BorderStroke(2.dp, MaterialTheme.colorScheme.primary) else null
+
+    ElevatedCard(
+        modifier = Modifier
+            .size(100.dp)
+            .padding(4.dp),
+        onClick = onClick,
+        elevation = CardDefaults.cardElevation(defaultElevation = 2.dp),
+        colors = CardDefaults.elevatedCardColors(
+            containerColor = MaterialTheme.colorScheme.secondary,
+            contentColor = MaterialTheme.colorScheme.tertiary
+        )
+    ) {
+        Box(
+            contentAlignment = Alignment.Center,
+            modifier = Modifier.fillMaxSize()
+        ) {
+            Text(
+                text = label,
+                style = MaterialTheme.typography.bodyMedium,
+                textAlign = TextAlign.Center
+            )
+        }
+    }
+}
+

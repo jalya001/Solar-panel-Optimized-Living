@@ -8,10 +8,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.Button
-import androidx.compose.material3.Card
-import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
@@ -21,17 +18,13 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.livedata.observeAsState
-import androidx.compose.runtime.key
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
@@ -41,26 +34,27 @@ import com.airbnb.lottie.compose.LottieConstants
 import com.airbnb.lottie.compose.animateLottieCompositionAsState
 import com.airbnb.lottie.compose.rememberLottieComposition
 import no.solcellepaneller.R
-import no.solcellepaneller.ui.handling.LoadingScreen
 import no.solcellepaneller.data.homedata.ElectricityPriceRepository
 import no.solcellepaneller.model.electricity.Region
 import no.solcellepaneller.ui.electricity.PriceScreenViewModel
 import no.solcellepaneller.ui.electricity.PriceUiState
 import no.solcellepaneller.ui.electricity.PriceViewModelFactory
+import no.solcellepaneller.ui.font.FontScaleViewModel
+import no.solcellepaneller.ui.handling.LoadingScreen
 import no.solcellepaneller.ui.map.MapScreenViewModel
 import no.solcellepaneller.ui.navigation.AppearanceBottomSheet
 import no.solcellepaneller.ui.navigation.BottomBar
 import no.solcellepaneller.ui.navigation.HelpBottomSheet
 import no.solcellepaneller.ui.navigation.TopBar
-import no.solcellepaneller.ui.font.FontScaleViewModel
-import no.solcellepaneller.ui.handling.LoadingScreen
+import no.solcellepaneller.ui.reusables.DataCard
 import java.time.ZoneId
 import java.time.ZonedDateTime
-import no.solcellepaneller.ui.reusables.DataCard
 
 @Composable
-fun ResultScreen(navController: NavController, viewModel: MapScreenViewModel, weatherViewModel: WeatherViewModel,
-                 fontScaleViewModel: FontScaleViewModel, priceScreenViewModel: ElectricityPriceRepository) {
+fun ResultScreen(
+    navController: NavController, viewModel: MapScreenViewModel, weatherViewModel: WeatherViewModel,
+    fontScaleViewModel: FontScaleViewModel, priceScreenViewModel: ElectricityPriceRepository,
+) {
     val frostData by weatherViewModel.frostData.collectAsState()
     Log.d("frostData", frostData.toString())
     val radiationData by weatherViewModel.radiationData.collectAsState()
@@ -89,8 +83,10 @@ fun ResultScreen(navController: NavController, viewModel: MapScreenViewModel, we
         is PriceUiState.Success -> {
             val prices = (priceUiState as PriceUiState.Success).prices
             val currentHour = ZonedDateTime.now(ZoneId.of("Europe/Oslo")).hour
-            prices.find { price -> ZonedDateTime.parse(price.time_start).hour == currentHour }?.NOK_per_kWh ?: 0.0
+            prices.find { price -> ZonedDateTime.parse(price.time_start).hour == currentHour }?.NOK_per_kWh
+                ?: 0.0
         }
+
         else -> 0.0
     }
 
@@ -145,16 +141,16 @@ fun ResultScreen(navController: NavController, viewModel: MapScreenViewModel, we
                         energyKWh / totalHours // Convert kWh to kW
                     }
 
-                var yearlyEnergyOutput = 0.0
-                for (nums in 0..11){
-                    yearlyEnergyOutput += monthlyEnergyOutput[nums]
-                }
-                Button(onClick = {
-                    navController.navigate("yearly_savings/${yearlyEnergyOutput}/$energyPrice")
-                }) {
-                    Text("Show yearly savings")
-
+                    var yearlyEnergyOutput = 0.0
+                    for (nums in 0..11) {
+                        yearlyEnergyOutput += monthlyEnergyOutput[nums]
                     }
+                    Button(onClick = {
+                        navController.navigate("yearly_savings/${yearlyEnergyOutput}/$energyPrice")
+                    }) {
+                        Text("Show yearly savings")
+                    }
+
                     MonthDataDisplay(
                         radiationList = radiationList,
                         cloudCoverData = cloudCoverData,
@@ -267,7 +263,7 @@ fun MonthDataDisplay(
 
             Column {
 
-                    SunAnimation(monthlyEnergyOutput[selectedMonthIndex])
+                SunAnimation(monthlyEnergyOutput[selectedMonthIndex])
 
 
             }
@@ -305,8 +301,9 @@ fun MonthDataDisplay(
         }
     }
 }
+
 @Composable
-fun SunAnimation( value: Double) {
+fun SunAnimation(value: Double) {
     val animationFile = when {
         value < 50.0 -> "solar_verylow.json"
         value in 50.0..500.0 -> "solar_low.json"

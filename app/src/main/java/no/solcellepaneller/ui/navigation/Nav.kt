@@ -8,14 +8,16 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
-import androidx.compose.material.icons.filled.Info
 import androidx.compose.material.icons.filled.Build
+import androidx.compose.material.icons.filled.Home
+import androidx.compose.material.icons.filled.Info
 import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.NavigationBar
 import androidx.compose.material3.NavigationBarItem
+import androidx.compose.material3.OutlinedIconButton
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
@@ -32,47 +34,48 @@ import androidx.navigation.NavHostController
 import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
+import androidx.navigation.navArgument
 import no.solcellepaneller.R
 import no.solcellepaneller.data.homedata.ElectricityPriceRepository
 import no.solcellepaneller.ui.electricity.PriceScreen
+import no.solcellepaneller.ui.electricity.ShowMonthlySavings
+import no.solcellepaneller.ui.electricity.ShowYearlySavings
+import no.solcellepaneller.ui.font.FontScaleViewModel
 import no.solcellepaneller.ui.home.HomeScreen
 import no.solcellepaneller.ui.infoscreen.InfoScreen
 import no.solcellepaneller.ui.map.MapScreen
 import no.solcellepaneller.ui.map.MapScreenViewModel
 import no.solcellepaneller.ui.result.ResultScreen
-import no.solcellepaneller.ui.savedLocations.SavedLocationsScreen
-import androidx.navigation.navArgument
-import no.solcellepaneller.ui.electricity.ShowMonthlySavings
-import no.solcellepaneller.ui.electricity.ShowYearlySavings
-import no.solcellepaneller.ui.result.WeatherViewModel
-import no.solcellepaneller.ui.font.FontScaleViewModel
-import androidx.compose.material3.OutlinedIconButton
 import no.solcellepaneller.ui.result.ShowProduce
+import no.solcellepaneller.ui.result.WeatherViewModel
+import no.solcellepaneller.ui.savedLocations.SavedLocationsScreen
 
 @Composable
 fun Nav(navController: NavHostController, fontScaleViewModel: FontScaleViewModel) {
-        val viewModel: MapScreenViewModel = viewModel()
+    val viewModel: MapScreenViewModel = viewModel()
     val WviewModel: WeatherViewModel = viewModel()
     val priceRepository = ElectricityPriceRepository("NO1")
 
     NavHost(navController, startDestination = "home") {
-        composable("home") { HomeScreen(navController,fontScaleViewModel) }
+        composable("home") { HomeScreen(navController, fontScaleViewModel) }
         composable("map") {
-            MapScreen(viewModel, navController,fontScaleViewModel,WviewModel)
+            MapScreen(viewModel, navController, fontScaleViewModel, WviewModel)
         }
         composable("result") {
             ResultScreen(
                 navController, viewModel, WviewModel, fontScaleViewModel,
                 priceScreenViewModel = priceRepository //hvorfor heter den viewmodel hvis den tar en repo?
-            ) }
-        composable("saved_locations") { SavedLocationsScreen(navController,fontScaleViewModel) }
+            )
+        }
+        composable("saved_locations") { SavedLocationsScreen(navController, fontScaleViewModel) }
         composable("prices") {
             val repository = ElectricityPriceRepository("NO1")
             PriceScreen(
-            repository = repository,
-            navController = navController,fontScaleViewModel
-        ) }
-        composable("info_screen") { InfoScreen(navController,fontScaleViewModel)}
+                repository = repository,
+                navController = navController, fontScaleViewModel
+            )
+        }
+        composable("info_screen") { InfoScreen(navController, fontScaleViewModel) }
         composable("produce/{energy}") { backStackEntry ->
             val energy = backStackEntry.arguments?.getString("energy")?.toDoubleOrNull() ?: 0.0
             ShowProduce(
@@ -84,25 +87,36 @@ fun Nav(navController: NavHostController, fontScaleViewModel: FontScaleViewModel
         composable(
             "monthly_savings/{month}/{energyProduced}/{energyPrice}",
             arguments = listOf(
-                navArgument ("month") { type = NavType.StringType },
-                navArgument ("energyProduced") { type = NavType.StringType },
-                navArgument ("energyPrice") { type = NavType.StringType }
+                navArgument("month") { type = NavType.StringType },
+                navArgument("energyProduced") { type = NavType.StringType },
+                navArgument("energyPrice") { type = NavType.StringType }
             )
-        ) {backStackEntry ->
+        ) { backStackEntry ->
             val month = backStackEntry.arguments?.getString("month") ?: ""
-            val energyProduced = backStackEntry.arguments?.getString("energyProduced")?.toDoubleOrNull() ?: 0.0
-            val energyPrice = backStackEntry.arguments?.getString("energyPrice")?.toDoubleOrNull() ?: 0.0
+            val energyProduced =
+                backStackEntry.arguments?.getString("energyProduced")?.toDoubleOrNull() ?: 0.0
+            val energyPrice =
+                backStackEntry.arguments?.getString("energyPrice")?.toDoubleOrNull() ?: 0.0
 
-            ShowMonthlySavings(month, energyProduced, energyPrice, navController, fontScaleViewModel)
+            ShowMonthlySavings(
+                month,
+                energyProduced,
+                energyPrice,
+                navController,
+                fontScaleViewModel
+            )
         }
-        composable ("yearly_savings/{energyProduced}/{energyPrice}",
-        arguments = listOf(
-            navArgument ("energyProduced") { type = NavType.StringType },
-            navArgument ("energyPrice") { type = NavType.StringType }
-        )
-        ){ backStackEntry ->
-            val energyProduced = backStackEntry.arguments?.getString("energyProduced")?.toDoubleOrNull() ?: 0.0
-            val energyPrice = backStackEntry.arguments?.getString("energyPrice")?.toDoubleOrNull() ?: 0.0
+        composable(
+            "yearly_savings/{energyProduced}/{energyPrice}",
+            arguments = listOf(
+                navArgument("energyProduced") { type = NavType.StringType },
+                navArgument("energyPrice") { type = NavType.StringType }
+            )
+        ) { backStackEntry ->
+            val energyProduced =
+                backStackEntry.arguments?.getString("energyProduced")?.toDoubleOrNull() ?: 0.0
+            val energyPrice =
+                backStackEntry.arguments?.getString("energyPrice")?.toDoubleOrNull() ?: 0.0
 
             ShowYearlySavings(energyProduced, energyPrice, navController, fontScaleViewModel)
         }
@@ -113,11 +127,11 @@ fun Nav(navController: NavHostController, fontScaleViewModel: FontScaleViewModel
 fun BottomBar(
     onHelpClicked: () -> Unit,
     onAppearanceClicked: () -> Unit,
-    navController: NavController
+    navController: NavController,
 ) {
     NavigationBar(
-            containerColor = MaterialTheme.colorScheme.secondary,
-            contentColor = MaterialTheme.colorScheme.tertiary,
+        containerColor = MaterialTheme.colorScheme.secondary,
+        contentColor = MaterialTheme.colorScheme.tertiary,
     ) {
 
         NavigationBarItem(
@@ -131,6 +145,12 @@ fun BottomBar(
             label = { Text("Info") },
             selected = false,
             onClick = { navController.navigate("info_screen") }
+        )
+        NavigationBarItem(//taktisk plassering innit, høyre tommel
+            icon = { Icon(Icons.Filled.Home, contentDescription = "Home") },
+            label = { Text(stringResource(id = R.string.home_bottom_bar)) },
+            selected = false,
+            onClick = { navController.navigate("home") }
         )
         NavigationBarItem(
             icon = { Icon(Icons.Filled.Settings, contentDescription = "Appearance") },
@@ -149,11 +169,13 @@ fun TopBar(
     onBackClick: (() -> Unit)? = null,
     backClick: Boolean = true,
     modifier: Modifier = Modifier,
-    height: Dp = 90.dp
+    height: Dp = 90.dp,
 ) {
     Box(modifier = modifier.fillMaxWidth()) {
         TopAppBar(
-            modifier = Modifier.fillMaxWidth().height(height),
+            modifier = Modifier
+                .fillMaxWidth()
+                .height(height),
             colors = TopAppBarDefaults.topAppBarColors(
                 containerColor = MaterialTheme.colorScheme.secondary,
                 titleContentColor = MaterialTheme.colorScheme.tertiary,
@@ -162,11 +184,13 @@ fun TopBar(
             title = {},
             navigationIcon = {
                 if (backClick) {
-                    OutlinedIconButton(onClick = {
-                        onBackClick?.invoke()
-                        navController.popBackStack()
-                     },modifier=modifier.padding(top = 10.dp),
-                        border = BorderStroke(2.dp,MaterialTheme.colorScheme.tertiary)) {
+                    OutlinedIconButton(
+                        onClick = {
+                            onBackClick?.invoke()
+                            navController.popBackStack()
+                        }, modifier = modifier.padding(top = 10.dp),
+                        border = BorderStroke(2.dp, MaterialTheme.colorScheme.tertiary)
+                    ) {
                         Icon(
                             Icons.AutoMirrored.Filled.ArrowBack,
                             contentDescription = "Go back"
@@ -179,7 +203,8 @@ fun TopBar(
         Box(
             modifier = Modifier
                 .fillMaxWidth()
-                .height(height).padding(top = 20.dp),
+                .height(height)
+                .padding(top = 20.dp),
             contentAlignment = Alignment.Center
         ) {
             Text(
