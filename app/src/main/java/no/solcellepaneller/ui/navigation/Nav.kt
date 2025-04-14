@@ -3,7 +3,6 @@ package no.solcellepaneller.ui.navigation
 
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
@@ -14,7 +13,6 @@ import androidx.compose.material.icons.filled.Build
 import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.NavigationBar
 import androidx.compose.material3.NavigationBarItem
@@ -31,6 +29,7 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import androidx.navigation.NavHostController
+import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import no.solcellepaneller.R
@@ -42,6 +41,9 @@ import no.solcellepaneller.ui.map.MapScreen
 import no.solcellepaneller.ui.map.MapScreenViewModel
 import no.solcellepaneller.ui.result.ResultScreen
 import no.solcellepaneller.ui.savedLocations.SavedLocationsScreen
+import androidx.navigation.navArgument
+import no.solcellepaneller.ui.electricity.ShowMonthlySavings
+import no.solcellepaneller.ui.electricity.ShowYearlySavings
 import no.solcellepaneller.ui.result.WeatherViewModel
 import no.solcellepaneller.ui.font.FontScaleViewModel
 import androidx.compose.material3.OutlinedIconButton
@@ -51,6 +53,7 @@ import no.solcellepaneller.ui.result.ShowProduce
 fun Nav(navController: NavHostController, fontScaleViewModel: FontScaleViewModel) {
         val viewModel: MapScreenViewModel = viewModel()
     val WviewModel: WeatherViewModel = viewModel()
+    val priceRepository = ElectricityPriceRepository("NO1")
 
     NavHost(navController, startDestination = "home") {
         composable("home") { HomeScreen(navController,fontScaleViewModel) }
@@ -58,7 +61,10 @@ fun Nav(navController: NavHostController, fontScaleViewModel: FontScaleViewModel
             MapScreen(viewModel, navController,fontScaleViewModel,WviewModel)
         }
         composable("result") {
-            ResultScreen(navController,viewModel,WviewModel,fontScaleViewModel) }
+            ResultScreen(
+                navController, viewModel, WviewModel, fontScaleViewModel,
+                priceScreenViewModel = priceRepository //hvorfor heter den viewmodel hvis den tar en repo?
+            ) }
         composable("saved_locations") { SavedLocationsScreen(navController,fontScaleViewModel) }
         composable("prices") {
             val repository = ElectricityPriceRepository("NO1")
@@ -67,7 +73,6 @@ fun Nav(navController: NavHostController, fontScaleViewModel: FontScaleViewModel
             navController = navController,fontScaleViewModel
         ) }
         composable("info_screen") { InfoScreen(navController,fontScaleViewModel)}
-
         composable("produce/{energy}") { backStackEntry ->
             val energy = backStackEntry.arguments?.getString("energy")?.toDoubleOrNull() ?: 0.0
             ShowProduce(
@@ -76,15 +81,31 @@ fun Nav(navController: NavHostController, fontScaleViewModel: FontScaleViewModel
                 fontScaleViewModel = fontScaleViewModel
             )
         }
-//        composable(
-//            "help?expandSection={expandSection}",
-//            arguments = listOf(
-//                navArgument("expandSection") { defaultValue = "" }
-//            )
-//        ) { backStackEntry ->
-//            val expandSection = backStackEntry.arguments?.getString("expandSection") ?: ""
-//            HelpScreen(navController, expandSection,fontScaleViewModel)
-//        }
+        composable(
+            "monthly_savings/{month}/{energyProduced}/{energyPrice}",
+            arguments = listOf(
+                navArgument ("month") { type = NavType.StringType },
+                navArgument ("energyProduced") { type = NavType.StringType },
+                navArgument ("energyPrice") { type = NavType.StringType }
+            )
+        ) {backStackEntry ->
+            val month = backStackEntry.arguments?.getString("month") ?: ""
+            val energyProduced = backStackEntry.arguments?.getString("energyProduced")?.toDoubleOrNull() ?: 0.0
+            val energyPrice = backStackEntry.arguments?.getString("energyPrice")?.toDoubleOrNull() ?: 0.0
+
+            ShowMonthlySavings(month, energyProduced, energyPrice, navController, fontScaleViewModel)
+        }
+        composable ("yearly_savings/{energyProduced}/{energyPrice}",
+        arguments = listOf(
+            navArgument ("energyProduced") { type = NavType.StringType },
+            navArgument ("energyPrice") { type = NavType.StringType }
+        )
+        ){ backStackEntry ->
+            val energyProduced = backStackEntry.arguments?.getString("energyProduced")?.toDoubleOrNull() ?: 0.0
+            val energyPrice = backStackEntry.arguments?.getString("energyPrice")?.toDoubleOrNull() ?: 0.0
+
+            ShowYearlySavings(energyProduced, energyPrice, navController, fontScaleViewModel)
+        }
     }
 }
 
