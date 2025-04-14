@@ -3,17 +3,11 @@ package no.solcellepaneller.ui.home
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Text
-import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -25,18 +19,18 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import no.solcellepaneller.R
-import no.solcellepaneller.ui.navigation.BottomBar
-import no.solcellepaneller.ui.navigation.AppearanceBottomSheet
 import no.solcellepaneller.ui.font.FontScaleViewModel
 import no.solcellepaneller.ui.handling.LoadingScreen
+import no.solcellepaneller.ui.navigation.AppearanceBottomSheet
+import no.solcellepaneller.ui.navigation.BottomBar
 import no.solcellepaneller.ui.navigation.HelpBottomSheet
 import no.solcellepaneller.ui.navigation.TopBar
-import no.solcellepaneller.ui.reusables.MyCard
 import no.solcellepaneller.ui.reusables.MyNavCard
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun HomeScreen(navController: NavController,    fontScaleViewModel: FontScaleViewModel
+fun HomeScreen(
+    navController: NavController,
+    fontScaleViewModel: FontScaleViewModel
 ) {
     var showHelp by remember { mutableStateOf(false) }
     var showAppearance by remember { mutableStateOf(false) }
@@ -98,12 +92,12 @@ fun HomeScreen(navController: NavController,    fontScaleViewModel: FontScaleVie
                 visible = showHelp,
                 onDismiss ={ showHelp = false },
             )
-AppearanceBottomSheet(
-    visible = showAppearance,
-    onDismiss = { showAppearance = false },
-    fontScaleViewModel = fontScaleViewModel
-)
 
+            AppearanceBottomSheet(
+                visible = showAppearance,
+                onDismiss = { showAppearance = false },
+                fontScaleViewModel = fontScaleViewModel
+            )
         }
     }
 }
