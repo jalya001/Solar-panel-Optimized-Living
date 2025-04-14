@@ -257,18 +257,18 @@ fun DataCard(
                 ) {
                     Text("Show savings $month")
                 }
-                Button(
-                    onClick = {
-                        navController.navigate("produce/${energy}")
-                    },
-                    colors = ButtonDefaults.buttonColors(
-                        containerColor = MaterialTheme.colorScheme.tertiary,
-                        contentColor = MaterialTheme.colorScheme.background
-                    ),
-                    modifier = modifier.weight(1f)
-                ) {
-                    Text("Show available energy")
-                }
+                //Button(
+                //    onClick = {
+                //        navController.navigate("produce/${energy}")
+                //    },
+                //    colors = ButtonDefaults.buttonColors(
+                //        containerColor = MaterialTheme.colorScheme.tertiary,
+                //        contentColor = MaterialTheme.colorScheme.background
+                //    ),
+                //    modifier = modifier.weight(1f)
+                //) {
+                //    Text("Show available energy")
+                //}
             }
         }
     }

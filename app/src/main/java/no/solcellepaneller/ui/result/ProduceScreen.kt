@@ -101,14 +101,14 @@ fun ShowProduce(
     ).value
 
     Scaffold(
-        topBar = { TopBar(navController, text = stringResource(R.string.prod)) },
-        bottomBar = {
-            BottomBar(
-                onHelpClicked = { showHelp = true },
-                onAppearanceClicked = { showAppearance = true },
-                navController = navController
-            )
-        }
+        //topBar = { TopBar(navController, text = stringResource(R.string.prod)) },
+        //bottomBar = {
+        //    BottomBar(
+        //        onHelpClicked = { showHelp = true },
+        //        onAppearanceClicked = { showAppearance = true },
+        //        navController = navController
+        //    )
+        //}
     ) { contentPadding ->
 
         Column(
@@ -212,15 +212,15 @@ fun ShowProduce(
             }
         }
 
-        HelpBottomSheet(
-            visible = showHelp,
-            onDismiss = { showHelp = false },
-        )
-        AppearanceBottomSheet(
-            visible = showAppearance,
-            onDismiss = { showAppearance = false },
-            fontScaleViewModel = fontScaleViewModel
-        )
+        //HelpBottomSheet(
+        //    visible = showHelp,
+        //    onDismiss = { showHelp = false },
+        //)
+        //AppearanceBottomSheet(
+        //    visible = showAppearance,
+        //    onDismiss = { showAppearance = false },
+        //    fontScaleViewModel = fontScaleViewModel
+        //)
     }
 }
 
