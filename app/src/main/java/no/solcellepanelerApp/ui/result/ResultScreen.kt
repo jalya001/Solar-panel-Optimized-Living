@@ -166,7 +166,7 @@ fun ResultScreen(
                         horizontalArrangement = Arrangement.SpaceEvenly
                     ) {
                         SavingsMonth_Card(
-                            label = "Yearly savings",
+                            label = "Yearly Savings",
                             iconRes = R.drawable.baseline_attach_money_24,
                             onClick = {
                                 navController.navigate("yearly_savings/${yearlyEnergyOutput}/$energyPrice")
