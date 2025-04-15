@@ -57,10 +57,6 @@ object LanguageUtils {
 fun langSwitch() {
     val context = LocalContext.current
     ElevatedCard(
-        colors = CardDefaults.elevatedCardColors(
-            contentColor = MaterialTheme.colorScheme.tertiary,
-            containerColor = MaterialTheme.colorScheme.secondary
-        ),
         elevation = CardDefaults.cardElevation(
             defaultElevation = 2.dp
         ),
@@ -77,7 +73,8 @@ fun langSwitch() {
         Text(
             stringResource(id = R.string.language),
             modifier = Modifier
-                .padding(16.dp).align(Alignment.CenterHorizontally)
+                .padding(16.dp)
+                .align(Alignment.CenterHorizontally),
         )
     }
 }

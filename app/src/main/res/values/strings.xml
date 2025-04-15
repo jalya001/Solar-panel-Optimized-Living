@@ -1,20 +1,17 @@
 <resources>
     <string name="app_name">Solcellepaneler</string>
-    <string name="Test" >This app is in English</string>
 
     <!--Home Screen-->
     <string name="home"> Home</string>
     <string name="install_panels"> Install solar panels</string>
     <string name="saved_locations"> Saved locations</string>
-    <string name="prices"> Prices </string>
-    <string name="help"> Help</string>
-    <string name="appereance"> Appearance</string>
+    <string name="prices"> Electricity prices </string>
+    <string name="help">Help</string>
+    <string name="appearance"> Appearance</string>
     <string name="dark_mode"> Dark mode  </string>
     <string name="light_mode"> Light mode  </string>
     <string name="language"> Change to Norwegian</string>
     <string name="font_size"> Change font size</string>
-    <string name="help_how"> Help (How to use the app) </string>
-    <string name="help_techinical"> Help (Technical help, Problems with the app)</string>
     <string name="go_back"> Back </string>
     <string name="close"> Close</string>
 
@@ -105,27 +102,36 @@
     <string name="how_to_draw">How to draw in the map</string>
 
     <!--Result Screen-->
-    <string name="results"> Results  🔍</string>
-    <string name="angle">📐 Angle: </string>
-    <string name="direction"> 🧭 Direction: </string>
-    <string name="effectivity"> ⚡ Effectivity:  </string>
+    <string name="results"> Results </string>
+    <string name="angle">Angle: </string>
+    <string name="direction">Direction: </string>
+    <string name="effectivity">Effectivity:  </string>
     <string name="data_not_added"> Data not added: </string>
-    <string name="get_data"> 📡 Get data </string>
-    <string name="loading"> ⏳ Loading Data, please wait…</string>
+    <string name="get_data">Get data </string>
+    <string name="loading"> Loading Data, please wait…</string>
 
-    <string name="month"> 📅 Month:  </string>
-    <string name="global_radiation"> ☼ Global Radiation: </string>
-    <string name="avg_cloud_cover"> ☁️ Average Cloud Cover: </string>
-    <string name="avg_snow_cover"> ☃ Average Snow Cover: </string>
-    <string name="temp_factor"> 🔥 Temperature Factor: </string>
-    <string name="adj_radiation"> ⚡ Adjusted Radiation: </string>
-    <string name="estimated_energy_prod"> 🔋 Estimated Energy Produced: %.2f kWh </string>
-    <string name="estimated_powerpr_hour"> 📊 Estimated Power Produced per Hour: </string>
+    <string name="month"> Month: </string>
+    <string name="global_radiation">Global Radiation: </string>
+    <string name="avg_cloud_cover"> Average Cloud Cover: </string>
+    <string name="avg_snow_cover">Average Snow Cover: </string>
+    <string name="temp_factor">Temperature Factor: </string>
+    <string name="adj_radiation">Adjusted Radiation: </string>
+    <string name="estimated_energy_prod">Estimated Energy Produced: %.2f kWh </string>
+    <string name="estimated_powerpr_hour">Estimated Power Produced per Hour: </string>
 
 
     <string name="address_not_found">Address not found, try again</string>
     <string name="follow_system">Follow system theme</string>
     <string name="navigate_results">Go to results</string>
+    <string name="map_title">Map</string>
+    <string name="info_title">Information</string>
+    <string name="additional_input">Additional input</string>
+    <string name="prod">Production</string>
+
+
+    <string name="frost_mode">Frost</string>
+    <string name="home_bottom_bar">Home</string>
+
 
     <!--Months-->
     <string name="month_january">January</string>

@@ -1,4 +1,4 @@
-package no.solcellepaneller.ui.handling
+package no.solcellepaneller.ui.reusables
 
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.OutlinedTextField
@@ -17,7 +17,7 @@ import java.text.DecimalFormatSymbols
 //Spør veilder hvordan man kildefører
 
 class DecimalFormatter(
-    symbols: DecimalFormatSymbols = DecimalFormatSymbols.getInstance()
+    symbols: DecimalFormatSymbols = DecimalFormatSymbols.getInstance(),
 ) {
 
     private val thousandsSeparator = symbols.groupingSeparator
@@ -41,7 +41,8 @@ class DecimalFormatter(
                 hasDecimalSep = true
             }
         }
-        return sb.toString()    }
+        return sb.toString()
+    }
 
     fun formatForVisual(input: String): String {
 
@@ -60,7 +61,7 @@ class DecimalFormatter(
 }
 
 class DecimalInputVisualTransformation(
-    private val decimalFormatter: DecimalFormatter
+    private val decimalFormatter: DecimalFormatter,
 ) : VisualTransformation {
 
     override fun filter(text: AnnotatedString): TransformedText {
@@ -97,7 +98,7 @@ fun DecimalInputField(
     decimalFormatter: DecimalFormatter,
     value: String,
     onValueChange: (String) -> Unit,
-    label: String
+    label: String,
 ) {
     OutlinedTextField(
         label = { Text(text = label) },
@@ -110,6 +111,6 @@ fun DecimalInputField(
         keyboardOptions = KeyboardOptions(
             keyboardType = KeyboardType.Decimal,
         ),
-        visualTransformation = DecimalInputVisualTransformation(decimalFormatter)
+        visualTransformation = DecimalInputVisualTransformation(decimalFormatter),
     )
 }

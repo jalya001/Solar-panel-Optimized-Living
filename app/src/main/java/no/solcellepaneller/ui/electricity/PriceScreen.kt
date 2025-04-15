@@ -1,46 +1,51 @@
 package no.solcellepaneller.ui.electricity
 
+import android.app.Activity
+import android.location.Location
 import android.util.Log
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ExposedDropdownMenuBox
 import androidx.compose.material3.ExposedDropdownMenuDefaults
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.MenuItemColors
+import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
+import no.solcellepaneller.R
 import no.solcellepaneller.data.homedata.ElectricityPriceRepository
-import no.solcellepaneller.model.electricity.ElectricityPrice
+import no.solcellepaneller.data.location.LocationService
 import no.solcellepaneller.model.electricity.Region
+import no.solcellepaneller.ui.font.FontScaleViewModel
+import no.solcellepaneller.ui.handling.ErrorScreen
+import no.solcellepaneller.ui.handling.LoadingScreen
 import no.solcellepaneller.ui.navigation.AppearanceBottomSheet
 import no.solcellepaneller.ui.navigation.BottomBar
 import no.solcellepaneller.ui.navigation.HelpBottomSheet
 import no.solcellepaneller.ui.navigation.TopBar
-import no.solcellepaneller.ui.font.FontScaleViewModel
-import no.solcellepaneller.ui.handling.ErrorScreen
-import no.solcellepaneller.ui.handling.LoadingScreen
 import java.time.ZoneId
 import java.time.ZonedDateTime
 
@@ -48,12 +53,34 @@ import java.time.ZonedDateTime
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun PriceScreen(
-    repository: ElectricityPriceRepository,navController: NavController,    fontScaleViewModel: FontScaleViewModel
+    repository: ElectricityPriceRepository,
+    navController: NavController,
+    fontScaleViewModel: FontScaleViewModel,
 ) {
+    val context = LocalContext.current
+    val activity = context as? Activity
+
     var showHelp by remember { mutableStateOf(false) }
     var showAppearance by remember { mutableStateOf(false) }
 
-    var selectedRegion by remember { mutableStateOf(Region.OSLO) }
+    var selectedRegion by remember { mutableStateOf(Region.BERGEN) }
+
+    // Hent lokasjon én gang og sett region automatisk
+    LaunchedEffect(Unit) {
+        // Bruk coroutine for å håndtere lokasjonsinnhenting asynkront
+        activity?.let {
+            val locationService = LocationService(it)
+            try {
+                val location = locationService.getCurrentLocation()
+                location?.let {
+                    selectedRegion = mapLocationToRegion(it)
+                }
+            } catch (e: Exception) {
+                Log.e("PriceScreen", "Feil ved henting av lokasjon", e)
+            }
+        }
+    }
+
     val viewModel: PriceScreenViewModel = viewModel(
         factory = PriceViewModelFactory(repository, selectedRegion.regionCode),
         key = selectedRegion.regionCode
@@ -62,11 +89,12 @@ fun PriceScreen(
     val priceUiState by viewModel.priceUiState.collectAsStateWithLifecycle()
 
     Scaffold(
-        topBar = { TopBar(navController) },
+        topBar = { TopBar(navController, stringResource(id = R.string.price_title)) },
         bottomBar = {
             BottomBar(
                 onHelpClicked = { showHelp = true },
-                onAppearanceClicked = { showAppearance = true },navController
+                onAppearanceClicked = { showAppearance = true },
+                navController = navController
             ) }
     ) { padding ->
         Column(
@@ -78,22 +106,47 @@ fun PriceScreen(
             RegionDropdown(selectedRegion) { newRegion ->
                 selectedRegion = newRegion
             }
+
             Spacer(modifier = Modifier.height(8.dp))
+
             when (priceUiState) {
                 is PriceUiState.Loading -> LoadingScreen()
                 is PriceUiState.Error -> ErrorScreen()
                 is PriceUiState.Success -> {
                     val prices = (priceUiState as PriceUiState.Success).prices
-                    PriceList(prices)
+                    ElectricityPriceChart(prices = prices)
+                    Spacer(modifier = Modifier.height(16.dp))
+                    PriceCard(prices)
                 }
             }
 
-            HelpBottomSheet(visible = showHelp, navController = navController, onDismiss = { showHelp = false })
-AppearanceBottomSheet(
-    visible = showAppearance,
-    onDismiss = { showAppearance = false },
-    fontScaleViewModel = fontScaleViewModel
-)        }
+            HelpBottomSheet(visible = showHelp, onDismiss = { showHelp = false })
+            AppearanceBottomSheet(
+                visible = showAppearance,
+                onDismiss = { showAppearance = false },
+                fontScaleViewModel = fontScaleViewModel
+            )
+        }
+    }
+}
+
+fun mapLocationToRegion(location: Location): Region {
+    val lat = location.latitude
+    val lon = location.longitude
+
+    return when {
+        // Østlandet / Oslo (NO1)
+        lat in 59.5..61.5 && lon in 9.0..12.5 -> Region.OSLO
+        // Sørlandet / Kristiansand (NO2)
+        lat in 57.5..59.5 && lon in 6.0..9.5 -> Region.KRISTIANSAND
+        // Midt-Norge / Trondheim (NO3)
+        lat in 62.0..64.5 && lon in 9.0..12.0 -> Region.TRONDHEIM
+        // Nord-Norge / Tromsø (NO4)
+        lat in 68.0..70.5 && lon in 17.0..20.5 -> Region.TROMSO
+        // Vestlandet / Bergen (NO5)
+        lat in 60.0..61.5 && lon in 4.5..6.5 -> Region.BERGEN
+        // Fallback hvis vi ikke finner match
+        else -> Region.OSLO
     }
 }
 
@@ -101,7 +154,7 @@ AppearanceBottomSheet(
 @Composable
 fun RegionDropdown(
     selectedRegion: Region,
-    onRegionSelected: (Region) -> Unit
+    onRegionSelected: (Region) -> Unit,
 ) {
     var expanded by remember { mutableStateOf(false) }
     ExposedDropdownMenuBox(
@@ -112,86 +165,41 @@ fun RegionDropdown(
             value = selectedRegion.displayName,
             onValueChange = {},
             readOnly = true,
-            label = { Text("Velg distrikt", color = Color.Blue, style = MaterialTheme.typography.bodySmall) },
+            label = { Text("Velg distrikt", color = MaterialTheme.colorScheme.tertiary) },
             trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(expanded) },
-            textStyle = TextStyle(color = Color.Black, fontSize = 18.sp),
+            textStyle = TextStyle(color = MaterialTheme.colorScheme.tertiary, fontSize = 18.sp),
             modifier = Modifier
                 .fillMaxWidth()
-                .menuAnchor()
-        )
+                .menuAnchor(),
+//            colors = OutlinedTextFieldDefaults.colors(
+//                unfocusedContainerColor = MaterialTheme.colorScheme.secondary,
+//                focusedBorderColor = MaterialTheme.colorScheme.tertiary,
+//                focusedContainerColor = MaterialTheme.colorScheme.background,
+//                focusedLabelColor = MaterialTheme.colorScheme.tertiary,
+//                unfocusedTextColor = MaterialTheme.colorScheme.tertiary,
+//                unfocusedBorderColor = MaterialTheme.colorScheme.tertiary
+            )
         ExposedDropdownMenu(
             expanded = expanded,
             onDismissRequest = { expanded = false }
         ) {
             Region.entries.forEach { region ->
                 DropdownMenuItem(
-                    text = { Text(region.displayName, style = MaterialTheme.typography.bodySmall) },
+                    text = { Text(region.displayName, color = MaterialTheme.colorScheme.tertiary) },
                     onClick = {
                         onRegionSelected(region)
                         expanded = false
-                    }
+                    },
+//                    colors = MenuItemColors(
+//                        leadingIconColor = MaterialTheme.colorScheme.secondary,
+//                        trailingIconColor = MaterialTheme.colorScheme.tertiary,
+//                        textColor = MaterialTheme.colorScheme.tertiary,
+//                        disabledTextColor = MaterialTheme.colorScheme.tertiary,
+//                        disabledLeadingIconColor = MaterialTheme.colorScheme.primary,
+//                        disabledTrailingIconColor = MaterialTheme.colorScheme.tertiary
+//                    )
                 )
             }
         }
-    }
-}
-
-@Composable
-fun PriceList(prices: List<ElectricityPrice>) {
-    val currentHour = ZonedDateTime.now(ZoneId.of("Europe/Oslo")).hour
-
-    val currentPrice = prices.find { price ->
-        val startTime = ZonedDateTime.parse(price.time_start)
-        startTime.hour == currentHour
-    } ?: run {
-        Log.e("ERROR", "Fant ingen pris for nåværende time!")
-        null
-    }
-
-    val highestPrice = prices.maxByOrNull { it.NOK_per_kWh }
-    val lowestPrice = prices.minByOrNull { it.NOK_per_kWh }
-    Column(
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(12.dp)
-    ) {
-        lowestPrice?.let {
-            Text(
-                text = "Laveste pris i dag: ${it.NOK_per_kWh} NOK/kWh",
-                style = MaterialTheme.typography.bodyMedium
-            )
-            Text(
-                text = "Tid: ${it.getTimeRange()}",
-                style = MaterialTheme.typography.bodySmall
-            )
-        }
-
-        if (currentPrice != null) {
-            Text(
-                text = "Pris nå: ${currentPrice.NOK_per_kWh} NOK/kWh",
-                style = MaterialTheme.typography.bodyMedium
-            )
-            Text(
-                text = "Tid: ${currentPrice.getTimeRange()}",
-                style = MaterialTheme.typography.bodySmall
-            )
-        } else {
-            Text(
-                text = "Ingen pris tilgjengelig for nåværende time",
-                style = MaterialTheme.typography.bodyLarge
-            )
-        }
-
-        highestPrice?.let {
-            Text(
-                text = "Høyeste pris i dag: ${it.NOK_per_kWh} NOK/kWh",
-                style = MaterialTheme.typography.bodyMedium
-            )
-            Text(
-                text = "Tid: ${it.getTimeRange()}",
-                style = MaterialTheme.typography.bodySmall
-            )
-        }
-        Spacer(modifier = Modifier.height(8.dp))
     }
 }

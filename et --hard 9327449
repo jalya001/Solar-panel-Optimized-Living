@@ -1,0 +1,81 @@
+[33m19e5dce[m[33m ([m[1;36mHEAD[m[33m -> [m[1;32mUI[m[33m, [m[1;31morigin/main[m[33m, [m[1;31morigin/UI[m[33m, [m[1;31morigin/HEAD[m[33m, [m[1;31morigin/DecimalTextField[m[33m, [m[1;32mmain[m[33m, [m[1;32mDecimalTextField[m[33m)[m HEAD@{0}: reset: moving to origin/main
+[33m9327449[m HEAD@{1}: commit: Minor changes
+[33maff01c4[m HEAD@{2}: commit: Merged help to one screen
+[33m6f0be2c[m HEAD@{3}: commit: Major changes in UI to look closer to planned design
+[33m1fb7897[m HEAD@{4}: commit: Major changes in UI to look closer to planned design
+[33m19e5dce[m[33m ([m[1;36mHEAD[m[33m -> [m[1;32mUI[m[33m, [m[1;31morigin/main[m[33m, [m[1;31morigin/UI[m[33m, [m[1;31morigin/HEAD[m[33m, [m[1;31morigin/DecimalTextField[m[33m, [m[1;32mmain[m[33m, [m[1;32mDecimalTextField[m[33m)[m HEAD@{5}: checkout: moving from main to UI
+[33m19e5dce[m[33m ([m[1;36mHEAD[m[33m -> [m[1;32mUI[m[33m, [m[1;31morigin/main[m[33m, [m[1;31morigin/UI[m[33m, [m[1;31morigin/HEAD[m[33m, [m[1;31morigin/DecimalTextField[m[33m, [m[1;32mmain[m[33m, [m[1;32mDecimalTextField[m[33m)[m HEAD@{6}: pull origin DecimalTextField: Fast-forward
+[33m4fe0381[m HEAD@{7}: checkout: moving from DecimalTextField to main
+[33m19e5dce[m[33m ([m[1;36mHEAD[m[33m -> [m[1;32mUI[m[33m, [m[1;31morigin/main[m[33m, [m[1;31morigin/UI[m[33m, [m[1;31morigin/HEAD[m[33m, [m[1;31morigin/DecimalTextField[m[33m, [m[1;32mmain[m[33m, [m[1;32mDecimalTextField[m[33m)[m HEAD@{8}: commit: Minor update - oppdatert oversettelser
+[33m0322027[m HEAD@{9}: commit: Implementert fullstendig fungerende DecimalInputFields slik at bruker ikke kan taste inn bokstaver, men kan taste inn desimaltall
+[33m8f6e56c[m HEAD@{10}: commit: Implementert fungerende DecimalInputFields slik at bruker ikke kan taste inn bokstaver, men kan taste inn desimaltall. backspace funker ikke
+[33m4fe0381[m HEAD@{11}: checkout: moving from main to DecimalTextField
+[33m4fe0381[m HEAD@{12}: commit: Follow system theme added to appearence
+[33m2740b14[m HEAD@{13}: checkout: moving from MVP-demo to main
+[33m5e9f45c[m[33m ([m[1;31morigin/MVP-demo[m[33m, [m[1;32mMVP-demo[m[33m)[m HEAD@{14}: checkout: moving from main to MVP-demo
+[33m2740b14[m HEAD@{15}: commit: lagt til (kommentert ut) timeout kode i fetchFrost
+[33m1a09275[m HEAD@{16}: commit: Begrenset textfield i additonalInfo til å kun ta tall. TODO gjøre slik at den tillatter desimaltall
+[33mc3a5c3c[m HEAD@{17}: commit: commented out useless(?) direction variables
+[33m1b856d1[m HEAD@{18}: commit: lagt til error handling for addressesøk
+[33m43bad11[m HEAD@{19}: commit: Added loading and error handling classes
+[33md1b385f[m HEAD@{20}: checkout: moving from pricegraph to main
+[33m1b078de[m[33m ([m[1;31morigin/pricegraph[m[33m, [m[1;32mpricegraph[m[33m)[m HEAD@{21}: checkout: moving from main to pricegraph
+[33md1b385f[m HEAD@{22}: checkout: moving from pricegraph to main
+[33m1b078de[m[33m ([m[1;31morigin/pricegraph[m[33m, [m[1;32mpricegraph[m[33m)[m HEAD@{23}: checkout: moving from main to pricegraph
+[33md1b385f[m HEAD@{24}: pull: Fast-forward
+[33m5e9f45c[m[33m ([m[1;31morigin/MVP-demo[m[33m, [m[1;32mMVP-demo[m[33m)[m HEAD@{25}: reset: moving to origin/MVP-demo
+[33md1b385f[m HEAD@{26}: checkout: moving from Icons to main
+[33md1b385f[m HEAD@{27}: checkout: moving from main to Icons
+[33md1b385f[m HEAD@{28}: commit: Implementert fungerende font size change, både gjennom mobilsettings og in-app. Mangler at alle text composables brukes style taggen
+[33md56c9c8[m HEAD@{29}: commit: Added minimal functionality for font size change
+[33m7adc98e[m HEAD@{30}: commit: la til knapp for å raskt fylle ut tesverdier
+[33mac4d368[m HEAD@{31}: commit: additonalinput bottomsheet now starts at full height
+[33m3eb0874[m HEAD@{32}: commit: additonalinput bottomsheet now starts at full height
+[33m1a5ee4f[m HEAD@{33}: merge språkBtn: Fast-forward
+[33m809f4fa[m HEAD@{34}: pull: Fast-forward
+[33m9a74cf3[m HEAD@{35}: checkout: moving from MVP-demo to main
+[33m5e9f45c[m[33m ([m[1;31morigin/MVP-demo[m[33m, [m[1;32mMVP-demo[m[33m)[m HEAD@{36}: reset: moving to origin/MVP-demo
+[33m1a5ee4f[m HEAD@{37}: merge språkBtn: Fast-forward
+[33m5e9f45c[m[33m ([m[1;31morigin/MVP-demo[m[33m, [m[1;32mMVP-demo[m[33m)[m HEAD@{38}: checkout: moving from språkBtn to MVP-demo
+[33m1a5ee4f[m HEAD@{39}: commit: fungerende språkswitch in-app implementert
+[33m4b451c7[m HEAD@{40}: checkout: moving from språkBtn2 to språkBtn
+[33mb1b977e[m HEAD@{41}: commit: Ikke helt funksjonell. Endrer språk på det meste, men ikke på bottomsheets, dialog osv
+[33m5e9f45c[m[33m ([m[1;31morigin/MVP-demo[m[33m, [m[1;32mMVP-demo[m[33m)[m HEAD@{42}: checkout: moving from MVP-demo to språkBtn2
+[33m5e9f45c[m[33m ([m[1;31morigin/MVP-demo[m[33m, [m[1;32mMVP-demo[m[33m)[m HEAD@{43}: checkout: moving from språkBtn to MVP-demo
+[33m4b451c7[m HEAD@{44}: commit: versjon 1 av språkbytte. hentet fra YT
+[33m5e9f45c[m[33m ([m[1;31morigin/MVP-demo[m[33m, [m[1;32mMVP-demo[m[33m)[m HEAD@{45}: reset: moving to origin/MVP-demo
+[33m809f4fa[m HEAD@{46}: reset: moving to origin/main
+[33m5e9f45c[m[33m ([m[1;31morigin/MVP-demo[m[33m, [m[1;32mMVP-demo[m[33m)[m HEAD@{47}: checkout: moving from MVP-demo to språkBtn
+[33m5e9f45c[m[33m ([m[1;31morigin/MVP-demo[m[33m, [m[1;32mMVP-demo[m[33m)[m HEAD@{48}: checkout: moving from FontSize to MVP-demo
+[33m5e9f45c[m[33m ([m[1;31morigin/MVP-demo[m[33m, [m[1;32mMVP-demo[m[33m)[m HEAD@{49}: checkout: moving from MVP-demo to FontSize
+[33m5e9f45c[m[33m ([m[1;31morigin/MVP-demo[m[33m, [m[1;32mMVP-demo[m[33m)[m HEAD@{50}: pull: Fast-forward
+[33m5393c9a[m HEAD@{51}: pull: Fast-forward
+[33m3a6b5a1[m HEAD@{52}: checkout: moving from main to MVP-demo
+[33m9a74cf3[m HEAD@{53}: commit: Oppdatert hjelp funksjonaliteten til å være mer utfyllende
+[33mb014afb[m HEAD@{54}: commit (merge): Merget priser branchen
+[33m75c2504[m HEAD@{55}: pull origin Frost: Merge made by the 'ort' strategy.
+[33m39fdfdd[m HEAD@{56}: commit: Merget PVGIS funksjonalitet
+[33m0045ed6[m HEAD@{57}: pull origin api-pvgis: Merge made by the 'ort' strategy.
+[33m5b42fc6[m HEAD@{58}: reset: moving to HEAD~1
+[33m1d3a921[m HEAD@{59}: pull origin Frost: Merge made by the 'ort' strategy.
+[33m5b42fc6[m HEAD@{60}: reset: moving to HEAD~1
+[33md4e20b5[m HEAD@{61}: reset: moving to HEAD
+[33md4e20b5[m HEAD@{62}: pull origin Frost: Merge made by the 'ort' strategy.
+[33m5b42fc6[m HEAD@{63}: merge origin/main: Merge made by the 'ort' strategy.
+[33m4a44235[m HEAD@{64}: merge Frost: Fast-forward
+[33mcb3a621[m HEAD@{65}: checkout: moving from Frost to main
+[33m4a44235[m HEAD@{66}: commit: Satt opp enkel Frost filer
+[33m48add27[m HEAD@{67}: commit: Satt opp enkel Frost filer
+[33mcb3a621[m HEAD@{68}: checkout: moving from main to Frost
+[33mcb3a621[m HEAD@{69}: commit: Lagt til resultatene fra additionalinput på resultatskjermen
+[33mfb273bb[m HEAD@{70}: merge additional: Fast-forward
+[33m3a2a885[m HEAD@{71}: checkout: moving from additional to main
+[33mfb273bb[m HEAD@{72}: commit (amend): Lagt til null check når lokasjon velges. Nå dukker det opp en forklarende dialogboks som kan ta brukeren til hjelp "skjermen"
+[33mc89e235[m HEAD@{73}: commit: Lagt til null check når lokasjon velges. Nå dukker det opp en forklarende
+[33m70513d3[m HEAD@{74}: commit: Oversatt ved bruk av xml filen og stringresource
+[33meb321cb[m HEAD@{75}: commit (merge): merget hentet main til additional branchen og resolved conflicts
+[33mb0ac6c0[m HEAD@{76}: checkout: moving from main to additional
+[33m3a2a885[m HEAD@{77}: pull: Fast-forward
+[33mb1723a7[m HEAD@{78}: checkout: moving from additional to main
+[33mb0ac6c0[m HEAD@{79}: commit (merge): slåå sammen kartene til et kart. Tegne funksjonaliteten aktiveres ved knapp. noen ting til men husker ikke help
+[33m9f7487b[m HEAD@{80}: commit: slåå sammen kartene til et kart. Tegne funksjonali

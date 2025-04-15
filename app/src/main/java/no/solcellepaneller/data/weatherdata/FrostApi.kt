@@ -19,6 +19,7 @@ import kotlin.math.*
 import java.time.ZonedDateTime
 import java.time.ZoneId
 import java.time.format.DateTimeFormatter
+import java.util.Locale
 
 class FrostApi {
     val baseUrl = "https://frost-beta.met.no/api/v1/obs/met.no/filter/get"

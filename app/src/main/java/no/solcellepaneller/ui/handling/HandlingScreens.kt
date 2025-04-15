@@ -7,13 +7,10 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.MaterialTheme
-import no.solcellepaneller.R
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 
 @Composable
@@ -25,10 +22,9 @@ fun LoadingScreen() {
         Column(
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            CircularProgressIndicator()
+            CircularProgressIndicator(color = MaterialTheme.colorScheme.tertiary)
             Spacer(modifier = Modifier.height(8.dp))
-//            Text("Laster inn data, vennligst vent...")
-            Text(stringResource(id = R.string.loading), fontWeight = FontWeight.Bold)
+            Text("Laster inn data, vennligst vent...")
         }
     }
 }
@@ -41,6 +37,19 @@ fun ErrorScreen() {
     ) {
         Text(
             text = "Noe gikk galt! Prøv igjen senere.",
+            style = MaterialTheme.typography.bodyLarge
+        )
+    }
+}
+
+@Composable
+fun InternetErrorScreen() {
+    Box(
+        modifier = Modifier.fillMaxSize(),
+        contentAlignment = Alignment.Center
+    ) {
+        Text(
+            text = "Nettverksfeil! Prøv å koble til igjen.",
             style = MaterialTheme.typography.bodyLarge
         )
     }
