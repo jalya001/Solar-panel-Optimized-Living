@@ -10,6 +10,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ElevatedCard
 import androidx.compose.material3.Icon
@@ -121,6 +122,7 @@ fun DataCard(
     power: Double,
     modifier: Modifier = Modifier,
     navController: NavController,
+    energyPrice: Double
 ) {
     val cardModifier = modifier
         .fillMaxWidth()
@@ -182,7 +184,7 @@ fun DataCard(
             Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
                 Button(
                     onClick = {
-                        navController.navigate("savings")
+                        navController.navigate("monthly_savings/$month/${energy}/${energyPrice}")
                     },
                     modifier = modifier.weight(1f)
                 ) {

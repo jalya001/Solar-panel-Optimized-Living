@@ -31,15 +31,14 @@ import androidx.navigation.navArgument
 import no.solcellepaneller.R
 import no.solcellepaneller.data.homedata.ElectricityPriceRepository
 import no.solcellepaneller.ui.electricity.PriceScreen
-import no.solcellepaneller.ui.electricity.ShowMonthlySavings
-import no.solcellepaneller.ui.electricity.ShowYearlySavings
 import no.solcellepaneller.ui.font.FontScaleViewModel
 import no.solcellepaneller.ui.home.HomeScreen
 import no.solcellepaneller.ui.infoscreen.InfoScreen
 import no.solcellepaneller.ui.map.MapScreen
 import no.solcellepaneller.ui.map.MapScreenViewModel
 import no.solcellepaneller.ui.result.ResultScreen
-import no.solcellepaneller.ui.result.ShowProduce
+import no.solcellepaneller.ui.result.ShowMonthlySavings
+import no.solcellepaneller.ui.result.ShowYearlySavings
 import no.solcellepaneller.ui.result.WeatherViewModel
 import no.solcellepaneller.ui.savedLocations.SavedLocationsScreen
 
@@ -69,14 +68,14 @@ fun Nav(navController: NavHostController, fontScaleViewModel: FontScaleViewModel
             )
         }
         composable("info_screen") { InfoScreen(navController, fontScaleViewModel) }
-        composable("produce/{energy}") { backStackEntry ->
-            val energy = backStackEntry.arguments?.getString("energy")?.toDoubleOrNull() ?: 0.0
-            ShowProduce(
-                energy = energy,
-                navController = navController,
-                fontScaleViewModel = fontScaleViewModel
-            )
-        }
+        //composable("produce/{energy}") { backStackEntry ->
+        //    val energy = backStackEntry.arguments?.getString("energy")?.toDoubleOrNull() ?: 0.0
+        //    ShowProduce(
+        //        energy = energy,
+        //        navController = navController,
+        //        fontScaleViewModel = fontScaleViewModel
+        //    )
+        //}
         composable(
             "monthly_savings/{month}/{energyProduced}/{energyPrice}",
             arguments = listOf(

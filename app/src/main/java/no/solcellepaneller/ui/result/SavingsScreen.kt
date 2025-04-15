@@ -1,4 +1,4 @@
-package no.solcellepaneller.ui.electricity
+package no.solcellepaneller.ui.result
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -14,7 +14,6 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -41,7 +40,7 @@ fun ShowMonthlySavings(
     var showAppearance by remember { mutableStateOf(false) }
 
     Scaffold(
-        topBar = { TopBar(navController, "Savings Monthly") },
+        topBar = { TopBar(navController, text = "Hvor mye vil du spare i $month?") },
         bottomBar = {
             BottomBar(
                 onHelpClicked = { showHelp = true },
@@ -59,11 +58,6 @@ fun ShowMonthlySavings(
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             Text(
-                text = "Hvor mye vil du spare?",
-                fontSize = 20.sp,
-                fontWeight = FontWeight.Bold
-            )
-            Text(
                 text = "Du vil spare %.2f kroner i $month på strøm fra solcellepaneler".format(
                     savings,
                     month
@@ -71,6 +65,8 @@ fun ShowMonthlySavings(
                 fontSize = 18.sp * fontScale,
                 textAlign = TextAlign.Center
             )
+
+            ShowProduce(energyProduced, navController, fontScaleViewModel)
 
             HelpBottomSheet(visible = showHelp, onDismiss = { showHelp = false })
             AppearanceBottomSheet(
@@ -96,7 +92,7 @@ fun ShowYearlySavings(
     var showAppearance by remember { mutableStateOf(false) }
 
     Scaffold(
-        topBar = { TopBar(navController, "Savings Yearly") },
+        topBar = { TopBar(navController, text = "Hvor mye vil du spare årlig?") },
         bottomBar = {
             BottomBar(
                 onHelpClicked = { showHelp = true },
@@ -114,15 +110,12 @@ fun ShowYearlySavings(
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             Text(
-                text = "Hvor mye vil du spare årlig?",
-                fontSize = 20.sp,
-                fontWeight = FontWeight.Bold
-            )
-            Text(
                 text = "Du vil spare %.2f kroner i året på strøm fra solcellepaneler".format(savings),
                 fontSize = 18.sp * fontScale,
                 textAlign = TextAlign.Center
             )
+
+            ShowProduce(energyProduced, navController, fontScaleViewModel)
 
             HelpBottomSheet(visible = showHelp, onDismiss = { showHelp = false })
             AppearanceBottomSheet(
