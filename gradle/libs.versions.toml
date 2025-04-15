@@ -1,4 +1,5 @@
 [versions]
+accompanistPermissions = "0.34.0"
 activityComposeVersion = "1.4.0"
 agp = "8.8.2"
 appcompat = "1.7.0"
@@ -27,6 +28,7 @@ material = "1.7.8"
 navigationRuntimeAndroid = "2.9.0-alpha08"
 navigationCompose = "2.8.9"
 playServicesLocation = "21.3.0"
+playServicesLocationVersion = "21.0.1"
 protoliteWellKnownTypes = "18.0.1"
 scenecore = "1.0.0-alpha03"
 
@@ -40,6 +42,7 @@ runtimeLivedata = "1.7.8"
 ycharts = "2.1.0"
 
 [libraries]
+accompanist-permissions = { module = "com.google.accompanist:accompanist-permissions", version.ref = "accompanistPermissions" }
 androidx-appcompat = { module = "androidx.appcompat:appcompat", version.ref = "appcompat" }
 androidx-appcompat-resources = { module = "androidx.appcompat:appcompat-resources", version.ref = "appcompat" }
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
@@ -77,6 +80,7 @@ ktor-ktor-serialization-kotlinx-json = { module = "io.ktor:ktor-serialization-ko
 androidx-navigation-runtime-android = { group = "androidx.navigation", name = "navigation-runtime-android", version.ref = "navigationRuntimeAndroid" }
 androidx-navigation-compose = { group = "androidx.navigation", name = "navigation-compose", version.ref = "navigationCompose" }
 play-services-location = { module = "com.google.android.gms:play-services-location", version.ref = "playServicesLocation" }
+play-services-location-v2101 = { module = "com.google.android.gms:play-services-location", version.ref = "playServicesLocationVersion" }
 protolite-well-known-types = { group = "com.google.firebase", name = "protolite-well-known-types", version.ref = "protoliteWellKnownTypes" }
 androidx-scenecore = { group = "androidx.xr.scenecore", name = "scenecore", version.ref = "scenecore" }
 

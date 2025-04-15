@@ -5,6 +5,7 @@ import android.annotation.SuppressLint
 import android.app.Activity
 import android.content.pm.PackageManager
 import android.location.Location
+import android.util.Log
 import androidx.core.app.ActivityCompat
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationServices
@@ -26,7 +27,7 @@ class LocationService(private val activity: Activity) {
             try {
                 fusedLocationClient?.lastLocation?.await()
             } catch (e: Exception) {
-                e.printStackTrace()
+                Log.e("LocationService", "Error getting location", e)
                 null
             }
         } else {

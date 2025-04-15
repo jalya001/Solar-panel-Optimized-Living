@@ -106,6 +106,9 @@ dependencies {
     //Location dependencies
     implementation(libs.play.services.location)
     implementation(libs.kotlinx.coroutines.play.services)
+    implementation(libs.accompanist.permissions)
+    implementation(libs.play.services.location.v2101)
+
 
     //...
     implementation(libs.androidx.appcompat)
