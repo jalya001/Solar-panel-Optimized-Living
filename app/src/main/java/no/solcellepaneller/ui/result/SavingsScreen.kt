@@ -14,6 +14,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -23,6 +24,7 @@ import no.solcellepaneller.ui.navigation.AppearanceBottomSheet
 import no.solcellepaneller.ui.navigation.BottomBar
 import no.solcellepaneller.ui.navigation.HelpBottomSheet
 import no.solcellepaneller.ui.navigation.TopBar
+import no.solcellepaneller.R
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -40,7 +42,7 @@ fun ShowMonthlySavings(
     var showAppearance by remember { mutableStateOf(false) }
 
     Scaffold(
-        topBar = { TopBar(navController, text = "Sparing i: $month?") },
+        topBar = { TopBar(navController, text = stringResource(R.string.monthly_savings, month)) },
         bottomBar = {
             BottomBar(
                 onHelpClicked = { showHelp = true },
@@ -58,10 +60,7 @@ fun ShowMonthlySavings(
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             Text(
-                text = "Du vil spare %.2f kroner i $month på strøm fra solcellepaneler".format(
-                    savings,
-                    month
-                ),
+                text = stringResource(R.string.monthly_savings_text, savings, month),
                 fontSize = 18.sp * fontScale,
                 textAlign = TextAlign.Center
             )
@@ -92,7 +91,7 @@ fun ShowYearlySavings(
     var showAppearance by remember { mutableStateOf(false) }
 
     Scaffold(
-        topBar = { TopBar(navController, text = "Spares årlig") },
+        topBar = { TopBar(navController, text = stringResource(R.string.yearly_savings)) },
         bottomBar = {
             BottomBar(
                 onHelpClicked = { showHelp = true },
@@ -110,7 +109,7 @@ fun ShowYearlySavings(
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             Text(
-                text = "Du vil spare %.2f kroner i året på strøm fra solcellepaneler".format(savings),
+                text = stringResource(R.string.yearly_savings_text, savings),
                 fontSize = 18.sp * fontScale,
                 textAlign = TextAlign.Center
             )
