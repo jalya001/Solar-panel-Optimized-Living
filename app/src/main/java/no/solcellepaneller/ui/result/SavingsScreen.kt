@@ -40,7 +40,7 @@ fun ShowMonthlySavings(
     var showAppearance by remember { mutableStateOf(false) }
 
     Scaffold(
-        topBar = { TopBar(navController, text = "Hvor mye vil du spare i $month?") },
+        topBar = { TopBar(navController, text = "Sparing i: $month?") },
         bottomBar = {
             BottomBar(
                 onHelpClicked = { showHelp = true },
@@ -92,7 +92,7 @@ fun ShowYearlySavings(
     var showAppearance by remember { mutableStateOf(false) }
 
     Scaffold(
-        topBar = { TopBar(navController, text = "Hvor mye vil du spare årlig?") },
+        topBar = { TopBar(navController, text = "Spares årlig") },
         bottomBar = {
             BottomBar(
                 onHelpClicked = { showHelp = true },
