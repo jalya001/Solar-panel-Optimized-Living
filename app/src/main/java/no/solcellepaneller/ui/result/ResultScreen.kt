@@ -64,11 +64,22 @@ fun ResultScreen(
     var startloading by remember { mutableStateOf(false) }
     val panelArea = viewModel.areaInput.toDouble()
     val efficiency = viewModel.efficiencyInput.toDouble()
-
-    val months = arrayOf(
-        "Januar", "Februar", "Mars", "April", "Mai", "Juni",
-        "Juli", "August", "September", "Oktober", "November", "Desember"
+    val direction = viewModel.directionInput.toInt()
+    val months = listOf(
+        stringResource(R.string.month_january),
+        stringResource(R.string.month_february),
+        stringResource(R.string.month_march),
+        stringResource(R.string.month_april),
+        stringResource(R.string.month_may),
+        stringResource(R.string.month_june),
+        stringResource(R.string.month_july),
+        stringResource(R.string.month_august),
+        stringResource(R.string.month_september),
+        stringResource(R.string.month_october),
+        stringResource(R.string.month_november),
+        stringResource(R.string.month_december)
     )
+
     val daysInMonth = arrayOf(31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31)
 
     var selectedRegion by remember { mutableStateOf(Region.OSLO) }
@@ -214,7 +225,7 @@ fun MonthDataDisplay(
     adjustedRadiation: List<Double>,
     monthlyEnergyOutput: List<Double>,
     monthlyPowerOutput: List<Double>,
-    months: Array<String>,
+    months: List<String>,
     navController: NavController,
     energyPrice: Double,
 ) {

@@ -1,6 +1,5 @@
 <resources>
     <string name="app_name">Solcellepaneler</string>
-    <string name="Test">This app is in English</string>
 
     <!--Home Screen-->
     <string name="home"> Home</string>
@@ -8,11 +7,11 @@
     <string name="saved_locations"> Saved locations</string>
     <string name="prices"> Electricity prices </string>
     <string name="help">Help</string>
-    <string name="appereance"> Appearance</string>
-    <string name="dark_mode">Darkmode</string>
-    <string name="light_mode">Lightmode </string>
-    <string name="language">Change to Norwegian</string>
-    <string name="font_size">Change font size</string>
+    <string name="appearance"> Appearance</string>
+    <string name="dark_mode"> Dark mode  </string>
+    <string name="light_mode"> Light mode  </string>
+    <string name="language"> Change to Norwegian</string>
+    <string name="font_size"> Change font size</string>
     <string name="go_back"> Back </string>
     <string name="close"> Close</string>
 
@@ -61,6 +60,13 @@
         This app helps you assess how much solar power you can potentially produce and whether it is sufficient for your needs.
     </string>
 
+    <string name="support_title">Support Schemes</string>
+    <string name="support_content">
+        You may be eligible for financial support from Enova, a Norwegian government agency that provides funding for energy-efficient solutions such as solar panels.
+        Through their homeowner program, you can get up to 32,500 NOK in support for installing solar power systems, depending on system size and efficiency.
+        For more information and to apply, visit:
+    </string>
+
     <!--Map Screen-->
     <string name="enter_address">Enter Address</string>
     <string name="search_coordinates">Search Coordinates</string>
@@ -79,7 +85,7 @@
     <string name="area_label">Area (m²)</string>
     <string name="draw_area">Draw areal</string>
     <string name="slope_label">Angle (°)</string>
-    <string name="direction_label">Direction</string>
+    <string name="direction_label">Direction (°)</string>
     <string name="efficiency_label">Efficiency (%)</string>
     <string name="coordinates_label">Coordinates (from map): </string>
     <string name="coordinates_unavailable">No coordinates available</string>
@@ -122,20 +128,23 @@
     <string name="additional_input">Additional input</string>
     <string name="prod">Production</string>
 
-    <string name="january">January</string>
-    <string name="february">February</string>
-    <string name="march">March</string>
-    <string name="april">April</string>
-    <string name="may">May</string>
-    <string name="june">June</string>
-    <string name="july">July</string>
-    <string name="august">August</string>
-    <string name="september">September</string>
-    <string name="october">October</string>
-    <string name="november">November</string>
-    <string name="december">December</string>
+
     <string name="frost_mode">Frost</string>
     <string name="home_bottom_bar">Home</string>
 
+
+    <!--Months-->
+    <string name="month_january">January</string>
+    <string name="month_february">February</string>
+    <string name="month_march">March</string>
+    <string name="month_april">April</string>
+    <string name="month_may">May</string>
+    <string name="month_june">June</string>
+    <string name="month_july">July</string>
+    <string name="month_august">August</string>
+    <string name="month_september">September</string>
+    <string name="month_october">October</string>
+    <string name="month_november">November</string>
+    <string name="month_december">December</string>
 
 </resources>

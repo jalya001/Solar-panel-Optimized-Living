@@ -1,18 +1,24 @@
 package no.solcellepaneller.ui.navigation
 
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.ArrowDropDown
 import androidx.compose.material.icons.filled.Create
 import androidx.compose.material3.Button
 import androidx.compose.material3.Checkbox
+import androidx.compose.material3.DropdownMenu
+import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
@@ -147,7 +153,7 @@ fun AppearanceBottomSheet(
                     horizontalAlignment = Alignment.CenterHorizontally
                 ) {
                     Text(
-                        stringResource(id = R.string.appereance),
+                        stringResource(id = R.string.appearance),
                         style = MaterialTheme.typography.headlineLarge,
                         fontWeight = FontWeight.Thin
                     )
@@ -266,6 +272,11 @@ fun AdditionalInputBottomSheet(
     }
 
     var direction by remember { mutableStateOf("") }
+    val directions = listOf("North", "East", "South", "West")
+    val azimuthValues = listOf("0", "90", "180", "270")
+    var selectedIndex by remember { mutableStateOf(-1) } // nothing selected yet
+    var expanded by remember { mutableStateOf(false) }
+
     var efficiency by remember { mutableStateOf("") }
 
     if (visible) {
@@ -276,8 +287,10 @@ fun AdditionalInputBottomSheet(
         )
 
         val sheetState = rememberModalBottomSheetState(
-            skipPartiallyExpanded = true
+            skipPartiallyExpanded = true,
         )
+
+
         CompositionLocalProvider(LocalDensity provides customDensity) {
             ModalBottomSheet(
                 onDismissRequest = onDismiss,
@@ -286,10 +299,19 @@ fun AdditionalInputBottomSheet(
                 contentColor = MaterialTheme.colorScheme.tertiary,
                 scrimColor = Color.Black.copy(alpha = 0.8f)
             ) {
-                Column(
+                Box(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .padding(16.dp),
+                        .heightIn(max = 600.dp)
+                        .padding(16.dp)
+                ) {
+
+                }
+                Column(
+                    modifier = Modifier
+//                        .fillMaxWidth()
+//                        .padding(16.dp)
+                        .fillMaxSize(),
                     horizontalAlignment = Alignment.CenterHorizontally
                 ) {
                     Text(
@@ -302,7 +324,7 @@ fun AdditionalInputBottomSheet(
                         onClick = {
                             areaState = "45"
                             angle = "30"
-                            direction = "1"
+//                            direction = "1"
                             efficiency = "85"
                         },
                         modifier = Modifier.align(Alignment.CenterHorizontally)
@@ -358,15 +380,43 @@ fun AdditionalInputBottomSheet(
 
                     Spacer(modifier = Modifier.height(10.dp))
 
-                    DecimalInputField(
-                        onValueChange = { direction = it },
-                        label = stringResource(id = R.string.direction_label),
-                        modifier = Modifier.fillMaxWidth(),
-                        value = direction,
-                        decimalFormatter = decimalFormatter
-                    )
+                    Box {
+                        Button(
+                            onClick = { expanded = true },
+                            modifier = Modifier.fillMaxWidth()
+                        ) {
+                            Text(
+                                text = if (selectedIndex >= 0)
+                                    "(${azimuthValues[selectedIndex]}°)"
+                                else
+                                    "Choose direction (°)"
+                            )
+
+                            Icon(
+                                imageVector = Icons.Default.ArrowDropDown,
+                                contentDescription = "Dropdown arrow"
+                            )
+                        }
+
+                        DropdownMenu(
+                            expanded = expanded,
+                            onDismissRequest = { expanded = false }
+                        ) {
+                            directions.forEachIndexed { index, dir ->
+                                DropdownMenuItem(
+                                    text = { Text("$dir (${azimuthValues[index]}°)") },
+                                    onClick = {
+                                        selectedIndex = index
+                                        direction = azimuthValues[index]
+                                        expanded = false
+                                    }
+                                )
+                            }
+                        }
+                    }
 
                     Spacer(modifier = Modifier.height(10.dp))
+
                     DecimalInputField(
                         onValueChange = { efficiency = it },
                         label = stringResource(id = R.string.efficiency_label),
@@ -400,7 +450,12 @@ fun AdditionalInputBottomSheet(
 
 
                                 if (slope != null) {
-                                    weatherViewModel.fetchRadiationInfo(lat, lon, slope)
+                                    weatherViewModel.fetchRadiationInfo(
+                                        lat,
+                                        lon,
+                                        slope,
+                                        direction.toInt()
+                                    )
                                 }
                                 navController.navigate("result")
 

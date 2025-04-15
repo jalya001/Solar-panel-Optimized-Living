@@ -165,7 +165,7 @@ fun BottomBar(
                     contentDescription = "Appearance"
                 )
             },
-            label = { Text(stringResource(id = R.string.appereance)) },
+            label = { Text(stringResource(id = R.string.appearance)) },
             selected = false,
             onClick = onAppearanceClicked,
             colors = NavigationBarItemDefaults.colors(

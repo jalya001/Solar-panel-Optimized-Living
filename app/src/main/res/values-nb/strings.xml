@@ -1,6 +1,5 @@
 <resources>
     <string name="app_name">Solcellepaneller</string>
-    <string name="Test">Appen er i norsk</string>
 
     <!--Home Screen-->
     <string name="home"> Hjemme</string>
@@ -8,7 +7,7 @@
     <string name="saved_locations"> Lagrede posisjoner</string>
     <string name="prices"> Strømpriser </string>
     <string name="help"> Hjelp</string>
-    <string name="appereance"> Utseende</string>
+    <string name="appearance"> Utseende</string>
     <string name="dark_mode">Mørkmodus </string>
     <string name="light_mode">Lysmodus </string>
     <string name="language">Bytt til Engelsk</string>
@@ -55,12 +54,21 @@
         Jo mer sol du får og jo høyere strømprisene er, desto mer kan du spare. Beregningen gir deg bedre grunnlag for å vurdere om investeringen i solceller er lønnsom for deg.
     </string>
 
+
     <string name="cabin_title"> Hytte</string>
     <string name="cabin_content">
         For hytter uten tilkobling til strømnettet kan solcellepaneler være en effektiv og bærekraftig løsning for å dekke grunnleggende strømbehov.
         Basert på beliggenhet og lokale solforhold kan du med solenergi få nok kapasitet til blant annet belysning, lading av elektroniske enheter, kjølebokser eller små vannpumper.
         Denne appen hjelper deg med å vurdere hvor mye solenergi hytta di potensielt kan produsere, og om det er tilstrekkelig for dine behov.
     </string>
+
+    <string name="support_title">Støtteordninger</string>
+    <string name="support_content">
+        Du kan være kvalifisert for økonomisk støtte fra Enova, en statlig aktør som gir tilskudd til energieffektive tiltak – inkludert solcelleanlegg.
+        Gjennom sitt program for boligeiere kan du få inntil 32 500 kr i støtte totalt, avhengig av anleggets størrelse og effektivitet.
+        For mer informasjon og søknad, gå til:
+</string>
+
 
     <!--Map Screen-->
     <string name="enter_address">Skriv inn adresse</string>
@@ -80,7 +88,7 @@
     <string name="area_label">Areal (m²)</string>
     <string name="draw_area">Tegn areal</string>
     <string name="slope_label">Vinkel (°)</string>
-    <string name="direction_label">Retning</string>
+    <string name="direction_label">Retning (°)</string>
     <string name="efficiency_label">Effektivitet (%)</string>
     <string name="coordinates_label">Koordinater (fra kart):</string>
     <string name="coordinates_unavailable">Ingen koordinater tilgjengelig</string>
@@ -98,9 +106,9 @@
 
     <!--Result Screen-->
     <string name="results"> Resultater </string>
-    <string name="angle"> 📐 Vinkel: </string>
-    <string name="direction"> 🧭 Retning: </string>
-    <string name="effectivity"> ⚡ Effektivitet: </string>
+    <string name="angle"> Vinkel: </string>
+    <string name="direction"> Retning: </string>
+    <string name="effectivity"> Effektivitet: </string>
     <string name="data_not_added"> Data ikke lagt til</string>
     <string name="get_data">Hent data </string>
     <string name="loading"> Laster inn data, vennligst vent… </string>
@@ -116,25 +124,28 @@
     <string name="address_not_found">Adresse ikke funnet, prøv igjen</string>
     <string name="follow_system">Følg systemtema</string>
     <string name="navigate_results">Gå til resultater</string>
+
     <string name="map_title">Kart</string>
     <string name="info_title">Informasjon</string>
 
     <string name="additional_input">Tilleggsinformasjon</string>
 
-    <string name="january">Januar</string>
-    <string name="february">Februar</string>
-    <string name="march">Mars</string>
-    <string name="april">April</string>
-    <string name="may">Mai</string>
-    <string name="june">Juni</string>
-    <string name="july">Juli</string>
-    <string name="august">August</string>
-    <string name="september">September</string>
-    <string name="october">Oktober</string>
-    <string name="november">November</string>
-    <string name="december">Desember</string>
+
+    <!-- Months -->
+    <string name="month_january">Januar</string>
+    <string name="month_february">Februar</string>
+    <string name="month_march">Mars</string>
+    <string name="month_april">April</string>
+    <string name="month_may">Mai</string>
+    <string name="month_june">Juni</string>
+    <string name="month_july">Juli</string>
+    <string name="month_august">August</string>
+    <string name="month_september">September</string>
+    <string name="month_october">Oktober</string>
+    <string name="month_november">November</string>
+    <string name="month_december">Desember</string>
+
     <string name="frost_mode">Frost</string>
     <string name="home_bottom_bar">Hjem</string>
-
 
 </resources>

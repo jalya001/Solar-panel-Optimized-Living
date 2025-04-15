@@ -61,3 +61,27 @@ fun ExpandInfoSection(title: String, content: String, initiallyExpanded: Boolean
         }
     }
 }
+
+@Composable
+fun ExpandInfoSectionContent(title: String, content: @Composable () -> Unit) {
+    var expanded by remember { mutableStateOf(false) }
+
+    Card(
+        onClick = { expanded = !expanded },
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(vertical = 8.dp),
+    )
+    {
+        Column(modifier = Modifier.padding(16.dp)) {
+
+            Text(
+                text = title, style = MaterialTheme.typography.titleMedium
+            )
+
+            if (expanded) {
+                content()
+            }
+        }
+    }
+}
