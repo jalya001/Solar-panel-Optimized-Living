@@ -98,11 +98,16 @@ dependencies {
     implementation ("com.google.maps.android:android-maps-utils:2.2.0")
 
     //Chart dependencies
-    implementation("co.yml:ycharts:2.1.0")
+    implementation(libs.ycharts)
 
-    //Icons
-    implementation("androidx.compose.material:material-icons-extended-android:1.7.8")
+    //Icons dependency
+    implementation(libs.androidx.material.icons.extended.android)
 
+    //Location dependencies
+    implementation(libs.play.services.location)
+    implementation(libs.kotlinx.coroutines.play.services)
+
+    //...
     implementation(libs.androidx.appcompat)
     implementation(libs.androidx.appcompat.resources)
     implementation("com.airbnb.android:lottie-compose:6.1.0")
