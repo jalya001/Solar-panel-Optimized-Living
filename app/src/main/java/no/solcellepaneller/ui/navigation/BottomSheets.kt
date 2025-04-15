@@ -426,7 +426,7 @@ fun AdditionalInputBottomSheet(
                                 text = if (selectedIndex >= 0)
                                     "(${azimuthValues[selectedIndex]}°)"
                                 else
-                                    "Choose direction (°)"
+                                    "Choose roof angle (°)"
                             )
 
                             Icon(
