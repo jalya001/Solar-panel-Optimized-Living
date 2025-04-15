@@ -234,6 +234,46 @@ fun ModeCard(
     }
 }
 
+@Composable
+fun SavingsMonth_Card(
+    label: String,
+    iconRes: Int,
+    onClick: () -> Unit,
+) {
+//    val border = if (selected) BorderStroke(2.dp, MaterialTheme.colorScheme.primary) else null
+
+    ElevatedCard(
+        modifier = Modifier
+            .width(160.dp)
+            .height(60.dp),
+        onClick = onClick,
+        elevation = CardDefaults.cardElevation(defaultElevation = 2.dp),
+    ) {
+        Box(
+            contentAlignment = Alignment.Center,
+            modifier = Modifier.fillMaxSize()
+        ) {
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth(),
+//                horizontalArrangement = Arrangement.spacedBy(10.dp),
+                horizontalArrangement = Arrangement.Center,
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Icon(
+                    painter = painterResource(id = iconRes),
+                    contentDescription = null,
+                    modifier = Modifier.size(30.dp)
+                )
+                Text(
+                    text = label,
+                    style = MaterialTheme.typography.bodyMedium,
+                )
+            }
+        }
+    }
+}
+
 
 @Composable
 fun IconTextRow(

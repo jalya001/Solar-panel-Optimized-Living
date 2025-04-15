@@ -44,6 +44,8 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.Density
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.launch
 import no.solcellepaneller.R
 import no.solcellepaneller.ui.font.FontScaleViewModel
 import no.solcellepaneller.ui.font.FontSizeState
@@ -55,13 +57,6 @@ import no.solcellepaneller.ui.reusables.DecimalInputField
 import no.solcellepaneller.ui.reusables.ExpandInfoSection
 import no.solcellepaneller.ui.reusables.ModeCard
 import no.solcellepaneller.ui.theme.ThemeMode
-import androidx.compose.ui.text.AnnotatedString
-import androidx.compose.ui.text.input.OffsetMapping
-import androidx.compose.ui.text.input.TransformedText
-import androidx.compose.ui.text.input.VisualTransformation
-import kotlinx.coroutines.Job
-import kotlinx.coroutines.launch
-import java.text.DecimalFormatSymbols
 import no.solcellepaneller.ui.theme.ThemeState
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -240,7 +235,7 @@ fun AppearanceBottomSheet(
                         Button(onClick = {
 
                             val didDecrease = fontScaleViewModel.decreaseFontScale()
-                            if (!didDecrease && snackBarJob?.isActive != true){
+                            if (!didDecrease && snackBarJob?.isActive != true) {
                                 snackBarJob = coroutineScope.launch {
                                     snackbarHostState.showSnackbar("Min font size reached")
                                 }
@@ -259,8 +254,8 @@ fun AppearanceBottomSheet(
                         Button(onClick = {
 
                             val didIncrease = fontScaleViewModel.increaseFontScale()
-                            if (!didIncrease && snackBarJob?.isActive != true){
-                                snackBarJob =  coroutineScope.launch {
+                            if (!didIncrease && snackBarJob?.isActive != true) {
+                                snackBarJob = coroutineScope.launch {
                                     snackbarHostState.showSnackbar("Max font size reached")
                                 }
                             }
@@ -358,7 +353,7 @@ fun AdditionalInputBottomSheet(
                         onClick = {
                             areaState = "45"
                             angle = "30"
-//                            direction = "1"
+                            direction = azimuthValues[1]
                             efficiency = "85"
                         },
                         modifier = Modifier.align(Alignment.CenterHorizontally)

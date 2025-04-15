@@ -3,13 +3,13 @@ package no.solcellepaneller.ui.result
 import android.util.Log
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.material3.Button
 import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.OutlinedButton
@@ -48,6 +48,7 @@ import no.solcellepaneller.ui.navigation.HelpBottomSheet
 import no.solcellepaneller.ui.navigation.TopBar
 import no.solcellepaneller.ui.reusables.DataCard
 import no.solcellepaneller.ui.reusables.IconTextRow
+import no.solcellepaneller.ui.reusables.SavingsMonth_Card
 import java.time.ZoneId
 import java.time.ZonedDateTime
 
@@ -104,6 +105,7 @@ fun ResultScreen(
 
     var showHelp by remember { mutableStateOf(false) }
     var showAppearance by remember { mutableStateOf(false) }
+    var showAllMonths by remember { mutableStateOf(false) }
 
     Scaffold(
         topBar = { TopBar(navController, text = stringResource(R.string.results)) },
@@ -116,7 +118,6 @@ fun ResultScreen(
         }
     ) { contentPadding ->
         Column {
-
             Column(
                 modifier = Modifier
                     .padding(contentPadding),
@@ -157,10 +158,28 @@ fun ResultScreen(
                     for (nums in 0..11) {
                         yearlyEnergyOutput += monthlyEnergyOutput[nums]
                     }
-                    Button(onClick = {
-                        navController.navigate("yearly_savings/${yearlyEnergyOutput}/$energyPrice")
-                    }) {
-                        Text("Show yearly savings")
+
+                    Row(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(vertical = 8.dp),
+                        horizontalArrangement = Arrangement.SpaceEvenly
+                    ) {
+                        SavingsMonth_Card(
+                            label = "Yearly savings",
+                            iconRes = R.drawable.baseline_attach_money_24,
+                            onClick = {
+                                navController.navigate("yearly_savings/${yearlyEnergyOutput}/$energyPrice")
+                            }
+                        )
+
+                        SavingsMonth_Card(
+                            label = if (showAllMonths) "Show One Month" else "Show All Months",
+                            iconRes = R.drawable.baseline_calendar_month_24,
+                            onClick = {
+                                showAllMonths = !showAllMonths
+                            }
+                        )
                     }
 
                     MonthDataDisplay(
@@ -173,7 +192,8 @@ fun ResultScreen(
                         monthlyPowerOutput = monthlyPowerOutput,
                         months = months,
                         navController = navController,
-                        energyPrice = energyPrice
+                        energyPrice = energyPrice,
+                        showAllMonths = showAllMonths
                     )
                 }
 
@@ -228,19 +248,16 @@ fun MonthDataDisplay(
     months: List<String>,
     navController: NavController,
     energyPrice: Double,
+    showAllMonths: Boolean,
 ) {
     var expanded by remember { mutableStateOf(false) }
     var selectedMonthIndex by remember { mutableStateOf(0) }
-    var showAllMonths by remember { mutableStateOf(false) }
+    var showAllMonths = showAllMonths
 
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
         modifier = Modifier.fillMaxHeight()
     ) {
-
-        Button(onClick = { showAllMonths = !showAllMonths }) {
-            Text(if (showAllMonths) "Show One Month" else "Show All Months")
-        }
 
         if (!showAllMonths) {
             OutlinedButton(onClick = { expanded = true }, modifier = Modifier.width(250.dp)) {
