@@ -16,10 +16,13 @@ import androidx.compose.material3.NavigationBarItemDefaults
 import androidx.compose.material3.OutlinedIconButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
@@ -141,7 +144,12 @@ fun BottomBar(
             },
             label = { Text("Info") },
             selected = false,
-            onClick = { navController.navigate("info_screen") },
+            //onClick = { navController.navigate("info_screen") },
+            onClick = {
+                if (navController.currentDestination?.route != "info_screen") {
+                    navController.navigate("info_screen")
+                }
+            },
             colors = NavigationBarItemDefaults.colors(
                 unselectedIconColor = MaterialTheme.colorScheme.tertiary,
                 unselectedTextColor = MaterialTheme.colorScheme.tertiary,
@@ -184,8 +192,10 @@ fun TopBar(
     onBackClick: (() -> Unit)? = null,
     backClick: Boolean = true,
     modifier: Modifier = Modifier,
-    height: Dp = 90.dp,
+//    height: Dp = 90.dp
 ) {
+    var backClicked by remember { mutableStateOf(false) }
+
     CenterAlignedTopAppBar(
         modifier = Modifier
             .fillMaxWidth(),
@@ -199,11 +209,23 @@ fun TopBar(
         },
         navigationIcon = {
             if (backClick) {
+//                OutlinedIconButton(
+//                    onClick = {
+//                        onBackClick?.invoke()
+//                        navController.popBackStack()
+//                    }, modifier = modifier.padding(top = 10.dp),
+//                    border = BorderStroke(2.dp, MaterialTheme.colorScheme.tertiary)
+//                )
                 OutlinedIconButton(
                     onClick = {
-                        onBackClick?.invoke()
-                        navController.popBackStack()
-                    }, modifier = modifier.padding(top = 10.dp),
+                        if (!backClicked) {
+                            backClicked = true
+                            onBackClick?.invoke()
+                            navController.popBackStack()
+                        }
+                    },
+                    enabled = !backClicked,
+                    modifier = modifier.padding(top = 10.dp),
                     border = BorderStroke(2.dp, MaterialTheme.colorScheme.tertiary)
                 ) {
                     Icon(

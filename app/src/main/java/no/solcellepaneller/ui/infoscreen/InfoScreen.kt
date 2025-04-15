@@ -40,7 +40,17 @@ fun InfoScreen(
         var showAppearance by remember { mutableStateOf(false) }
 
         Scaffold(
-            topBar = { TopBar(navController, text = stringResource(R.string.info_title)) },
+            //topBar = { TopBar(navController, text = stringResource(R.string.info_title)) },
+            topBar = {
+                var backClicked by remember { mutableStateOf(false) }
+                TopBar(
+                    navController = navController,
+                    text = stringResource(R.string.info_title),
+                    onBackClick = { backClicked = true },
+                    modifier = Modifier,
+                    backClick = !backClicked
+                )
+            },
             bottomBar = {
                 BottomBar(
                     onHelpClicked = { showHelp = true },
