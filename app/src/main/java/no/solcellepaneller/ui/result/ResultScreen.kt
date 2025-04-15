@@ -160,7 +160,7 @@ fun ResultScreen(
                     Button(onClick = {
                         navController.navigate("yearly_savings/${yearlyEnergyOutput}/$energyPrice")
                     }) {
-                        Text("Show yearly savings")
+                        Text("Show Yearly Savings")
                     }
 
                     MonthDataDisplay(
