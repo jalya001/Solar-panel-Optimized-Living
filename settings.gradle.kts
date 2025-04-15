@@ -19,6 +19,6 @@ dependencyResolutionManagement {
     }
 }
 
-rootProject.name = "Solcellepaneller"
+rootProject.name = "SolcellepanelerApp"
 include(":app")
  

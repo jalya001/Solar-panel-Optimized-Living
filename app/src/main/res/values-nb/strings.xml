@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">Solcellepaneller</string>
+    <string name="app_name">SolcellepanelerApp</string>
 
     <!--Home Screen-->
     <string name="home"> Hjemme</string>
