@@ -6,13 +6,10 @@ import android.content.Context
 import android.os.Build
 import android.os.LocaleList
 import androidx.appcompat.app.AppCompatDelegate
-import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.material3.Button
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ElevatedCard
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -54,10 +51,6 @@ object LanguageUtils {
 fun langSwitch() {
     val context = LocalContext.current
     ElevatedCard(
-        colors = CardDefaults.elevatedCardColors(
-            contentColor = MaterialTheme.colorScheme.tertiary,
-            containerColor = MaterialTheme.colorScheme.secondary
-        ),
         elevation = CardDefaults.cardElevation(
             defaultElevation = 2.dp
         ),
@@ -72,7 +65,8 @@ fun langSwitch() {
         Text(
             stringResource(id = R.string.language),
             modifier = Modifier
-                .padding(16.dp).align(Alignment.CenterHorizontally),
+                .padding(16.dp)
+                .align(Alignment.CenterHorizontally),
         )
     }
 }

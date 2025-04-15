@@ -75,7 +75,8 @@ fun HelpBottomSheet(
             ) {
                 Text(
                     stringResource(id = R.string.help),
-                    style = MaterialTheme.typography.titleLarge
+                    style = MaterialTheme.typography.titleLarge,
+                    fontWeight = Bold
                 )
 
                 LazyColumn(
@@ -146,7 +147,8 @@ fun AppearanceBottomSheet(
                 ) {
                     Text(
                         stringResource(id = R.string.appereance),
-                        style = MaterialTheme.typography.titleLarge
+                        style = MaterialTheme.typography.titleLarge,
+                        fontWeight = Bold
                     )
 
                     var followSystem by remember { mutableStateOf(ThemeState.themeMode == ThemeMode.SYSTEM) }
@@ -159,6 +161,7 @@ fun AppearanceBottomSheet(
                     ) {
                         ModeCard(
                             label = stringResource(id = R.string.light_mode),
+                            iconRes = R.drawable.light_mode_24px,
                             selected = ThemeState.themeMode == ThemeMode.LIGHT && !followSystem,
                             onClick = {
                                 followSystem = false
@@ -168,6 +171,7 @@ fun AppearanceBottomSheet(
 
                         ModeCard(
                             label = stringResource(id = R.string.dark_mode),
+                            iconRes = R.drawable.dark_mode_24px,
                             selected = ThemeState.themeMode == ThemeMode.DARK && !followSystem,
                             onClick = {
                                 followSystem = false
@@ -177,6 +181,7 @@ fun AppearanceBottomSheet(
 
                         ModeCard(
                             label = stringResource(id = R.string.frost_mode),
+                            iconRes = R.drawable.outline_mode_cool_24,
                             selected = ThemeState.themeMode == ThemeMode.FROST && !followSystem,
                             onClick = {
                                 followSystem = false

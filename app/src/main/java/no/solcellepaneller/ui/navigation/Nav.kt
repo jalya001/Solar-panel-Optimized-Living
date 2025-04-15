@@ -2,30 +2,23 @@ package no.solcellepaneller.ui.navigation
 
 
 import androidx.compose.foundation.BorderStroke
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
-import androidx.compose.material.icons.filled.Build
-import androidx.compose.material.icons.filled.Home
-import androidx.compose.material.icons.filled.Info
-import androidx.compose.material.icons.filled.Settings
+import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.NavigationBar
 import androidx.compose.material3.NavigationBarItem
+import androidx.compose.material3.NavigationBarItemDefaults
 import androidx.compose.material3.OutlinedIconButton
 import androidx.compose.material3.Text
-import androidx.compose.material3.TopAppBar
-import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.font.FontWeight.Companion.Bold
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
@@ -129,34 +122,57 @@ fun BottomBar(
     onAppearanceClicked: () -> Unit,
     navController: NavController,
 ) {
-    NavigationBar(
-        containerColor = MaterialTheme.colorScheme.secondary,
-        contentColor = MaterialTheme.colorScheme.tertiary,
-    ) {
-
+    NavigationBar {
         NavigationBarItem(
-            icon = { Icon(Icons.Filled.Build, contentDescription = "Help") },
+            icon = { Icon(painterResource(R.drawable.help_24px), contentDescription = "Help") },
             label = { Text(stringResource(id = R.string.help)) },
             selected = false,
-            onClick = onHelpClicked
+            onClick = onHelpClicked,
+            colors = NavigationBarItemDefaults.colors(
+                unselectedIconColor = MaterialTheme.colorScheme.tertiary,
+                unselectedTextColor = MaterialTheme.colorScheme.tertiary,
+            )
         )
         NavigationBarItem(
-            icon = { Icon(Icons.Filled.Info, contentDescription = "Information") },
+            icon = {
+                Icon(
+                    painterResource(R.drawable.baseline_info_outline_24),
+                    contentDescription = "Information"
+                )
+            },
             label = { Text("Info") },
             selected = false,
-            onClick = { navController.navigate("info_screen") }
+            onClick = { navController.navigate("info_screen") },
+            colors = NavigationBarItemDefaults.colors(
+                unselectedIconColor = MaterialTheme.colorScheme.tertiary,
+                unselectedTextColor = MaterialTheme.colorScheme.tertiary,
+            )
         )
         NavigationBarItem(//taktisk plassering innit, høyre tommel
-            icon = { Icon(Icons.Filled.Home, contentDescription = "Home") },
+            icon = { Icon(painterResource(R.drawable.home_24px), contentDescription = "Home") },
             label = { Text(stringResource(id = R.string.home_bottom_bar)) },
             selected = false,
-            onClick = { navController.navigate("home") }
+            onClick = { navController.navigate("home") },
+            colors = NavigationBarItemDefaults.colors(
+                unselectedIconColor = MaterialTheme.colorScheme.tertiary,
+                unselectedTextColor = MaterialTheme.colorScheme.tertiary,
+            )
         )
         NavigationBarItem(
-            icon = { Icon(Icons.Filled.Settings, contentDescription = "Appearance") },
+//            icon = { Icon(Icons.Filled.Settings, contentDescription = "Appearance") },
+            icon = {
+                Icon(
+                    painterResource(R.drawable.palette_24px),
+                    contentDescription = "Appearance"
+                )
+            },
             label = { Text(stringResource(id = R.string.appereance)) },
             selected = false,
-            onClick = onAppearanceClicked
+            onClick = onAppearanceClicked,
+            colors = NavigationBarItemDefaults.colors(
+                unselectedIconColor = MaterialTheme.colorScheme.tertiary,
+                unselectedTextColor = MaterialTheme.colorScheme.tertiary,
+            )
         )
     }
 }
@@ -165,55 +181,39 @@ fun BottomBar(
 @Composable
 fun TopBar(
     navController: NavController,
-    text: String = "",
+    text: String,
     onBackClick: (() -> Unit)? = null,
     backClick: Boolean = true,
     modifier: Modifier = Modifier,
     height: Dp = 90.dp,
 ) {
-    Box(modifier = modifier.fillMaxWidth()) {
-        TopAppBar(
-            modifier = Modifier
-                .fillMaxWidth()
-                .height(height),
-            colors = TopAppBarDefaults.topAppBarColors(
-                containerColor = MaterialTheme.colorScheme.secondary,
-                titleContentColor = MaterialTheme.colorScheme.tertiary,
-                navigationIconContentColor = MaterialTheme.colorScheme.tertiary
-            ),
-            title = {},
-            navigationIcon = {
-                if (backClick) {
-                    OutlinedIconButton(
-                        onClick = {
-                            onBackClick?.invoke()
-                            navController.popBackStack()
-                        }, modifier = modifier.padding(top = 10.dp),
-                        border = BorderStroke(2.dp, MaterialTheme.colorScheme.tertiary)
-                    ) {
-                        Icon(
-                            Icons.AutoMirrored.Filled.ArrowBack,
-                            contentDescription = "Go back"
-                        )
-                    }
-                }
-            }
-        )
-
-        Box(
-            modifier = Modifier
-                .fillMaxWidth()
-                .height(height)
-                .padding(top = 20.dp),
-            contentAlignment = Alignment.Center
-        ) {
+    CenterAlignedTopAppBar(
+        modifier = Modifier
+            .fillMaxWidth(),
+//            .height(height)
+        title = {
             Text(
                 text = text,
-                color = MaterialTheme.colorScheme.tertiary,
-                style = MaterialTheme.typography.titleLarge,
-                fontWeight = Bold
+                style = MaterialTheme.typography.displaySmall,
+                modifier = Modifier.padding(top = 15.dp)
             )
+        },
+        navigationIcon = {
+            if (backClick) {
+                OutlinedIconButton(
+                    onClick = {
+                        onBackClick?.invoke()
+                        navController.popBackStack()
+                    }, modifier = modifier.padding(top = 10.dp),
+                    border = BorderStroke(2.dp, MaterialTheme.colorScheme.tertiary)
+                ) {
+                    Icon(
+                        Icons.AutoMirrored.Filled.ArrowBack,
+                        contentDescription = "Go back"
+                    )
+                }
+            }
         }
-    }
+    )
 }
 

@@ -41,7 +41,7 @@ fun ShowMonthlySavings(
     var showAppearance by remember { mutableStateOf(false) }
 
     Scaffold(
-        topBar = { TopBar(navController) },
+        topBar = { TopBar(navController, "Savings Monthly") },
         bottomBar = {
             BottomBar(
                 onHelpClicked = { showHelp = true },
@@ -96,7 +96,7 @@ fun ShowYearlySavings(
     var showAppearance by remember { mutableStateOf(false) }
 
     Scaffold(
-        topBar = { TopBar(navController) },
+        topBar = { TopBar(navController, "Savings Yearly") },
         bottomBar = {
             BottomBar(
                 onHelpClicked = { showHelp = true },

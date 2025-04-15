@@ -10,7 +10,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.material3.Button
-import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ElevatedCard
 import androidx.compose.material3.Icon
@@ -19,7 +18,9 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.Dp
@@ -32,17 +33,12 @@ import no.solcellepaneller.R
 fun MyCard(
     text: String = "",
     modifier: Modifier = Modifier,
-//    size: DpSize = DpSize(width = 240.dp, height = 100.dp),
     width: Dp = 240.dp,
-    style: String = "",
+    style: TextStyle,
     elevation: Dp = 3.dp,
     content: (@Composable () -> Unit)? = null,
 ) {
     ElevatedCard(
-        colors = CardDefaults.elevatedCardColors(
-            contentColor = MaterialTheme.colorScheme.tertiary,
-            containerColor = MaterialTheme.colorScheme.secondary
-        ),
         elevation = CardDefaults.cardElevation(defaultElevation = elevation),
         modifier = modifier
             .padding(8.dp)
@@ -55,21 +51,12 @@ fun MyCard(
             if (content != null) {
                 content()
             } else {
-                if (style == "Large") {
-                    Text(
-                        text = text,
-                        modifier = Modifier.padding(16.dp),
-                        textAlign = TextAlign.Center,
-                        style = MaterialTheme.typography.titleLarge
-                    )
-                } else {
-                    Text(
-                        text = text,
-                        modifier = Modifier.padding(16.dp),
-                        textAlign = TextAlign.Center,
-                        style = MaterialTheme.typography.bodySmall
-                    )
-                }
+                Text(
+                    text = text,
+                    modifier = Modifier.padding(16.dp),
+                    textAlign = TextAlign.Center,
+                    style = style
+                )
             }
         }
     }
@@ -82,14 +69,11 @@ fun MyNavCard(
     navController: NavController,
     modifier: Modifier = Modifier,
     size: DpSize = DpSize(width = 240.dp, height = 100.dp),
-    style: String = "",
+    style: TextStyle,
     content: (@Composable () -> Unit)? = null,
+    color: Color,
 ) {
     ElevatedCard(
-        colors = CardDefaults.elevatedCardColors(
-            contentColor = MaterialTheme.colorScheme.tertiary,
-            containerColor = MaterialTheme.colorScheme.secondary
-        ),
         elevation = CardDefaults.cardElevation(defaultElevation = 3.dp),
         modifier = modifier
             .padding(8.dp)
@@ -97,28 +81,30 @@ fun MyNavCard(
         onClick = { navController.navigate(route) },
 
         ) {
-        Box(
-            modifier = Modifier.fillMaxSize(),
-            contentAlignment = Alignment.Center
-        ) {
-            if (content != null) {
-                content()
-            } else {
-                if (style == "Large") {
-                    Text(
-                        text = text,
-                        modifier = Modifier.padding(16.dp),
-                        textAlign = TextAlign.Center,
-                        style = MaterialTheme.typography.titleLarge
-                    )
-                } else {
-                    Text(
-                        text = text,
-                        modifier = Modifier.padding(16.dp),
-                        textAlign = TextAlign.Center,
-                        style = MaterialTheme.typography.bodySmall
-                    )
+        Box(modifier = Modifier.fillMaxSize()) {
+
+            content?.let {
+                Box(
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .padding(12.dp),
+                    contentAlignment = Alignment.BottomEnd
+                ) {
+                    it()
                 }
+            }
+
+            Box(
+                modifier = Modifier.fillMaxSize(),
+                contentAlignment = Alignment.Center
+            ) {
+                Text(
+                    text = text,
+                    textAlign = TextAlign.Center,
+                    style = style,
+                    modifier = Modifier.padding(16.dp),
+                    color = color
+                )
             }
         }
     }
@@ -143,104 +129,55 @@ fun DataCard(
     MyCard(
         modifier = cardModifier,
         elevation = 4.dp,
+        style = MaterialTheme.typography.bodyLarge,
     ) {
         Column(
-            modifier = Modifier.padding(16.dp), verticalArrangement = Arrangement.spacedBy(4.dp)
+            modifier = Modifier.padding(16.dp), verticalArrangement = Arrangement.spacedBy(6.dp)
         ) {
-            Row {
-                Icon(
-                    painter = painterResource(id = R.drawable.baseline_calendar_month_24),
-                    modifier = modifier.size(30.dp),
-                    contentDescription = null
-                )
-                Text(
-                    "$month",
-                    fontWeight = FontWeight.Bold,
-                    style = MaterialTheme.typography.titleLarge
+            if (month != "") {
+                IconTextRow(
+                    iconRes = R.drawable.baseline_calendar_month_24,
+                    text = "$month",
+                    textStyle = MaterialTheme.typography.titleLarge,
+                    fontWeight = FontWeight.Bold
                 )
             }
 
-            Row {
-                Icon(
-                    painter = painterResource(id = R.drawable.rounded_nest_sunblock_24),
-                    modifier = modifier.size(30.dp),
-                    contentDescription = null
-                )
-                Text(
-                    "Global Radiation: %.2f".format(radiation),
-                    style = MaterialTheme.typography.bodyLarge
-                )
-            }
-            Row {
-                Icon(
-                    painter = painterResource(id = R.drawable.baseline_cloud_24),
-                    modifier = modifier.size(30.dp),
-                    contentDescription = null
-                )
-                Text(
-                    "Avg Cloud Cover: %.2f".format(cloud / 8),
-                    style = MaterialTheme.typography.bodyLarge
-                )
-            }
-            Row {
-                Icon(
-                    painter = painterResource(id = R.drawable.outline_mode_cool_24),
-                    modifier = modifier.size(30.dp),
-                    contentDescription = null
-                )
-                Text(
-                    "Avg Snow Cover: %.2f".format(snow / 4),
-                    style = MaterialTheme.typography.bodyLarge
-                )
-            }
-            Row {
-                Icon(
-                    painter = painterResource(id = R.drawable.baseline_device_thermostat_24),
-                    modifier = modifier.size(30.dp),
-                    contentDescription = null
-                )
-                Text(
-                    "Temp Factor: %.2f °C".format(1 + (-0.44) * (temp - 25)),
-                    style = MaterialTheme.typography.bodyLarge
-                )
-            }
-            Row {
-                Icon(
-                    painter = painterResource(id = R.drawable.rounded_nest_sunblock_24),
-                    modifier = modifier.size(30.dp),
-                    contentDescription = null
-                )
-                Text(
-                    "Adj. Radiation: %.2f kWh/m²".format(adjusted),
-                    style = MaterialTheme.typography.bodyLarge
-                )
-            }
-            Row {
-                Icon(
-                    painter = painterResource(id = R.drawable.baseline_battery_6_bar_24),
-                    modifier = modifier.size(30.dp),
-                    contentDescription = null
-                )
-                Text(
-                    "Estimated Energy: %.2f kWh".format(energy),
-                    fontWeight = FontWeight.Bold,
-                    style = MaterialTheme.typography.bodyLarge
-                )
-            }
-            Row {
-                Icon(
-                    painter = painterResource(id = R.drawable.baseline_power_24),
-                    modifier = modifier.size(30.dp),
-                    contentDescription = null
-                )
-                Text(
-                    "Power/hour: %.2f kW".format(power),
-                    style = MaterialTheme.typography.bodyLarge
-                )
-            }
+            IconTextRow(
+                iconRes = R.drawable.rounded_nest_sunblock_24,
+                text = "Global Radiation: %.2f".format(radiation)
+            )
 
+            IconTextRow(
+                iconRes = R.drawable.baseline_cloud_24,
+                text = "Avg Cloud Cover: %.2f".format(cloud / 8)
+            )
 
+            IconTextRow(
+                iconRes = R.drawable.outline_mode_cool_24,
+                text = "Avg Snow Cover: %.2f".format(snow / 4)
+            )
 
+            IconTextRow(
+                iconRes = R.drawable.baseline_device_thermostat_24,
+                text = "Temp Factor: %.2f °C".format(1 + (-0.44) * (temp - 25))
+            )
+
+            IconTextRow(
+                iconRes = R.drawable.rounded_nest_sunblock_24,
+                text = "Adj. Radiation: %.2f kWh/m²".format(adjusted)
+            )
+
+            IconTextRow(
+                iconRes = R.drawable.baseline_battery_6_bar_24,
+                text = "Estimated Energy: %.2f kWh".format(energy),
+                fontWeight = FontWeight.Bold
+            )
+
+            IconTextRow(
+                iconRes = R.drawable.baseline_power_24,
+                text = "Power/hour: %.2f kW".format(power)
+            )
 
 
             Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
@@ -248,10 +185,6 @@ fun DataCard(
                     onClick = {
                         navController.navigate("savings")
                     },
-                    colors = ButtonDefaults.buttonColors(
-                        containerColor = MaterialTheme.colorScheme.tertiary,
-                        contentColor = MaterialTheme.colorScheme.background
-                    ),
                     modifier = modifier.weight(1f)
                 ) {
                     Text("Show savings $month")
@@ -260,10 +193,6 @@ fun DataCard(
                     onClick = {
                         navController.navigate("produce/${energy}")
                     },
-                    colors = ButtonDefaults.buttonColors(
-                        containerColor = MaterialTheme.colorScheme.tertiary,
-                        contentColor = MaterialTheme.colorScheme.background
-                    ),
                     modifier = modifier.weight(1f)
                 ) {
                     Text("Show available energy")
@@ -276,6 +205,7 @@ fun DataCard(
 @Composable
 fun ModeCard(
     label: String,
+    iconRes: Int,
     selected: Boolean,
     onClick: () -> Unit,
 ) {
@@ -287,21 +217,57 @@ fun ModeCard(
             .padding(4.dp),
         onClick = onClick,
         elevation = CardDefaults.cardElevation(defaultElevation = 2.dp),
-        colors = CardDefaults.elevatedCardColors(
-            containerColor = MaterialTheme.colorScheme.secondary,
-            contentColor = MaterialTheme.colorScheme.tertiary
-        )
     ) {
         Box(
             contentAlignment = Alignment.Center,
             modifier = Modifier.fillMaxSize()
         ) {
-            Text(
-                text = label,
-                style = MaterialTheme.typography.bodyMedium,
-                textAlign = TextAlign.Center
-            )
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(vertical = 2.dp),
+                horizontalArrangement = Arrangement.spacedBy(10.dp),
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Icon(
+                    painter = painterResource(id = iconRes),
+                    contentDescription = null,
+                    modifier = Modifier.size(30.dp)
+                )
+                Text(
+                    text = label,
+                    style = MaterialTheme.typography.bodyMedium,
+                )
+            }
         }
     }
 }
 
+
+@Composable
+fun IconTextRow(
+    iconRes: Int,
+    text: String,
+    modifier: Modifier = Modifier,
+    textStyle: TextStyle = MaterialTheme.typography.bodyLarge,
+    fontWeight: FontWeight? = null,
+) {
+    Row(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(vertical = 2.dp),
+        horizontalArrangement = Arrangement.spacedBy(10.dp),
+        verticalAlignment = Alignment.CenterVertically
+    ) {
+        Icon(
+            painter = painterResource(id = iconRes),
+            contentDescription = null,
+            modifier = modifier.size(30.dp)
+        )
+        Text(
+            text = text,
+            style = textStyle,
+            fontWeight = fontWeight
+        )
+    }
+}

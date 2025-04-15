@@ -1,29 +1,23 @@
 package no.solcellepaneller.ui.reusables
 
 import androidx.compose.foundation.text.KeyboardOptions
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
-import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextFieldColors
-import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.OffsetMapping
 import androidx.compose.ui.text.input.TransformedText
 import androidx.compose.ui.text.input.VisualTransformation
 import java.text.DecimalFormatSymbols
-import kotlin.text.iterator
 
 
 //hentet fra https://dev.to/tuvakov/decimal-input-formatting-with-jetpack-composes-visualtransformation-110n
 //Spør veilder hvordan man kildefører
 
 class DecimalFormatter(
-    symbols: DecimalFormatSymbols = DecimalFormatSymbols.getInstance()
+    symbols: DecimalFormatSymbols = DecimalFormatSymbols.getInstance(),
 ) {
 
     private val thousandsSeparator = symbols.groupingSeparator
@@ -47,7 +41,8 @@ class DecimalFormatter(
                 hasDecimalSep = true
             }
         }
-        return sb.toString()    }
+        return sb.toString()
+    }
 
     fun formatForVisual(input: String): String {
 
@@ -66,7 +61,7 @@ class DecimalFormatter(
 }
 
 class DecimalInputVisualTransformation(
-    private val decimalFormatter: DecimalFormatter
+    private val decimalFormatter: DecimalFormatter,
 ) : VisualTransformation {
 
     override fun filter(text: AnnotatedString): TransformedText {
@@ -103,7 +98,7 @@ fun DecimalInputField(
     decimalFormatter: DecimalFormatter,
     value: String,
     onValueChange: (String) -> Unit,
-    label: String
+    label: String,
 ) {
     OutlinedTextField(
         label = { Text(text = label) },
@@ -117,13 +112,5 @@ fun DecimalInputField(
             keyboardType = KeyboardType.Decimal,
         ),
         visualTransformation = DecimalInputVisualTransformation(decimalFormatter),
-        colors = OutlinedTextFieldDefaults.colors(
-            unfocusedContainerColor = MaterialTheme.colorScheme.background,
-            unfocusedBorderColor = MaterialTheme.colorScheme.tertiary,
-            focusedBorderColor = MaterialTheme.colorScheme.tertiary,
-            focusedLabelColor = MaterialTheme.colorScheme.tertiary,
-            cursorColor = MaterialTheme.colorScheme.tertiary,
-            unfocusedTextColor = MaterialTheme.colorScheme.tertiary
-        )
     )
 }

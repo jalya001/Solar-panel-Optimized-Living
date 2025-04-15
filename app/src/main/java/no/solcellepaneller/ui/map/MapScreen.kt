@@ -17,9 +17,10 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonColors
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
-import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.CardColors
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
@@ -236,8 +237,11 @@ fun DisplayScreen(
         Card(
             modifier = Modifier.fillMaxWidth(),
             shape = RectangleShape,
-            colors = CardDefaults.cardColors(
-                containerColor = MaterialTheme.colorScheme.secondary
+            colors = CardColors(
+                containerColor = MaterialTheme.colorScheme.background,
+                contentColor = MaterialTheme.colorScheme.background,
+                disabledContainerColor = MaterialTheme.colorScheme.background,
+                disabledContentColor = MaterialTheme.colorScheme.background,
             )
         ) {
             Row(
@@ -255,13 +259,13 @@ fun DisplayScreen(
                     viewModel = viewModel,
                     label = stringResource(id = R.string.enter_address),
                     colors = OutlinedTextFieldDefaults.colors(
-                        unfocusedContainerColor = MaterialTheme.colorScheme.secondary,
+                        unfocusedContainerColor = MaterialTheme.colorScheme.background,
                         focusedBorderColor = MaterialTheme.colorScheme.tertiary,
                         focusedContainerColor = MaterialTheme.colorScheme.background,
                         focusedLabelColor = MaterialTheme.colorScheme.tertiary,
                         cursorColor = MaterialTheme.colorScheme.tertiary,
-                        unfocusedTextColor = MaterialTheme.colorScheme.tertiary,
-                        unfocusedBorderColor = MaterialTheme.colorScheme.tertiary,
+                        unfocusedTextColor = MaterialTheme.colorScheme.primary,
+                        unfocusedBorderColor = MaterialTheme.colorScheme.surfaceContainer,
                     ),
 //                    keyboardOptions = KeyboardOptions.Default.copy(imeAction = ImeAction.Done),
 //                    keyboardActions = KeyboardActions(
@@ -279,7 +283,13 @@ fun DisplayScreen(
                     shape = RectangleShape,
                     onClick = {
                         viewModel.fetchCoordinates(address)
-                    }
+                    },
+                    colors = ButtonColors(
+                        containerColor = MaterialTheme.colorScheme.background,
+                        contentColor = MaterialTheme.colorScheme.primary,
+                        disabledContainerColor = MaterialTheme.colorScheme.primary,
+                        disabledContentColor = MaterialTheme.colorScheme.primary,
+                    )
                 ) {
                     Icon(
                         imageVector = Icons.Filled.Search,

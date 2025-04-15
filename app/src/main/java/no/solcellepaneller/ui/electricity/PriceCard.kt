@@ -29,7 +29,7 @@ import no.solcellepaneller.ui.theme.ThemeState
 fun PriceCard(
     currentPrice: ElectricityPrice?,
     highestPrice: ElectricityPrice?,
-    lowestPrice: ElectricityPrice?
+    lowestPrice: ElectricityPrice?,
 ) {
     Card(
         modifier = Modifier
@@ -73,7 +73,7 @@ fun PriceRow(
     icon: ImageVector,
     label: String,
     price: Double,
-    time: String
+    time: String,
 ) {
     Row(verticalAlignment = Alignment.CenterVertically) {
         Icon(

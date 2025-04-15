@@ -82,20 +82,20 @@ dependencies {
     implementation(libs.kotlin.stdlib)
     //Project independencies
 
-    implementation ("io.ktor:ktor-client-core:2.3.6")
+    implementation("io.ktor:ktor-client-core:2.3.6")
     implementation("io.ktor:ktor-client-cio:2.3.6")
     implementation("io.ktor:ktor-client-okhttp:2.3.6")
     implementation("io.ktor:ktor-client-content-negotiation:2.3.6")
     implementation("io.ktor:ktor-serialization-kotlinx-json:2.3.6")
 
 
-    implementation ("androidx.lifecycle:lifecycle-viewmodel-compose:2.8.7")
-    implementation ("androidx.navigation:navigation-compose:2.8.9")
+    implementation("androidx.lifecycle:lifecycle-viewmodel-compose:2.8.7")
+    implementation("androidx.navigation:navigation-compose:2.8.9")
 
     //mapdependencies
     implementation("com.google.maps.android:maps-compose:4.2.0")
     implementation("com.google.android.gms:play-services-maps:18.2.0")
-    implementation ("com.google.maps.android:android-maps-utils:2.2.0")
+    implementation("com.google.maps.android:android-maps-utils:2.2.0")
 
     //Chart dependencies
     implementation("co.yml:ycharts:2.1.0")
@@ -106,4 +106,7 @@ dependencies {
     implementation(libs.androidx.appcompat)
     implementation(libs.androidx.appcompat.resources)
     implementation("com.airbnb.android:lottie-compose:6.1.0")
+
+
+    implementation("androidx.compose.ui:ui-text-google-fonts:1.7.8")
 }

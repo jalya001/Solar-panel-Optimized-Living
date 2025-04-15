@@ -38,6 +38,7 @@ import no.solcellepaneller.ui.theme.ThemeMode
 import no.solcellepaneller.ui.theme.ThemeState
 import java.time.ZonedDateTime
 
+
 @Composable
 fun ElectricityPriceChart(prices: List<ElectricityPrice>) {
     var chartType by remember { mutableStateOf(ChartType.LINE) }
@@ -47,7 +48,8 @@ fun ElectricityPriceChart(prices: List<ElectricityPrice>) {
         Point(hour.toFloat(), price.NOK_per_kWh.toFloat())
     }
 
-    val barColor = if (ThemeState.themeMode == ThemeMode.DARK) MaterialTheme.colorScheme.tertiary else MaterialTheme.colorScheme.primary
+    val barColor =
+        if (ThemeState.themeMode == ThemeMode.DARK) MaterialTheme.colorScheme.tertiary else MaterialTheme.colorScheme.primary
 
     val bars = prices.map { price ->
         val hour = ZonedDateTime.parse(price.time_start).hour
@@ -87,7 +89,7 @@ fun ElectricityPriceChart(prices: List<ElectricityPrice>) {
     Button(
         onClick = {
             chartType = if (chartType == ChartType.LINE) ChartType.BAR else ChartType.LINE
-            },
+        },
         modifier = Modifier.padding(8.dp)
     ) {
         Text(text = if (chartType == ChartType.LINE) "Vis søylediagram" else "Vis linjediagram")
@@ -106,9 +108,9 @@ fun ElectricityPriceChart(prices: List<ElectricityPrice>) {
                         lines = listOf(
                             Line(
                                 dataPoints = points,
-                                LineStyle(color = if (ThemeState.themeMode == ThemeMode.DARK) MaterialTheme.colorScheme.tertiary else MaterialTheme.colorScheme.primary,),
-                                IntersectionPoint(color = if (ThemeState.themeMode == ThemeMode.DARK) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.tertiary,),
-                                SelectionHighlightPoint(color = if (ThemeState.themeMode == ThemeMode.DARK) MaterialTheme.colorScheme.tertiary else MaterialTheme.colorScheme.primary,),
+                                LineStyle(color = if (ThemeState.themeMode == ThemeMode.DARK) MaterialTheme.colorScheme.tertiary else MaterialTheme.colorScheme.primary),
+                                IntersectionPoint(color = if (ThemeState.themeMode == ThemeMode.DARK) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.tertiary),
+                                SelectionHighlightPoint(color = if (ThemeState.themeMode == ThemeMode.DARK) MaterialTheme.colorScheme.tertiary else MaterialTheme.colorScheme.primary),
                                 ShadowUnderLine(
                                     alpha = 0.5f,
                                     brush = Brush.verticalGradient(

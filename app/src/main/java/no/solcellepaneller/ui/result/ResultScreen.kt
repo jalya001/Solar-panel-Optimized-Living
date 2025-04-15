@@ -9,10 +9,8 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material3.Button
-import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -47,6 +45,7 @@ import no.solcellepaneller.ui.navigation.BottomBar
 import no.solcellepaneller.ui.navigation.HelpBottomSheet
 import no.solcellepaneller.ui.navigation.TopBar
 import no.solcellepaneller.ui.reusables.DataCard
+import no.solcellepaneller.ui.reusables.IconTextRow
 import java.time.ZoneId
 import java.time.ZonedDateTime
 
@@ -230,9 +229,9 @@ fun MonthDataDisplay(
 
         if (!showAllMonths) {
             Button(onClick = { expanded = true }) {
-                Text(
-                    text = "📅 ${months[selectedMonthIndex]}",
-                    color = MaterialTheme.colorScheme.tertiary
+                IconTextRow(
+                    R.drawable.baseline_calendar_month_24,
+                    text = "Måned: ${months[selectedMonthIndex]}"
                 )
             }
             DropdownMenu(
@@ -250,7 +249,8 @@ fun MonthDataDisplay(
                 }
             }
             DataCard(
-                month = months[selectedMonthIndex],
+                month = "",
+//                month = months[selectedMonthIndex],
                 radiation = radiationList[selectedMonthIndex],
                 cloud = cloudCoverData[selectedMonthIndex],
                 snow = snowCoverData[selectedMonthIndex],
@@ -262,10 +262,7 @@ fun MonthDataDisplay(
             )
 
             Column {
-
                 SunAnimation(monthlyEnergyOutput[selectedMonthIndex])
-
-
             }
 
         } else {
@@ -273,12 +270,8 @@ fun MonthDataDisplay(
                 onClick = {
                     navController.navigate("savings")
                 },
-                colors = ButtonDefaults.buttonColors(
-                    containerColor = MaterialTheme.colorScheme.tertiary,
-                    contentColor = MaterialTheme.colorScheme.background
-                )
 
-            ) {
+                ) {
                 Text("Show yearly savings")
             }
             LazyColumn(

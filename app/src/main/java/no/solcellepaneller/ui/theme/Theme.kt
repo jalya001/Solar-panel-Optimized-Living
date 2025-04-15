@@ -6,6 +6,7 @@ import androidx.compose.material3.Typography
 import androidx.compose.material3.darkColorScheme
 import androidx.compose.material3.lightColorScheme
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.Immutable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
@@ -14,57 +15,9 @@ import androidx.compose.ui.platform.LocalDensity
 
 // Må legge til 0xFF før HExveerdi
 
-val orangeColor = Color(0xFFf3a712) // Må finne bedre navn
-
-// DARK Mode
-val darkPrimary = Color(0xFF0c1618)
-val darkSecondary = Color(0xFF111e21)
-
 // FROST Mode
 val frostPrimary = Color(0xFFc5e3e4)
 val frostSecondary = Color(0xFFa6d5d6)
-
-// LIGHT Mode
-val lightPrimary = Color.White
-val lightSecondary = Color(0xFFF0F0F0)
-
-
-//private val DarkColorScheme = darkColorScheme(
-//    primary = darkSecondary,
-//    secondary = darkSecondary,
-//    tertiary = orangeColor,
-//    background = darkPrimary,
-//    onPrimary = orangeColor,
-//    onSurfaceVariant = orangeColor
-//
-//    //  surface = Color(0xFFFFFBFE),
-//    //    onSecondary = Color.White,
-////    onTertiary = Color.White,
-////    onBackground = Color.White,
-////    onSurface = Color.White,
-//)
-//
-//private val LightColorScheme = lightColorScheme(
-////    primary = lightSecondary,
-////    secondary = lightSecondary,
-////    tertiary = darkPrimary,
-////    background = lightPrimary,
-////    onPrimary = darkPrimary,
-////    onSurfaceVariant = darkPrimary
-//
-//    primary = Color(0xFFEFEFEF),
-//    secondary = Color(0xFFDADADA),
-//    tertiary = Color(0xFF333333),
-//    background = Color(0xFFFFFFFF),
-//    onPrimary = Color(0xFF000000),
-//    onSurfaceVariant = Color(0xFF333333)
-//
-//    //  surface = Color(0xFFFFFBFE),
-//    //    onSecondary = Color.White,
-////    onTertiary = Color.White,
-////    onBackground = Color.White,
-////    onSurface = Color.White,
-//)
 
 private val lightScheme = lightColorScheme(
     primary = primaryLight,
@@ -145,16 +98,23 @@ private val darkScheme = darkColorScheme(
 private val FrostColorScheme = lightColorScheme(
     primary = frostSecondary,
     secondary = frostSecondary,
-    tertiary = darkPrimary,
+    tertiary = backgroundDark,
     background = frostPrimary,
-    onPrimary = darkPrimary,
-    onSurfaceVariant = darkPrimary
+    onPrimary = backgroundDark,
+    onSurfaceVariant = backgroundDark
+)
 
-    //  surface = Color(0xFFFFFBFE),
-    //    onSecondary = Color.White,
-//    onTertiary = Color.White,
-//    onBackground = Color.White,
-//    onSurface = Color.White,
+
+@Immutable
+data class ColorFamily(
+    val color: Color,
+    val onColor: Color,
+    val colorContainer: Color,
+    val onColorContainer: Color,
+)
+
+val unspecified_scheme = ColorFamily(
+    Color.Unspecified, Color.Unspecified, Color.Unspecified, Color.Unspecified
 )
 
 enum class ThemeMode {
@@ -167,34 +127,39 @@ object ThemeState {
 
 @Composable
 fun SolcellepanellerTheme(
+    darkTheme: Boolean = isSystemInDarkTheme(),
     fontScale: Float = LocalDensity.current.fontScale,
     content: @Composable () -> Unit,
 ) {
-    val systemInDarkTheme = isSystemInDarkTheme()
-
-    val isDark = when (ThemeState.themeMode) {
-        ThemeMode.DARK -> true
-        ThemeMode.LIGHT, ThemeMode.FROST -> false
-        ThemeMode.SYSTEM -> systemInDarkTheme
-    }
 
     val colors = when (ThemeState.themeMode) {
         ThemeMode.DARK -> darkScheme
         ThemeMode.LIGHT -> lightScheme
         ThemeMode.FROST -> FrostColorScheme
-        ThemeMode.SYSTEM -> if (systemInDarkTheme) darkScheme else lightScheme
+        ThemeMode.SYSTEM -> if (darkTheme) darkScheme else lightScheme
     }
 
-    val baseTypography = Typography()
-
     val scaledTypography = Typography(
-        bodyLarge = baseTypography.bodyLarge.copy(fontSize = baseTypography.bodyLarge.fontSize * fontScale),
-        bodyMedium = baseTypography.bodyMedium.copy(fontSize = baseTypography.bodyMedium.fontSize * fontScale),
-        bodySmall = baseTypography.bodySmall.copy(fontSize = baseTypography.bodySmall.fontSize * fontScale),
+        displayLarge = myTypography.displayLarge.copy(fontSize = myTypography.displayLarge.fontSize * fontScale),
+        displayMedium = myTypography.displayMedium.copy(fontSize = myTypography.displayMedium.fontSize * fontScale),
+        displaySmall = myTypography.displaySmall.copy(fontSize = myTypography.displaySmall.fontSize * fontScale),
 
-        titleLarge = baseTypography.titleLarge.copy(fontSize = baseTypography.titleLarge.fontSize * fontScale),
-        titleMedium = baseTypography.titleMedium.copy(fontSize = baseTypography.titleMedium.fontSize * fontScale),
-        titleSmall = baseTypography.titleSmall.copy(fontSize = baseTypography.titleSmall.fontSize * fontScale)
+        headlineLarge = myTypography.headlineLarge.copy(fontSize = myTypography.headlineLarge.fontSize * fontScale),
+        headlineMedium = myTypography.headlineMedium.copy(fontSize = myTypography.headlineMedium.fontSize * fontScale),
+        headlineSmall = myTypography.headlineSmall.copy(fontSize = myTypography.headlineSmall.fontSize * fontScale),
+
+        titleLarge = myTypography.titleLarge.copy(fontSize = myTypography.titleLarge.fontSize * fontScale),
+        titleMedium = myTypography.titleMedium.copy(fontSize = myTypography.titleMedium.fontSize * fontScale),
+        titleSmall = myTypography.titleSmall.copy(fontSize = myTypography.titleSmall.fontSize * fontScale),
+
+        bodyLarge = myTypography.bodyLarge.copy(fontSize = myTypography.bodyLarge.fontSize * fontScale),
+        bodyMedium = myTypography.bodyMedium.copy(fontSize = myTypography.bodyMedium.fontSize * fontScale),
+        bodySmall = myTypography.bodySmall.copy(fontSize = myTypography.bodySmall.fontSize * fontScale),
+
+
+        labelLarge = myTypography.labelLarge.copy(fontSize = myTypography.labelLarge.fontSize * fontScale),
+        labelMedium = myTypography.labelMedium.copy(fontSize = myTypography.labelMedium.fontSize * fontScale),
+        labelSmall = myTypography.labelSmall.copy(fontSize = myTypography.labelSmall.fontSize * fontScale)
     )
 
     MaterialTheme(
