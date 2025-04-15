@@ -1,8 +1,6 @@
 package no.solcellepaneller.ui.map
 
 
-import android.content.Context
-import android.location.Geocoder
 import android.util.Log
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateListOf
@@ -13,16 +11,11 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.google.android.gms.maps.model.LatLng
-import kotlinx.coroutines.Dispatchers
+import com.google.maps.android.SphericalUtil
 import kotlinx.coroutines.launch
 import no.solcellepaneller.data.mapdata.AddressRepository
 import no.solcellepaneller.data.mapdata.AdressDataSource
-import no.solcellepaneller.model.map.AdressData
-import no.solcellepaneller.model.map.GeocodingResponse
-import java.util.Locale
 import kotlin.math.abs
-
-import com.google.maps.android.SphericalUtil
 import kotlin.math.ceil
 
 class MapScreenViewModel(
@@ -35,8 +28,8 @@ class MapScreenViewModel(
     var efficiencyInput by mutableStateOf("")
 
 
-    private val _coordinates = MutableLiveData<Pair<Double, Double>>()
-    val coordinates: LiveData<Pair<Double, Double>> = _coordinates
+    private val _coordinates = MutableLiveData<Pair<Double, Double>?>()
+    val coordinates: LiveData<Pair<Double, Double>?> get() = _coordinates
 
 
 

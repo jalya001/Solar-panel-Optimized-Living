@@ -1,4 +1,4 @@
-<resources>
+<resources xmlns:tools="http://schemas.android.com/tools">
     <string name="app_name">Solcellepaneller</string>
 
     <!--Home Screen-->
@@ -144,6 +144,9 @@
     <string name="month_october">Oktober</string>
     <string name="month_november">November</string>
     <string name="month_december">Desember</string>
+
+    <string name="current_location">Nåværende plassering</string>
+    <string name="search">Søk</string>
 
     <string name="frost_mode">Frost</string>
     <string name="home_bottom_bar">Hjem</string>

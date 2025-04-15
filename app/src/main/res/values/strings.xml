@@ -147,6 +147,9 @@
     <string name="month_november">November</string>
     <string name="month_december">December</string>
 
+    <string name="current_location">Current Location</string>
+    <string name="search">Search</string>
+
     <!--Savings Screen-->
     <string name="yearly_savings">Saved annually</string>
     <string name="yearly_savings_text">You will save %.2f kroner per year on electricity from solar panels</string>
