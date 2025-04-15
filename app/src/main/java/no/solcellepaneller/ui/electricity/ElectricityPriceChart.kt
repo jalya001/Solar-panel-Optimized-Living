@@ -70,7 +70,8 @@ fun ElectricityPriceChart(prices: List<ElectricityPrice>) {
     val xAxisData = AxisData.Builder()
         .axisStepSize(12.dp)
         .steps(prices.size / 2)
-        .labelData { i -> if (i % 2 == 0) "%02d:00".format(i) else "" }
+        .labelData { i -> if (i % 2 == 0) "%02d".format(i) else "" }
+//        .labelData { i -> if (i % 2 == 0) "%02d:00".format(i) else "" }
         .axisLabelColor(MaterialTheme.colorScheme.tertiary)
         .axisLineColor(MaterialTheme.colorScheme.tertiary)
         .axisLabelAngle(35f)
@@ -107,10 +108,11 @@ fun ElectricityPriceChart(prices: List<ElectricityPrice>) {
         modifier = Modifier
             .fillMaxWidth()
             .height(325.dp)
-            .padding(4.dp),
-        elevation = CardDefaults.cardElevation(defaultElevation = 8.dp),
+//            .padding(4.dp)
+        ,
+        elevation = CardDefaults.cardElevation(defaultElevation = 0.dp),
         colors = CardColors(
-            containerColor =  MaterialTheme.colorScheme.primary,
+            containerColor = MaterialTheme.colorScheme.background,
             contentColor = MaterialTheme.colorScheme.primary,
             disabledContentColor = MaterialTheme.colorScheme.primary,
             disabledContainerColor = MaterialTheme.colorScheme.primary
@@ -125,8 +127,8 @@ fun ElectricityPriceChart(prices: List<ElectricityPrice>) {
                                 Line(
                                     dataPoints = points,
                                     LineStyle(color = if (ThemeState.themeMode == ThemeMode.DARK) MaterialTheme.colorScheme.tertiary else MaterialTheme.colorScheme.primary),
-                                    IntersectionPoint(color = if (ThemeState.themeMode == ThemeMode.DARK) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.tertiary,),
-                                    SelectionHighlightPoint(color = if (ThemeState.themeMode == ThemeMode.DARK) MaterialTheme.colorScheme.tertiary else MaterialTheme.colorScheme.primary,),
+                                    IntersectionPoint(color = if (ThemeState.themeMode == ThemeMode.DARK) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.tertiary),
+                                    SelectionHighlightPoint(color = if (ThemeState.themeMode == ThemeMode.DARK) MaterialTheme.colorScheme.tertiary else MaterialTheme.colorScheme.primary),
                                     ShadowUnderLine(
                                         alpha = 0.5f,
                                         brush = Brush.verticalGradient(

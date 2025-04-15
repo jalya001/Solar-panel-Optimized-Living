@@ -244,7 +244,7 @@ fun SavingsMonth_Card(
 
     ElevatedCard(
         modifier = Modifier
-            .width(160.dp)
+            .width(200.dp)
             .height(60.dp),
         onClick = onClick,
         elevation = CardDefaults.cardElevation(defaultElevation = 2.dp),
