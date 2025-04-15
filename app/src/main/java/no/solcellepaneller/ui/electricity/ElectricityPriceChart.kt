@@ -66,16 +66,17 @@ fun ElectricityPriceChart(prices: List<ElectricityPrice>) {
         )
     }
 
-    //Prepare X-axis (hours)
+    //Prepare X-axis (hours) - Showing fewer labels to prevent crowding
     val xAxisData = AxisData.Builder()
         .axisStepSize(12.dp)
-        .steps(prices.size / 2)
-        .labelData { i -> if (i % 2 == 0) "%02d:00".format(i) else "" }
+        .steps(prices.size / 2) //Showing fewer steps
+        .labelData { i ->
+            if (i % 2 == 0) "%02d:00".format(i) else ""
+        }
         .axisLabelColor(MaterialTheme.colorScheme.tertiary)
         .axisLineColor(MaterialTheme.colorScheme.tertiary)
-        .axisLabelAngle(35f)
-        .bottomPadding(24.dp)
-        .startPadding(40.dp)
+        .axisLabelAngle(40f)
+        .bottomPadding(32.dp)
         .build()
 
     //Prepare Y-axis (price)
@@ -88,7 +89,9 @@ fun ElectricityPriceChart(prices: List<ElectricityPrice>) {
     val yAxisData = AxisData.Builder()
         .steps(steps)
         .topPadding(20.dp)
-        .labelData { i -> "%.2f".format((minPrice + stepSize * i).toFloat()) }
+        .labelData { i ->
+            "%.2f".format((minPrice + stepSize * i).toFloat())
+        }
         .axisStepSize(((maxPrice - minPrice) / 5).toFloat().dp)
         .axisLabelColor(MaterialTheme.colorScheme.tertiary)
         .axisLineColor(MaterialTheme.colorScheme.tertiary)
@@ -106,7 +109,7 @@ fun ElectricityPriceChart(prices: List<ElectricityPrice>) {
     Card(
         modifier = Modifier
             .fillMaxWidth()
-            .height(325.dp)
+            .height(350.dp)
             .padding(4.dp),
         elevation = CardDefaults.cardElevation(defaultElevation = 8.dp),
         colors = CardColors(
@@ -116,7 +119,11 @@ fun ElectricityPriceChart(prices: List<ElectricityPrice>) {
             disabledContainerColor = MaterialTheme.colorScheme.primary
         )
     ) {
-        BoxWithConstraints(modifier = Modifier.height(300.dp)) {
+        BoxWithConstraints(
+            modifier = Modifier
+                .height(320.dp)
+                .padding(top = 4.dp, start = 4.dp, end = 4.dp, bottom = 8.dp)
+        ) {
             when (chartType) {
                 ChartType.LINE -> {
                     val lineChartData = LineChartData(
@@ -143,14 +150,15 @@ fun ElectricityPriceChart(prices: List<ElectricityPrice>) {
                         xAxisData = xAxisData,
                         yAxisData = yAxisData,
                         gridLines = GridLines(color = Color.LightGray),
-                        backgroundColor = MaterialTheme.colorScheme.surface
+                        backgroundColor = MaterialTheme.colorScheme.surface,
+                        bottomPadding = 30.dp
                     )
 
                     LineChart(
                         modifier = Modifier
                             .fillMaxWidth()
-                            .height(300.dp)
-                            .padding(8.dp),
+                            .padding(8.dp)
+                            .height(300.dp),
                         lineChartData = lineChartData
                     )
                 }
@@ -165,17 +173,21 @@ fun ElectricityPriceChart(prices: List<ElectricityPrice>) {
                             barWidth = 10.dp
                         ),
                         backgroundColor = MaterialTheme.colorScheme.surface,
+                        paddingEnd = 16.dp
                     )
 
                     BarChart(
                         modifier = Modifier
                             .fillMaxWidth()
-                            .height(300.dp)
-                            .padding(8.dp),
+                            .padding(8.dp)
+                            .height(300.dp),
                         barChartData = barChartData
                     )
                 }
             }
+
+
+
 
             // X-axis name
             Text(
@@ -183,7 +195,7 @@ fun ElectricityPriceChart(prices: List<ElectricityPrice>) {
                 style = MaterialTheme.typography.bodySmall,
                 modifier = Modifier
                     .align(Alignment.BottomCenter)
-                    .offset(y = 12.dp),
+                    .offset(y = 22.dp),
                 color = MaterialTheme.colorScheme.tertiary
             )
 

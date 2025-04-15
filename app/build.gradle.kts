@@ -98,7 +98,7 @@ dependencies {
     implementation("com.google.maps.android:android-maps-utils:2.2.0")
 
     //Chart dependencies
-    implementation(libs.ycharts)
+    implementation("co.yml:ycharts:2.1.0")
 
     //Icons dependency
     implementation(libs.androidx.material.icons.extended.android)
