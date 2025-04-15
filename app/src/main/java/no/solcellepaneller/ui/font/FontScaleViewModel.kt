@@ -6,12 +6,22 @@ import androidx.lifecycle.ViewModel
 class FontScaleViewModel : ViewModel() {
     val fontScale = mutableFloatStateOf(1f)
 
-    fun increaseFontScale() {
-        fontScale.floatValue += 0.1f
+    fun increaseFontScale(): Boolean {
+        return if (fontScale.floatValue < 1.6f){
+            fontScale.floatValue += 0.1f
+            true
+        } else{
+            false
+        }
     }
 
-    fun decreaseFontScale() {
-        fontScale.floatValue = maxOf(0.5f, fontScale.floatValue - 0.1f)
+    fun decreaseFontScale(): Boolean {
+        return if (fontScale.floatValue > 1.0f){
+            fontScale.floatValue -= 0.1f
+            true
+        } else{
+            false
+        }
     }
 
     fun resetFontScale() {

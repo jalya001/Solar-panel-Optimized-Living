@@ -43,6 +43,8 @@ import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.text.input.OffsetMapping
 import androidx.compose.ui.text.input.TransformedText
 import androidx.compose.ui.text.input.VisualTransformation
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.launch
 import no.solcellepaneller.ui.handling.DecimalFormatter
 import no.solcellepaneller.ui.handling.DecimalInputField
 import java.text.DecimalFormatSymbols
@@ -205,22 +207,46 @@ fun AppearanceBottomSheet(
 
                     Spacer(modifier = Modifier.height(10.dp))
 
+                    //for max/min font
+                    val snackbarHostState = remember { SnackbarHostState() }
+                    var snackBarJob by remember { mutableStateOf<Job?>(null) }
+                    val coroutineScope = rememberCoroutineScope()
+
+                    SnackbarHost(hostState = snackbarHostState) //hvor snackbaren skal vises
+
+
                     Row(
                         horizontalArrangement = Arrangement.SpaceEvenly,
                         modifier = Modifier.fillMaxWidth()
                     ) {
                         Button(onClick = {
-                            fontScaleViewModel.decreaseFontScale()
+
+                            val didDecrease = fontScaleViewModel.decreaseFontScale()
+                            if (!didDecrease && snackBarJob?.isActive != true){
+                                snackBarJob = coroutineScope.launch {
+                                    snackbarHostState.showSnackbar("Min font size reached")
+                                }
+                            }
+
                         }) {
                             Text("- A", style = MaterialTheme.typography.bodySmall)
                         }
+
                         Button(onClick = {
                             fontScaleViewModel.resetFontScale()
                         }) {
                             Text("Reset", style = MaterialTheme.typography.bodySmall)
                         }
+
                         Button(onClick = {
-                            fontScaleViewModel.increaseFontScale()
+
+                            val didIncrease = fontScaleViewModel.increaseFontScale()
+                            if (!didIncrease && snackBarJob?.isActive != true){
+                                snackBarJob =  coroutineScope.launch {
+                                    snackbarHostState.showSnackbar("Max font size reached")
+                                }
+                            }
+
                         }) {
                             Text("+ A", style = MaterialTheme.typography.bodySmall)
                         }
