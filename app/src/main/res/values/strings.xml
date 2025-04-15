@@ -150,7 +150,7 @@
     <!--Savings Screen-->
     <string name="yearly_savings">Saved annually</string>
     <string name="yearly_savings_text">You will save %.2f kroner per year on electricity from solar panels</string>
-    <string name="monthly_savings">Savings in: %1$s?</string>
+    <string name="monthly_savings">Savings in: %1$s</string>
     <string name="monthly_savings_text">You will save %1$.2f kroner in %2$s with electricity from solar panels</string>
 
 </resources>
