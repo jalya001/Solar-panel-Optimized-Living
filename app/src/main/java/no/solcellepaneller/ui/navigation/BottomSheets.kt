@@ -412,7 +412,15 @@ fun AdditionalInputBottomSheet(
                         decimalFormatter = decimalFormatter
                     )
 
-                    Spacer(modifier = Modifier.height(10.dp))
+                    DecimalInputField(
+                        onValueChange = { efficiency = it },
+                        label = stringResource(id = R.string.efficiency_label),
+                        modifier = Modifier.fillMaxWidth(),
+                        value = efficiency,
+                        decimalFormatter = decimalFormatter
+                    )
+
+                    Spacer(modifier = Modifier.height(16.dp))
 
                     Box {
                         Button(
@@ -450,16 +458,6 @@ fun AdditionalInputBottomSheet(
                     }
 
                     Spacer(modifier = Modifier.height(10.dp))
-
-                    DecimalInputField(
-                        onValueChange = { efficiency = it },
-                        label = stringResource(id = R.string.efficiency_label),
-                        modifier = Modifier.fillMaxWidth(),
-                        value = efficiency,
-                        decimalFormatter = decimalFormatter
-                    )
-
-                    Spacer(modifier = Modifier.height(16.dp))
 
                     if (areaState.isNotEmpty() && direction.isNotEmpty() && angle.isNotEmpty() && efficiency.isNotEmpty() && coordinates != null) {
                         Button(
