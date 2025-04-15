@@ -31,7 +31,7 @@ val displayFontFamily = FontFamily(
 val baseline = Typography()
 
 val myTypography = Typography(
-    displayLarge = baseline.displayLarge.copy( //funker ikke idk
+    displayLarge = baseline.displayLarge.copy(
         fontFamily = displayFontFamily,
         fontWeight = FontWeight.Light,
         fontSize = 57.sp,

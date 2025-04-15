@@ -1,10 +1,10 @@
 package no.solcellepaneller.ui.home
 
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -20,7 +20,6 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
@@ -83,7 +82,7 @@ fun HomeScreen(
                 modifier = Modifier
                     .fillMaxWidth()
                     .height(250.dp),
-                style = MaterialTheme.typography.displayLarge, //Må bruke title for at the skal funke idw why
+                style = MaterialTheme.typography.displayLarge,
                 content = { PanelAnimation() },
                 color = MaterialTheme.colorScheme.tertiary
             )
@@ -142,13 +141,17 @@ fun PanelAnimation() {
         iterations = LottieConstants.IterateForever,
     )
 
-    Box(modifier = Modifier.background(color = Color.Blue)) {
+    Box(
+        modifier = Modifier
+//        .background(color = Color.Blue)
+            .height(100.dp)
+    ) {
         LottieAnimation(
             composition = composition,
             progress = { progress },
             modifier = Modifier
-                .height(400.dp)
-                .width(300.dp)
+                .width(130.dp)
+                .aspectRatio(400.dp / 1000.dp),
         )
     }
 }

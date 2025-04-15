@@ -7,10 +7,12 @@ import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material3.Button
 import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
+import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -228,7 +230,7 @@ fun MonthDataDisplay(
         }
 
         if (!showAllMonths) {
-            Button(onClick = { expanded = true }) {
+            OutlinedButton(onClick = { expanded = true }, modifier = Modifier.width(250.dp)) {
                 IconTextRow(
                     R.drawable.baseline_calendar_month_24,
                     text = "Måned: ${months[selectedMonthIndex]}"

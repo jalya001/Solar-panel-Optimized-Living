@@ -9,8 +9,8 @@
     <string name="prices"> Electricity prices </string>
     <string name="help">Help</string>
     <string name="appereance"> Appearance</string>
-    <string name="dark_mode">Theme:\nDark </string>
-    <string name="light_mode">Theme:\nLight </string>
+    <string name="dark_mode">Darkmode</string>
+    <string name="light_mode">Lightmode </string>
     <string name="language">Change to Norwegian</string>
     <string name="font_size">Change font size</string>
     <string name="go_back"> Back </string>
@@ -134,7 +134,7 @@
     <string name="october">October</string>
     <string name="november">November</string>
     <string name="december">December</string>
-    <string name="frost_mode">Theme:\nFrost</string>
+    <string name="frost_mode">Frost</string>
     <string name="home_bottom_bar">Home</string>
 
 

@@ -13,12 +13,6 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalDensity
 
-// Må legge til 0xFF før HExveerdi
-
-// FROST Mode
-val frostPrimary = Color(0xFFc5e3e4)
-val frostSecondary = Color(0xFFa6d5d6)
-
 private val lightScheme = lightColorScheme(
     primary = primaryLight,
     onPrimary = onPrimaryLight,
@@ -95,13 +89,42 @@ private val darkScheme = darkColorScheme(
     surfaceContainerHighest = surfaceContainerHighestDark,
 )
 
-private val FrostColorScheme = lightColorScheme(
-    primary = frostSecondary,
-    secondary = frostSecondary,
-    tertiary = backgroundDark,
-    background = frostPrimary,
-    onPrimary = backgroundDark,
-    onSurfaceVariant = backgroundDark
+private val frostScheme = lightColorScheme(
+    primary = primaryFrost,
+    onPrimary = onPrimaryFrost,
+    primaryContainer = primaryContainerFrost,
+    onPrimaryContainer = onPrimaryContainerFrost,
+    secondary = secondaryFrost,
+    onSecondary = onSecondaryFrost,
+    secondaryContainer = secondaryContainerFrost,
+    onSecondaryContainer = onSecondaryContainerFrost,
+    tertiary = tertiaryFrost,
+    onTertiary = onTertiaryFrost,
+    tertiaryContainer = tertiaryContainerFrost,
+    onTertiaryContainer = onTertiaryContainerFrost,
+    error = errorFrost,
+    onError = onErrorFrost,
+    errorContainer = errorContainerFrost,
+    onErrorContainer = onErrorContainerFrost,
+    background = backgroundFrost,
+    onBackground = onBackgroundFrost,
+    surface = surfaceFrost,
+    onSurface = onSurfaceFrost,
+    surfaceVariant = surfaceVariantFrost,
+    onSurfaceVariant = onSurfaceVariantFrost,
+    outline = outlineFrost,
+    outlineVariant = outlineVariantFrost,
+    scrim = scrimFrost,
+    inverseSurface = inverseSurfaceFrost,
+    inverseOnSurface = inverseOnSurfaceFrost,
+    inversePrimary = inversePrimaryFrost,
+    surfaceDim = surfaceDimFrost,
+    surfaceBright = surfaceBrightFrost,
+    surfaceContainerLowest = surfaceContainerLowestFrost,
+    surfaceContainerLow = surfaceContainerLowFrost,
+    surfaceContainer = surfaceContainerFrost,
+    surfaceContainerHigh = surfaceContainerHighFrost,
+    surfaceContainerHighest = surfaceContainerHighestFrost,
 )
 
 
@@ -135,7 +158,7 @@ fun SolcellepanellerTheme(
     val colors = when (ThemeState.themeMode) {
         ThemeMode.DARK -> darkScheme
         ThemeMode.LIGHT -> lightScheme
-        ThemeMode.FROST -> FrostColorScheme
+        ThemeMode.FROST -> frostScheme
         ThemeMode.SYSTEM -> if (darkTheme) darkScheme else lightScheme
     }
 

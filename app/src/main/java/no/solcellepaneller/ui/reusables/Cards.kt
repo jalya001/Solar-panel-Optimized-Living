@@ -86,8 +86,7 @@ fun MyNavCard(
             content?.let {
                 Box(
                     modifier = Modifier
-                        .fillMaxSize()
-                        .padding(12.dp),
+                        .fillMaxSize(),
                     contentAlignment = Alignment.BottomEnd
                 ) {
                     it()
@@ -262,7 +261,8 @@ fun IconTextRow(
         Icon(
             painter = painterResource(id = iconRes),
             contentDescription = null,
-            modifier = modifier.size(30.dp)
+            modifier = modifier.size(30.dp),
+            tint = MaterialTheme.colorScheme.tertiary
         )
         Text(
             text = text,

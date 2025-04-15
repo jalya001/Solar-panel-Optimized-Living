@@ -31,7 +31,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.font.FontWeight.Companion.Bold
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.Density
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
@@ -75,8 +75,8 @@ fun HelpBottomSheet(
             ) {
                 Text(
                     stringResource(id = R.string.help),
-                    style = MaterialTheme.typography.titleLarge,
-                    fontWeight = Bold
+                    style = MaterialTheme.typography.headlineLarge,
+                    fontWeight = FontWeight.Thin
                 )
 
                 LazyColumn(
@@ -147,8 +147,8 @@ fun AppearanceBottomSheet(
                 ) {
                     Text(
                         stringResource(id = R.string.appereance),
-                        style = MaterialTheme.typography.titleLarge,
-                        fontWeight = Bold
+                        style = MaterialTheme.typography.headlineLarge,
+                        fontWeight = FontWeight.Thin
                     )
 
                     var followSystem by remember { mutableStateOf(ThemeState.themeMode == ThemeMode.SYSTEM) }
@@ -293,9 +293,10 @@ fun AdditionalInputBottomSheet(
                 ) {
                     Text(
                         stringResource(id = R.string.additional_input),
-                        style = MaterialTheme.typography.titleLarge,
-                        fontWeight = Bold
-                    )
+                        style = MaterialTheme.typography.headlineLarge,
+                        fontWeight = FontWeight.Thin,
+
+                        )
                     Button(
                         onClick = {
                             areaState = "45"

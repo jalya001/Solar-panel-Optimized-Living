@@ -19,6 +19,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 
 @Composable
@@ -39,7 +40,8 @@ fun ExpandInfoSection(title: String, content: String, initiallyExpanded: Boolean
             ) {
                 Text(
                     text = title,
-                    style = MaterialTheme.typography.headlineMedium,
+                    style = MaterialTheme.typography.headlineSmall,
+                    fontWeight = FontWeight.Thin,
                     color = MaterialTheme.colorScheme.primary
                 )
 
