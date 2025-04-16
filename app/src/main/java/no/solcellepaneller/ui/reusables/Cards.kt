@@ -187,7 +187,7 @@ fun DataCard(
                 },
                 modifier = modifier.fillMaxWidth()
             ) {
-                Text("Show your savings in $month")
+                Text("Show Your Savings In $month")
             }
         }
     }
