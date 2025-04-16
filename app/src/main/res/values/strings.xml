@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">Solcellepaneler</string>
+    <string name="app_name">SolcellepanelerApp</string>
 
     <!--Home Screen-->
     <string name="home"> Home</string>
@@ -82,11 +82,11 @@
     <string name="cancel">Cancel</string>
 
     <!--Additional Input-->
-    <string name="area_label">Area (m²)</string>
+    <string name="area_label">Roof Area (m²)</string>
     <string name="draw_area">Draw areal</string>
-    <string name="slope_label">Angle (°)</string>
-    <string name="direction_label">Direction (°)</string>
-    <string name="efficiency_label">Efficiency (%)</string>
+    <string name="slope_label">Roof Angle (°)</string>
+    <string name="direction_label">Roof Direction (°)</string>
+    <string name="efficiency_label">Panel Efficiency (%)</string>
     <string name="coordinates_label">Coordinates (from map): </string>
     <string name="coordinates_unavailable">No coordinates available</string>
     <string name="closest_weather_station">Closest weather station:</string>
@@ -153,7 +153,7 @@
     <!--Savings Screen-->
     <string name="yearly_savings">Saved annually</string>
     <string name="yearly_savings_text">You will save %.2f kroner per year on electricity from solar panels</string>
-    <string name="monthly_savings">Savings in: %1$s?</string>
+    <string name="monthly_savings">Savings in: %1$s</string>
     <string name="monthly_savings_text">You will save %1$.2f kroner in %2$s with electricity from solar panels</string>
 
 </resources>

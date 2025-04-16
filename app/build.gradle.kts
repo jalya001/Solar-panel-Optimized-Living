@@ -8,11 +8,11 @@ plugins {
 }
 
 android {
-    namespace = "no.solcellepaneller"
+    namespace = "no.solcellepanelerApp"
     compileSdk = 35
 
     defaultConfig {
-        applicationId = "no.solcellepaneller"
+        applicationId = "no.solcellepanelerApp"
         minSdk = 26
         targetSdk = 35
         versionCode = 1
@@ -123,4 +123,10 @@ dependencies {
 
 
     implementation("androidx.compose.ui:ui-text-google-fonts:1.7.8")
+
+//    implementation("com.google.accompanist:accompanist-flowlayout:<latest_version>")
+    implementation("com.google.accompanist:accompanist-flowlayout:0.28.0")
+//    implementation("androidx.compose.ui:ui:1.3.0")
+//    implementation("androidx.compose.material3:material3:1.0.0")
+
 }
