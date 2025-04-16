@@ -21,6 +21,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
@@ -139,7 +140,7 @@ fun DataCard(
             if (allMonths) {
                 IconTextRow(
                     iconRes = R.drawable.baseline_calendar_month_24,
-                    text = "$month",
+                    text = month,
                     textStyle = MaterialTheme.typography.titleLarge,
                     fontWeight = FontWeight.Bold
                 )
@@ -147,38 +148,38 @@ fun DataCard(
 
             IconTextRow(
                 iconRes = R.drawable.rounded_nest_sunblock_24,
-                text = "Global Radiation: %.2f".format(radiation)
+                text = stringResource(R.string.global_radiation, radiation)
             )
 
             IconTextRow(
                 iconRes = R.drawable.baseline_cloud_24,
-                text = "Avg Cloud Cover: %.2f".format(cloud / 8)
+                text = stringResource(R.string.avg_cloud_cover, cloud / 8)
             )
 
             IconTextRow(
                 iconRes = R.drawable.outline_mode_cool_24,
-                text = "Avg Snow Cover: %.2f".format(snow / 4)
+                text = stringResource(R.string.avg_snow_cover, snow / 4)
             )
 
             IconTextRow(
                 iconRes = R.drawable.baseline_device_thermostat_24,
-                text = "Temp Factor: %.2f °C".format(1 + (-0.44) * (temp - 25))
+                text = stringResource(R.string.temp_factor, 1 + (-0.44) * (temp - 25))
             )
 
             IconTextRow(
                 iconRes = R.drawable.rounded_nest_sunblock_24,
-                text = "Adj. Radiation: %.2f kWh/m²".format(adjusted)
+                text = stringResource(R.string.adj_radiation, adjusted)
             )
 
             IconTextRow(
                 iconRes = R.drawable.baseline_battery_6_bar_24,
-                text = "Estimated Energy: %.2f kWh".format(energy),
+                text = stringResource(R.string.estimated_energy_prod, energy),
                 fontWeight = FontWeight.Bold
             )
 
             IconTextRow(
                 iconRes = R.drawable.baseline_power_24,
-                text = "Power/hour: %.2f kW".format(power)
+                text = stringResource(R.string.estimated_powerpr_hour, power)
             )
 
             Button(
@@ -187,7 +188,7 @@ fun DataCard(
                 },
                 modifier = modifier.fillMaxWidth()
             ) {
-                Text("Show Your Savings In $month")
+                Text(stringResource(R.string.show_monthly_savings, month))
             }
         }
     }

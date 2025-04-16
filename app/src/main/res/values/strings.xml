@@ -109,17 +109,7 @@
     <string name="data_not_added"> Data not added: </string>
     <string name="get_data">Get data </string>
     <string name="loading"> Loading Data, please wait…</string>
-
-    <string name="month"> Month: </string>
-    <string name="global_radiation">Global Radiation: </string>
-    <string name="avg_cloud_cover"> Average Cloud Cover: </string>
-    <string name="avg_snow_cover">Average Snow Cover: </string>
-    <string name="temp_factor">Temperature Factor: </string>
-    <string name="adj_radiation">Adjusted Radiation: </string>
-    <string name="estimated_energy_prod">Estimated Energy Produced: %.2f kWh </string>
-    <string name="estimated_powerpr_hour">Estimated Power Produced per Hour: </string>
-
-
+    
     <string name="address_not_found">Address not found, try again</string>
     <string name="follow_system">Follow system theme</string>
     <string name="navigate_results">Go to results</string>
@@ -128,10 +118,13 @@
     <string name="additional_input">Additional input</string>
     <string name="prod">Production</string>
 
-
     <string name="frost_mode">Frost</string>
     <string name="home_bottom_bar">Home</string>
 
+    <string name="yearly_savings_label">Yearly Savings</string>
+    <string name="show_one_month">Show One Month</string>
+    <string name="show_all_months">Show All Months</string>
+    <string name="selected_month">Month: %1$s</string>
 
     <!--Months-->
     <string name="month_january">January</string>
@@ -146,6 +139,17 @@
     <string name="month_october">October</string>
     <string name="month_november">November</string>
     <string name="month_december">December</string>
+
+    <!--Cards-->
+    <string name="month"> Month: </string>
+    <string name="global_radiation">Global Radiation: %.2f kWh/m²</string>
+    <string name="avg_cloud_cover"> Average Cloud Cover: %.2f</string>
+    <string name="avg_snow_cover">Average Snow Cover: %.2f</string>
+    <string name="temp_factor">Temperature Factor: %.2f °C</string>
+    <string name="adj_radiation">Adjusted Radiation: %.2f kWh/m²</string>
+    <string name="estimated_energy_prod">Estimated Energy Produced: %.2f kWh </string>
+    <string name="estimated_powerpr_hour">Estimated Power Produced per Hour: %.2f kW</string>
+    <string name="show_monthly_savings">Show Your Savings In %1$s</string>
 
     <!--Savings Screen-->
     <string name="yearly_savings">Saved annually</string>

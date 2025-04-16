@@ -40,7 +40,12 @@ fun ShowMonthlySavings(
     var showAppearance by remember { mutableStateOf(false) }
 
     Scaffold(
-        topBar = { TopBar(navController, text = stringResource(R.string.monthly_savings, month)) },
+        topBar = {
+            TopBar(
+                navController,
+                text = stringResource(R.string.monthly_savings, month)
+            )
+                 },
         bottomBar = {
             BottomBar(
                 onHelpClicked = { showHelp = true },
@@ -87,7 +92,12 @@ fun ShowYearlySavings(
     var showAppearance by remember { mutableStateOf(false) }
 
     Scaffold(
-        topBar = { TopBar(navController, text = stringResource(R.string.yearly_savings)) },
+        topBar = {
+            TopBar(
+                navController,
+                text = stringResource(R.string.yearly_savings)
+            )
+                 },
         bottomBar = {
             BottomBar(
                 onHelpClicked = { showHelp = true },

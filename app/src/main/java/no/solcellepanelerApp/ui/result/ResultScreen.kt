@@ -83,7 +83,7 @@ fun ResultScreen(
 
     val daysInMonth = arrayOf(31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31)
 
-    var selectedRegion by remember { mutableStateOf(Region.OSLO) }
+    var selectedRegion by remember { mutableStateOf(Region.OSLO) } // Må endres senere slik at bruker kan velge region selv
 
     val priceScreenViewModel: PriceScreenViewModel = viewModel(
         factory = PriceViewModelFactory(priceScreenViewModel, selectedRegion.regionCode),
@@ -166,7 +166,7 @@ fun ResultScreen(
                         horizontalArrangement = Arrangement.SpaceEvenly
                     ) {
                         SavingsMonth_Card(
-                            label = "Yearly Savings",
+                            label = stringResource(R.string.yearly_savings_label),
                             iconRes = R.drawable.baseline_attach_money_24,
                             onClick = {
                                 navController.navigate("yearly_savings/${yearlyEnergyOutput}/$energyPrice")
@@ -174,7 +174,8 @@ fun ResultScreen(
                         )
 
                         SavingsMonth_Card(
-                            label = if (showAllMonths) "Show One Month" else "Show All Months",
+                            label = if (showAllMonths) stringResource(R.string.show_one_month)
+                            else stringResource(R.string.show_all_months),
                             iconRes = R.drawable.baseline_calendar_month_24,
                             onClick = {
                                 showAllMonths = !showAllMonths
@@ -263,7 +264,7 @@ fun MonthDataDisplay(
             OutlinedButton(onClick = { expanded = true }, modifier = Modifier.width(250.dp)) {
                 IconTextRow(
                     R.drawable.baseline_calendar_month_24,
-                    text = "Måned: ${months[selectedMonthIndex]}"
+                    text = stringResource(R.string.selected_month, months[selectedMonthIndex])
                 )
             }
             DropdownMenu(
