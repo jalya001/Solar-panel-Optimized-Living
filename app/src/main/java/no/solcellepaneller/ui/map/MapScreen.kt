@@ -116,23 +116,21 @@ fun MapScreen(
             )
         }
     ) { contentPadding ->
-//        Column(
-//            modifier = Modifier
-//                .fillMaxSize()
-//                .padding(contentPadding),
-//            horizontalAlignment = Alignment.CenterHorizontally,
-//            verticalArrangement = Arrangement.Center
-//        ) {
-//            DisplayScreen(viewModel, navController, weatherViewModel)
-//        }
-
-        DisplayScreen(
-            viewModel = viewModel,
-            navController = navController,
-            weatherViewModel = weatherViewModel,
-            snackbarHostState = snackbarHostState,
-            modifier = Modifier.padding(contentPadding)
-        )
+        Column(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(contentPadding),
+            horizontalAlignment = Alignment.CenterHorizontally,
+            verticalArrangement = Arrangement.Center
+        ) {
+            DisplayScreen(
+                viewModel = viewModel,
+                navController = navController,
+                weatherViewModel = weatherViewModel,
+                snackbarHostState = snackbarHostState,
+                modifier = Modifier.padding(contentPadding)
+            )
+        }
     }
     HelpBottomSheet(
         visible = showHelp,
@@ -162,9 +160,9 @@ fun DisplayScreen(
     val polygonPoints = viewModel.polygondata
     var isPolygonvisible by remember { mutableStateOf(false) }
     var drawingEnabled by remember { mutableStateOf(false) }
-    //var index by remember { mutableIntStateOf(0) }
+    var index by remember { mutableIntStateOf(0) }
     var showBottomSheet by remember { mutableStateOf(false) }
-    //var arealatlong by remember { mutableStateOf<LatLng?>(null) }
+    var arealatlong by remember { mutableStateOf<LatLng?>(null) }
     var showMissingLocationDialog by remember { mutableStateOf(false) }
 
     //Location permission state
@@ -401,190 +399,168 @@ fun DisplayScreen(
             }
         }
 
-//        Column(
-//            modifier = Modifier
-//                .fillMaxWidth()
-//                .padding(16.dp)
-//                .zIndex(1f),
-//            horizontalAlignment = Alignment.CenterHorizontally
-//        ) {
-//
-//            Spacer(modifier = Modifier.height(60.dp))
-//
-//            val coroutineScope = rememberCoroutineScope()
-//
-//            BekreftLokasjon(
-//                onClick = {
-//                    if (coordinates != null) {
-//                        showBottomSheet = true
-//                        selectedCoordinates = null
-//                        viewModel.removePoints()
-//                        index = 0
-//                        coroutineScope.launch {
-//                            cameraPositionState.animate(
-//                                CameraUpdateFactory.newCameraPosition(
-//                                    CameraPosition(
-//                                        cameraPositionState.position.target,
-//                                        19f,
-//                                        0f,
-//                                        cameraPositionState.position.bearing
-//                                    )
-//                                )
-//                            )
-//                        }
-//                    } else {
-//                        showMissingLocationDialog = true
-//                    }
-//                }
-//            )
-//
-//            if (showMissingLocationDialog) {
-//                LocationNotSelectedDialog(
-//                    coordinates = coordinates,
-//                    onDismiss = { showMissingLocationDialog = false },
-//                )
-//            }
-//
-//            var area by remember { mutableStateOf("") }
-//
-//            AdditionalInputBottomSheet(
-//                visible = showBottomSheet,
-//                onDismiss = { showBottomSheet = false },
-//                onStartDrawing = {
-//                    drawingEnabled = true
-//                    selectedCoordinates = null
-//                    viewModel.removePoints()
-//                    index = 0
-//                },
-//                coordinates = coordinates,
-//                area = area,
-//                navController = navController,
-//                viewModel = viewModel,
-//                weatherViewModel = weatherViewModel
-//            )
-//
-//            if (drawingEnabled) {
-//                Box(
-//                    modifier = Modifier
-//                        .fillMaxSize()
-//                        .align(alignment = Alignment.Start)
-//                        .padding(16.dp)
-//                ) {
-//                    Column(
-//                        modifier = Modifier
-//                            .align(alignment = Alignment.BottomStart)
-//                    ) {
-//                        var areaShown by remember { mutableStateOf(false) }
-//
-//                        Button(
-//                            onClick = {
-//                                area = ""
-//                                drawingEnabled = false
-//                                isPolygonvisible = false
-//                                viewModel.removePoints()
-//                                index = 0
-//                            },
-//                            colors = ButtonDefaults.buttonColors(Color.Gray)
-//                        ) {
-//                            Text(text = stringResource(id = R.string.cancel))
-//                        }
-//                        if (polygonPoints.size > 3) {
-//                            Button(onClick = {
-//                                isPolygonvisible = !isPolygonvisible
-//                                arealatlong = cameraPositionState.position.target
-//                                val calculatedArea = viewModel.calculateAreaOfPolygon(polygonPoints)
-//                                area = calculatedArea.toString()
-//                                areaShown = true
-//                            }, colors = ButtonDefaults.buttonColors(Color(color = 0xFF4CAF50))) {
-//                                Text(text = stringResource(id = R.string.show_area))
-//                            }
-//
-//                            if (areaShown && isPolygonvisible) {
-//                                Button(onClick = {
-//                                    showBottomSheet = true
-//                                }) {
-//                                    Text(text = stringResource(id = R.string.confirm_drawing))
-//                                }
-//                            }
-//                        }
-//
-//                        if (polygonPoints.isNotEmpty()) {
-//                            Button(onClick = {
-//                                viewModel.removeLastPoint()
-//                                isPolygonvisible = false
-//                                index -= 1
-//                            }, colors = ButtonDefaults.buttonColors(Color.Yellow)) {
-//                                Text(text = stringResource(id = R.string.remove_last_point))
-//                            }
-//                            Button(onClick = {
-//                                viewModel.removePoints()
-//                                isPolygonvisible = false
-//                                index = 0
-//                            }, colors = ButtonDefaults.buttonColors(Red)) {
-//                                Text(text = stringResource(id = R.string.remove_points))
-//                            }
-//                        }
-//                    }
-//
-//                }
-//            }
-//        }
+        Column(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(16.dp)
+                .zIndex(1f),
+            horizontalAlignment = Alignment.CenterHorizontally
+        ) {
 
-        if (!drawingEnabled) {
-            Box(
-                modifier = Modifier
-                    .align(Alignment.BottomCenter)
-                    .padding(bottom = 80.dp)
-            ) {
-                Button(
-                    onClick = {
-                        if (coordinates != null) {
-                            showBottomSheet = true
-                            selectedCoordinates = null
-                            viewModel.removePoints()
-                        } else {
-                            showMissingLocationDialog = true
-                        }
-                    }
-                ) {
-                    Text(stringResource(id = R.string.confirm_location))
-                }
-            }
+            Spacer(modifier = Modifier.height(60.dp))
 
-            if (drawingEnabled) {
-                DrawingControls(
-                    polygonPoints = polygonPoints,
-                    viewModel = viewModel,
-                    showBottomSheet = { showBottomSheet = true },
-                    onCancel = {
-                        drawingEnabled = false
-                        isPolygonvisible = false
+            val coroutineScope = rememberCoroutineScope()
+
+            BekreftLokasjon(
+                onClick = {
+                    if (coordinates != null) {
+                        showBottomSheet = true
+                        selectedCoordinates = null
                         viewModel.removePoints()
-                    },
-                    onToggleVisibility = { isPolygonvisible = !isPolygonvisible }
+                        index = 0
+                        coroutineScope.launch {
+                            cameraPositionState.animate(
+                                CameraUpdateFactory.newCameraPosition(
+                                    CameraPosition(
+                                        cameraPositionState.position.target,
+                                        19f,
+                                        0f,
+                                        cameraPositionState.position.bearing
+                                    )
+                                )
+                            )
+                        }
+                    } else {
+                        showMissingLocationDialog = true
+                    }
+                }
+            )
+
+            if (showMissingLocationDialog) {
+                LocationNotSelectedDialog(
+                    //coordinates = coordinates,
+                    onDismiss = { showMissingLocationDialog = false },
                 )
             }
 
-            if (showMissingLocationDialog) {
-                LocationNotSelectedDialog(onDismiss = { showMissingLocationDialog = false })
+            var area by remember { mutableStateOf("") }
+
+            AdditionalInputBottomSheet(
+                visible = showBottomSheet,
+                onDismiss = { showBottomSheet = false },
+                onStartDrawing = {
+                    drawingEnabled = true
+                    selectedCoordinates = null
+                    viewModel.removePoints()
+                    index = 0
+                },
+                coordinates = coordinates,
+                area = area,
+                navController = navController,
+                viewModel = viewModel,
+                weatherViewModel = weatherViewModel
+            )
+
+            if (drawingEnabled) {
+                Box(
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .align(alignment = Alignment.Start)
+                        .padding(16.dp)
+                ) {
+                    Column(
+                        modifier = Modifier
+                            .align(alignment = Alignment.BottomStart)
+                    ) {
+                        var areaShown by remember { mutableStateOf(false) }
+
+                        Button(
+                            onClick = {
+                                area = ""
+                                drawingEnabled = false
+                                isPolygonvisible = false
+                                viewModel.removePoints()
+                                index = 0
+                            },
+                            colors = ButtonDefaults.buttonColors(Color.Gray)
+                        ) {
+                            Text(text = stringResource(id = R.string.cancel))
+                        }
+                        if (polygonPoints.size > 3) {
+                            Button(onClick = {
+                                isPolygonvisible = !isPolygonvisible
+                                arealatlong = cameraPositionState.position.target
+                                val calculatedArea = viewModel.calculateAreaOfPolygon(polygonPoints)
+                                area = calculatedArea.toString()
+                                areaShown = true
+                            }, colors = ButtonDefaults.buttonColors(Color(color = 0xFF4CAF50))) {
+                                Text(text = stringResource(id = R.string.show_area))
+                            }
+
+                            if (areaShown && isPolygonvisible) {
+                                Button(onClick = {
+                                    showBottomSheet = true
+                                }) {
+                                    Text(text = stringResource(id = R.string.confirm_drawing))
+                                }
+                            }
+                        }
+
+                        if (polygonPoints.isNotEmpty()) {
+                            Button(onClick = {
+                                viewModel.removeLastPoint()
+                                isPolygonvisible = false
+                                index -= 1
+                            }, colors = ButtonDefaults.buttonColors(Color.Yellow)) {
+                                Text(text = stringResource(id = R.string.remove_last_point))
+                            }
+                            Button(onClick = {
+                                viewModel.removePoints()
+                                isPolygonvisible = false
+                                index = 0
+                            }, colors = ButtonDefaults.buttonColors(Red)) {
+                                Text(text = stringResource(id = R.string.remove_points))
+                            }
+                        }
+                    }
+
+                }
             }
         }
 
-        AdditionalInputBottomSheet(
-            visible = showBottomSheet,
-            onDismiss = { showBottomSheet = false },
-            onStartDrawing = {
-                drawingEnabled = true
-                selectedCoordinates = null
-                viewModel.removePoints()
-            },
-            coordinates = coordinates,
-            area = viewModel.calculateAreaOfPolygon(polygonPoints).toString(),
-            navController = navController,
-            viewModel = viewModel,
-            weatherViewModel = weatherViewModel
-        )
+        if (drawingEnabled) {
+            DrawingControls(
+                polygonPoints = polygonPoints,
+                viewModel = viewModel,
+                showBottomSheet = { showBottomSheet = true },
+                onCancel = {
+                    drawingEnabled = false
+                    isPolygonvisible = false
+                    viewModel.removePoints()
+                },
+                onToggleVisibility = { isPolygonvisible = !isPolygonvisible }
+            )
+        }
+
+        if (showMissingLocationDialog) {
+            LocationNotSelectedDialog(onDismiss = { showMissingLocationDialog = false })
+        }
     }
+
+    AdditionalInputBottomSheet(
+        visible = showBottomSheet,
+        onDismiss = { showBottomSheet = false },
+        onStartDrawing = {
+            drawingEnabled = true
+            selectedCoordinates = null
+            viewModel.removePoints()
+        },
+        coordinates = coordinates,
+        area = viewModel.calculateAreaOfPolygon(polygonPoints).toString(),
+        navController = navController,
+        viewModel = viewModel,
+        weatherViewModel = weatherViewModel
+    )
 }
 
 @Composable
@@ -615,15 +591,15 @@ fun InputField(
     )
 }
 
-//@Composable
-//fun BekreftLokasjon(
-//    //må huske å endre navn på funksjoner ogsånt til engelsk
-//    onClick: () -> Unit,
-//) {
-//    Button(onClick = onClick) {
-//        Text(stringResource(id = R.string.confirm_location))
-//    }
-//}
+@Composable
+fun BekreftLokasjon(
+    //må huske å endre navn på funksjoner ogsånt til engelsk
+    onClick: () -> Unit,
+) {
+    Button(onClick = onClick) {
+        Text(stringResource(id = R.string.confirm_location))
+    }
+}
 
 @Composable
 fun LocationNotSelectedDialog(
@@ -746,11 +722,11 @@ private fun DrawingControls(
                     Text(stringResource(id = R.string.show_area))
                 }
 
-                if (areaShown) {
-                    Button(onClick = showBottomSheet) {
-                        Text(stringResource(id = R.string.confirm_drawing))
-                    }
-                }
+//                if (areaShown) {
+//                    Button(onClick = showBottomSheet) {
+//                        Text(stringResource(id = R.string.confirm_drawing))
+//                    }
+//                }
             }
 
             if (polygonPoints.isNotEmpty()) {
