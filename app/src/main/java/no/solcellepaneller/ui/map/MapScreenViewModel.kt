@@ -28,7 +28,7 @@ class MapScreenViewModel(
     var directionInput by mutableStateOf("")
     var efficiencyInput by mutableStateOf("")
 
-    var selectedRegion: Region = Region.KRISTIANSAND
+    var selectedRegion: Region = Region.OSLO
 
 
     private val _coordinates = MutableLiveData<Pair<Double, Double>?>()

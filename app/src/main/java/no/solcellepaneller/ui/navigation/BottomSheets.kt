@@ -456,7 +456,7 @@ fun AdditionalInputBottomSheet(
 
                     Spacer(modifier = Modifier.height(10.dp))
 
-                    var selectedRegion by remember { mutableStateOf(Region.KRISTIANSAND) }
+                    var selectedRegion by remember { mutableStateOf(Region.OSLO) }
                     RegionDropdown(
                         selectedRegion = viewModel.selectedRegion,
                         onRegionSelected = { newRegion ->
