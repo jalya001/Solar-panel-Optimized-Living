@@ -379,6 +379,7 @@ fun DisplayScreen(
 
             val coroutineScope = rememberCoroutineScope()
 
+            // må finne en måtte å gjøre d slik at denne knappen ikke er til stedet når brukeren tegner
             BekreftLokasjon(
                 onClick = {
                     if (coordinates != null) {
@@ -660,7 +661,7 @@ private fun DrawingControls(
                         onToggleVisibility
                     },
                     colors = ButtonColors(
-                        containerColor = MaterialTheme.colorScheme.onPrimaryContainer,
+                        containerColor = MaterialTheme.colorScheme.onErrorContainer,
                         contentColor = MaterialTheme.colorScheme.background,
                         disabledContainerColor = Color(color = 0xFF4CAF50),
                         disabledContentColor = Color(color = 0xFF4CAF50)
@@ -676,8 +677,8 @@ private fun DrawingControls(
                         onToggleVisibility()
                     },
                     colors = ButtonColors(
-                        containerColor = MaterialTheme.colorScheme.onPrimaryContainer,
-                        contentColor = MaterialTheme.colorScheme.background,
+                        containerColor = MaterialTheme.colorScheme.error,
+                        contentColor = MaterialTheme.colorScheme.onError,//litt lav kontrsast kanskje bruke .background
                         disabledContainerColor = Color(color = 0xFF4CAF50),
                         disabledContentColor = Color(color = 0xFF4CAF50)
                     )
