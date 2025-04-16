@@ -74,7 +74,7 @@
     <string name="show_area">Show Area</string>
     <string name="confirm_drawing">Confirm Drawing</string>
     <string name="remove_last_point">Remove Last Point</string>
-    <string name="remove_points">Remove Points</string>
+    <string name="remove_points">Remove All Points</string>
     <string name="selected_position">Selected Position</string>
     <string name="latitude">Latitude</string>
     <string name="longitude">Longitude</string>
@@ -109,7 +109,7 @@
     <string name="data_not_added"> Data not added: </string>
     <string name="get_data">Get data </string>
     <string name="loading"> Loading Data, please wait…</string>
-    
+
     <string name="address_not_found">Address not found, try again</string>
     <string name="follow_system">Follow system theme</string>
     <string name="navigate_results">Go to results</string>
@@ -139,6 +139,9 @@
     <string name="month_october">October</string>
     <string name="month_november">November</string>
     <string name="month_december">December</string>
+
+    <string name="current_location">Current Location</string>
+    <string name="search">Search</string>
 
     <!--Cards-->
     <string name="month"> Month: </string>

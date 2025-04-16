@@ -58,6 +58,13 @@ import no.solcellepanelerApp.ui.reusables.ExpandInfoSection
 import no.solcellepanelerApp.ui.reusables.ModeCard
 import no.solcellepanelerApp.ui.theme.ThemeMode
 import no.solcellepanelerApp.ui.theme.ThemeState
+import no.solcellepanelerApp.model.electricity.Region
+import no.solcellepanelerApp.ui.electricity.RegionDropdown
+import no.solcellepanelerApp.ui.language.langSwitch
+import no.solcellepanelerApp.ui.reusables.DecimalInputField
+import no.solcellepanelerApp.ui.reusables.ExpandInfoSection
+import no.solcellepanelerApp.ui.reusables.ModeCard
+
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -451,6 +458,16 @@ fun AdditionalInputBottomSheet(
                             }
                         }
                     }
+
+                    Spacer(modifier = Modifier.height(10.dp))
+
+                    var selectedRegion by remember { mutableStateOf(Region.OSLO) }
+                    RegionDropdown(
+                        selectedRegion = viewModel.selectedRegion,
+                        onRegionSelected = { newRegion ->
+                            viewModel.selectedRegion = newRegion
+                        }
+                    )
 
                     Spacer(modifier = Modifier.height(10.dp))
 

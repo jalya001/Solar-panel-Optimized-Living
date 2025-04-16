@@ -77,7 +77,7 @@
     <string name="show_area">Vis område</string>
     <string name="confirm_drawing">Bekreft tegning</string>
     <string name="remove_last_point">Fjern siste punkt</string>
-    <string name="remove_points">Fjern punkter</string>
+    <string name="remove_points">Fjern alle punkter</string>
     <string name="selected_position">Valgt posisjon</string>
     <string name="latitude">Breddegrad</string>
     <string name="longitude">Lengdegrad</string>
@@ -140,6 +140,9 @@
     <string name="month_october">Oktober</string>
     <string name="month_november">November</string>
     <string name="month_december">Desember</string>
+
+    <string name="current_location">Nåværende plassering</string>
+    <string name="search">Søk</string>
 
     <string name="frost_mode">Frost</string>
     <string name="home_bottom_bar">Hjem</string>

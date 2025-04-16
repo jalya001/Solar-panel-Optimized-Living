@@ -17,7 +17,7 @@ data class ElectricityPrice(
     val date: String = LocalDate.now().toString(),
 ) {
     fun getTimeRange(): String {
-        val formatter = DateTimeFormatter.ofPattern("d. MMM yyyy, HH:mm", Locale("no"))
+        val formatter = DateTimeFormatter.ofPattern("HH:mm", Locale("no"))
         val start = ZonedDateTime.parse(time_start).format(formatter)
         val end = ZonedDateTime.parse(time_end).format(formatter)
         return "$start - $end"

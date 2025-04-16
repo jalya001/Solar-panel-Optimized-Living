@@ -59,7 +59,8 @@ fun PriceScreen(
     var showHelp by remember { mutableStateOf(false) }
     var showAppearance by remember { mutableStateOf(false) }
 
-    var selectedRegion by remember { mutableStateOf(Region.BERGEN) }
+//    var selectedRegion by remember { mutableStateOf(Region.BERGEN) }
+    var selectedRegion by remember { mutableStateOf(Region.OSLO) }
 
     // Hent lokasjon én gang og sett region automatisk
     LaunchedEffect(Unit) {

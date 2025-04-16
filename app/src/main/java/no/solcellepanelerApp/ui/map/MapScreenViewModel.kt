@@ -15,6 +15,8 @@ import com.google.maps.android.SphericalUtil
 import kotlinx.coroutines.launch
 import no.solcellepanelerApp.data.mapdata.AddressRepository
 import no.solcellepanelerApp.data.mapdata.AdressDataSource
+import no.solcellepanelerApp.model.electricity.Region
+
 import kotlin.math.abs
 import kotlin.math.ceil
 
@@ -27,9 +29,12 @@ class MapScreenViewModel(
     var directionInput by mutableStateOf("")
     var efficiencyInput by mutableStateOf("")
 
+    var selectedRegion: Region = Region.OSLO
 
-    private val _coordinates = MutableLiveData<Pair<Double, Double>>()
-    val coordinates: LiveData<Pair<Double, Double>> = _coordinates
+
+    private val _coordinates = MutableLiveData<Pair<Double, Double>?>()
+    val coordinates: LiveData<Pair<Double, Double>?> get() = _coordinates
+
 
 
     //could add adress name

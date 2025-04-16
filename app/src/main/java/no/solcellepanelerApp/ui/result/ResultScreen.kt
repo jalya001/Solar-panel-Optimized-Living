@@ -83,7 +83,7 @@ fun ResultScreen(
 
     val daysInMonth = arrayOf(31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31)
 
-    var selectedRegion by remember { mutableStateOf(Region.OSLO) } // Må endres senere slik at bruker kan velge region selv
+    var selectedRegion = viewModel.selectedRegion
 
     val priceScreenViewModel: PriceScreenViewModel = viewModel(
         factory = PriceViewModelFactory(priceScreenViewModel, selectedRegion.regionCode),
