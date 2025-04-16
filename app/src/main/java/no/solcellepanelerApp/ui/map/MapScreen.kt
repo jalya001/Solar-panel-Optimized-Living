@@ -605,8 +605,76 @@ private fun DrawingControls(
                 .align(Alignment.BottomStart)
         ) {
 
-            var areaShown by remember { mutableStateOf(false) }
+            Column {
+                var areaShown by remember { mutableStateOf(false) }
 
+                if (polygonPoints.size > 2) {
+                    Button(
+                        onClick = {
+                            onToggleVisibility()
+                            areaShown = true
+                        },
+                        colors = ButtonColors(
+                            containerColor = MaterialTheme.colorScheme.tertiary,
+                            contentColor = MaterialTheme.colorScheme.background,
+                            disabledContainerColor = Color(color = 0xFF4CAF50),
+                            disabledContentColor = Color(color = 0xFF4CAF50)
+                        )
+                    ) {
+                        Text(text = stringResource(id = R.string.show_area))
+                    }
+
+                    if (areaShown) {
+                        Button(
+                            onClick = {
+                                toggleBottomSheet()
+                            },
+                            colors = ButtonColors(
+                                containerColor = MaterialTheme.colorScheme.background,
+                                contentColor = MaterialTheme.colorScheme.onPrimaryContainer,
+                                disabledContainerColor = Color(color = 0xFF4CAF50),
+                                disabledContentColor = Color(color = 0xFF4CAF50)
+                            )
+                        ) {
+                            Text(text = stringResource(id = R.string.confirm_drawing))
+                        }
+                    }
+
+                }
+
+                if (polygonPoints.isNotEmpty()) {
+                    Button(
+                        onClick = {
+                            viewModel.removeLastPoint()
+                            onToggleVisibility
+                        },
+                        colors = ButtonColors(
+                            containerColor = MaterialTheme.colorScheme.onErrorContainer,
+                            contentColor = MaterialTheme.colorScheme.background,
+                            disabledContainerColor = Color(color = 0xFF4CAF50),
+                            disabledContentColor = Color(color = 0xFF4CAF50)
+                        )
+                    )
+
+                    {
+                        Text(text = stringResource(id = R.string.remove_last_point))
+                    }
+                    Button(
+                        onClick = {
+                            viewModel.removePoints()
+                            onToggleVisibility()
+                        },
+                        colors = ButtonColors(
+                            containerColor = MaterialTheme.colorScheme.error,
+                            contentColor = MaterialTheme.colorScheme.onError,//litt lav kontrsast kanskje bruke .background
+                            disabledContainerColor = Color(color = 0xFF4CAF50),
+                            disabledContentColor = Color(color = 0xFF4CAF50)
+                        )
+                    ) {
+                        Text(text = stringResource(id = R.string.remove_points))
+                    }
+                }
+            }
             Button(
                 onClick = {
                     onCancel
@@ -619,72 +687,6 @@ private fun DrawingControls(
                 )
             ) {
                 Text(text = stringResource(id = R.string.cancel))
-            }
-            if (polygonPoints.size > 2) {
-                Button(
-                    onClick = {
-                        onToggleVisibility()
-                        areaShown = true
-                    },
-                    colors = ButtonColors(
-                        containerColor = MaterialTheme.colorScheme.tertiary,
-                        contentColor = MaterialTheme.colorScheme.background,
-                        disabledContainerColor = Color(color = 0xFF4CAF50),
-                        disabledContentColor = Color(color = 0xFF4CAF50)
-                    )
-                ) {
-                    Text(text = stringResource(id = R.string.show_area))
-                }
-
-                if (areaShown) {
-                    Button(
-                        onClick = {
-                            toggleBottomSheet()
-                        },
-                        colors = ButtonColors(
-                            containerColor = MaterialTheme.colorScheme.background,
-                            contentColor = MaterialTheme.colorScheme.onPrimaryContainer,
-                            disabledContainerColor = Color(color = 0xFF4CAF50),
-                            disabledContentColor = Color(color = 0xFF4CAF50)
-                        )
-                    ) {
-                        Text(text = stringResource(id = R.string.confirm_drawing))
-                    }
-                }
-
-            }
-
-            if (polygonPoints.isNotEmpty()) {
-                Button(
-                    onClick = {
-                        viewModel.removeLastPoint()
-                        onToggleVisibility
-                    },
-                    colors = ButtonColors(
-                        containerColor = MaterialTheme.colorScheme.onErrorContainer,
-                        contentColor = MaterialTheme.colorScheme.background,
-                        disabledContainerColor = Color(color = 0xFF4CAF50),
-                        disabledContentColor = Color(color = 0xFF4CAF50)
-                    )
-                )
-
-                {
-                    Text(text = stringResource(id = R.string.remove_last_point))
-                }
-                Button(
-                    onClick = {
-                        viewModel.removePoints()
-                        onToggleVisibility()
-                    },
-                    colors = ButtonColors(
-                        containerColor = MaterialTheme.colorScheme.error,
-                        contentColor = MaterialTheme.colorScheme.onError,//litt lav kontrsast kanskje bruke .background
-                        disabledContainerColor = Color(color = 0xFF4CAF50),
-                        disabledContentColor = Color(color = 0xFF4CAF50)
-                    )
-                ) {
-                    Text(text = stringResource(id = R.string.remove_points))
-                }
             }
         }
     }
