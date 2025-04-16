@@ -4,6 +4,7 @@ import android.Manifest
 import android.app.Activity
 import android.content.Context
 import android.content.pm.PackageManager
+import android.graphics.Canvas
 import android.location.Geocoder
 import android.location.Location
 import android.util.Log
@@ -28,8 +29,10 @@ import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonColors
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardColors
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
@@ -40,6 +43,7 @@ import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextFieldColors
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
@@ -51,16 +55,22 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.Color.Companion.Green
 import androidx.compose.ui.graphics.RectangleShape
+import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.ImeAction
+import androidx.compose.ui.unit.Density
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.zIndex
 import androidx.core.content.ContextCompat
+import androidx.core.graphics.createBitmap
+import androidx.core.graphics.scale
 import androidx.navigation.NavController
 import com.google.android.gms.maps.CameraUpdateFactory
+import com.google.android.gms.maps.model.BitmapDescriptor
+import com.google.android.gms.maps.model.BitmapDescriptorFactory
 import com.google.android.gms.maps.model.CameraPosition
 import com.google.android.gms.maps.model.LatLng
 import com.google.maps.android.compose.GoogleMap
@@ -68,11 +78,13 @@ import com.google.maps.android.compose.MapProperties
 import com.google.maps.android.compose.MapType
 import com.google.maps.android.compose.MapUiSettings
 import com.google.maps.android.compose.Marker
+import com.google.maps.android.compose.MarkerState
 import com.google.maps.android.compose.Polygon
 import com.google.maps.android.compose.rememberCameraPositionState
 import com.google.maps.android.compose.rememberMarkerState
 import kotlinx.coroutines.launch
 import no.solcellepanelerApp.R
+import no.solcellepanelerApp.data.location.LocationService
 import no.solcellepanelerApp.ui.font.FontScaleViewModel
 import no.solcellepanelerApp.ui.font.FontSizeState
 import no.solcellepanelerApp.ui.navigation.AdditionalInputBottomSheet
@@ -81,12 +93,6 @@ import no.solcellepanelerApp.ui.navigation.BottomBar
 import no.solcellepanelerApp.ui.navigation.HelpBottomSheet
 import no.solcellepanelerApp.ui.navigation.TopBar
 import no.solcellepanelerApp.ui.result.WeatherViewModel
-import no.solcellepanelerApp.data.location.LocationService
-import no.solcellepanelerApp.ui.navigation.AdditionalInputBottomSheet
-import no.solcellepanelerApp.ui.navigation.AppearanceBottomSheet
-import no.solcellepanelerApp.ui.navigation.BottomBar
-import no.solcellepanelerApp.ui.navigation.HelpBottomSheet
-import no.solcellepanelerApp.ui.navigation.TopBar
 import java.util.Locale
 
 
@@ -153,13 +159,14 @@ fun MapScreen(
     )
 }
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun DisplayScreen(
     viewModel: MapScreenViewModel,
     navController: NavController,
     weatherViewModel: WeatherViewModel,
     snackbarHostState: SnackbarHostState,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
 ) {
     val context = LocalContext.current
     var selectedCoordinates by remember { mutableStateOf<LatLng?>(null) }
@@ -187,9 +194,6 @@ fun DisplayScreen(
             }
         }
     }
-
-    //var showHelpSheet by remember { mutableStateOf(false) }
-    //val keyboardController = LocalSoftwareKeyboardController.current
 
     //Camera and map state
     val cameraPositionState = rememberCameraPositionState {
@@ -230,7 +234,10 @@ fun DisplayScreen(
                     viewModel.selectLocation(latLng.latitude, latLng.longitude)
                     coroutineScope.launch {
                         cameraPositionState.animate(
-                            CameraUpdateFactory.newLatLngZoom(latLng, cameraPositionState.position.zoom)
+                            CameraUpdateFactory.newLatLngZoom(
+                                latLng,
+                                cameraPositionState.position.zoom
+                            )
                         )
                     }
                 }
@@ -240,50 +247,42 @@ fun DisplayScreen(
             if (!drawingEnabled) {
                 selectedCoordinates?.let {
                     markerState.position = it
-                    Marker(
+//                    Marker(
+//                        state = markerState,
+//                        title = stringResource(id = R.string.selected_position),
+//                        snippet = "Lat: ${it.latitude}, Lng: ${it.longitude}",
+//                    )
+                    MapMarker(
                         state = markerState,
                         title = stringResource(id = R.string.selected_position),
-                        snippet = "Lat: ${it.latitude}, Lng: ${it.longitude}"
+                        snippet = "Lat: ${it.latitude}, Lng: ${it.longitude}",
+                        context = LocalContext.current,
                     )
                 }
             } else {
                 polygonPoints.forEachIndexed { i, point ->
-                    Marker(
+//                    Marker(
+//                        state = rememberMarkerState(position = point),
+//                        title = "${stringResource(id = R.string.point)} ${i + 1}"
+//                    )
+                    MapMarker(
                         state = rememberMarkerState(position = point),
-                        title = "${stringResource(id = R.string.point)} ${i + 1}"
+                        title = "${stringResource(id = R.string.point)} ${i + 1}",
+                        context = LocalContext.current,
                     )
                 }
                 if (isPolygonvisible) {
                     Polygon(
                         points = polygonPoints,
-                        fillColor = Green.copy(0.3f),
-                        strokeColor = Green,
+                        fillColor = MaterialTheme.colorScheme.primary.copy(0.6f),
+                        strokeColor = MaterialTheme.colorScheme.primary,
+//                        fillColor = Green.copy(0.3f),
+//                        strokeColor = Green,
                         strokeWidth = 5f
                     )
                 }
             }
         }
-
-//        LaunchedEffect(coordinates) {
-//            coordinates?.let { lat, lon ->
-//                val newLatLng = LatLng(lat, lon)
-//                if (selectedCoordinates != newLatLng) {
-//                    selectedCoordinates = newLatLng
-//                    coroutineScope.launch {
-//                        cameraPositionState.animate(
-//                            CameraUpdateFactory.newCameraPosition(
-//                                CameraPosition(
-//                                    newLatLng,
-//                                    cameraPositionState.position.zoom,
-//                                    0f,
-//                                    cameraPositionState.position.bearing
-//                                )
-//                            )
-//                        )
-//                    }
-//                }
-//            }
-//        }
 
         LaunchedEffect(coordinates) {
             coordinates?.let { (lat, lon) ->
@@ -297,13 +296,14 @@ fun DisplayScreen(
             }
         }
 
-        var detectedAddress by remember { mutableStateOf("") }
-        LocationButton(
-            locationPermissionGranted = locationPermissionGranted,
-            onAddressDetected = { address ->
-                detectedAddress = address
-            }
-        )
+//        funker ikke rn
+//        var detectedAddress by remember { mutableStateOf("") }
+//        LocationButton(
+//            locationPermissionGranted = locationPermissionGranted,
+//            onAddressDetected = { address ->
+//                detectedAddress = address
+//            }
+//        )
 
         //Search bar
         Card(
@@ -321,7 +321,9 @@ fun DisplayScreen(
                 horizontalArrangement = Arrangement.Center,
                 verticalAlignment = Alignment.CenterVertically
             ) {
-                InputField(
+
+
+                AdressInputField(
                     value = address,
                     onValueChange = {
                         address = it
@@ -339,13 +341,6 @@ fun DisplayScreen(
                         unfocusedTextColor = MaterialTheme.colorScheme.primary,
                         unfocusedBorderColor = MaterialTheme.colorScheme.surfaceContainer,
                     ),
-//                    keyboardOptions = KeyboardOptions.Default.copy(imeAction = ImeAction.Done),
-//                    keyboardActions = KeyboardActions(
-//                        onDone = {
-//                            keyboardController?.hide()
-//                            viewModel.fetchCoordinates(address)
-//                        }
-//                    )
                 )
 
                 Button(
@@ -411,7 +406,7 @@ fun DisplayScreen(
 
             if (showMissingLocationDialog) {
                 LocationNotSelectedDialog(
-                    //coordinates = coordinates,
+                    coordinates = coordinates,
                     onDismiss = { showMissingLocationDialog = false },
                 )
             }
@@ -435,144 +430,42 @@ fun DisplayScreen(
             )
 
             if (drawingEnabled) {
-                Box(
-                    modifier = Modifier
-                        .fillMaxSize()
-                        .align(alignment = Alignment.Start)
-                        .padding(16.dp)
-                ) {
-                    Column(
-                        modifier = Modifier
-                            .align(alignment = Alignment.BottomStart)
-                    ) {
-                        var areaShown by remember { mutableStateOf(false) }
+                DrawingControls(
+                    polygonPoints = polygonPoints,
+                    viewModel = viewModel,
+                    toggleBottomSheet = { showBottomSheet = true },
+                    onCancel = {
+                        drawingEnabled = false
+                        isPolygonvisible = false
+                        viewModel.removePoints()
+                    },
+                    onToggleVisibility = { isPolygonvisible = !isPolygonvisible }
+                )
+            }
 
-                        Button(
-                            onClick = {
-                                area = ""
-                                drawingEnabled = false
-                                isPolygonvisible = false
-                                viewModel.removePoints()
-                                index = 0
-                            },
-                            colors = ButtonColors(
-                                containerColor = MaterialTheme.colorScheme.background,
-                                contentColor = MaterialTheme.colorScheme.tertiary,
-                                disabledContainerColor = Color(color = 0xFF4CAF50),
-                                disabledContentColor = Color(color = 0xFF4CAF50)
-                            )
-                        ) {
-                            Text(text = stringResource(id = R.string.cancel))
-                        }
-                        if (polygonPoints.size > 3) {
-                            Button(
-                                onClick = {
-                                    isPolygonvisible = !isPolygonvisible
-                                    arealatlong = cameraPositionState.position.target
-                                    val calculatedArea =
-                                        viewModel.calculateAreaOfPolygon(polygonPoints)
-                                    area = calculatedArea.toString()
-                                    areaShown = true
-                                },
-                                colors = ButtonColors(
-                                    containerColor = MaterialTheme.colorScheme.tertiary,
-                                    contentColor = MaterialTheme.colorScheme.background,
-                                    disabledContainerColor = Color(color = 0xFF4CAF50),
-                                    disabledContentColor = Color(color = 0xFF4CAF50)
-                                )
-                            ) {
-                                Text(text = stringResource(id = R.string.show_area))
-                            }
-
-                            if (areaShown && isPolygonvisible) {
-                                Button(
-                                    onClick = {
-                                        showBottomSheet = true
-                                    },
-                                    colors = ButtonColors(
-                                        containerColor = MaterialTheme.colorScheme.background,
-                                        contentColor = MaterialTheme.colorScheme.onPrimaryContainer,
-                                        disabledContainerColor = Color(color = 0xFF4CAF50),
-                                        disabledContentColor = Color(color = 0xFF4CAF50)
-                                    )
-                                ) {
-                                    Text(text = stringResource(id = R.string.confirm_drawing))
-                                }
-                            }
-                        }
-
-                        if (polygonPoints.isNotEmpty()) {
-                            Button(
-                                onClick = {
-                                    viewModel.removeLastPoint()
-                                    isPolygonvisible = false
-                                    index -= 1
-                                },
-                                colors = ButtonColors(
-                                    containerColor = MaterialTheme.colorScheme.onPrimaryContainer,
-                                    contentColor = MaterialTheme.colorScheme.background,
-                                    disabledContainerColor = Color(color = 0xFF4CAF50),
-                                    disabledContentColor = Color(color = 0xFF4CAF50)
-                                )
-                            )
-
-                            {
-                                Text(text = stringResource(id = R.string.remove_last_point))
-                            }
-                            Button(
-                                onClick = {
-                                    viewModel.removePoints()
-                                    isPolygonvisible = false
-                                    index = 0
-                                },
-                                colors = ButtonColors(
-                                    containerColor = MaterialTheme.colorScheme.onPrimaryContainer,
-                                    contentColor = MaterialTheme.colorScheme.background,
-                                    disabledContainerColor = Color(color = 0xFF4CAF50),
-                                    disabledContentColor = Color(color = 0xFF4CAF50)
-                                )
-                            ) {
-                                Text(text = stringResource(id = R.string.remove_points))
-                            }
-                    }
-
-                }
+            if (showMissingLocationDialog) {
+                LocationNotSelectedDialog(
+                    onDismiss = { showMissingLocationDialog = false },
+                    coordinates = coordinates
+                )
             }
         }
 
-        if (drawingEnabled) {
-            DrawingControls(
-                polygonPoints = polygonPoints,
-                viewModel = viewModel,
-                showBottomSheet = { showBottomSheet = true },
-                onCancel = {
-                    drawingEnabled = false
-                    isPolygonvisible = false
-                    viewModel.removePoints()
-                },
-                onToggleVisibility = { isPolygonvisible = !isPolygonvisible }
-            )
-        }
-
-        if (showMissingLocationDialog) {
-            LocationNotSelectedDialog(onDismiss = { showMissingLocationDialog = false })
-        }
+        AdditionalInputBottomSheet(
+            visible = showBottomSheet,
+            onDismiss = { showBottomSheet = false },
+            onStartDrawing = {
+                drawingEnabled = true
+                selectedCoordinates = null
+                viewModel.removePoints()
+            },
+            coordinates = coordinates,
+            area = viewModel.calculateAreaOfPolygon(polygonPoints).toString(),
+            navController = navController,
+            viewModel = viewModel,
+            weatherViewModel = weatherViewModel
+        )
     }
-
-    AdditionalInputBottomSheet(
-        visible = showBottomSheet,
-        onDismiss = { showBottomSheet = false },
-        onStartDrawing = {
-            drawingEnabled = true
-            selectedCoordinates = null
-            viewModel.removePoints()
-        },
-        coordinates = coordinates,
-        area = viewModel.calculateAreaOfPolygon(polygonPoints).toString(),
-        navController = navController,
-        viewModel = viewModel,
-        weatherViewModel = weatherViewModel
-    )
 }
 
 fun getAddressFromLocation(context: Context, location: Location): String? {
@@ -588,7 +481,7 @@ fun getAddressFromLocation(context: Context, location: Location): String? {
 
 
 @Composable
-fun InputField(
+fun AdressInputField(
     value: String,
     onValueChange: (String) -> Unit,
     label: String,
@@ -627,10 +520,10 @@ fun BekreftLokasjon(
 
 @Composable
 fun LocationNotSelectedDialog(
-    //coordinates: Pair<Double, Double>?,
-    onDismiss: () -> Unit
+    coordinates: Pair<Double, Double>?,
+    onDismiss: () -> Unit,
 ) {
-//    var showDialog by remember { mutableStateOf(coordinates == null) }
+    var showDialog by remember { mutableStateOf(coordinates == null) }
 //    var showHelpBottomSheet by remember { mutableStateOf(false) }
 //    if (showHelpBottomSheet) {
 //        HelpBottomSheet(
@@ -639,41 +532,46 @@ fun LocationNotSelectedDialog(
 //            expandSection = "draw",
 //        )
 //    }
-//    if (showDialog && coordinates == null) {
-//        val currentDensity = LocalDensity.current
-//        val customDensity = Density(
-//            density = currentDensity.density,
-//            fontScale = FontSizeState.fontScale.value
-//        )
-//
-//        CompositionLocalProvider(LocalDensity provides customDensity) {
-//            AlertDialog(
-//                onDismissRequest = onDismiss,
-//                title = {
-//                    Text(stringResource(id = R.string.no_location_title))
-//                },
-//                text = {
-//                    Text(stringResource(id = R.string.no_location_message))
-//                },
-//                confirmButton = {
-////                Button( //Ga ikke mening å ha det på denne skjermen
-////                    onClick ={
-////                        showHelpBottomSheet = true
-////                    }
-////                ) {
-////                  Text(stringResource(id = R.string.need_help_drawing))
-////                }
-//                },
-//                dismissButton = {
-//                    Button(
-//                        onClick = onDismiss
-//                    ) {
-//                        Text(stringResource(id = R.string.dismiss))
+
+    if (showDialog && coordinates == null) {
+        val currentDensity = LocalDensity.current
+        val customDensity = Density(
+            density = currentDensity.density,
+            fontScale = FontSizeState.fontScale.value
+        )
+
+        CompositionLocalProvider(LocalDensity provides customDensity) {
+            AlertDialog(
+                onDismissRequest = onDismiss,
+                title = {
+                    Text(stringResource(id = R.string.no_location_title))
+                },
+                text = {
+                    Text(stringResource(id = R.string.no_location_message))
+                },
+                confirmButton = {
+
+
+//                Button( //Ga ikke mening å ha det på denne skjermen, men burde være på tegneskjermen
+//                    onClick ={
+//                        showHelpBottomSheet = true
 //                    }
+//                ) {
+//                  Text(stringResource(id = R.string.need_help_drawing))
 //                }
-//            )
-//        }
-//    }
+
+
+                },
+                dismissButton = {
+                    Button(
+                        onClick = onDismiss
+                    ) {
+                        Text(stringResource(id = R.string.dismiss))
+                    }
+                }
+            )
+        }
+    }
 
     AlertDialog(
         onDismissRequest = onDismiss,
@@ -692,9 +590,9 @@ fun LocationNotSelectedDialog(
 private fun DrawingControls(
     polygonPoints: List<LatLng>,
     viewModel: MapScreenViewModel,
-    showBottomSheet: () -> Unit,
     onCancel: () -> Unit,
-    onToggleVisibility: () -> Unit
+    onToggleVisibility: () -> Unit,
+    toggleBottomSheet: () -> Unit,
 ) {
     Box(
         modifier = Modifier
@@ -705,61 +603,97 @@ private fun DrawingControls(
             modifier = Modifier
                 .align(Alignment.BottomStart)
         ) {
+
             var areaShown by remember { mutableStateOf(false) }
 
             Button(
-                onClick = onCancel,
-                colors = ButtonDefaults.buttonColors(Color.Gray)
+                onClick = {
+                    onCancel
+                },
+                colors = ButtonColors(
+                    containerColor = MaterialTheme.colorScheme.background,
+                    contentColor = MaterialTheme.colorScheme.tertiary,
+                    disabledContainerColor = Color(color = 0xFF4CAF50), //random farge som ikke brukes
+                    disabledContentColor = Color(color = 0xFF4CAF50)
+                )
             ) {
-                Text(stringResource(id = R.string.cancel))
+                Text(text = stringResource(id = R.string.cancel))
             }
-
             if (polygonPoints.size > 2) {
                 Button(
                     onClick = {
                         onToggleVisibility()
                         areaShown = true
                     },
-                    colors = ButtonDefaults.buttonColors(Color(0xFF4CAF50))
+                    colors = ButtonColors(
+                        containerColor = MaterialTheme.colorScheme.tertiary,
+                        contentColor = MaterialTheme.colorScheme.background,
+                        disabledContainerColor = Color(color = 0xFF4CAF50),
+                        disabledContentColor = Color(color = 0xFF4CAF50)
+                    )
                 ) {
-                    Text(stringResource(id = R.string.show_area))
+                    Text(text = stringResource(id = R.string.show_area))
                 }
 
-//                if (areaShown) {
-//                    Button(onClick = showBottomSheet) {
-//                        Text(stringResource(id = R.string.confirm_drawing))
-//                    }
-//                }
+                if (areaShown) {
+                    Button(
+                        onClick = {
+                            toggleBottomSheet()
+                        },
+                        colors = ButtonColors(
+                            containerColor = MaterialTheme.colorScheme.background,
+                            contentColor = MaterialTheme.colorScheme.onPrimaryContainer,
+                            disabledContainerColor = Color(color = 0xFF4CAF50),
+                            disabledContentColor = Color(color = 0xFF4CAF50)
+                        )
+                    ) {
+                        Text(text = stringResource(id = R.string.confirm_drawing))
+                    }
+                }
+
             }
 
             if (polygonPoints.isNotEmpty()) {
-                Row {
-                    Button(
-                        onClick = { viewModel.removePoints() },
-                        colors = ButtonDefaults.buttonColors(Color.Yellow),
-                        modifier = Modifier.weight(1f)
-                    ) {
-                        Text(stringResource(id = R.string.remove_last_point))
-                    }
-                    Spacer(modifier = Modifier.width(8.dp))
+                Button(
+                    onClick = {
+                        viewModel.removeLastPoint()
+                        onToggleVisibility
+                    },
+                    colors = ButtonColors(
+                        containerColor = MaterialTheme.colorScheme.onPrimaryContainer,
+                        contentColor = MaterialTheme.colorScheme.background,
+                        disabledContainerColor = Color(color = 0xFF4CAF50),
+                        disabledContentColor = Color(color = 0xFF4CAF50)
+                    )
+                )
 
-                    Button(
-                        onClick = { viewModel.removePoints() },
-                        colors = ButtonDefaults.buttonColors(Red),
-                        modifier = Modifier.weight(1f)
-                    ) {
-                        Text(stringResource(id = R.string.remove_points))
-                    }
+                {
+                    Text(text = stringResource(id = R.string.remove_last_point))
+                }
+                Button(
+                    onClick = {
+                        viewModel.removePoints()
+                        onToggleVisibility()
+                    },
+                    colors = ButtonColors(
+                        containerColor = MaterialTheme.colorScheme.onPrimaryContainer,
+                        contentColor = MaterialTheme.colorScheme.background,
+                        disabledContainerColor = Color(color = 0xFF4CAF50),
+                        disabledContentColor = Color(color = 0xFF4CAF50)
+                    )
+                ) {
+                    Text(text = stringResource(id = R.string.remove_points))
                 }
             }
         }
     }
+
 }
 
 @Composable
 fun LocationButton(
     locationPermissionGranted: Boolean,
-    onAddressDetected: (String) -> Unit
+    onAddressDetected: (String) -> Unit,
 ) {
     val context = LocalContext.current
     val activity = context as? Activity
@@ -805,4 +739,62 @@ fun LocationButton(
             }
         }
     }
+}
+
+
+//https://stackoverflow.com/questions/70598043/how-to-use-custom-icon-of-google-maps-marker-in-compose
+
+@Composable
+fun MapMarker(
+    context: Context,
+    title: String,
+    snippet: String? = null,
+    state: MarkerState,
+) {
+//    val iconResourceId = R.drawable.location_on_24px //Outlined versjon av den under
+    val iconResourceId = R.drawable.location_on_24px_filled //litt rundere
+//    val iconResourceId = R.drawable.baseline_location_pin_24 //jeg foretrekker denne men får den ikke til å funkne
+
+    val tintColor = MaterialTheme.colorScheme.tertiary.toArgb()
+
+    val icon =
+        bitmapDescriptor(context, iconResourceId, width = 120, height = 120, tint = tintColor)
+
+    if (snippet != null) {
+        Marker(
+            state = state,
+            title = title,
+            snippet = snippet,
+            icon = icon,
+        )
+    } else {
+        Marker(
+            state = state,
+            title = title,
+            icon = icon,
+        )
+    }
+}
+
+fun bitmapDescriptor(
+    context: Context,
+    vectorResId: Int,
+    width: Int = 100,
+    height: Int = 100,
+    tint: Int? = null,
+): BitmapDescriptor? {
+    val drawable = ContextCompat.getDrawable(context, vectorResId) ?: return null
+
+    if (tint != null) {
+        drawable.setTint(tint)
+    }
+
+    val originalBitmap = createBitmap(drawable.intrinsicWidth, drawable.intrinsicHeight)
+
+    val canvas = Canvas(originalBitmap)
+    drawable.setBounds(0, 0, canvas.width, canvas.height)
+    drawable.draw(canvas)
+
+    val scaledBitmap = originalBitmap.scale(width, height, false)
+    return BitmapDescriptorFactory.fromBitmap(scaledBitmap)
 }
