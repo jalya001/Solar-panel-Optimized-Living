@@ -7,11 +7,11 @@ plugins {
 }
 
 android {
-    namespace = "no.solcellepaneller"
+    namespace = "no.solcellepanelerApp"
     compileSdk = 35
 
     defaultConfig {
-        applicationId = "no.solcellepaneller"
+        applicationId = "no.solcellepanelerApp"
         minSdk = 26
         targetSdk = 35
         versionCode = 1
@@ -65,7 +65,7 @@ dependencies {
 
     //Project independencies
 
-    implementation ("io.ktor:ktor-client-core:2.3.6")
+    implementation("io.ktor:ktor-client-core:2.3.6")
     implementation("io.ktor:ktor-client-cio:2.3.6")
     implementation("io.ktor:ktor-client-okhttp:2.3.6")
     implementation("io.ktor:ktor-client-content-negotiation:2.3.6")
@@ -74,11 +74,11 @@ dependencies {
 
 
 
-    implementation ("androidx.lifecycle:lifecycle-viewmodel-compose:2.8.7")
-    implementation ("androidx.navigation:navigation-compose:2.8.9")
+    implementation("androidx.lifecycle:lifecycle-viewmodel-compose:2.8.7")
+    implementation("androidx.navigation:navigation-compose:2.8.9")
 
     //mapdependencies
     implementation("com.google.maps.android:maps-compose:4.2.0")
     implementation("com.google.android.gms:play-services-maps:18.2.0")
-    implementation ("com.google.maps.android:android-maps-utils:2.2.0")
+    implementation("com.google.maps.android:android-maps-utils:2.2.0")
 }

@@ -82,11 +82,11 @@
     <string name="cancel">Cancel</string>
 
     <!--Additional Input-->
-    <string name="area_label">Area (m²)</string>
+    <string name="area_label">Roof Area (m²)</string>
     <string name="draw_area">Draw areal</string>
-    <string name="slope_label">Angle (°)</string>
-    <string name="direction_label">Direction (°)</string>
-    <string name="efficiency_label">Efficiency (%)</string>
+    <string name="slope_label">Roof Angle (°)</string>
+    <string name="direction_label">Roof Direction (°)</string>
+    <string name="efficiency_label">Panel Efficiency (%)</string>
     <string name="coordinates_label">Coordinates (from map): </string>
     <string name="coordinates_unavailable">No coordinates available</string>
     <string name="closest_weather_station">Closest weather station:</string>

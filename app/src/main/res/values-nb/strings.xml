@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">Solcellepaneller</string>
+    <string name="app_name">SolcellepanelerApp</string>
 
     <!--Home Screen-->
     <string name="home"> Hjemme</string>
@@ -85,10 +85,10 @@
     <string name="cancel">Tilbakestill</string>
 
     <!--Additional Input-->
-    <string name="area_label">Areal (m²)</string>
+    <string name="area_label">Takareal (m²)</string>
     <string name="draw_area">Tegn areal</string>
-    <string name="slope_label">Vinkel (°)</string>
-    <string name="direction_label">Retning (°)</string>
+    <string name="slope_label">Takvinkel (°)</string>
+    <string name="direction_label">Takretning (°)</string>
     <string name="efficiency_label">Effektivitet (%)</string>
     <string name="coordinates_label">Koordinater (fra kart):</string>
     <string name="coordinates_unavailable">Ingen koordinater tilgjengelig</string>
