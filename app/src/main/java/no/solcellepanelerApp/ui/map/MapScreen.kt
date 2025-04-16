@@ -18,7 +18,6 @@ import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonColors
-import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardColors
 import androidx.compose.material3.Icon
@@ -44,7 +43,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Color.Companion.Green
-import androidx.compose.ui.graphics.Color.Companion.Red
 import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
@@ -383,43 +381,83 @@ fun DisplayScreen(
                                 viewModel.removePoints()
                                 index = 0
                             },
-                            colors = ButtonDefaults.buttonColors(Color.Gray)
+                            colors = ButtonColors(
+                                containerColor = MaterialTheme.colorScheme.background,
+                                contentColor = MaterialTheme.colorScheme.tertiary,
+                                disabledContainerColor = Color(color = 0xFF4CAF50),
+                                disabledContentColor = Color(color = 0xFF4CAF50)
+                            )
                         ) {
                             Text(text = stringResource(id = R.string.cancel))
                         }
                         if (polygonPoints.size > 3) {
-                            Button(onClick = {
-                                ispolygonvisible = !ispolygonvisible
-                                arealatlong = cameraPositionState.position.target
-                                val calculatedArea = viewModel.calculateAreaOfPolygon(polygonPoints)
-                                area = calculatedArea.toString()
-                                areaShown = true
-                            }, colors = ButtonDefaults.buttonColors(Color(color = 0xFF4CAF50))) {
+                            Button(
+                                onClick = {
+                                    ispolygonvisible = !ispolygonvisible
+                                    arealatlong = cameraPositionState.position.target
+                                    val calculatedArea =
+                                        viewModel.calculateAreaOfPolygon(polygonPoints)
+                                    area = calculatedArea.toString()
+                                    areaShown = true
+                                },
+                                colors = ButtonColors(
+                                    containerColor = MaterialTheme.colorScheme.tertiary,
+                                    contentColor = MaterialTheme.colorScheme.background,
+                                    disabledContainerColor = Color(color = 0xFF4CAF50),
+                                    disabledContentColor = Color(color = 0xFF4CAF50)
+                                )
+                            ) {
                                 Text(text = stringResource(id = R.string.show_area))
                             }
 
                             if (areaShown && ispolygonvisible) {
-                                Button(onClick = {
-                                    showBottomSheet = true
-                                }) {
+                                Button(
+                                    onClick = {
+                                        showBottomSheet = true
+                                    },
+                                    colors = ButtonColors(
+                                        containerColor = MaterialTheme.colorScheme.background,
+                                        contentColor = MaterialTheme.colorScheme.onPrimaryContainer,
+                                        disabledContainerColor = Color(color = 0xFF4CAF50),
+                                        disabledContentColor = Color(color = 0xFF4CAF50)
+                                    )
+                                ) {
                                     Text(text = stringResource(id = R.string.confirm_drawing))
                                 }
                             }
                         }
 
                         if (polygonPoints.isNotEmpty()) {
-                            Button(onClick = {
-                                viewModel.removeLastPoint()
-                                ispolygonvisible = false
-                                index -= 1
-                            }, colors = ButtonDefaults.buttonColors(Color.Yellow)) {
+                            Button(
+                                onClick = {
+                                    viewModel.removeLastPoint()
+                                    ispolygonvisible = false
+                                    index -= 1
+                                },
+                                colors = ButtonColors(
+                                    containerColor = MaterialTheme.colorScheme.onPrimaryContainer,
+                                    contentColor = MaterialTheme.colorScheme.background,
+                                    disabledContainerColor = Color(color = 0xFF4CAF50),
+                                    disabledContentColor = Color(color = 0xFF4CAF50)
+                                )
+                            )
+
+                            {
                                 Text(text = stringResource(id = R.string.remove_last_point))
                             }
-                            Button(onClick = {
-                                viewModel.removePoints()
-                                ispolygonvisible = false
-                                index = 0
-                            }, colors = ButtonDefaults.buttonColors(Red)) {
+                            Button(
+                                onClick = {
+                                    viewModel.removePoints()
+                                    ispolygonvisible = false
+                                    index = 0
+                                },
+                                colors = ButtonColors(
+                                    containerColor = MaterialTheme.colorScheme.onPrimaryContainer,
+                                    contentColor = MaterialTheme.colorScheme.background,
+                                    disabledContainerColor = Color(color = 0xFF4CAF50),
+                                    disabledContentColor = Color(color = 0xFF4CAF50)
+                                )
+                            ) {
                                 Text(text = stringResource(id = R.string.remove_points))
                             }
                         }

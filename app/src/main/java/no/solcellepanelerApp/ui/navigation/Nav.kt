@@ -68,14 +68,6 @@ fun Nav(navController: NavHostController, fontScaleViewModel: FontScaleViewModel
             )
         }
         composable("info_screen") { InfoScreen(navController, fontScaleViewModel) }
-        //composable("produce/{energy}") { backStackEntry ->
-        //    val energy = backStackEntry.arguments?.getString("energy")?.toDoubleOrNull() ?: 0.0
-        //    ShowProduce(
-        //        energy = energy,
-        //        navController = navController,
-        //        fontScaleViewModel = fontScaleViewModel
-        //    )
-        //}
         composable(
             "monthly_savings/{month}/{energyProduced}/{energyPrice}",
             arguments = listOf(

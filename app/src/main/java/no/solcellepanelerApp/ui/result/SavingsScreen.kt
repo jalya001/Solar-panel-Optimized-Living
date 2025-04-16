@@ -2,7 +2,6 @@ package no.solcellepanelerApp.ui.result
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Scaffold
@@ -16,15 +15,14 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
+import no.solcellepanelerApp.R
 import no.solcellepanelerApp.ui.font.FontScaleViewModel
 import no.solcellepanelerApp.ui.navigation.AppearanceBottomSheet
 import no.solcellepanelerApp.ui.navigation.BottomBar
 import no.solcellepanelerApp.ui.navigation.HelpBottomSheet
 import no.solcellepanelerApp.ui.navigation.TopBar
-import no.solcellepanelerApp.R
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -53,8 +51,6 @@ fun ShowMonthlySavings(
     ) { paddingValues ->
         Column(
             modifier = Modifier
-                .fillMaxWidth()
-                .padding(12.dp)
                 .padding(paddingValues),
             verticalArrangement = Arrangement.Center,
             horizontalAlignment = Alignment.CenterHorizontally
@@ -102,8 +98,6 @@ fun ShowYearlySavings(
     ) { paddingValues ->
         Column(
             modifier = Modifier
-                .fillMaxWidth()
-                .padding(12.dp)
                 .padding(paddingValues),
             verticalArrangement = Arrangement.Center,
             horizontalAlignment = Alignment.CenterHorizontally
@@ -111,7 +105,7 @@ fun ShowYearlySavings(
             Text(
                 text = stringResource(R.string.yearly_savings_text, savings),
                 fontSize = 18.sp * fontScale,
-                textAlign = TextAlign.Center
+                textAlign = TextAlign.Center,
             )
 
             ShowProduce(energyProduced, navController, fontScaleViewModel)

@@ -8,9 +8,9 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.platform.LocalDensity
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.compose.rememberNavController
+import no.solcellepanelerApp.ui.font.FontScaleViewModel
 import no.solcellepanelerApp.ui.language.LanguageUtils
 import no.solcellepanelerApp.ui.navigation.Nav
-import no.solcellepanelerApp.ui.font.FontScaleViewModel
 import no.solcellepanelerApp.ui.theme.SolcellepanelerAppTheme
 
 

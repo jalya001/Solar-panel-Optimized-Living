@@ -282,10 +282,12 @@ fun IconTextRow(
     modifier: Modifier = Modifier,
     textStyle: TextStyle = MaterialTheme.typography.bodyLarge,
     fontWeight: FontWeight? = null,
+    textColor: Color? = null,
+    iconColor: Color? = null,
 ) {
     Row(
-        modifier = Modifier
-            .fillMaxWidth()
+        modifier = modifier
+//            .fillMaxWidth()
             .padding(vertical = 2.dp),
         horizontalArrangement = Arrangement.spacedBy(10.dp),
         verticalAlignment = Alignment.CenterVertically
@@ -293,13 +295,22 @@ fun IconTextRow(
         Icon(
             painter = painterResource(id = iconRes),
             contentDescription = null,
-            modifier = modifier.size(30.dp),
-            tint = MaterialTheme.colorScheme.tertiary
+            modifier = Modifier.size(30.dp),
+            tint = iconColor ?: MaterialTheme.colorScheme.tertiary
         )
-        Text(
-            text = text,
-            style = textStyle,
-            fontWeight = fontWeight
-        )
+        if (textColor != null) {
+            Text(
+                text = text,
+                style = textStyle,
+                fontWeight = fontWeight,
+                color = textColor
+            )
+        } else {
+            Text(
+                text = text,
+                style = textStyle,
+                fontWeight = fontWeight
+            )
+        }
     }
 }

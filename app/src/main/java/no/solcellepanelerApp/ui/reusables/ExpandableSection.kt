@@ -70,14 +70,26 @@ fun ExpandInfoSectionContent(title: String, content: @Composable () -> Unit) {
         onClick = { expanded = !expanded },
         modifier = Modifier
             .fillMaxWidth()
-            .padding(vertical = 8.dp),
-    )
-    {
+            .padding(vertical = 8.dp)
+    ) {
         Column(modifier = Modifier.padding(16.dp)) {
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.SpaceBetween,
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Text(
+                    text = title,
+                    style = MaterialTheme.typography.headlineSmall,
+                    fontWeight = FontWeight.Thin,
+                    color = MaterialTheme.colorScheme.primary
+                )
 
-            Text(
-                text = title, style = MaterialTheme.typography.titleMedium
-            )
+                Icon(
+                    imageVector = if (expanded) Icons.Default.ExpandLess else Icons.Default.ExpandMore,
+                    contentDescription = if (expanded) "Collapse" else "Expand"
+                )
+            }
 
             if (expanded) {
                 content()
