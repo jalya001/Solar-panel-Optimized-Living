@@ -35,7 +35,6 @@ import com.airbnb.lottie.compose.animateLottieCompositionAsState
 import com.airbnb.lottie.compose.rememberLottieComposition
 import no.solcellepaneller.R
 import no.solcellepaneller.data.homedata.ElectricityPriceRepository
-import no.solcellepaneller.model.electricity.Region
 import no.solcellepaneller.ui.electricity.PriceScreenViewModel
 import no.solcellepaneller.ui.electricity.PriceUiState
 import no.solcellepaneller.ui.electricity.PriceViewModelFactory
@@ -83,7 +82,7 @@ fun ResultScreen(
 
     val daysInMonth = arrayOf(31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31)
 
-    var selectedRegion by remember { mutableStateOf(Region.OSLO) }
+    var selectedRegion = viewModel.selectedRegion
 
     val priceScreenViewModel: PriceScreenViewModel = viewModel(
         factory = PriceViewModelFactory(priceScreenViewModel, selectedRegion.regionCode),

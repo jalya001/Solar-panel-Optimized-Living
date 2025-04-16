@@ -15,6 +15,7 @@ import com.google.maps.android.SphericalUtil
 import kotlinx.coroutines.launch
 import no.solcellepaneller.data.mapdata.AddressRepository
 import no.solcellepaneller.data.mapdata.AdressDataSource
+import no.solcellepaneller.model.electricity.Region
 import kotlin.math.abs
 import kotlin.math.ceil
 
@@ -26,6 +27,8 @@ class MapScreenViewModel(
     var angleInput by mutableStateOf("")
     var directionInput by mutableStateOf("")
     var efficiencyInput by mutableStateOf("")
+
+    var selectedRegion: Region = Region.KRISTIANSAND
 
 
     private val _coordinates = MutableLiveData<Pair<Double, Double>?>()

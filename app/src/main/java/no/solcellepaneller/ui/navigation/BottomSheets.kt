@@ -47,6 +47,8 @@ import androidx.navigation.NavController
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
 import no.solcellepaneller.R
+import no.solcellepaneller.model.electricity.Region
+import no.solcellepaneller.ui.electricity.RegionDropdown
 import no.solcellepaneller.ui.font.FontScaleViewModel
 import no.solcellepaneller.ui.font.FontSizeState
 import no.solcellepaneller.ui.language.langSwitch
@@ -451,6 +453,16 @@ fun AdditionalInputBottomSheet(
                             }
                         }
                     }
+
+                    Spacer(modifier = Modifier.height(10.dp))
+
+                    var selectedRegion by remember { mutableStateOf(Region.KRISTIANSAND) }
+                    RegionDropdown(
+                        selectedRegion = viewModel.selectedRegion,
+                        onRegionSelected = { newRegion ->
+                            viewModel.selectedRegion = newRegion
+                        }
+                    )
 
                     Spacer(modifier = Modifier.height(10.dp))
 

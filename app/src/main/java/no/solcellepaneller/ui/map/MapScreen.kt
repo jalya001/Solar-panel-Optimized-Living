@@ -744,7 +744,7 @@ fun LocationButton(
                                     }
                                 }
                             } catch (e: Exception) {
-                                Log.e("PriceScreen", "Feil ved henting av lokasjon", e)
+                                Log.e("MapScreen", "Feil ved henting av lokasjon", e)
                             }
                         }
                     }
