@@ -1,8 +1,12 @@
 package no.solcellepaneller.ui.map
 
 import android.Manifest
+import android.app.Activity
 import android.content.Context
 import android.content.pm.PackageManager
+import android.location.Geocoder
+import android.location.Location
+import android.util.Log
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.layout.Arrangement
@@ -58,7 +62,6 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.zIndex
 import androidx.core.content.ContextCompat
 import androidx.navigation.NavController
-import com.google.android.gms.location.LocationServices
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.model.CameraPosition
 import com.google.android.gms.maps.model.LatLng
@@ -72,6 +75,7 @@ import com.google.maps.android.compose.rememberCameraPositionState
 import com.google.maps.android.compose.rememberMarkerState
 import kotlinx.coroutines.launch
 import no.solcellepaneller.R
+import no.solcellepaneller.data.location.LocationService
 import no.solcellepaneller.ui.font.FontScaleViewModel
 import no.solcellepaneller.ui.navigation.AdditionalInputBottomSheet
 import no.solcellepaneller.ui.navigation.AppearanceBottomSheet
@@ -79,6 +83,8 @@ import no.solcellepaneller.ui.navigation.BottomBar
 import no.solcellepaneller.ui.navigation.HelpBottomSheet
 import no.solcellepaneller.ui.navigation.TopBar
 import no.solcellepaneller.ui.result.WeatherViewModel
+import java.util.Locale
+
 
 @Composable
 fun MapScreen(
@@ -287,50 +293,13 @@ fun DisplayScreen(
             }
         }
 
-        //Current location button
-        Box(
-            modifier = Modifier
-                .align(Alignment.BottomEnd)
-                .padding(end = 16.dp, bottom = 110.dp)
-        ) {
-            Button(
-                onClick = {
-                    if (locationPermissionGranted) {
-                        getCurrentLocation(
-                            context = context,
-                            onSuccess = { latLng ->
-                                selectedCoordinates = latLng
-                                viewModel.selectLocation(latLng.latitude, latLng.longitude)
-                                coroutineScope.launch {
-                                    cameraPositionState.animate(
-                                        CameraUpdateFactory.newCameraPosition(
-                                            CameraPosition.fromLatLngZoom(latLng, 18f)
-                                        )
-                                    )
-                                }
-                            },
-                            onFailure = {
-                                coroutineScope.launch {
-                                    snackbarHostState.showSnackbar("Could not get current location")
-                                }
-                            }
-                        )
-                    } else {
-                        locationPermissionLauncher.launch(Manifest.permission.ACCESS_FINE_LOCATION)
-                    }
-                },
-                modifier = Modifier.size(56.dp),
-                colors = ButtonDefaults.buttonColors(
-                    containerColor = MaterialTheme.colorScheme.primaryContainer,
-                    contentColor = MaterialTheme.colorScheme.onPrimaryContainer
-                )
-            ) {
-                Icon(
-                    imageVector = Icons.Default.MyLocation,
-                    contentDescription = stringResource(id = R.string.current_location)
-                )
+        var detectedAddress by remember { mutableStateOf("") }
+        LocationButton(
+            locationPermissionGranted = locationPermissionGranted,
+            onAddressDetected = { address ->
+                detectedAddress = address
             }
-        }
+        )
 
         //Search bar
         Card(
@@ -563,6 +532,18 @@ fun DisplayScreen(
     )
 }
 
+fun getAddressFromLocation(context: Context, location: Location): String? {
+    val geocoder = Geocoder(context, Locale.getDefault())
+    return try {
+        val addresses = geocoder.getFromLocation(location.latitude, location.longitude, 1)
+        addresses?.firstOrNull()?.getAddressLine(0)
+    } catch (e: Exception) {
+        Log.e("Geocoder", "Feil ved henting av adresse", e)
+        null
+    }
+}
+
+
 @Composable
 fun InputField(
     value: String,
@@ -664,27 +645,6 @@ fun LocationNotSelectedDialog(
     )
 }
 
-fun getCurrentLocation(
-    context: Context,
-    onSuccess: (LatLng) -> Unit,
-    onFailure: () -> Unit
-) {
-    val fusedLocationClient = LocationServices.getFusedLocationProviderClient(context)
-    if (ContextCompat.checkSelfPermission(
-        context,
-        Manifest.permission.ACCESS_FINE_LOCATION
-        ) == PackageManager.PERMISSION_GRANTED
-    ) {
-        fusedLocationClient.lastLocation.addOnSuccessListener { location ->
-            location?.let {
-                onSuccess(LatLng(it.latitude, it.longitude))
-            } ?: run {
-                onFailure
-           }
-        }
-    }
-}
-
 @Composable
 private fun DrawingControls(
     polygonPoints: List<LatLng>,
@@ -748,6 +708,57 @@ private fun DrawingControls(
                         Text(stringResource(id = R.string.remove_points))
                     }
                 }
+            }
+        }
+    }
+}
+
+@Composable
+fun LocationButton(
+    locationPermissionGranted: Boolean,
+    onAddressDetected: (String) -> Unit
+) {
+    val context = LocalContext.current
+    val activity = context as? Activity
+    val scope = rememberCoroutineScope()
+    //Current location button
+    Box(
+        modifier = Modifier.fillMaxSize()
+    ) {
+        Box(
+            modifier = Modifier
+                .align(Alignment.BottomEnd)
+                .padding(end = 16.dp, bottom = 150.dp)
+        ) {
+            Button(
+                onClick = {
+                    if (locationPermissionGranted && activity != null) {
+                        scope.launch {
+                            val locationService = LocationService(activity)
+                            try {
+                                val location = locationService.getCurrentLocation()
+                                location?.let {
+                                    val address = getAddressFromLocation(context, it)
+                                    address?.let {
+                                        onAddressDetected(it)
+                                    }
+                                }
+                            } catch (e: Exception) {
+                                Log.e("PriceScreen", "Feil ved henting av lokasjon", e)
+                            }
+                        }
+                    }
+                },
+                modifier = Modifier.size(56.dp),
+                colors = ButtonDefaults.buttonColors(
+                    containerColor = MaterialTheme.colorScheme.primaryContainer,
+                    contentColor = MaterialTheme.colorScheme.onPrimaryContainer
+                )
+            ) {
+                Icon(
+                    imageVector = Icons.Default.MyLocation,
+                    contentDescription = stringResource(id = R.string.current_location)
+                )
             }
         }
     }
