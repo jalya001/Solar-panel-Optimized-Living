@@ -608,6 +608,22 @@ private fun DrawingControls(
             Column {
                 var areaShown by remember { mutableStateOf(false) }
 
+                if (areaShown) {
+                    Button(
+                        onClick = {
+                            toggleBottomSheet()
+                        },
+                        colors = ButtonColors(
+                            containerColor = MaterialTheme.colorScheme.background,
+                            contentColor = MaterialTheme.colorScheme.onPrimaryContainer,
+                            disabledContainerColor = Color(color = 0xFF4CAF50),
+                            disabledContentColor = Color(color = 0xFF4CAF50)
+                        )
+                    ) {
+                        Text(text = stringResource(id = R.string.confirm_drawing))
+                    }
+                }
+
                 if (polygonPoints.size > 2) {
                     Button(
                         onClick = {
@@ -623,23 +639,6 @@ private fun DrawingControls(
                     ) {
                         Text(text = stringResource(id = R.string.show_area))
                     }
-
-                    if (areaShown) {
-                        Button(
-                            onClick = {
-                                toggleBottomSheet()
-                            },
-                            colors = ButtonColors(
-                                containerColor = MaterialTheme.colorScheme.background,
-                                contentColor = MaterialTheme.colorScheme.onPrimaryContainer,
-                                disabledContainerColor = Color(color = 0xFF4CAF50),
-                                disabledContentColor = Color(color = 0xFF4CAF50)
-                            )
-                        ) {
-                            Text(text = stringResource(id = R.string.confirm_drawing))
-                        }
-                    }
-
                 }
 
                 if (polygonPoints.isNotEmpty()) {
