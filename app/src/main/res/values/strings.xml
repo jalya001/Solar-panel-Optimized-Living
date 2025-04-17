@@ -84,7 +84,7 @@
     <!--Additional Input-->
     <string name="area_label">Roof Area (m²)</string>
     <string name="draw_area">Draw areal</string>
-    <string name="slope_label">Angle of the roof (°)</string>
+    <string name="slope_label">Angle of the roof from 0 - 90° </string>
     <string name="direction_label">The direction the panel is facing</string>
     <string name="efficiency_label">Efficiency of the panels, usually betweeen 16-20%</string>
     <string name="coordinates_label">Coordinates (from map): </string>
@@ -100,6 +100,15 @@
     <string name="tech_problems_title">Problems</string>
     <string name="tech_problems_content">Problems with app</string>
     <string name="how_to_draw">How to draw in the map</string>
+    <string name="north">N</string>
+    <string name="northeast">NE</string>
+    <string name="east">E</string>
+    <string name="southeast">SE</string>
+    <string name="south">S</string>
+    <string name="southwest">SW</string>
+    <string name="west">W</string>
+    <string name="northwest">NW</string>
+
 
     <!--Result Screen-->
     <string name="results"> Results </string>

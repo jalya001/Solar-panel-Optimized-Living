@@ -298,6 +298,20 @@ fun AppearanceBottomSheet(
     }
 }
 
+@Composable
+fun getCompassDirection(degree: Int): String {
+    return when (degree) {
+        in 0..22 -> stringResource(id = R.string.north)
+        in 23..67 -> stringResource(id = R.string.northeast)
+        in 68..112 -> stringResource(id = R.string.east)
+        in 113..157 -> stringResource(id = R.string.southeast)
+        in 158..202 -> stringResource(id = R.string.south)
+        in 203..247 -> stringResource(id = R.string.southwest)
+        in 248..292 -> stringResource(id = R.string.west)
+        else -> stringResource(id = R.string.northwest)
+    }
+}
+
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun AdditionalInputBottomSheet(
@@ -310,7 +324,7 @@ fun AdditionalInputBottomSheet(
     viewModel: MapScreenViewModel,
     weatherViewModel: WeatherViewModel,
 ) {
-    var angle by remember { mutableStateOf("") }
+    var angle by remember { mutableStateOf(0f) }
     var areaState by remember { mutableStateOf(area) }
 
     LaunchedEffect(area) {
@@ -319,7 +333,7 @@ fun AdditionalInputBottomSheet(
 
     // var direction by remember { mutableStateOf("") } bruker azimuthpostion istendefor
     var azimuthPosition by remember { mutableStateOf(0f) } // never null ans starts at 0
-    var efficiency by remember { mutableStateOf("") }
+    var efficiency by remember { mutableStateOf(0f) }
 
     if (visible) {
         val currentDensity = LocalDensity.current
@@ -365,9 +379,9 @@ fun AdditionalInputBottomSheet(
                     Button(
                         onClick = {
                             areaState = "45"
-                            angle = "30"
+                            //angle = "30"
                             // direction = "180" trengs ikke fordi direction alltid starter på 0 i slider
-                            efficiency = "85"
+                            //efficiency = "15"
                         },
                         modifier = Modifier.align(Alignment.CenterHorizontally)
                     ) {
@@ -410,29 +424,45 @@ fun AdditionalInputBottomSheet(
                         }
                     }
 
-                    Spacer(modifier = Modifier.height(10.dp))
-
-                    DecimalInputField(
-                        onValueChange = { angle = it },
-                        label = stringResource(id = R.string.slope_label),
-                        modifier = Modifier.fillMaxWidth(),
-                        value = angle,
-                        decimalFormatter = decimalFormatter
-                    )
-
-                    DecimalInputField(
-                        onValueChange = { efficiency = it },
-                        label = stringResource(id = R.string.efficiency_label),
-                        modifier = Modifier.fillMaxWidth(),
-                        value = efficiency,
-                        decimalFormatter = decimalFormatter
-                    )
-
                     Spacer(modifier = Modifier.height(16.dp))
+
 
                     Column(
                         modifier = Modifier.padding(16.dp)
                     ) {
+
+                        Text(
+                            text = stringResource(id = R.string.slope_label),
+                            style = MaterialTheme.typography.titleMedium
+                        )
+
+                        Spacer(Modifier.height(8.dp))
+
+                        Slider(
+                            value = angle,
+                            onValueChange = {angle = it},
+                            valueRange = 0f..90f,
+                            modifier = Modifier.fillMaxWidth()
+                        )
+
+                        Text("Tilt: ${angle.toInt()}°")
+
+                        Spacer(Modifier.height(8.dp))
+
+                        Text(stringResource(id = R.string.efficiency_label), style = MaterialTheme.typography.titleMedium)
+
+                        Slider(
+                            value = efficiency,
+                            onValueChange = { efficiency = it },
+                            valueRange = 0f..100f,
+                            modifier = Modifier.fillMaxWidth()
+                        )
+
+                        Text("Efficiency: ${efficiency.toInt()}%")
+
+
+                        Spacer(Modifier.height(8.dp))
+
                         Text(
                             text = stringResource(id = R.string.direction_label),
                             style = MaterialTheme.typography.titleMedium
@@ -443,29 +473,14 @@ fun AdditionalInputBottomSheet(
                         Slider(
                             value = azimuthPosition,
                             onValueChange = { azimuthPosition = it },
-                            valueRange = 0f..359f,
-                            steps = 358,
+                            valueRange = 0f..315f,
                             modifier = Modifier.fillMaxWidth()
                         )
 
-                        Text("Direction: ${azimuthPosition.toInt()}°")
-
-                        Spacer(Modifier.height(4.dp))
-
-                        Row(
-                            Modifier.fillMaxWidth(),
-                            horizontalArrangement = Arrangement.SpaceBetween
-                        ) {
-                            Text("N")
-                            Text("E")
-                            Text("S")
-                            Text("W")
-                        }
-                    }
+                        Text("Direction: ${azimuthPosition.toInt()}° (${getCompassDirection(azimuthPosition.toInt())})")
 
 
-
-                    Spacer(modifier = Modifier.height(10.dp))
+                        Spacer(modifier = Modifier.height(10.dp))
 
                     var selectedRegion by remember { mutableStateOf(Region.OSLO) }
                     RegionDropdown(
@@ -477,18 +492,19 @@ fun AdditionalInputBottomSheet(
 
                     Spacer(modifier = Modifier.height(10.dp))
 
-                    if (areaState.isNotEmpty() && angle.isNotEmpty() && efficiency.isNotEmpty() && coordinates != null) {
+                    if (areaState.isNotEmpty() && coordinates != null) {
                         Button(
                             onClick = {
                                 viewModel.areaInput = areaState
-                                viewModel.angleInput = angle
-                                viewModel.efficiencyInput = efficiency
+                                viewModel.angleInput = angle.toString()
+                                viewModel.efficiencyInput = efficiency.toString()
                                 viewModel.directionInput = azimuthPosition.toInt().toString()
                                 Log.d("AZIMUTH", viewModel.directionInput)
+                                Log.d("angle", viewModel.angleInput)
 
                                 val lat = coordinates.first
                                 val lon = coordinates.second
-                                val slope = angle.toIntOrNull()
+                                val slope = angle
 
                                 weatherViewModel.fetchFrostData(
                                     lat, lon,
@@ -500,14 +516,12 @@ fun AdditionalInputBottomSheet(
                                 )
 
 
-                                if (slope != null) {
-                                    weatherViewModel.fetchRadiationInfo(
-                                        lat,
-                                        lon,
-                                        slope,
-                                        azimuthPosition.toInt()
-                                    )
-                                }
+                                weatherViewModel.fetchRadiationInfo(
+                                    lat,
+                                    lon,
+                                    slope.toInt(),
+                                    azimuthPosition.toInt()
+                                )
                                 navController.navigate("result")
 
                             },
@@ -521,4 +535,6 @@ fun AdditionalInputBottomSheet(
             }
         }
     }
+}
+
 }

@@ -87,7 +87,7 @@
     <!--Additional Input-->
     <string name="area_label">Takareal (m²)</string>
     <string name="draw_area">Tegn areal</string>
-    <string name="slope_label">Vinkel på taket (°)</string>
+    <string name="slope_label">Vinkel på taket fra 0 - 90°</string>
     <string name="direction_label">Retningen panelet vender mot</string>
     <string name="efficiency_label">Effektiviteten til panelene, vanligvis mellom 16-20 %</string>
     <string name="coordinates_label">Koordinater (fra kart):</string>
@@ -101,8 +101,17 @@
     <string name="tech_problems_content">Problemer med appen</string>
     <string name="how_to_draw">Hvordan tegne i kartet</string>
     <string name="need_help_drawing">Trenger du hjelp med å tegne?</string>
-    <string name="help_draw">Draw on the map</string>
     <string name="tech_problems_title">Problemer</string>
+    <string name="help_draw">Draw on the map</string>
+    <string name="north">N</string>
+    <string name="northeast">NØ</string>
+    <string name="east">Ø</string>
+    <string name="southeast">SØ</string>
+    <string name="south">S</string>
+    <string name="southwest">SV</string>
+    <string name="west">V</string>
+    <string name="northwest">NV</string>
+
 
     <!--Result Screen-->
     <string name="results"> Resultater </string>

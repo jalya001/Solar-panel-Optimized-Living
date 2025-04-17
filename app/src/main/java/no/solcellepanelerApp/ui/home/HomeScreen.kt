@@ -8,7 +8,9 @@ import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
@@ -111,6 +113,7 @@ fun HomeScreen(
                         .weight(1f)
                         .height(400.dp),
                     style = MaterialTheme.typography.displaySmall,
+                    content = { LightningAnimation() },
                     color = MaterialTheme.colorScheme.primary
                 )
             }
@@ -153,6 +156,34 @@ fun PanelAnimation() {
             modifier = Modifier
                 .width(130.dp)
                 .aspectRatio(400.dp / 1000.dp),
+        )
+    }
+}
+
+@Composable
+fun LightningAnimation() {
+    val animationFile = "lightningBolt_anim.json"
+
+    val composition by rememberLottieComposition(
+        LottieCompositionSpec.Asset(animationFile)
+    )
+
+    val progress by animateLottieCompositionAsState(
+        composition = composition,
+        iterations = LottieConstants.IterateForever,
+    )
+
+    Box(
+        modifier = Modifier
+//        .background(color = Color.Blue)
+            .height(500.dp)
+    ) {
+        LottieAnimation(
+            composition = composition,
+            progress = { progress },
+            modifier = Modifier
+                .size(300.dp)
+                .offset(x = (-40).dp, y = (40).dp)
         )
     }
 }
