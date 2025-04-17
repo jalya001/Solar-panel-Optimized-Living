@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">Solcellepaneller</string>
+    <string name="app_name">SolcellepanelerApp</string>
 
     <!--Home Screen-->
     <string name="home"> Hjemme</string>
@@ -77,7 +77,7 @@
     <string name="show_area">Vis område</string>
     <string name="confirm_drawing">Bekreft tegning</string>
     <string name="remove_last_point">Fjern siste punkt</string>
-    <string name="remove_points">Fjern punkter</string>
+    <string name="remove_points">Fjern alle punkter</string>
     <string name="selected_position">Valgt posisjon</string>
     <string name="latitude">Breddegrad</string>
     <string name="longitude">Lengdegrad</string>
@@ -85,10 +85,10 @@
     <string name="cancel">Tilbakestill</string>
 
     <!--Additional Input-->
-    <string name="area_label">Areal (m²)</string>
+    <string name="area_label">Takareal (m²)</string>
     <string name="draw_area">Tegn areal</string>
-    <string name="slope_label">Vinkel (°)</string>
-    <string name="direction_label">Retning (°)</string>
+    <string name="slope_label">Takvinkel (°)</string>
+    <string name="direction_label">Takretning (°)</string>
     <string name="efficiency_label">Effektivitet (%)</string>
     <string name="coordinates_label">Koordinater (fra kart):</string>
     <string name="coordinates_unavailable">Ingen koordinater tilgjengelig</string>
@@ -113,14 +113,6 @@
     <string name="get_data">Hent data </string>
     <string name="loading"> Laster inn data, vennligst vent… </string>
 
-    <string name="month"> Måned </string>
-    <string name="global_radiation">Global stråling: </string>
-    <string name="avg_cloud_cover"> Gjennomsnittlig skydekke: </string>
-    <string name="avg_snow_cover">Gjennomsnittlig snødekke: </string>
-    <string name="temp_factor">Temperaturfaktor: </string>
-    <string name="adj_radiation">Justert stråling: </string>
-    <string name="estimated_energy_prod">Estimert produsert energi: %.2f kWh </string>
-    <string name="estimated_powerpr_hour">Estimert kraft produsert per time: </string>
     <string name="address_not_found">Adresse ikke funnet, prøv igjen</string>
     <string name="follow_system">Følg systemtema</string>
     <string name="navigate_results">Gå til resultater</string>
@@ -130,6 +122,10 @@
 
     <string name="additional_input">Tilleggsinformasjon</string>
 
+    <string name="yearly_savings_label">Årlig Sparing</string>
+    <string name="show_one_month">Vis Èn Måned</string>
+    <string name="show_all_months">Vis Alle Måneder</string>
+    <string name="selected_month">Måned: %1$s</string>
 
     <!-- Months -->
     <string name="month_january">Januar</string>
@@ -145,8 +141,22 @@
     <string name="month_november">November</string>
     <string name="month_december">Desember</string>
 
+    <string name="current_location">Nåværende plassering</string>
+    <string name="search">Søk</string>
+
     <string name="frost_mode">Frost</string>
     <string name="home_bottom_bar">Hjem</string>
+
+    <!--Cards-->
+    <string name="month"> Måned </string>
+    <string name="global_radiation">Global stråling: %.2f kWh/m²</string>
+    <string name="avg_cloud_cover"> Gjennomsnittlig skydekke: %.2f</string>
+    <string name="avg_snow_cover">Gjennomsnittlig snødekke: %.2f</string>
+    <string name="temp_factor">Temperaturfaktor: %.2f °C</string>
+    <string name="adj_radiation">Justert stråling: %.2f kWh/m²</string>
+    <string name="estimated_energy_prod">Estimert produsert energi: %.2f kWh </string>
+    <string name="estimated_powerpr_hour">Estimert kraft produsert per time: %.2f kW</string>
+    <string name="show_monthly_savings">Vis Din Månedlige Sparing I %1$s</string>
 
     <!--Savings Screen-->
     <string name="yearly_savings">Spares årlig</string>

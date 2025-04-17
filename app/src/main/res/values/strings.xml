@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">Solcellepaneler</string>
+    <string name="app_name">SolcellepanelerApp</string>
 
     <!--Home Screen-->
     <string name="home"> Home</string>
@@ -74,7 +74,7 @@
     <string name="show_area">Show Area</string>
     <string name="confirm_drawing">Confirm Drawing</string>
     <string name="remove_last_point">Remove Last Point</string>
-    <string name="remove_points">Remove Points</string>
+    <string name="remove_points">Remove All Points</string>
     <string name="selected_position">Selected Position</string>
     <string name="latitude">Latitude</string>
     <string name="longitude">Longitude</string>
@@ -82,11 +82,11 @@
     <string name="cancel">Cancel</string>
 
     <!--Additional Input-->
-    <string name="area_label">Area (m²)</string>
+    <string name="area_label">Roof Area (m²)</string>
     <string name="draw_area">Draw areal</string>
-    <string name="slope_label">Angle (°)</string>
-    <string name="direction_label">Direction (°)</string>
-    <string name="efficiency_label">Efficiency (%)</string>
+    <string name="slope_label">Roof Angle (°)</string>
+    <string name="direction_label">Roof Direction (°)</string>
+    <string name="efficiency_label">Panel Efficiency (%)</string>
     <string name="coordinates_label">Coordinates (from map): </string>
     <string name="coordinates_unavailable">No coordinates available</string>
     <string name="closest_weather_station">Closest weather station:</string>
@@ -110,16 +110,6 @@
     <string name="get_data">Get data </string>
     <string name="loading"> Loading Data, please wait…</string>
 
-    <string name="month"> Month: </string>
-    <string name="global_radiation">Global Radiation: </string>
-    <string name="avg_cloud_cover"> Average Cloud Cover: </string>
-    <string name="avg_snow_cover">Average Snow Cover: </string>
-    <string name="temp_factor">Temperature Factor: </string>
-    <string name="adj_radiation">Adjusted Radiation: </string>
-    <string name="estimated_energy_prod">Estimated Energy Produced: %.2f kWh </string>
-    <string name="estimated_powerpr_hour">Estimated Power Produced per Hour: </string>
-
-
     <string name="address_not_found">Address not found, try again</string>
     <string name="follow_system">Follow system theme</string>
     <string name="navigate_results">Go to results</string>
@@ -128,10 +118,13 @@
     <string name="additional_input">Additional input</string>
     <string name="prod">Production</string>
 
-
     <string name="frost_mode">Frost</string>
     <string name="home_bottom_bar">Home</string>
 
+    <string name="yearly_savings_label">Yearly Savings</string>
+    <string name="show_one_month">Show One Month</string>
+    <string name="show_all_months">Show All Months</string>
+    <string name="selected_month">Month: %1$s</string>
 
     <!--Months-->
     <string name="month_january">January</string>
@@ -147,10 +140,24 @@
     <string name="month_november">November</string>
     <string name="month_december">December</string>
 
+    <string name="current_location">Current Location</string>
+    <string name="search">Search</string>
+
+    <!--Cards-->
+    <string name="month"> Month: </string>
+    <string name="global_radiation">Global Radiation: %.2f kWh/m²</string>
+    <string name="avg_cloud_cover"> Average Cloud Cover: %.2f</string>
+    <string name="avg_snow_cover">Average Snow Cover: %.2f</string>
+    <string name="temp_factor">Temperature Factor: %.2f °C</string>
+    <string name="adj_radiation">Adjusted Radiation: %.2f kWh/m²</string>
+    <string name="estimated_energy_prod">Estimated Energy Produced: %.2f kWh </string>
+    <string name="estimated_powerpr_hour">Estimated Power Produced per Hour: %.2f kW</string>
+    <string name="show_monthly_savings">Show Your Savings In %1$s</string>
+
     <!--Savings Screen-->
     <string name="yearly_savings">Saved annually</string>
     <string name="yearly_savings_text">You will save %.2f kroner per year on electricity from solar panels</string>
-    <string name="monthly_savings">Savings in: %1$s?</string>
+    <string name="monthly_savings">Savings in: %1$s</string>
     <string name="monthly_savings_text">You will save %1$.2f kroner in %2$s with electricity from solar panels</string>
 
 </resources>

@@ -8,11 +8,11 @@ plugins {
 }
 
 android {
-    namespace = "no.solcellepaneller"
+    namespace = "no.solcellepanelerApp"
     compileSdk = 35
 
     defaultConfig {
-        applicationId = "no.solcellepaneller"
+        applicationId = "no.solcellepanelerApp"
         minSdk = 26
         targetSdk = 35
         versionCode = 1
@@ -47,6 +47,12 @@ android {
 }
 
 dependencies {
+
+    implementation("androidx.compose.ui:ui:1.5.15")
+    implementation("androidx.compose.material3:material3:1.1.2")
+    implementation("androidx.compose.foundation:foundation:1.5.0")
+    implementation("androidx.activity:activity-compose:1.7.2")
+
 
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.lifecycle.runtime.ktx)
@@ -98,7 +104,7 @@ dependencies {
     implementation("com.google.maps.android:android-maps-utils:2.2.0")
 
     //Chart dependencies
-    implementation(libs.ycharts)
+    implementation("co.yml:ycharts:2.1.0")
 
     //Icons dependency
     implementation(libs.androidx.material.icons.extended.android)
@@ -117,4 +123,10 @@ dependencies {
 
 
     implementation("androidx.compose.ui:ui-text-google-fonts:1.7.8")
+
+//    implementation("com.google.accompanist:accompanist-flowlayout:<latest_version>")
+    implementation("com.google.accompanist:accompanist-flowlayout:0.28.0")
+//    implementation("androidx.compose.ui:ui:1.3.0")
+//    implementation("androidx.compose.material3:material3:1.0.0")
+
 }
