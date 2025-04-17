@@ -1,5 +1,6 @@
 package no.solcellepanelerApp.ui.navigation
 
+import android.util.Log
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -11,6 +12,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
@@ -26,6 +28,7 @@ import androidx.compose.material3.ExposedDropdownMenuDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.ModalBottomSheet
+import androidx.compose.material3.Slider
 import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
@@ -50,6 +53,7 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.Density
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
+import co.yml.charts.common.extensions.isNotNull
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
 import no.solcellepanelerApp.R
@@ -313,10 +317,8 @@ fun AdditionalInputBottomSheet(
         areaState = area
     }
 
-    var direction by remember { mutableStateOf("") }
-    val azimuthValues = listOf("0", "90", "180", "270")
-    var azimuthInput by remember { mutableStateOf("") } // nothing selected yet
-    var expanded by remember { mutableStateOf(false) }
+    // var direction by remember { mutableStateOf("") } bruker azimuthpostion istendefor
+    var azimuthPosition by remember { mutableStateOf(0f) } // never null ans starts at 0
     var efficiency by remember { mutableStateOf("") }
 
     if (visible) {
@@ -364,7 +366,7 @@ fun AdditionalInputBottomSheet(
                         onClick = {
                             areaState = "45"
                             angle = "30"
-                            direction = azimuthValues[1]
+                            // direction = "180" trengs ikke fordi direction alltid starter på 0 i slider
                             efficiency = "85"
                         },
                         modifier = Modifier.align(Alignment.CenterHorizontally)
@@ -428,43 +430,39 @@ fun AdditionalInputBottomSheet(
 
                     Spacer(modifier = Modifier.height(16.dp))
 
-                    ExposedDropdownMenuBox(
-                        expanded = expanded,
-                        onExpandedChange = { expanded = !expanded }
+                    Column(
+                        modifier = Modifier.padding(16.dp)
                     ) {
-                        TextField(
-                            value = azimuthInput,
-                            onValueChange = { it ->
-                                if (it.isEmpty() || (it.all { it.isDigit() } && it.toInt() in 0..359)) {
-                                    azimuthInput = it
-                                }
-
-                            },
-                            keyboardOptions = KeyboardOptions(
-                                keyboardType = KeyboardType.Number
-                            ),
-                            label = { Text(stringResource(id = R.string.direction_label)) },
-                            trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(expanded = expanded) },
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .menuAnchor()
+                        Text(
+                            text = stringResource(id = R.string.direction_label),
+                            style = MaterialTheme.typography.titleMedium
                         )
 
-                        ExposedDropdownMenu(
-                            expanded = expanded,
-                            onDismissRequest = { expanded = false }
+                        Spacer(Modifier.height(8.dp))
+
+                        Slider(
+                            value = azimuthPosition,
+                            onValueChange = { azimuthPosition = it },
+                            valueRange = 0f..359f,
+                            steps = 358,
+                            modifier = Modifier.fillMaxWidth()
+                        )
+
+                        Text("Direction: ${azimuthPosition.toInt()}°")
+
+                        Spacer(Modifier.height(4.dp))
+
+                        Row(
+                            Modifier.fillMaxWidth(),
+                            horizontalArrangement = Arrangement.SpaceBetween
                         ) {
-                            azimuthValues.forEach { item ->
-                                DropdownMenuItem(
-                                    text = { Text("$item°") },
-                                    onClick = {
-                                        azimuthInput = item
-                                        expanded = false
-                                    }
-                                )
-                            }
+                            Text("N")
+                            Text("E")
+                            Text("S")
+                            Text("W")
                         }
                     }
+
 
 
                     Spacer(modifier = Modifier.height(10.dp))
@@ -479,13 +477,14 @@ fun AdditionalInputBottomSheet(
 
                     Spacer(modifier = Modifier.height(10.dp))
 
-                    if (areaState.isNotEmpty() && direction.isNotEmpty() && angle.isNotEmpty() && efficiency.isNotEmpty() && coordinates != null) {
+                    if (areaState.isNotEmpty() && angle.isNotEmpty() && efficiency.isNotEmpty() && coordinates != null) {
                         Button(
                             onClick = {
                                 viewModel.areaInput = areaState
                                 viewModel.angleInput = angle
                                 viewModel.efficiencyInput = efficiency
-                                viewModel.directionInput = direction
+                                viewModel.directionInput = azimuthPosition.toInt().toString()
+                                Log.d("AZIMUTH", viewModel.directionInput)
 
                                 val lat = coordinates.first
                                 val lon = coordinates.second
@@ -506,7 +505,7 @@ fun AdditionalInputBottomSheet(
                                         lat,
                                         lon,
                                         slope,
-                                        direction.toInt()
+                                        azimuthPosition.toInt()
                                     )
                                 }
                                 navController.navigate("result")
