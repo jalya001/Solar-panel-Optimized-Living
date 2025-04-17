@@ -43,6 +43,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalDensity
+import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
@@ -316,7 +317,6 @@ fun AdditionalInputBottomSheet(
     val azimuthValues = listOf("0", "90", "180", "270")
     var azimuthInput by remember { mutableStateOf("") } // nothing selected yet
     var expanded by remember { mutableStateOf(false) }
-
     var efficiency by remember { mutableStateOf("") }
 
     if (visible) {
@@ -430,21 +430,24 @@ fun AdditionalInputBottomSheet(
 
                     ExposedDropdownMenuBox(
                         expanded = expanded,
-                        onExpandedChange = { expanded = it }
+                        onExpandedChange = { expanded = !expanded }
                     ) {
                         TextField(
                             value = azimuthInput,
                             onValueChange = { it ->
-                                if (it.all { it.isDigit() }) {
+                                if (it.isEmpty() || (it.all { it.isDigit() } && it.toInt() in 0..359)) {
                                     azimuthInput = it
                                 }
+
                             },
                             keyboardOptions = KeyboardOptions(
                                 keyboardType = KeyboardType.Number
                             ),
-                            label = { Text("Input the direction the panel is facing in degrees") },
+                            label = { Text(stringResource(id = R.string.direction_label)) },
                             trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(expanded = expanded) },
-                            modifier = Modifier.menuAnchor()
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .menuAnchor()
                         )
 
                         ExposedDropdownMenu(
