@@ -7,7 +7,7 @@ class FontScaleViewModel : ViewModel() {
     val fontScale = mutableFloatStateOf(1f)
 
     fun increaseFontScale(): Boolean {
-        return if (fontScale.floatValue < 1.6f) {
+        return if (fontScale.floatValue < 1.3f) {
             fontScale.floatValue += 0.1f
             true
         } else {

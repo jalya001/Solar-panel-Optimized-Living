@@ -35,10 +35,9 @@ fun App() {
 
     val systemFontScale = LocalDensity.current.fontScale
     val effectiveFontScale = systemFontScale * fontScaleViewModel.fontScale.floatValue
-    val clampedFontScale = effectiveFontScale.coerceIn(1.0f, 1.6f)
 
     SolcellepanelerAppTheme(
-        fontScale = clampedFontScale
+        fontScale = effectiveFontScale
     ) {
         Nav(navController = navController, fontScaleViewModel = fontScaleViewModel)
     }

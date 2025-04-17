@@ -12,6 +12,7 @@ import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowDropDown
 import androidx.compose.material.icons.filled.Create
@@ -20,12 +21,15 @@ import androidx.compose.material3.Checkbox
 import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.ExposedDropdownMenuBox
+import androidx.compose.material3.ExposedDropdownMenuDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.ModalBottomSheet
 import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextField
 import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
@@ -41,6 +45,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.Density
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
@@ -308,9 +313,8 @@ fun AdditionalInputBottomSheet(
     }
 
     var direction by remember { mutableStateOf("") }
-    val directions = listOf("North", "East", "South", "West")
     val azimuthValues = listOf("0", "90", "180", "270")
-    var selectedIndex by remember { mutableStateOf(-1) } // nothing selected yet
+    var azimuthInput by remember { mutableStateOf("") } // nothing selected yet
     var expanded by remember { mutableStateOf(false) }
 
     var efficiency by remember { mutableStateOf("") }
@@ -424,40 +428,41 @@ fun AdditionalInputBottomSheet(
 
                     Spacer(modifier = Modifier.height(16.dp))
 
-                    Box {
-                        Button(
-                            onClick = { expanded = true },
-                            modifier = Modifier.fillMaxWidth()
-                        ) {
-                            Text(
-                                text = if (selectedIndex >= 0)
-                                    "(${azimuthValues[selectedIndex]}°)"
-                                else
-                                    "Choose roof angle (°)"
-                            )
+                    ExposedDropdownMenuBox(
+                        expanded = expanded,
+                        onExpandedChange = { expanded = it }
+                    ) {
+                        TextField(
+                            value = azimuthInput,
+                            onValueChange = { it ->
+                                if (it.all { it.isDigit() }) {
+                                    azimuthInput = it
+                                }
+                            },
+                            keyboardOptions = KeyboardOptions(
+                                keyboardType = KeyboardType.Number
+                            ),
+                            label = { Text("Input the direction the panel is facing in degrees") },
+                            trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(expanded = expanded) },
+                            modifier = Modifier.menuAnchor()
+                        )
 
-                            Icon(
-                                imageVector = Icons.Default.ArrowDropDown,
-                                contentDescription = "Dropdown arrow"
-                            )
-                        }
-
-                        DropdownMenu(
+                        ExposedDropdownMenu(
                             expanded = expanded,
                             onDismissRequest = { expanded = false }
                         ) {
-                            directions.forEachIndexed { index, dir ->
+                            azimuthValues.forEach { item ->
                                 DropdownMenuItem(
-                                    text = { Text("$dir (${azimuthValues[index]}°)") },
+                                    text = { Text("$item°") },
                                     onClick = {
-                                        selectedIndex = index
-                                        direction = azimuthValues[index]
+                                        azimuthInput = item
                                         expanded = false
                                     }
                                 )
                             }
                         }
                     }
+
 
                     Spacer(modifier = Modifier.height(10.dp))
 
