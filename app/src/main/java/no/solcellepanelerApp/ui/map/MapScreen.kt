@@ -379,7 +379,9 @@ fun DisplayScreen(
 
             val coroutineScope = rememberCoroutineScope()
 
-            // må finne en måtte å gjøre d slik at denne knappen ikke er til stedet når brukeren tegner
+            Spacer(
+                modifier = Modifier.height(20.dp)
+            )
             BekreftLokasjon(
                 onClick = {
                     if (coordinates != null) {
@@ -607,7 +609,6 @@ private fun DrawingControls(
 
             Column {
                 var areaShown by remember { mutableStateOf(false) }
-
                 if (areaShown) {
                     Button(
                         onClick = {

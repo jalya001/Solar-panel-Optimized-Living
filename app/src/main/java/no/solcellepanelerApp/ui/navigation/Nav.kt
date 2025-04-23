@@ -225,8 +225,8 @@ fun TopBar(
                     border = BorderStroke(2.dp, MaterialTheme.colorScheme.tertiary)
                 ) {
                     Icon(
-                        painterResource(R.drawable.palette_24px),
-                        contentDescription = "Appearance"
+                        painterResource(R.drawable.home_24px),
+                        contentDescription = "Home"
                     )
                 }
             }
