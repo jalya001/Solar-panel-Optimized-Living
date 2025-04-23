@@ -35,7 +35,6 @@ import no.solcellepanelerApp.ui.theme.SolcellepanelerAppTheme
 fun InfoScreen(
     navController: NavController, fontScaleViewModel: FontScaleViewModel,
 ) {
-    SolcellepanelerAppTheme {
         var showHelp by remember { mutableStateOf(false) }
         var showAppearance by remember { mutableStateOf(false) }
 
@@ -140,5 +139,4 @@ fun InfoScreen(
             )
         }
 
-    }
 }
