@@ -382,30 +382,36 @@ fun DisplayScreen(
             Spacer(
                 modifier = Modifier.height(20.dp)
             )
-            BekreftLokasjon(
-                onClick = {
-                    if (coordinates != null) {
-                        showBottomSheet = true
-                        selectedCoordinates = null
-                        viewModel.removePoints()
-                        index = 0
-                        coroutineScope.launch {
-                            cameraPositionState.animate(
-                                CameraUpdateFactory.newCameraPosition(
-                                    CameraPosition(
-                                        cameraPositionState.position.target,
-                                        19f,
-                                        0f,
-                                        cameraPositionState.position.bearing
+
+            if (selectedCoordinates != null) {
+                Button(
+                    content = {
+                        Text(stringResource(id = R.string.confirm_location))
+                    },
+                    onClick = {
+                        if (coordinates != null) {
+                            showBottomSheet = true
+                            selectedCoordinates = null
+                            viewModel.removePoints()
+                            index = 0
+                            coroutineScope.launch {
+                                cameraPositionState.animate(
+                                    CameraUpdateFactory.newCameraPosition(
+                                        CameraPosition(
+                                            cameraPositionState.position.target,
+                                            19f,
+                                            0f,
+                                            cameraPositionState.position.bearing
+                                        )
                                     )
                                 )
-                            )
+                            }
+                        } else {
+                            showMissingLocationDialog = true
                         }
-                    } else {
-                        showMissingLocationDialog = true
                     }
-                }
-            )
+                )
+            }
 
             if (showMissingLocationDialog) {
                 LocationNotSelectedDialog(
