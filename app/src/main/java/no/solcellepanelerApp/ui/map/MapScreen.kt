@@ -447,23 +447,6 @@ fun DisplayScreen(
                 )
             }
 
-
-            AdditionalInputBottomSheet(
-                visible = showBottomSheet,
-                onDismiss = { showBottomSheet = false },
-                onStartDrawing = {
-                    drawingEnabled = true
-                    selectedCoordinates = null
-                    viewModel.removePoints()
-                    index = 0
-                },
-                coordinates = coordinates,
-                area = area,
-                navController = navController,
-                viewModel = viewModel,
-                weatherViewModel = weatherViewModel
-            )
-
             if (drawingEnabled) {
                 DrawingControls(
                     polygonPoints = polygonPoints,
@@ -485,8 +468,24 @@ fun DisplayScreen(
                 )
             }
         }
+        AdditionalInputBottomSheet(
+            visible = showBottomSheet,
+            onDismiss = { showBottomSheet = false },
+            onStartDrawing = {
+                drawingEnabled = true
+                selectedCoordinates = null
+                viewModel.removePoints()
+                index = 0
+            },
+            coordinates = coordinates,
+            area = area,
+            navController = navController,
+            viewModel = viewModel,
+            weatherViewModel = weatherViewModel
+        )
     }
 }
+
 
 fun getAddressFromLocation(context: Context, location: Location): String? {
     val geocoder = Geocoder(context, Locale.getDefault())

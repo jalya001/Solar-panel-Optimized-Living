@@ -111,7 +111,7 @@ fun ResultScreen(
             TopBar(
                 navController,
                 text = stringResource(R.string.results),
-                showHomeButton = true
+//                showHomeButton = true
             )
         },
         bottomBar = {
