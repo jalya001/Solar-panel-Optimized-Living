@@ -164,4 +164,6 @@
     <string name="monthly_savings">Sparing i: <b>%1$s</b></string>
     <string name="monthly_savings_text">Du vil spare <b>%1$.2f kroner</b>  i <b>%2$s</b>  på strøm fra solcellepaneler</string>
 
+    <string name="area_drawn">Tegnet areal:</string>
+
 </resources>
