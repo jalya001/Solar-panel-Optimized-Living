@@ -10,6 +10,7 @@ import android.location.Location
 import android.util.Log
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -223,8 +224,8 @@ fun DisplayScreen(
                 isMyLocationEnabled = locationPermissionGranted
             ),
             uiSettings = mapUiSettings.copy(
-                scrollGesturesEnabled = !drawingEnabled,
-                zoomGesturesEnabled = !drawingEnabled
+//                scrollGesturesEnabled = !drawingEnabled,
+//                zoomGesturesEnabled = !drawingEnabled
             ),
             onMapClick = { latLng ->
                 if (drawingEnabled) {
@@ -248,11 +249,6 @@ fun DisplayScreen(
             if (!drawingEnabled) {
                 selectedCoordinates?.let {
                     markerState.position = it
-//                    Marker(
-//                        state = markerState,
-//                        title = stringResource(id = R.string.selected_position),
-//                        snippet = "Lat: ${it.latitude}, Lng: ${it.longitude}",
-//                    )
                     MapMarker(
                         state = markerState,
                         title = stringResource(id = R.string.selected_position),
@@ -262,10 +258,6 @@ fun DisplayScreen(
                 }
             } else {
                 polygonPoints.forEachIndexed { i, point ->
-//                    Marker(
-//                        state = rememberMarkerState(position = point),
-//                        title = "${stringResource(id = R.string.point)} ${i + 1}"
-//                    )
                     MapMarker(
                         state = rememberMarkerState(position = point),
                         title = "${stringResource(id = R.string.point)} ${i + 1}",
@@ -277,8 +269,6 @@ fun DisplayScreen(
                         points = polygonPoints,
                         fillColor = MaterialTheme.colorScheme.primary.copy(0.6f),
                         strokeColor = MaterialTheme.colorScheme.primary,
-//                        fillColor = Green.copy(0.3f),
-//                        strokeColor = Green,
                         strokeWidth = 5f
                     )
                 }
@@ -630,6 +620,17 @@ private fun DrawingControls(
                     ) {
                         Text(text = stringResource(id = R.string.confirm_drawing))
                     }
+                    var area = viewModel.calculateAreaOfPolygon(polygonPoints).toString()
+
+                    Text(
+                        text = "Areal: $area m²",
+                        style = MaterialTheme.typography.bodyLarge,
+                        color = MaterialTheme.colorScheme.tertiary,
+                        modifier = Modifier
+                            .zIndex(1f)
+                            .background(MaterialTheme.colorScheme.background.copy(alpha = 0.7f))
+                            .padding(8.dp)
+                    )
                 }
 
                 if (polygonPoints.size > 2) {
