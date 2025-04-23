@@ -17,8 +17,13 @@
 
 
     <string name='intro_title'>Introduction</string>
-    <string name="intro_content">Installing solar panels can be a smart investment both financially and environmentally – but it depends on where you live, how much sun you get, and what the electricity prices are where you live.
-    This app helps you assess whether switching to solar energy is worth it, based on weather data, electricity prices, and location. Here we explain the most important things you should know before making a decision.</string>
+    <string name="intro_content">
+    Installing solar panels can be a smart investment both financially and environmentally
+    – but it depends on where you live, how much sun you get, and what the electricity prices are where you live.
+    This app helps you assess whether switching to solar energy is worth it, based on weather data, electricity prices, and location.
+    Here we explain the most important things you should know before making a decision.\n\n
+    </string>
+
 
     <string name="price_title">Electricity Price</string>
     <string name="price_content">
@@ -84,9 +89,9 @@
     <!--Additional Input-->
     <string name="area_label">Roof Area (m²)</string>
     <string name="draw_area">Draw areal</string>
-    <string name="slope_label">Angle of the roof from 0 - 90° </string>
+    <string name="slope_label">Angle of the roof from 0 – 90° </string>
     <string name="direction_label">The direction the panel is facing</string>
-    <string name="efficiency_label">Efficiency of the panels, usually betweeen 16-20%</string>
+    <string name="efficiency_label">Efficiency of the panels, usually between 16–20%</string>
     <string name="coordinates_label">Coordinates (from map): </string>
     <string name="coordinates_unavailable">No coordinates available</string>
     <string name="closest_weather_station">Closest weather station:</string>
@@ -96,7 +101,7 @@
     <string name="dismiss">Close</string>
     <string name="need_help">Need help?</string>
     <string name="need_help_drawing">Need help with drawing?</string>
-    <string name="help_draw">Tegne i kartet</string>
+    <string name="help_draw">Draw on the map</string>
     <string name="tech_problems_title">Problems</string>
     <string name="tech_problems_content">Problems with app</string>
     <string name="how_to_draw">How to draw in the map</string>
@@ -108,6 +113,11 @@
     <string name="southwest">SW</string>
     <string name="west">W</string>
     <string name="northwest">NW</string>
+    <string name="roofAreaHelp">The total area of the roof suitable for solar panels, measured in square meters (m²).</string>
+    <string name="roofAngleHelp">Also known as the slope. This is how steep the roof is. Panels perform best when angled toward the sun.</string>
+    <string name="panelEfficencyHelp">How efficiently the panels convert sunlight into electricity. Usually between 16–20%.</string>
+    <string name="panelDirectionHelp">Also called azimuth. South-facing usually gives the best performance in Norway, but the app calculates this based on your location.</string>
+
 
 
     <!--Result Screen-->

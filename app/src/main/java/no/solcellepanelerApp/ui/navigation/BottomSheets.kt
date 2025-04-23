@@ -44,6 +44,9 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.focus.FocusRequester
+import androidx.compose.ui.focus.focusRequester
+import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
@@ -334,6 +337,13 @@ fun AdditionalInputBottomSheet(
     // var direction by remember { mutableStateOf("") } bruker azimuthpostion istendefor
     var azimuthPosition by remember { mutableStateOf(0f) } // never null ans starts at 0
     var efficiency by remember { mutableStateOf(0f) }
+    //focus
+    //val focusRequester = remember {
+       // FocusRequester()
+    //}
+    var activeInput by remember { mutableStateOf<String?>(null) }
+
+
 
     if (visible) {
         val currentDensity = LocalDensity.current
@@ -358,7 +368,7 @@ fun AdditionalInputBottomSheet(
                 Box(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .heightIn(max = 600.dp)
+                        .heightIn(max = 700.dp)
                         .padding(16.dp)
                 ) {
 
@@ -376,17 +386,6 @@ fun AdditionalInputBottomSheet(
                         fontWeight = FontWeight.Thin,
 
                         )
-                    Button(
-                        onClick = {
-                            areaState = "45"
-                            //angle = "30"
-                            // direction = "180" trengs ikke fordi direction alltid starter på 0 i slider
-                            //efficiency = "15"
-                        },
-                        modifier = Modifier.align(Alignment.CenterHorizontally)
-                    ) {
-                        Text("Fyll ut testverdier")
-                    }
 
                     Spacer(modifier = Modifier.height(10.dp))
 
@@ -401,7 +400,14 @@ fun AdditionalInputBottomSheet(
                             modifier = Modifier
                                 .weight(1f)
                                 .padding(end = 4.dp)
+                                //.focusRequester(focusRequester)
+                                //Pop opp som viser info når bruker trykker på den
+                                .onFocusChanged {
+                                    activeInput = if (it.isFocused) "area" else null
+                                }
+
                         )
+
 
                         Button(
                             onClick = {
@@ -423,6 +429,12 @@ fun AdditionalInputBottomSheet(
                             }
                         }
                     }
+                    Spacer(modifier = Modifier.height(5.dp))
+
+                    //Pop opp som viser info når bruker trykker på den
+                    if(activeInput == "area"){
+                        Text(stringResource(id = R.string.roofAreaHelp))
+                    }
 
                     Spacer(modifier = Modifier.height(16.dp))
 
@@ -440,12 +452,20 @@ fun AdditionalInputBottomSheet(
 
                         Slider(
                             value = angle,
-                            onValueChange = {angle = it},
+                            onValueChange = {
+                                angle = it
+                                activeInput = "angle"
+                            },
                             valueRange = 0f..90f,
                             modifier = Modifier.fillMaxWidth()
                         )
 
-                        Text("Tilt: ${angle.toInt()}°")
+                        Text(stringResource(id = R.string.angle) + "${angle.toInt()}°")
+
+                        //Pop opp som viser info når bruker trykker på den
+                        if(activeInput == "angle"){
+                            Text(stringResource(id = R.string.roofAngleHelp))
+                        }
 
                         Spacer(Modifier.height(8.dp))
 
@@ -453,12 +473,20 @@ fun AdditionalInputBottomSheet(
 
                         Slider(
                             value = efficiency,
-                            onValueChange = { efficiency = it },
+                            onValueChange = {
+                                efficiency = it
+                                activeInput = "efficiency" // or "efficiency", "direction", etc.
+                            },
                             valueRange = 0f..100f,
                             modifier = Modifier.fillMaxWidth()
                         )
 
-                        Text("Efficiency: ${efficiency.toInt()}%")
+                        Text(stringResource(id = R.string.effectivity) +"${efficiency.toInt()}%")
+
+                        //Pop opp som viser info når bruker trykker på den
+                        if(activeInput == "efficiency"){
+                            Text(stringResource(id = R.string.panelEfficencyHelp))
+                        }
 
 
                         Spacer(Modifier.height(8.dp))
@@ -472,23 +500,35 @@ fun AdditionalInputBottomSheet(
 
                         Slider(
                             value = azimuthPosition,
-                            onValueChange = { azimuthPosition = it },
+                            onValueChange = {
+                                azimuthPosition = it
+                                activeInput = "azimuth" // or "efficiency", "direction", etc.
+                            },
                             valueRange = 0f..315f,
                             modifier = Modifier.fillMaxWidth()
                         )
 
-                        Text("Direction: ${azimuthPosition.toInt()}° (${getCompassDirection(azimuthPosition.toInt())})")
+                        Text(stringResource(id = R.string.direction) + "${azimuthPosition.toInt()}° (${getCompassDirection(azimuthPosition.toInt())})")
+
+                        //Pop opp som viser info når bruker trykker på den
+                        if(activeInput == "azimuth"){
+                            Text(stringResource(id = R.string.panelDirectionHelp))
+                        }
+
+                        Spacer(modifier = Modifier.height(16.dp))
 
 
-                        Spacer(modifier = Modifier.height(10.dp))
 
-                    var selectedRegion by remember { mutableStateOf(Region.OSLO) }
+                        var selectedRegion by remember { mutableStateOf(Region.OSLO) }
                     RegionDropdown(
                         selectedRegion = viewModel.selectedRegion,
                         onRegionSelected = { newRegion ->
                             viewModel.selectedRegion = newRegion
                         }
                     )
+                        //UI er ikke updatert
+
+                    Log.d("region", "$selectedRegion")
 
                     Spacer(modifier = Modifier.height(10.dp))
 
@@ -499,8 +539,7 @@ fun AdditionalInputBottomSheet(
                                 viewModel.angleInput = angle.toString()
                                 viewModel.efficiencyInput = efficiency.toString()
                                 viewModel.directionInput = azimuthPosition.toInt().toString()
-                                Log.d("AZIMUTH", viewModel.directionInput)
-                                Log.d("angle", viewModel.angleInput)
+
 
                                 val lat = coordinates.first
                                 val lon = coordinates.second

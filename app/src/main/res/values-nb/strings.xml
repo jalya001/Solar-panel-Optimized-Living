@@ -19,9 +19,11 @@
     <!--Info Screen-->
     <string name='intro_title'>Introduksjon</string>
     <string name="intro_content">
-        Å installere solcellepaneler kan være en smart investering både økonomisk og miljømessig – men det avhenger av hvor du bor, hvor mye sol du får, og hva strømprisene er der du bor.
-        Denne appen hjelper deg å vurdere om det lønner seg å bytte til solenergi, basert på værdata, strømpriser og beliggenhet. Her forklarer vi det viktigste du bør vite før du tar en beslutning.
+    Å installere solcellepaneler kan være en smart investering – både økonomisk og miljømessig.
+    Men hvor lønnsomt det er, avhenger av hvor du bor, hvor mye sol du får, og hva strømprisene er i ditt område.
+    Denne appen hjelper deg med å vurdere om solenergi er verdt det for deg, basert på værdata, strømpriser og din lokasjon.\n\n
     </string>
+
     <string name='price_title'>Strøm priser</string>
     <string name='price_content'>
         Strømprisene i Norge varierer avhengig av region, tid på året og det totale energibehovet.
@@ -29,6 +31,7 @@
         Ved å sammenligne nåværende og historiske strømpriser, hjelper denne appen deg med å vurdere hvor mye penger du kan spare ved å produsere din egen strøm med solcellepaneler.
         Prisene måles vanligvis i øre/kWh, og varierer på tvers av ulike prissoner i landet.
     </string>
+
     <string name='pros_and_cons_title'>Fordeler og ulemper </string>
     <string name='pros_and_cons_content'>
         Solcellepaneler har blitt et populært alternativ for mange som ønsker å produsere sin egen strøm, spare penger og bidra til et mer bærekraftig energiforbruk. Men som med alle investeringer, finnes det både fordeler og ulemper du bør være klar over.\n
@@ -47,6 +50,7 @@
         • Lang tilbakebetalingstid: Det kan ta mange år før investeringen betaler seg.\n
         • Tekniske begrensninger: Ikke alle bygninger er like godt egnet for montering av solcellepaneler.\n
     </string>
+
     <string name="money_saved_title">Penger spart</string>
     <string name="money_saved_content">
         Appen beregner hvor mye penger du potensielt kan spare ved å installere solcellepaneler, basert på værforhold der du bor og historiske strømpriser.
@@ -67,7 +71,7 @@
         Du kan være kvalifisert for økonomisk støtte fra Enova, en statlig aktør som gir tilskudd til energieffektive tiltak – inkludert solcelleanlegg.
         Gjennom sitt program for boligeiere kan du få inntil 32 500 kr i støtte totalt, avhengig av anleggets størrelse og effektivitet.
         For mer informasjon og søknad, gå til:
-</string>
+    </string>
 
 
     <!--Map Screen-->
@@ -111,7 +115,10 @@
     <string name="southwest">SV</string>
     <string name="west">V</string>
     <string name="northwest">NV</string>
-
+    <string name="roofAreaHelp"> Det totale arealet på taket som er egnet for solcellepaneler, målt i kvadratmeter (m²) </string>
+    <string name="roofAngleHelp"> Også kjent som helning. Dette er hvor bratt taket er. Paneler fungerer best når de er vinklet mot solen.</string>
+    <string name="panelEfficencyHelp"> Hvor godt panelene omdanner sollys til strøm. Vanligvis mellom 16–20 % </string>
+    <string name="panelDirectionHelp">Også kalt azimuth. Sørvendt gir som regel best effekt i Norge, men appen beregner dette ut fra din lokasjon.</string>
 
     <!--Result Screen-->
     <string name="results"> Resultater </string>
