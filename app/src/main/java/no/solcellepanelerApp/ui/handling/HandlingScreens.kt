@@ -49,7 +49,7 @@ fun InternetErrorScreen() {
         contentAlignment = Alignment.Center
     ) {
         Text(
-            text = "Nettverksfeil! Prøv å koble til igjen.",
+            text = "Nettverksfeil! Prøv å koble til nett",
             style = MaterialTheme.typography.bodyLarge
         )
     }

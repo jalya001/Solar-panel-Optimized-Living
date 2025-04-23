@@ -731,7 +731,7 @@ fun LocationButton(
 }
 
 
-//https://stackoverflow.com/questions/70598043/how-to-use-custom-icon-of-google-maps-marker-in-compose
+// hentet fra https://stackoverflow.com/questions/70598043/how-to-use-custom-icon-of-google-maps-marker-in-compose
 
 @Composable
 fun MapMarker(
