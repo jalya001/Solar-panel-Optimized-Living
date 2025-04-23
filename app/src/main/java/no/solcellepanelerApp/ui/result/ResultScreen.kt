@@ -35,7 +35,6 @@ import com.airbnb.lottie.compose.animateLottieCompositionAsState
 import com.airbnb.lottie.compose.rememberLottieComposition
 import no.solcellepanelerApp.R
 import no.solcellepanelerApp.data.homedata.ElectricityPriceRepository
-import no.solcellepanelerApp.model.electricity.Region
 import no.solcellepanelerApp.ui.electricity.PriceScreenViewModel
 import no.solcellepanelerApp.ui.electricity.PriceUiState
 import no.solcellepanelerApp.ui.electricity.PriceViewModelFactory
@@ -108,7 +107,13 @@ fun ResultScreen(
     var showAllMonths by remember { mutableStateOf(false) }
 
     Scaffold(
-        topBar = { TopBar(navController, text = stringResource(R.string.results)) },
+        topBar = {
+            TopBar(
+                navController,
+                text = stringResource(R.string.results),
+                showHomeButton = true
+            )
+        },
         bottomBar = {
             BottomBar(
                 onHelpClicked = { showHelp = true },
