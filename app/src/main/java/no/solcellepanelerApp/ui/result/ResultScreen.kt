@@ -122,93 +122,88 @@ fun ResultScreen(
             )
         }
     ) { contentPadding ->
-        Column {
-            Column(
-                modifier = Modifier
-                    .padding(contentPadding),
-                horizontalAlignment = Alignment.CenterHorizontally,
-                verticalArrangement = Arrangement.Top
-            ) {
-                if (loading) {
-                    startloading = true
-                } else if (frostData.isNotEmpty()) {
-                    startloading = false
-                    val snowCoverData = frostData["mean(snow_coverage_type P1M)"] ?: emptyArray()
-                    val airTempData = frostData["mean(air_temperature P1M)"] ?: emptyArray()
-                    val cloudCoverData = frostData["mean(cloud_area_fraction P1M)"] ?: emptyArray()
+        Column(
+            modifier = Modifier
+                .padding(contentPadding),
+            horizontalAlignment = Alignment.CenterHorizontally,
+            verticalArrangement = Arrangement.Top
+        ) {
+            if (loading) {
+                startloading = true
+            } else if (frostData.isNotEmpty()) {
+                startloading = false
+                val snowCoverData = frostData["mean(snow_coverage_type P1M)"] ?: emptyArray()
+                val airTempData = frostData["mean(air_temperature P1M)"] ?: emptyArray()
+                val cloudCoverData = frostData["mean(cloud_area_fraction P1M)"] ?: emptyArray()
 
-                    val calculatedMonthly = calculateMonthlyEnergyOutput(
-                        airTempData,
-                        cloudCoverData,
-                        snowCoverData,
-                        panelArea,
-                        efficiency,
-                        -0.44,
-                        radiationList
+                val calculatedMonthly = calculateMonthlyEnergyOutput(
+                    airTempData,
+                    cloudCoverData,
+                    snowCoverData,
+                    panelArea,
+                    efficiency,
+                    -0.44,
+                    radiationList
+                )
+
+                val adjustedRadiation = mutableListOf<Double>()
+                val monthlyEnergyOutput = radiationList.indices.map { month ->
+                    adjustedRadiation.add(radiationList[month] * (1 - (cloudCoverData[month] / 8)) * (1 - (snowCoverData[month] / 4)))
+                    val tempFactor = 1 + (-0.44) * (airTempData[month] - 25)
+                    adjustedRadiation[month] * panelArea * (efficiency / 100.0) * tempFactor
+                }
+
+                val monthlyPowerOutput = monthlyEnergyOutput.mapIndexed { index, energyKWh ->
+                    val totalHours = daysInMonth[index] * 24 // Total hours in the month
+                    energyKWh / totalHours // Convert kWh to kW
+                }
+
+                var yearlyEnergyOutput = 0.0
+                for (nums in 0..11) {
+                    yearlyEnergyOutput += monthlyEnergyOutput[nums]
+                }
+
+                Row(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(vertical = 8.dp),
+                    horizontalArrangement = Arrangement.SpaceEvenly
+                ) {
+                    SavingsMonth_Card(
+                        label = stringResource(R.string.yearly_savings_label),
+                        iconRes = R.drawable.baseline_attach_money_24,
+                        onClick = {
+                            navController.navigate("yearly_savings/${yearlyEnergyOutput}/$energyPrice")
+                        }
                     )
 
-                    val adjustedRadiation = mutableListOf<Double>()
-                    val monthlyEnergyOutput = radiationList.indices.map { month ->
-                        adjustedRadiation.add(radiationList[month] * (1 - (cloudCoverData[month] / 8)) * (1 - (snowCoverData[month] / 4)))
-                        val tempFactor = 1 + (-0.44) * (airTempData[month] - 25)
-                        adjustedRadiation[month] * panelArea * (efficiency / 100.0) * tempFactor
-                    }
-
-                    val monthlyPowerOutput = monthlyEnergyOutput.mapIndexed { index, energyKWh ->
-                        val totalHours = daysInMonth[index] * 24 // Total hours in the month
-                        energyKWh / totalHours // Convert kWh to kW
-                    }
-
-                    var yearlyEnergyOutput = 0.0
-                    for (nums in 0..11) {
-                        yearlyEnergyOutput += monthlyEnergyOutput[nums]
-                    }
-
-                    Row(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(vertical = 8.dp),
-                        horizontalArrangement = Arrangement.SpaceEvenly
-                    ) {
-                        SavingsMonth_Card(
-                            label = stringResource(R.string.yearly_savings_label),
-                            iconRes = R.drawable.baseline_attach_money_24,
-                            onClick = {
-                                navController.navigate("yearly_savings/${yearlyEnergyOutput}/$energyPrice")
-                            }
-                        )
-
-                        SavingsMonth_Card(
-                            label = if (showAllMonths) stringResource(R.string.show_one_month)
-                            else stringResource(R.string.show_all_months),
-                            iconRes = R.drawable.baseline_calendar_month_24,
-                            onClick = {
-                                showAllMonths = !showAllMonths
-                            }
-                        )
-                    }
-
-                    MonthDataDisplay(
-                        radiationList = radiationList,
-                        cloudCoverData = cloudCoverData,
-                        snowCoverData = snowCoverData,
-                        airTempData = airTempData,
-                        adjustedRadiation = adjustedRadiation,
-                        monthlyEnergyOutput = monthlyEnergyOutput,
-                        monthlyPowerOutput = monthlyPowerOutput,
-                        months = months,
-                        navController = navController,
-                        energyPrice = energyPrice,
-                        showAllMonths = showAllMonths
+                    SavingsMonth_Card(
+                        label = if (showAllMonths) stringResource(R.string.show_one_month)
+                        else stringResource(R.string.show_all_months),
+                        iconRes = R.drawable.baseline_calendar_month_24,
+                        onClick = {
+                            showAllMonths = !showAllMonths
+                        }
                     )
                 }
 
+                MonthDataDisplay(
+                    radiationList = radiationList,
+                    cloudCoverData = cloudCoverData,
+                    snowCoverData = snowCoverData,
+                    airTempData = airTempData,
+                    adjustedRadiation = adjustedRadiation,
+                    monthlyEnergyOutput = monthlyEnergyOutput,
+                    monthlyPowerOutput = monthlyPowerOutput,
+                    months = months,
+                    navController = navController,
+                    energyPrice = energyPrice,
+                    showAllMonths = showAllMonths
+                )
             }
 
             if (startloading) {
-                Column {
-                    LoadingScreen()
-                }
+                LoadingScreen()
             }
 
             HelpBottomSheet(

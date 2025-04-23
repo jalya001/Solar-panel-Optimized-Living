@@ -94,16 +94,16 @@ fun HomeScreen(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.spacedBy(1.dp)
             ) {
-//                MyNavCard(
-//                    text = stringResource(id = R.string.saved_locations),
-//                    route = "saved_locations",
-//                    navController = navController,
-//                    modifier = Modifier
-//                        .weight(1f)
-//                        .height(400.dp),
-//                    style = MaterialTheme.typography.displaySmall,
-//                    color = MaterialTheme.colorScheme.primary
-//                )
+                MyNavCard(
+                    text = stringResource(id = R.string.last_location),
+                    route = "last_location",
+                    navController = navController,
+                    modifier = Modifier
+                        .weight(1f)
+                        .height(400.dp),
+                    style = MaterialTheme.typography.displaySmall,
+                    color = MaterialTheme.colorScheme.primary
+                )
 
                 MyNavCard(
                     text = stringResource(id = R.string.prices),
@@ -147,7 +147,6 @@ fun PanelAnimation() {
 
     Box(
         modifier = Modifier
-//        .background(color = Color.Blue)
             .height(100.dp)
     ) {
         LottieAnimation(

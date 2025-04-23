@@ -4,7 +4,7 @@
     <!--Home Screen-->
     <string name="home"> Hjemme</string>
     <string name="install_panels"> Installer paneler</string>
-    <string name="saved_locations"> Lagrede posisjoner</string>
+    <string name="last_location">Siste posisjon (trenger bedre navn)</string>
     <string name="prices"> Strømpriser </string>
     <string name="help"> Hjelp</string>
     <string name="appearance"> Utseende</string>

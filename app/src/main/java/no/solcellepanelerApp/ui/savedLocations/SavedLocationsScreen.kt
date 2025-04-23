@@ -32,7 +32,7 @@ fun SavedLocationsScreen(
     var showAppearance by remember { mutableStateOf(false) }
 
     Scaffold(
-        topBar = { TopBar(navController, text = stringResource(id = R.string.saved_locations)) },
+        topBar = { TopBar(navController, text = stringResource(id = R.string.last_location)) },
         bottomBar = {
             BottomBar(
                 onHelpClicked = { showHelp = true },
@@ -49,7 +49,7 @@ fun SavedLocationsScreen(
             verticalArrangement = Arrangement.Center
         ) {
             Text(
-                stringResource(id = R.string.saved_locations),
+                stringResource(id = R.string.last_location),
                 style = MaterialTheme.typography.bodyMedium
             )
 

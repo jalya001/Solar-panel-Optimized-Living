@@ -22,6 +22,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
@@ -412,7 +413,10 @@ fun DisplayScreen(
                     color = MaterialTheme.colorScheme.tertiary,
                     modifier = Modifier
                         .zIndex(1f)
-                        .background(MaterialTheme.colorScheme.background.copy(alpha = 0.7f))
+                        .background(
+                            color = MaterialTheme.colorScheme.background.copy(alpha = 0.7f),
+                            shape = RoundedCornerShape(20.dp)
+                        )
                         .padding(8.dp)
                 )
 

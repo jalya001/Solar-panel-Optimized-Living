@@ -62,7 +62,7 @@ fun Nav(navController: NavHostController, fontScaleViewModel: FontScaleViewModel
                 priceScreenViewModel = priceRepository //hvorfor heter den viewmodel hvis den tar en repo?
             )
         }
-        composable("saved_locations") { SavedLocationsScreen(navController, fontScaleViewModel) }
+        composable("last_location") { SavedLocationsScreen(navController, fontScaleViewModel) }
         composable("prices") {
             val repository = ElectricityPriceRepository("NO1")
             PriceScreen(
