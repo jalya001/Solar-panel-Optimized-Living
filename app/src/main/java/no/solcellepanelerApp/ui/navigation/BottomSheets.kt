@@ -47,6 +47,8 @@ import androidx.navigation.NavController
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
 import no.solcellepanelerApp.R
+import no.solcellepanelerApp.model.electricity.Region
+import no.solcellepanelerApp.ui.electricity.RegionDropdown
 import no.solcellepanelerApp.ui.font.FontScaleViewModel
 import no.solcellepanelerApp.ui.font.FontSizeState
 import no.solcellepanelerApp.ui.language.langSwitch
@@ -58,12 +60,6 @@ import no.solcellepanelerApp.ui.reusables.ExpandInfoSection
 import no.solcellepanelerApp.ui.reusables.ModeCard
 import no.solcellepanelerApp.ui.theme.ThemeMode
 import no.solcellepanelerApp.ui.theme.ThemeState
-import no.solcellepanelerApp.model.electricity.Region
-import no.solcellepanelerApp.ui.electricity.RegionDropdown
-import no.solcellepanelerApp.ui.language.langSwitch
-import no.solcellepanelerApp.ui.reusables.DecimalInputField
-import no.solcellepanelerApp.ui.reusables.ExpandInfoSection
-import no.solcellepanelerApp.ui.reusables.ModeCard
 
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -195,16 +191,6 @@ fun AppearanceBottomSheet(
                             onClick = {
                                 followSystem = false
                                 ThemeState.themeMode = ThemeMode.DARK
-                            }
-                        )
-
-                        ModeCard(
-                            label = stringResource(id = R.string.frost_mode),
-                            iconRes = R.drawable.outline_mode_cool_24,
-                            selected = ThemeState.themeMode == ThemeMode.FROST && !followSystem,
-                            onClick = {
-                                followSystem = false
-                                ThemeState.themeMode = ThemeMode.FROST
                             }
                         )
                     }

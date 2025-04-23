@@ -181,6 +181,7 @@ fun DisplayScreen(
     var showBottomSheet by remember { mutableStateOf(false) }
     var arealatlong by remember { mutableStateOf<LatLng?>(null) }
     var showMissingLocationDialog by remember { mutableStateOf(false) }
+    var area by remember { mutableStateOf("") }
 
     //Location permission state
     var locationPermissionGranted by remember { mutableStateOf(false) }
@@ -306,6 +307,7 @@ fun DisplayScreen(
 //        )
 
         //Search bar
+
         Card(
             modifier = Modifier.fillMaxWidth(),
             shape = RectangleShape,
@@ -420,7 +422,6 @@ fun DisplayScreen(
                 )
             }
 
-            var area by remember { mutableStateOf("") }
 
             AdditionalInputBottomSheet(
                 visible = showBottomSheet,
