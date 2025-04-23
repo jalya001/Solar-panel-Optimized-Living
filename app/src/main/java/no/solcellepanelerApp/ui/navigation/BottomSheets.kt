@@ -9,22 +9,14 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.ArrowDropDown
 import androidx.compose.material.icons.filled.Create
 import androidx.compose.material3.Button
 import androidx.compose.material3.Checkbox
-import androidx.compose.material3.DropdownMenu
-import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.ExposedDropdownMenuBox
-import androidx.compose.material3.ExposedDropdownMenuDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.ModalBottomSheet
@@ -32,7 +24,6 @@ import androidx.compose.material3.Slider
 import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextField
 import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
@@ -44,19 +35,14 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.focus.FocusRequester
-import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalDensity
-import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.Density
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
-import co.yml.charts.common.extensions.isNotNull
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
 import no.solcellepanelerApp.R
@@ -325,7 +311,7 @@ fun AdditionalInputBottomSheet(
     var efficiency by remember { mutableStateOf(0f) }
     //focus
     //val focusRequester = remember {
-       // FocusRequester()
+    // FocusRequester()
     //}
     var activeInput by remember { mutableStateOf<String?>(null) }
 
@@ -342,7 +328,6 @@ fun AdditionalInputBottomSheet(
             skipPartiallyExpanded = true,
         )
 
-
         CompositionLocalProvider(LocalDensity provides customDensity) {
             ModalBottomSheet(
                 onDismissRequest = onDismiss,
@@ -354,26 +339,23 @@ fun AdditionalInputBottomSheet(
                 Box(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .heightIn(max = 700.dp)
                         .padding(16.dp)
                 ) {
 
                 }
                 Column(
                     modifier = Modifier
-//                        .fillMaxWidth()
-//                        .padding(16.dp)
-                        .fillMaxSize(),
+                        .fillMaxSize()
+                        .padding(horizontal = 16.dp),
                     horizontalAlignment = Alignment.CenterHorizontally
                 ) {
                     Text(
                         stringResource(id = R.string.additional_input),
                         style = MaterialTheme.typography.headlineLarge,
                         fontWeight = FontWeight.Thin,
+                    )
 
-                        )
-
-                    Spacer(modifier = Modifier.height(10.dp))
+                    Spacer(modifier = Modifier.height(20.dp))
 
                     val decimalFormatter = DecimalFormatter()
 
@@ -418,16 +400,14 @@ fun AdditionalInputBottomSheet(
                     Spacer(modifier = Modifier.height(5.dp))
 
                     //Pop opp som viser info når bruker trykker på den
-                    if(activeInput == "area"){
+                    if (activeInput == "area") {
                         Text(stringResource(id = R.string.roofAreaHelp))
                     }
 
                     Spacer(modifier = Modifier.height(16.dp))
 
 
-                    Column(
-                        modifier = Modifier.padding(16.dp)
-                    ) {
+                    Column {
 
                         Text(
                             text = stringResource(id = R.string.slope_label),
@@ -446,16 +426,22 @@ fun AdditionalInputBottomSheet(
                             modifier = Modifier.fillMaxWidth()
                         )
 
-                        Text(stringResource(id = R.string.angle) + "${angle.toInt()}°")
+                        Text(
+                            stringResource(id = R.string.angle) + " ${angle.toInt()}°",
+                            fontWeight = FontWeight.Bold
+                        )
 
                         //Pop opp som viser info når bruker trykker på den
-                        if(activeInput == "angle"){
+                        if (activeInput == "angle") {
                             Text(stringResource(id = R.string.roofAngleHelp))
                         }
 
-                        Spacer(Modifier.height(8.dp))
+                        Spacer(Modifier.height(25.dp))
 
-                        Text(stringResource(id = R.string.efficiency_label), style = MaterialTheme.typography.titleMedium)
+                        Text(
+                            stringResource(id = R.string.efficiency_label),
+                            style = MaterialTheme.typography.titleMedium
+                        )
 
                         Slider(
                             value = efficiency,
@@ -467,15 +453,17 @@ fun AdditionalInputBottomSheet(
                             modifier = Modifier.fillMaxWidth()
                         )
 
-                        Text(stringResource(id = R.string.effectivity) +"${efficiency.toInt()}%")
+                        Text(
+                            stringResource(id = R.string.effectivity) + " ${efficiency.toInt()}%",
+                            fontWeight = FontWeight.Bold
+                        )
 
                         //Pop opp som viser info når bruker trykker på den
-                        if(activeInput == "efficiency"){
+                        if (activeInput == "efficiency") {
                             Text(stringResource(id = R.string.panelEfficencyHelp))
                         }
 
-
-                        Spacer(Modifier.height(8.dp))
+                        Spacer(Modifier.height(25.dp))
 
                         Text(
                             text = stringResource(id = R.string.direction_label),
@@ -494,72 +482,78 @@ fun AdditionalInputBottomSheet(
                             modifier = Modifier.fillMaxWidth()
                         )
 
-                        Text(stringResource(id = R.string.direction) + "${azimuthPosition.toInt()}° (${getCompassDirection(azimuthPosition.toInt())})")
+                        Text(
+                            stringResource(id = R.string.direction) + " ${azimuthPosition.toInt()}° (${
+                                getCompassDirection(
+                                    azimuthPosition.toInt()
+                                )
+                            })",
+                            fontWeight = FontWeight.Bold
+                        )
 
                         //Pop opp som viser info når bruker trykker på den
-                        if(activeInput == "azimuth"){
+                        if (activeInput == "azimuth") {
                             Text(stringResource(id = R.string.panelDirectionHelp))
                         }
 
-                        Spacer(modifier = Modifier.height(16.dp))
-
-
+                        Spacer(Modifier.height(25.dp))
 
                         var selectedRegion by remember { mutableStateOf(Region.OSLO) }
-                    RegionDropdown(
-                        selectedRegion = viewModel.selectedRegion,
-                        onRegionSelected = { newRegion ->
-                            viewModel.selectedRegion = newRegion
-                        }
-                    )
+                        RegionDropdown(
+                            selectedRegion = viewModel.selectedRegion,
+                            onRegionSelected = { newRegion ->
+                                viewModel.selectedRegion = newRegion
+                            }
+                        )
+
                         //UI er ikke updatert
 
-                    Log.d("region", "$selectedRegion")
+                        Log.d("region", "$selectedRegion")
 
-                    Spacer(modifier = Modifier.height(10.dp))
+                        Spacer(modifier = Modifier.height(10.dp))
 
-                    if (areaState.isNotEmpty() && coordinates != null) {
-                        Button(
-                            onClick = {
-                                viewModel.areaInput = areaState
-                                viewModel.angleInput = angle.toString()
-                                viewModel.efficiencyInput = efficiency.toString()
-                                viewModel.directionInput = azimuthPosition.toInt().toString()
+                        if (areaState.isNotEmpty() && coordinates != null) {
+                            Button(
+                                onClick = {
+                                    viewModel.areaInput = areaState
+                                    viewModel.angleInput = angle.toString()
+                                    viewModel.efficiencyInput = efficiency.toString()
+                                    viewModel.directionInput = azimuthPosition.toInt().toString()
 
 
-                                val lat = coordinates.first
-                                val lon = coordinates.second
-                                val slope = angle
+                                    val lat = coordinates.first
+                                    val lon = coordinates.second
+                                    val slope = angle
 
-                                weatherViewModel.fetchFrostData(
-                                    lat, lon,
-                                    listOf(
-                                        "mean(snow_coverage_type P1M)",
-                                        "mean(air_temperature P1M)",
-                                        "mean(cloud_area_fraction P1M)"
+                                    weatherViewModel.fetchFrostData(
+                                        lat, lon,
+                                        listOf(
+                                            "mean(snow_coverage_type P1M)",
+                                            "mean(air_temperature P1M)",
+                                            "mean(cloud_area_fraction P1M)"
+                                        )
                                     )
-                                )
 
 
-                                weatherViewModel.fetchRadiationInfo(
-                                    lat,
-                                    lon,
-                                    slope.toInt(),
-                                    azimuthPosition.toInt()
-                                )
-                                navController.navigate("result")
+                                    weatherViewModel.fetchRadiationInfo(
+                                        lat,
+                                        lon,
+                                        slope.toInt(),
+                                        azimuthPosition.toInt()
+                                    )
+                                    navController.navigate("result")
 
-                            },
-                            modifier = Modifier.align(Alignment.CenterHorizontally)
-                        ) {
-                            Text("Gå til resultater")
+                                },
+                                modifier = Modifier.align(Alignment.CenterHorizontally)
+                            ) {
+                                Text("Gå til resultater")
+                            }
                         }
-                    }
 
+                    }
                 }
             }
         }
     }
-}
 
 }

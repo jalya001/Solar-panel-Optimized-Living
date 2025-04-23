@@ -462,21 +462,6 @@ fun DisplayScreen(
                 )
             }
         }
-
-        AdditionalInputBottomSheet(
-            visible = showBottomSheet,
-            onDismiss = { showBottomSheet = false },
-            onStartDrawing = {
-                drawingEnabled = true
-                selectedCoordinates = null
-                viewModel.removePoints()
-            },
-            coordinates = coordinates,
-            area = viewModel.calculateAreaOfPolygon(polygonPoints).toString(),
-            navController = navController,
-            viewModel = viewModel,
-            weatherViewModel = weatherViewModel
-        )
     }
 }
 
