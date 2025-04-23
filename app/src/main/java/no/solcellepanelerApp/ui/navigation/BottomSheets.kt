@@ -373,7 +373,6 @@ fun AdditionalInputBottomSheet(
                                 .onFocusChanged {
                                     activeInput = if (it.isFocused) "area" else null
                                 }
-
                         )
 
 

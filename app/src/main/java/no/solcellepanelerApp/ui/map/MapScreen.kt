@@ -478,7 +478,7 @@ fun DisplayScreen(
                 index = 0
             },
             coordinates = coordinates,
-            area = area,
+            area = viewModel.areaInput,
             navController = navController,
             viewModel = viewModel,
             weatherViewModel = weatherViewModel
@@ -616,6 +616,8 @@ private fun DrawingControls(
                 if (areaShown) {
                     Button(
                         onClick = {
+                            viewModel.areaInput =
+                                viewModel.calculateAreaOfPolygon(polygonPoints).toString()
                             toggleBottomSheet()
                         },
                         colors = ButtonColors(
