@@ -254,6 +254,7 @@ fun DisplayScreen(
                         title = stringResource(id = R.string.selected_position),
                         snippet = "Lat: ${it.latitude}, Lng: ${it.longitude}",
                         context = LocalContext.current,
+                        draggable = false
                     )
                 }
             } else {
@@ -313,8 +314,6 @@ fun DisplayScreen(
                 horizontalArrangement = Arrangement.Center,
                 verticalAlignment = Alignment.CenterVertically
             ) {
-
-
                 AdressInputField(
                     value = address,
                     onValueChange = {
@@ -405,6 +404,19 @@ fun DisplayScreen(
                 )
             }
 
+            if (isPolygonvisible) {
+                var area = viewModel.calculateAreaOfPolygon(polygonPoints).toString()
+                Text(
+                    text = stringResource(R.string.area_drawn) + " $area m²",
+                    style = MaterialTheme.typography.bodyLarge,
+                    color = MaterialTheme.colorScheme.tertiary,
+                    modifier = Modifier
+                        .zIndex(1f)
+                        .background(MaterialTheme.colorScheme.background.copy(alpha = 0.7f))
+                        .padding(8.dp)
+                )
+
+            }
             if (showMissingLocationDialog) {
                 LocationNotSelectedDialog(
                     coordinates = coordinates,
@@ -503,19 +515,7 @@ fun AdressInputField(
             onDone = {
                 viewModel.fetchCoordinates(address)
             }
-        ),
-        //burde egt ikke være hardkodet
-    )
-}
-
-@Composable
-fun BekreftLokasjon(
-    //må huske å endre navn på funksjoner ogsånt til engelsk
-    onClick: () -> Unit,
-) {
-    Button(onClick = onClick) {
-        Text(stringResource(id = R.string.confirm_location))
-    }
+        ))
 }
 
 @Composable
@@ -620,17 +620,6 @@ private fun DrawingControls(
                     ) {
                         Text(text = stringResource(id = R.string.confirm_drawing))
                     }
-                    var area = viewModel.calculateAreaOfPolygon(polygonPoints).toString()
-
-                    Text(
-                        text = "Areal: $area m²",
-                        style = MaterialTheme.typography.bodyLarge,
-                        color = MaterialTheme.colorScheme.tertiary,
-                        modifier = Modifier
-                            .zIndex(1f)
-                            .background(MaterialTheme.colorScheme.background.copy(alpha = 0.7f))
-                            .padding(8.dp)
-                    )
                 }
 
                 if (polygonPoints.size > 2) {
@@ -761,6 +750,7 @@ fun MapMarker(
     title: String,
     snippet: String? = null,
     state: MarkerState,
+    draggable: Boolean = true,
 ) {
 //    val iconResourceId = R.drawable.location_on_24px //Outlined versjon av den under
     val iconResourceId = R.drawable.location_on_24px_filled //litt rundere
@@ -777,12 +767,14 @@ fun MapMarker(
             title = title,
             snippet = snippet,
             icon = icon,
+            draggable = draggable
         )
     } else {
         Marker(
             state = state,
             title = title,
             icon = icon,
+            draggable = draggable
         )
     }
 }
