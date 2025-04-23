@@ -14,6 +14,8 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.font.FontWeight.Companion.Bold
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.sp
@@ -63,8 +65,9 @@ fun ShowMonthlySavings(
         ) {
             Text(
                 text = stringResource(R.string.monthly_savings_text, savings, month),
-                fontSize = 18.sp * fontScale,
-                textAlign = TextAlign.Center
+                fontSize = 24.sp * fontScale,
+                textAlign = TextAlign.Center,
+                style = TextStyle(fontWeight = FontWeight.Bold)
             )
 
             ShowProduce(energyProduced, navController, fontScaleViewModel)
@@ -115,9 +118,9 @@ fun ShowYearlySavings(
         ) {
             Text(
                 text = stringResource(R.string.yearly_savings_text, savings),
-                fontSize = 18.sp * fontScale,
-                fontWeight = Bold,
+                fontSize = 24.sp * fontScale,
                 textAlign = TextAlign.Center,
+                style = TextStyle(fontWeight = FontWeight.Bold)
             )
 
             ShowProduce(energyProduced, navController, fontScaleViewModel)
