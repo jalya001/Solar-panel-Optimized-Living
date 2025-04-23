@@ -54,6 +54,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
+import androidx.compose.runtime.snapshotFlow
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -259,16 +260,34 @@ fun DisplayScreen(
                     )
                 }
             } else {
-                polygonPoints.forEachIndexed { i, point ->
+//                polygonPoints.forEachIndexed { i, point ->
+//                    MapMarker(
+//                        state = rememberMarkerState(position = point),
+//                        title = "${stringResource(id = R.string.point)} ${i + 1}",
+//                        context = LocalContext.current,
+//                    )
+//                }
+                polygonPoints.forEachIndexed { index, point ->
+                    val markerState = rememberMarkerState(position = point)
+
+                    LaunchedEffect(markerState) {
+                        snapshotFlow { markerState.position }
+                            .collect { newPosition ->
+                                viewModel.updatePoint(index, newPosition)
+                            }
+                    }
+
                     MapMarker(
-                        state = rememberMarkerState(position = point),
-                        title = "${stringResource(id = R.string.point)} ${i + 1}",
+                        state = markerState,
+                        title = "${stringResource(id = R.string.point)} ${index + 1}",
                         context = LocalContext.current,
+                        draggable = true
                     )
                 }
+
                 if (isPolygonvisible) {
                     Polygon(
-                        points = polygonPoints,
+                        points = polygonPoints.toList(),
                         fillColor = MaterialTheme.colorScheme.primary.copy(0.6f),
                         strokeColor = MaterialTheme.colorScheme.primary,
                         strokeWidth = 5f

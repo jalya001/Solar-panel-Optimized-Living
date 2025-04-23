@@ -36,7 +36,6 @@ class MapScreenViewModel(
     val coordinates: LiveData<Pair<Double, Double>?> get() = _coordinates
 
 
-
     //could add adress name
     var polygondata = mutableStateListOf<LatLng>()
 
@@ -117,5 +116,14 @@ class MapScreenViewModel(
         _coordinates.postValue(lat to lon)  //  Updates lat/lon
     }
 
+    
+    fun updatePoint(index: Int, newPosition: LatLng) {
+        if (index in polygondata.indices) {
+            polygondata[index] = newPosition
+        }
+    }
+
+
 }
+
 
