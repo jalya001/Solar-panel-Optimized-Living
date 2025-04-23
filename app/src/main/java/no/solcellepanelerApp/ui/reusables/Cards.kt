@@ -147,6 +147,12 @@ fun DataCard(
             }
 
             IconTextRow(
+                iconRes = R.drawable.baseline_battery_6_bar_24,
+                text = stringResource(R.string.estimated_energy_prod, energy),
+                fontWeight = FontWeight.Bold
+            )
+
+            IconTextRow(
                 iconRes = R.drawable.rounded_nest_sunblock_24,
                 text = stringResource(R.string.global_radiation, radiation)
             )
@@ -169,12 +175,6 @@ fun DataCard(
             IconTextRow(
                 iconRes = R.drawable.rounded_nest_sunblock_24,
                 text = stringResource(R.string.adj_radiation, adjusted)
-            )
-
-            IconTextRow(
-                iconRes = R.drawable.baseline_battery_6_bar_24,
-                text = stringResource(R.string.estimated_energy_prod, energy),
-                fontWeight = FontWeight.Bold
             )
 
             IconTextRow(

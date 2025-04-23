@@ -10,6 +10,7 @@ import android.location.Location
 import android.util.Log
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -181,6 +182,7 @@ fun DisplayScreen(
     var showBottomSheet by remember { mutableStateOf(false) }
     var arealatlong by remember { mutableStateOf<LatLng?>(null) }
     var showMissingLocationDialog by remember { mutableStateOf(false) }
+    var area by remember { mutableStateOf("") }
 
     //Location permission state
     var locationPermissionGranted by remember { mutableStateOf(false) }
@@ -222,8 +224,8 @@ fun DisplayScreen(
                 isMyLocationEnabled = locationPermissionGranted
             ),
             uiSettings = mapUiSettings.copy(
-                scrollGesturesEnabled = !drawingEnabled,
-                zoomGesturesEnabled = !drawingEnabled
+//                scrollGesturesEnabled = !drawingEnabled,
+//                zoomGesturesEnabled = !drawingEnabled
             ),
             onMapClick = { latLng ->
                 if (drawingEnabled) {
@@ -247,24 +249,16 @@ fun DisplayScreen(
             if (!drawingEnabled) {
                 selectedCoordinates?.let {
                     markerState.position = it
-//                    Marker(
-//                        state = markerState,
-//                        title = stringResource(id = R.string.selected_position),
-//                        snippet = "Lat: ${it.latitude}, Lng: ${it.longitude}",
-//                    )
                     MapMarker(
                         state = markerState,
                         title = stringResource(id = R.string.selected_position),
                         snippet = "Lat: ${it.latitude}, Lng: ${it.longitude}",
                         context = LocalContext.current,
+                        draggable = false
                     )
                 }
             } else {
                 polygonPoints.forEachIndexed { i, point ->
-//                    Marker(
-//                        state = rememberMarkerState(position = point),
-//                        title = "${stringResource(id = R.string.point)} ${i + 1}"
-//                    )
                     MapMarker(
                         state = rememberMarkerState(position = point),
                         title = "${stringResource(id = R.string.point)} ${i + 1}",
@@ -276,8 +270,6 @@ fun DisplayScreen(
                         points = polygonPoints,
                         fillColor = MaterialTheme.colorScheme.primary.copy(0.6f),
                         strokeColor = MaterialTheme.colorScheme.primary,
-//                        fillColor = Green.copy(0.3f),
-//                        strokeColor = Green,
                         strokeWidth = 5f
                     )
                 }
@@ -306,6 +298,7 @@ fun DisplayScreen(
 //        )
 
         //Search bar
+
         Card(
             modifier = Modifier.fillMaxWidth(),
             shape = RectangleShape,
@@ -321,8 +314,6 @@ fun DisplayScreen(
                 horizontalArrangement = Arrangement.Center,
                 verticalAlignment = Alignment.CenterVertically
             ) {
-
-
                 AdressInputField(
                     value = address,
                     onValueChange = {
@@ -379,32 +370,53 @@ fun DisplayScreen(
 
             val coroutineScope = rememberCoroutineScope()
 
-            // må finne en måtte å gjøre d slik at denne knappen ikke er til stedet når brukeren tegner
-            BekreftLokasjon(
-                onClick = {
-                    if (coordinates != null) {
-                        showBottomSheet = true
-                        selectedCoordinates = null
-                        viewModel.removePoints()
-                        index = 0
-                        coroutineScope.launch {
-                            cameraPositionState.animate(
-                                CameraUpdateFactory.newCameraPosition(
-                                    CameraPosition(
-                                        cameraPositionState.position.target,
-                                        19f,
-                                        0f,
-                                        cameraPositionState.position.bearing
-                                    )
-                                )
-                            )
-                        }
-                    } else {
-                        showMissingLocationDialog = true
-                    }
-                }
+            Spacer(
+                modifier = Modifier.height(20.dp)
             )
 
+            if (selectedCoordinates != null) {
+                Button(
+                    content = {
+                        Text(stringResource(id = R.string.confirm_location))
+                    },
+                    onClick = {
+                        if (coordinates != null) {
+                            showBottomSheet = true
+                            selectedCoordinates = null
+                            viewModel.removePoints()
+                            index = 0
+                            coroutineScope.launch {
+                                cameraPositionState.animate(
+                                    CameraUpdateFactory.newCameraPosition(
+                                        CameraPosition(
+                                            cameraPositionState.position.target,
+                                            19f,
+                                            0f,
+                                            cameraPositionState.position.bearing
+                                        )
+                                    )
+                                )
+                            }
+                        } else {
+                            showMissingLocationDialog = true
+                        }
+                    }
+                )
+            }
+
+            if (isPolygonvisible) {
+                var area = viewModel.calculateAreaOfPolygon(polygonPoints).toString()
+                Text(
+                    text = stringResource(R.string.area_drawn) + " $area m²",
+                    style = MaterialTheme.typography.bodyLarge,
+                    color = MaterialTheme.colorScheme.tertiary,
+                    modifier = Modifier
+                        .zIndex(1f)
+                        .background(MaterialTheme.colorScheme.background.copy(alpha = 0.7f))
+                        .padding(8.dp)
+                )
+
+            }
             if (showMissingLocationDialog) {
                 LocationNotSelectedDialog(
                     coordinates = coordinates,
@@ -412,7 +424,6 @@ fun DisplayScreen(
                 )
             }
 
-            var area by remember { mutableStateOf("") }
 
             AdditionalInputBottomSheet(
                 visible = showBottomSheet,
@@ -504,19 +515,7 @@ fun AdressInputField(
             onDone = {
                 viewModel.fetchCoordinates(address)
             }
-        ),
-        //burde egt ikke være hardkodet
-    )
-}
-
-@Composable
-fun BekreftLokasjon(
-    //må huske å endre navn på funksjoner ogsånt til engelsk
-    onClick: () -> Unit,
-) {
-    Button(onClick = onClick) {
-        Text(stringResource(id = R.string.confirm_location))
-    }
+        ))
 }
 
 @Composable
@@ -607,7 +606,6 @@ private fun DrawingControls(
 
             Column {
                 var areaShown by remember { mutableStateOf(false) }
-
                 if (areaShown) {
                     Button(
                         onClick = {
@@ -752,6 +750,7 @@ fun MapMarker(
     title: String,
     snippet: String? = null,
     state: MarkerState,
+    draggable: Boolean = true,
 ) {
 //    val iconResourceId = R.drawable.location_on_24px //Outlined versjon av den under
     val iconResourceId = R.drawable.location_on_24px_filled //litt rundere
@@ -768,12 +767,14 @@ fun MapMarker(
             title = title,
             snippet = snippet,
             icon = icon,
+            draggable = draggable
         )
     } else {
         Marker(
             state = state,
             title = title,
             icon = icon,
+            draggable = draggable
         )
     }
 }

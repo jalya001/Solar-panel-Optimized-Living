@@ -21,7 +21,7 @@ import androidx.compose.ui.unit.dp
 import androidx.core.os.LocaleListCompat
 import no.solcellepanelerApp.R
 
-//    https://www.youtube.com/watch?v=MXTsj43Csp4
+//  //hentet fra  https://www.youtube.com/watch?v=MXTsj43Csp4
 
 object LanguageUtils {
     private const val PREFS_NAME = "language_prefs"

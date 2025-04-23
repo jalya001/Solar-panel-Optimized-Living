@@ -116,7 +116,8 @@ fun BottomBar(
     onAppearanceClicked: () -> Unit,
     navController: NavController,
 ) {
-    NavigationBar {
+    NavigationBar(
+    ) {
         NavigationBarItem(
             icon = { Icon(painterResource(R.drawable.help_24px), contentDescription = "Help") },
             label = { Text(stringResource(id = R.string.help)) },
@@ -136,7 +137,6 @@ fun BottomBar(
             },
             label = { Text("Info") },
             selected = false,
-            //onClick = { navController.navigate("info_screen") },
             onClick = {
                 if (navController.currentDestination?.route != "info_screen") {
                     navController.navigate("info_screen")
@@ -158,7 +158,6 @@ fun BottomBar(
             )
         )
         NavigationBarItem(
-//            icon = { Icon(Icons.Filled.Settings, contentDescription = "Appearance") },
             icon = {
                 Icon(
                     painterResource(R.drawable.palette_24px),
@@ -184,14 +183,12 @@ fun TopBar(
     onBackClick: (() -> Unit)? = null,
     backClick: Boolean = true,
     modifier: Modifier = Modifier,
-//    height: Dp = 90.dp
+    showHomeButton: Boolean = false,
 ) {
     var backClicked by remember { mutableStateOf(false) }
 
     CenterAlignedTopAppBar(
-        modifier = Modifier
-            .fillMaxWidth(),
-//            .height(height)
+        modifier = Modifier.fillMaxWidth(),
         title = {
             Text(
                 text = text,
@@ -201,13 +198,6 @@ fun TopBar(
         },
         navigationIcon = {
             if (backClick) {
-//                OutlinedIconButton(
-//                    onClick = {
-//                        onBackClick?.invoke()
-//                        navController.popBackStack()
-//                    }, modifier = modifier.padding(top = 10.dp),
-//                    border = BorderStroke(2.dp, MaterialTheme.colorScheme.tertiary)
-//                )
                 OutlinedIconButton(
                     onClick = {
                         if (!backClicked) {
@@ -226,7 +216,20 @@ fun TopBar(
                     )
                 }
             }
+        },
+        actions = {
+            if (showHomeButton) {
+                OutlinedIconButton(
+                    onClick = { navController.navigate("home") },
+                    modifier = Modifier.padding(top = 10.dp),
+                    border = BorderStroke(2.dp, MaterialTheme.colorScheme.tertiary)
+                ) {
+                    Icon(
+                        painterResource(R.drawable.home_24px),
+                        contentDescription = "Home"
+                    )
+                }
+            }
         }
     )
 }
-

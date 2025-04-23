@@ -14,6 +14,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.font.FontWeight.Companion.Bold
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
@@ -45,7 +46,7 @@ fun ShowMonthlySavings(
                 navController,
                 text = stringResource(R.string.monthly_savings, month)
             )
-                 },
+        },
         bottomBar = {
             BottomBar(
                 onHelpClicked = { showHelp = true },
@@ -97,7 +98,7 @@ fun ShowYearlySavings(
                 navController,
                 text = stringResource(R.string.yearly_savings)
             )
-                 },
+        },
         bottomBar = {
             BottomBar(
                 onHelpClicked = { showHelp = true },
@@ -115,6 +116,7 @@ fun ShowYearlySavings(
             Text(
                 text = stringResource(R.string.yearly_savings_text, savings),
                 fontSize = 18.sp * fontScale,
+                fontWeight = Bold,
                 textAlign = TextAlign.Center,
             )
 

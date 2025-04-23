@@ -89,44 +89,6 @@ private val darkScheme = darkColorScheme(
     surfaceContainerHighest = surfaceContainerHighestDark,
 )
 
-private val frostScheme = lightColorScheme(
-    primary = primaryFrost,
-    onPrimary = onPrimaryFrost,
-    primaryContainer = primaryContainerFrost,
-    onPrimaryContainer = onPrimaryContainerFrost,
-    secondary = secondaryFrost,
-    onSecondary = onSecondaryFrost,
-    secondaryContainer = secondaryContainerFrost,
-    onSecondaryContainer = onSecondaryContainerFrost,
-    tertiary = tertiaryFrost,
-    onTertiary = onTertiaryFrost,
-    tertiaryContainer = tertiaryContainerFrost,
-    onTertiaryContainer = onTertiaryContainerFrost,
-    error = errorFrost,
-    onError = onErrorFrost,
-    errorContainer = errorContainerFrost,
-    onErrorContainer = onErrorContainerFrost,
-    background = backgroundFrost,
-    onBackground = onBackgroundFrost,
-    surface = surfaceFrost,
-    onSurface = onSurfaceFrost,
-    surfaceVariant = surfaceVariantFrost,
-    onSurfaceVariant = onSurfaceVariantFrost,
-    outline = outlineFrost,
-    outlineVariant = outlineVariantFrost,
-    scrim = scrimFrost,
-    inverseSurface = inverseSurfaceFrost,
-    inverseOnSurface = inverseOnSurfaceFrost,
-    inversePrimary = inversePrimaryFrost,
-    surfaceDim = surfaceDimFrost,
-    surfaceBright = surfaceBrightFrost,
-    surfaceContainerLowest = surfaceContainerLowestFrost,
-    surfaceContainerLow = surfaceContainerLowFrost,
-    surfaceContainer = surfaceContainerFrost,
-    surfaceContainerHigh = surfaceContainerHighFrost,
-    surfaceContainerHighest = surfaceContainerHighestFrost,
-)
-
 
 @Immutable
 data class ColorFamily(
@@ -141,7 +103,7 @@ val unspecified_scheme = ColorFamily(
 )
 
 enum class ThemeMode {
-    LIGHT, DARK, SYSTEM, FROST
+    LIGHT, DARK, SYSTEM
 }
 
 object ThemeState {
@@ -158,7 +120,6 @@ fun SolcellepanelerAppTheme(
     val colors = when (ThemeState.themeMode) {
         ThemeMode.DARK -> darkScheme
         ThemeMode.LIGHT -> lightScheme
-        ThemeMode.FROST -> frostScheme
         ThemeMode.SYSTEM -> if (darkTheme) darkScheme else lightScheme
     }
 
