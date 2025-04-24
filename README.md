@@ -13,7 +13,7 @@ A brief description of what this project does and who it's for
 - [mikass]
 - [anisai]
 - [jacobhl]
-- [amwarsam]
+- [amwarsam](www.linkedin.com/in/abdirahman-m-a-warsame-6a5636252)
 
 
 ## Features
