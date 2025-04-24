@@ -1,7 +1,9 @@
 package no.solcellepanelerApp.ui.electricity
 
 import android.annotation.SuppressLint
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.BoxWithConstraints
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.offset
@@ -22,6 +24,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import co.yml.charts.axis.AxisData
 import co.yml.charts.common.model.Point
@@ -48,6 +51,7 @@ import java.time.ZonedDateTime
 @Composable
 fun ElectricityPriceChart(prices: List<ElectricityPrice>) {
     var chartType by remember { mutableStateOf(ChartType.LINE) }
+    val selectedPoint = remember { mutableStateOf<Point?>(null) }
 
     val points = prices.map { price ->
         val hour = ZonedDateTime.parse(price.time_start).hour
@@ -71,7 +75,6 @@ fun ElectricityPriceChart(prices: List<ElectricityPrice>) {
         .axisStepSize(12.dp)
         .steps(prices.size / 2)//Showing fewer steps
         .labelData { i -> if (i % 2 == 0) "%02d".format(i) else "" }
-//        .labelData { i -> if (i % 2 == 0) "%02d:00".format(i) else "" }
         .axisLabelColor(MaterialTheme.colorScheme.tertiary)
         .axisLineColor(MaterialTheme.colorScheme.tertiary)
         .axisLabelAngle(40f)
@@ -108,10 +111,7 @@ fun ElectricityPriceChart(prices: List<ElectricityPrice>) {
     Card(
         modifier = Modifier
             .fillMaxWidth()
-            .height(325.dp)
-//            .height(350.dp)
-//            .padding(4.dp)
-        ,
+            .height(350.dp),
         elevation = CardDefaults.cardElevation(defaultElevation = 0.dp),
         colors = CardColors(
             containerColor = MaterialTheme.colorScheme.background,
@@ -120,10 +120,37 @@ fun ElectricityPriceChart(prices: List<ElectricityPrice>) {
             disabledContainerColor = MaterialTheme.colorScheme.primary
         )
     ) {
+
+        Spacer(modifier = Modifier.height(10.dp))
+
+        Box(
+            modifier = Modifier
+                .height(20.dp)
+                .fillMaxWidth(),
+            contentAlignment = Alignment.Center
+        ) {
+            // Show selected point's time and price
+            selectedPoint.value?.let {
+                val hour = it.x.toInt()
+                val price = it.y
+                val timeString = "Kl. %02d:00".format(hour)
+                val priceString = "Pris: %.2f kr".format(price)
+
+                Text(
+                    text = "$timeString, $priceString",
+                    style = MaterialTheme.typography.bodyMedium,
+                    modifier = Modifier
+                        .padding(bottom = 1.dp),
+                    color = MaterialTheme.colorScheme.primary,
+                    fontWeight = FontWeight.Bold
+                )
+            }
+        }
+
         BoxWithConstraints(
             modifier = Modifier
                 .height(320.dp)
-                .padding(top = 4.dp, start = 4.dp, end = 4.dp, bottom = 8.dp)
+                //.padding(start = 4.dp, end = 4.dp)
         ) {
             when (chartType) {
                 ChartType.LINE -> {
@@ -134,7 +161,21 @@ fun ElectricityPriceChart(prices: List<ElectricityPrice>) {
                                     dataPoints = points,
                                     LineStyle(color = if (ThemeState.themeMode == ThemeMode.DARK) MaterialTheme.colorScheme.tertiary else MaterialTheme.colorScheme.primary),
                                     IntersectionPoint(color = if (ThemeState.themeMode == ThemeMode.DARK) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.tertiary),
-                                    SelectionHighlightPoint(color = if (ThemeState.themeMode == ThemeMode.DARK) MaterialTheme.colorScheme.tertiary else MaterialTheme.colorScheme.primary),
+                                    SelectionHighlightPoint(
+                                         color = if (ThemeState.themeMode == ThemeMode.DARK) MaterialTheme.colorScheme.tertiary else MaterialTheme.colorScheme.primary,
+                                         draw = { offset ->
+                                             drawCircle(
+                                                 color = if (ThemeState.themeMode == ThemeMode.DARK) {
+                                                    Color(0xFFF3BD6E)
+                                                } else {
+                                                    Color(0xFF00696D)
+                                                },
+                                             radius = 6.dp.toPx(),
+                                             center = offset
+                                             )
+                                         },
+                                         isHighlightLineRequired = true
+                                     ),
                                     ShadowUnderLine(
                                         alpha = 0.5f,
                                         brush = Brush.verticalGradient(
@@ -144,7 +185,9 @@ fun ElectricityPriceChart(prices: List<ElectricityPrice>) {
                                             )
                                         )
                                     ),
-                                    SelectionHighlightPopUp()
+                                    selectionHighlightPopUp = SelectionHighlightPopUp { offset, point ->
+                                        selectedPoint.value = point
+                                    }
                                 )
                             ),
                         ),
@@ -196,7 +239,7 @@ fun ElectricityPriceChart(prices: List<ElectricityPrice>) {
                 style = MaterialTheme.typography.bodySmall,
                 modifier = Modifier
                     .align(Alignment.BottomCenter)
-                    .offset(y = 22.dp),
+                    .offset(y = -5.dp),
                 color = MaterialTheme.colorScheme.tertiary
             )
 
@@ -206,7 +249,7 @@ fun ElectricityPriceChart(prices: List<ElectricityPrice>) {
                 style = MaterialTheme.typography.bodySmall,
                 modifier = Modifier
                     .align(Alignment.CenterStart)
-                    .offset(x = (-28).dp, y = 3.dp)
+                    .offset(x = (-28).dp, y = -5.dp)
                     .rotate(-90f),
                 color = MaterialTheme.colorScheme.tertiary
             )
