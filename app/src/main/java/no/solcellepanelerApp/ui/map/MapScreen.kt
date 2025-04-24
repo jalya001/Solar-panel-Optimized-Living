@@ -96,6 +96,10 @@ import no.solcellepanelerApp.ui.navigation.BottomBar
 import no.solcellepanelerApp.ui.navigation.HelpBottomSheet
 import no.solcellepanelerApp.ui.navigation.TopBar
 import no.solcellepanelerApp.ui.result.WeatherViewModel
+import no.solcellepanelerApp.ui.theme.ThemeMode
+import no.solcellepanelerApp.ui.theme.ThemeState
+import no.solcellepanelerApp.ui.theme.lightBlue
+import no.solcellepanelerApp.ui.theme.orange
 import java.util.Locale
 
 
@@ -255,18 +259,11 @@ fun DisplayScreen(
                         state = markerState,
                         title = stringResource(id = R.string.selected_position),
                         snippet = "Lat: ${it.latitude}, Lng: ${it.longitude}",
-                        context = LocalContext.current,
-                        draggable = false
+                        draggable = false,
+                        context = LocalContext.current
                     )
                 }
             } else {
-//                polygonPoints.forEachIndexed { i, point ->
-//                    MapMarker(
-//                        state = rememberMarkerState(position = point),
-//                        title = "${stringResource(id = R.string.point)} ${i + 1}",
-//                        context = LocalContext.current,
-//                    )
-//                }
                 polygonPoints.forEachIndexed { index, point ->
                     val markerState = rememberMarkerState(position = point)
 
@@ -288,8 +285,8 @@ fun DisplayScreen(
                 if (isPolygonvisible) {
                     Polygon(
                         points = polygonPoints.toList(),
-                        fillColor = MaterialTheme.colorScheme.primary.copy(0.6f),
-                        strokeColor = MaterialTheme.colorScheme.primary,
+                        fillColor = lightBlue.copy(0.6f),
+                        strokeColor = lightBlue,
                         strokeWidth = 5f
                     )
                 }
@@ -655,8 +652,8 @@ private fun DrawingControls(
                             onToggleVisibility
                         },
                         colors = ButtonColors(
-                            containerColor = MaterialTheme.colorScheme.onErrorContainer,
-                            contentColor = MaterialTheme.colorScheme.background,
+                            containerColor = if (ThemeState.themeMode == ThemeMode.LIGHT) MaterialTheme.colorScheme.error else MaterialTheme.colorScheme.onErrorContainer,
+                            contentColor = if (ThemeState.themeMode == ThemeMode.LIGHT) MaterialTheme.colorScheme.onError else MaterialTheme.colorScheme.background,
                             disabledContainerColor = Color(color = 0xFF4CAF50),
                             disabledContentColor = Color(color = 0xFF4CAF50)
                         )
@@ -671,8 +668,8 @@ private fun DrawingControls(
                             onToggleVisibility()
                         },
                         colors = ButtonColors(
-                            containerColor = MaterialTheme.colorScheme.error,
-                            contentColor = MaterialTheme.colorScheme.onError,//litt lav kontrsast kanskje bruke .background
+                            containerColor = if (ThemeState.themeMode == ThemeMode.LIGHT) MaterialTheme.colorScheme.onErrorContainer else MaterialTheme.colorScheme.tertiary,
+                            contentColor = if (ThemeState.themeMode == ThemeMode.LIGHT) MaterialTheme.colorScheme.background else MaterialTheme.colorScheme.background,
                             disabledContainerColor = Color(color = 0xFF4CAF50),
                             disabledContentColor = Color(color = 0xFF4CAF50)
                         )
@@ -761,11 +758,11 @@ fun MapMarker(
     state: MarkerState,
     draggable: Boolean = true,
 ) {
-//    val iconResourceId = R.drawable.location_on_24px //Outlined versjon av den under
-    val iconResourceId = R.drawable.location_on_24px_filled //litt rundere
-//    val iconResourceId = R.drawable.baseline_location_pin_24 //jeg foretrekker denne men får den ikke til å funkne
 
-    val tintColor = MaterialTheme.colorScheme.tertiary.toArgb()
+    val iconResourceId =
+        R.drawable.baseline_location_pin_24
+
+    val tintColor = orange.toArgb()
 
     val icon =
         bitmapDescriptor(context, iconResourceId, width = 120, height = 120, tint = tintColor)
