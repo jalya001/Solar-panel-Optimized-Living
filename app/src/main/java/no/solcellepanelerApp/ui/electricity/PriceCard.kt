@@ -1,9 +1,11 @@
 package no.solcellepanelerApp.ui.electricity
 
 import android.util.Log
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
@@ -22,7 +24,11 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import no.solcellepanelerApp.model.electricity.ElectricityPrice
+import no.solcellepanelerApp.model.electricity.Region
+import no.solcellepanelerApp.ui.handling.LoadingScreen
+import no.solcellepanelerApp.ui.home.LightningAnimation
 import no.solcellepanelerApp.ui.theme.ThemeMode
 import no.solcellepanelerApp.ui.theme.ThemeState
 import java.time.ZoneId
@@ -97,13 +103,65 @@ fun PriceRow(
         Spacer(modifier = Modifier.width(8.dp))
         Column {
             Text(
-                text = "$label: ${"%2f".format(price)} NOK/kWh",
-                style = MaterialTheme.typography.bodyLarge
+                text = "$label:",
+                style = MaterialTheme.typography.titleMedium,
+                color = MaterialTheme.colorScheme.primary,
+                fontSize = 18.sp
+            )
+
+            Text(
+                text = "${"%2f".format(price)} NOK/kWh",
+                style = MaterialTheme.typography.bodyMedium
             )
             Text(
                 text = "Tid: $time",
                 style = MaterialTheme.typography.bodySmall
             )
+        }
+    }
+}
+
+@Composable
+fun HomePriceCard(
+    prices: List<ElectricityPrice>,
+    selectedRegion: Region?
+) {
+    if (selectedRegion == null) {
+        LoadingScreen()
+        return
+    }
+
+    val currentHour = ZonedDateTime.now(ZoneId.of("Europe/Oslo")).hour
+
+    val currentPrice = prices.find { price ->
+        val startTime = ZonedDateTime.parse(price.time_start)
+        startTime.hour == currentHour
+    } ?: run {
+        Log.e("ERROR", "Fant ingen pris for nåværende time!")
+        null
+    }
+
+    currentPrice?.let {
+        Column(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(12.dp),
+            verticalArrangement = Arrangement.Top,
+            //horizontalAlignment = Alignment.
+        ) {
+            Text(
+                text = "Strømpris akkurat nå i ${selectedRegion.name}:",
+                style = MaterialTheme.typography.titleLarge,
+                color = MaterialTheme.colorScheme.primary
+            )
+            Spacer(modifier = Modifier.height(8.dp))
+            PriceRow(
+                icon = Icons.Default.AccessTime,
+                label = "Pris nå",
+                price = it.NOK_per_kWh,
+                time = it.getTimeRange()
+            )
+            LightningAnimation()
         }
     }
 }

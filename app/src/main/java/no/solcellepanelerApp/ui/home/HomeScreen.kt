@@ -4,7 +4,6 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -16,7 +15,6 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -38,7 +36,7 @@ import com.airbnb.lottie.compose.rememberLottieComposition
 import no.solcellepanelerApp.R
 import no.solcellepanelerApp.data.homedata.ElectricityPriceRepository
 import no.solcellepanelerApp.model.electricity.Region
-import no.solcellepanelerApp.ui.electricity.PriceCard
+import no.solcellepanelerApp.ui.electricity.HomePriceCard
 import no.solcellepanelerApp.ui.electricity.PriceScreenViewModel
 import no.solcellepanelerApp.ui.electricity.PriceUiState
 import no.solcellepanelerApp.ui.electricity.PriceViewModelFactory
@@ -135,33 +133,30 @@ fun HomeScreen(
                     style = MaterialTheme.typography.displaySmall,
                     //content = { LightningAnimation() },
                     content = {
-                        Column {
-                            Text(text = "Viser nå strømpriser for $selectedRegion:")
+                        // Show loading screen until the region is selected
+                        if (selectedRegion == null) {
+                            LoadingScreen()
+                        } else {
+                            val repository =
+                                ElectricityPriceRepository(priceArea = selectedRegion!!.regionCode)
 
-                            Spacer(modifier = Modifier.padding(8.dp))
-                            // Show loading screen until the region is selected
-                            if (selectedRegion == null) {
-                                LoadingScreen()
-                            } else {
-                                val repository =
-                                    ElectricityPriceRepository(priceArea = selectedRegion!!.regionCode)
+                            val viewModel: PriceScreenViewModel = viewModel(
+                                factory = PriceViewModelFactory(
+                                    repository,
+                                    selectedRegion!!.regionCode
+                                ),
+                                key = selectedRegion!!.regionCode
+                            )
 
-                                val viewModel: PriceScreenViewModel = viewModel(
-                                    factory = PriceViewModelFactory(
-                                        repository,
-                                        selectedRegion!!.regionCode
-                                    ),
-                                    key = selectedRegion!!.regionCode
-                                )
+                            val priceUiState by viewModel.priceUiState.collectAsStateWithLifecycle()
 
-                                val priceUiState by viewModel.priceUiState.collectAsStateWithLifecycle()
-
-                                when (priceUiState) {
-                                    is PriceUiState.Loading -> LoadingScreen()
-                                    is PriceUiState.Error -> ErrorScreen()
-                                    is PriceUiState.Success -> {
-                                        val prices = (priceUiState as PriceUiState.Success).prices
-                                        PriceCard(prices)
+                            when (priceUiState) {
+                                is PriceUiState.Loading -> LoadingScreen()
+                                is PriceUiState.Error -> ErrorScreen()
+                                is PriceUiState.Success -> {
+                                    val prices = (priceUiState as PriceUiState.Success).prices
+                                    Column {
+                                        HomePriceCard(prices, selectedRegion)
                                     }
                                 }
                             }
