@@ -550,6 +550,10 @@ fun AdditionalInputBottomSheet(
                                             "mean(cloud_area_fraction P1M)"
                                         )
                                     )
+//                                    weatherViewModel.fetchRimData(
+//                                        lat,lon,"mean(surface_downwelling_shortwave_flux_in_air PT1H)"
+//                                    )
+
 
 
                                     weatherViewModel.fetchRadiationInfo(

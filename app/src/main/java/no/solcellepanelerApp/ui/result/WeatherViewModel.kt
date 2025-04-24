@@ -15,6 +15,10 @@ class WeatherViewModel(
     val radiationData: StateFlow<List<Radiation>> = _radiationData
     private val _frostData = MutableStateFlow<Map<String, Array<Double>>>(emptyMap())
     val frostData: StateFlow<Map<String, Array<Double>>> = _frostData
+
+    private val _frostDataRim = MutableStateFlow<Array<Double>>(emptyArray())
+    val frostDataRim: StateFlow<Array<Double>> = _frostDataRim
+
     private val _isloading = MutableStateFlow(false)
     val isLoading: StateFlow<Boolean> = _isloading
 
@@ -31,18 +35,19 @@ class WeatherViewModel(
         }
     }
 
-    fun fetchFrostData(
-        lat: Double,
-        lon: Double,
-        elements: List<String>,
-    ) { // PRODUCTION: Set to private
+    fun fetchFrostData(lat: Double, lon: Double, elements: List<String>) { // PRODUCTION: Set to private
         viewModelScope.launch {
             _isloading.value = true
             _frostData.value = repository.getFrostData(lat, lon, elements)
             _isloading.value = false
         }
-
-
+    }
+    fun fetchRimData(lat: Double, lon: Double, elements: String) { // PRODUCTION: Set to private
+        viewModelScope.launch {
+            _isloading.value = true
+            _frostDataRim.value = repository.getRimData(lat, lon, elements)
+            _isloading.value = false
+        }
     }
 
     fun fetchWeatherData(

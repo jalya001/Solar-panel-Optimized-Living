@@ -52,7 +52,7 @@ fun Nav(navController: NavHostController, fontScaleViewModel: FontScaleViewModel
     val priceRepository = ElectricityPriceRepository("NO1")
 
     NavHost(navController, startDestination = "home") {
-        composable("home") { HomeScreen(navController, fontScaleViewModel) }
+        composable("home") { HomeScreen(navController, fontScaleViewModel, WviewModel) }
         composable("map") {
             MapScreen(viewModel, navController, fontScaleViewModel, WviewModel)
         }

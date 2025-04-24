@@ -58,6 +58,8 @@ fun ResultScreen(
 ) {
     val frostData by weatherViewModel.frostData.collectAsState()
     Log.d("frostData", frostData.toString())
+    val rimData by weatherViewModel.frostDataRim.collectAsState()
+    Log.d("rimData", rimData.joinToString())
     val radiationData by weatherViewModel.radiationData.collectAsState()
     val radiationList = remember(radiationData) { radiationData.map { it.radiation } }
     val loading by weatherViewModel.isLoading.collectAsState()
