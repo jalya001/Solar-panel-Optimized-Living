@@ -1,6 +1,7 @@
 package no.solcellepanelerApp.ui.electricity
 
 import android.util.Log
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -12,7 +13,9 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.AccessTime
+import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.ArrowDownward
+import androidx.compose.material.icons.filled.ArrowForward
 import androidx.compose.material.icons.filled.ArrowUpward
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
@@ -35,10 +38,16 @@ import java.time.ZoneId
 import java.time.ZonedDateTime
 
 @Composable
-fun PriceCard(prices: List<ElectricityPrice>) {
+fun PriceCard(
+    prices: List<ElectricityPrice>,
+    hourIndex: Int,
+    onHourChange: (Int) -> Unit
+) {
     val currentHour = ZonedDateTime.now(ZoneId.of("Europe/Oslo")).hour
 
-    val currentPrice = prices.find { price ->
+    val currentDisplayedPrice = prices.getOrNull(hourIndex)
+
+    prices.find { price ->
         val startTime = ZonedDateTime.parse(price.time_start)
         startTime.hour == currentHour
     } ?: run {
@@ -49,6 +58,13 @@ fun PriceCard(prices: List<ElectricityPrice>) {
     val highestPrice = prices.maxByOrNull { it.NOK_per_kWh }
     val lowestPrice = prices.minByOrNull { it.NOK_per_kWh }
 
+    val label = when {
+        ZonedDateTime.parse(currentDisplayedPrice?.time_start).hour == currentHour -> "Pris nå"
+        hourIndex > currentHour -> "Pris om ${hourIndex - currentHour} time${if (hourIndex - currentHour > 1) "r" else ""}"
+        else -> "Pris for ${currentHour - hourIndex} time${if (currentHour - hourIndex > 1) "r" else ""} siden"
+    }
+
+
     Card(
         modifier = Modifier
             .fillMaxWidth()
@@ -56,13 +72,48 @@ fun PriceCard(prices: List<ElectricityPrice>) {
         elevation = CardDefaults.cardElevation(defaultElevation = 8.dp)
     ) {
         Column(modifier = Modifier.padding(16.dp)) {
-            currentPrice?.let {
-                PriceRow(
-                    icon = Icons.Default.AccessTime,
-                    label = "Pris nå",
-                    price = it.NOK_per_kWh,
-                    time = it.getTimeRange()
-                )
+            Row(
+                horizontalArrangement = Arrangement.Center,
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                currentDisplayedPrice?.let {
+                    PriceRow(
+                        icon = Icons.Default.AccessTime,
+                        label = label,
+                        price = it.NOK_per_kWh,
+                        time = it.getTimeRange()
+                    )
+                    Spacer(modifier = Modifier.height(12.dp))
+
+                    Row(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(8.dp),
+                        horizontalArrangement = Arrangement.End,
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        Icon(
+                            imageVector = Icons.Default.ArrowBack,
+                            contentDescription = "Forrige time",
+                            modifier = Modifier
+                                .padding(2.dp)
+                                .clickable {
+                                    if (hourIndex > 0) onHourChange(hourIndex - 1)
+                                },
+                            tint = MaterialTheme.colorScheme.primary
+                        )
+                        Icon(
+                            imageVector = Icons.Default.ArrowForward,
+                            contentDescription = "Neste time",
+                            modifier = Modifier
+                                .padding(2.dp)
+                                .clickable {
+                                    if (hourIndex < prices.lastIndex) onHourChange(hourIndex + 1)
+                                },
+                            tint = MaterialTheme.colorScheme.primary
+                        )
+                    }
+                }
             }
 
             Spacer(modifier = Modifier.height(16.dp))

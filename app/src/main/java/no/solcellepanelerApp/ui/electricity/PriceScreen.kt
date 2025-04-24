@@ -39,6 +39,8 @@ import no.solcellepanelerApp.ui.navigation.BottomBar
 import no.solcellepanelerApp.ui.navigation.HelpBottomSheet
 import no.solcellepanelerApp.ui.navigation.TopBar
 import no.solcellepanelerApp.util.RequestLocationPermission
+import java.time.ZoneId
+import java.time.ZonedDateTime
 
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -96,7 +98,14 @@ fun PriceScreen(
                         val prices = (priceUiState as PriceUiState.Success).prices
                         ElectricityPriceChart(prices = prices)
                         Spacer(modifier = Modifier.height(16.dp))
-                        PriceCard(prices)
+                        val currentHour = ZonedDateTime.now(ZoneId.of("Europe/Oslo")).hour
+                        val initialIndex = prices.indexOfFirst { ZonedDateTime.parse(it.time_start).hour == currentHour }
+                        var hourIndex by remember { mutableStateOf(initialIndex.coerceAtLeast(0)) }
+                        PriceCard(
+                            prices = prices,
+                            hourIndex = hourIndex,
+                            onHourChange = { newIndex -> hourIndex = newIndex }
+                        )
                     }
                 }
             } else {
