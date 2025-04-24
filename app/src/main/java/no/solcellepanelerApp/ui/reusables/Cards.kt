@@ -153,6 +153,11 @@ fun DataCard(
             )
 
             IconTextRow(
+                iconRes = R.drawable.baseline_power_24,
+                text = stringResource(R.string.estimated_powerpr_hour, power)
+            )
+
+            IconTextRow(
                 iconRes = R.drawable.rounded_nest_sunblock_24,
                 text = stringResource(R.string.global_radiation, radiation)
             )
@@ -177,10 +182,6 @@ fun DataCard(
                 text = stringResource(R.string.adj_radiation, adjusted)
             )
 
-            IconTextRow(
-                iconRes = R.drawable.baseline_power_24,
-                text = stringResource(R.string.estimated_powerpr_hour, power)
-            )
 
             Button(
                 onClick = {
