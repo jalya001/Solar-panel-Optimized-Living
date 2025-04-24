@@ -300,7 +300,6 @@ fun getCompassDirection(degree: Int): String {
 fun InfoHelpButton(
     label: String,
     helpText: String,
-    autoDismissMillis: Long = 3500L
 ) {
     var isVisible by remember { mutableStateOf(false) }
 
@@ -321,11 +320,6 @@ fun InfoHelpButton(
         }
 
         if (isVisible) {
-            LaunchedEffect(isVisible) {
-                delay(autoDismissMillis)
-                isVisible = false
-            }
-
             Spacer(modifier = Modifier.height(4.dp))
             Text(helpText, style = MaterialTheme.typography.bodyMedium)
         }
