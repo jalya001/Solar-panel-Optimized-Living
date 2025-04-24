@@ -143,6 +143,7 @@
     <string name="show_one_month">Show One Month</string>
     <string name="show_all_months">Show All Months</string>
     <string name="selected_month">Month: %1$s</string>
+    <string name="savedGlobe"> Hooray! You have saved the planet: %.2f kg CO₂ this month</string>
 
     <!--Months-->
     <string name="month_january">January</string>

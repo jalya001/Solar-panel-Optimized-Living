@@ -142,6 +142,7 @@
     <string name="show_one_month">Vis Èn Måned</string>
     <string name="show_all_months">Vis Alle Måneder</string>
     <string name="selected_month">Måned: %1$s</string>
+    <string name="savedGlobe"> Hurra! Du har spart kloden for: %.2f kg CO₂ denne måneden</string>
 
     <!-- Months -->
     <string name="month_january">Januar</string>

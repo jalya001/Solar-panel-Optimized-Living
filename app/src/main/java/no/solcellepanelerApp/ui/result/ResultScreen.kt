@@ -312,7 +312,7 @@ fun MonthDataDisplay(
                 ) {
                     GlobeAnimation()
                     Text(
-                        "Hurra! du har spart kloden for: ${String.format("%.2f", calculateSavedCO2(monthlyPowerOutput[selectedMonthIndex]))} kg CO₂ denne måneden",
+                        stringResource(id = R.string.savedGlobe, calculateSavedCO2(monthlyPowerOutput[selectedMonthIndex])),
                         style = MaterialTheme.typography.bodyMedium
                     )
                 }
