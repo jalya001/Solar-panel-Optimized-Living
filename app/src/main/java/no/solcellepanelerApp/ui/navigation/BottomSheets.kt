@@ -519,29 +519,17 @@ fun AdditionalInputBottomSheet(
                                     viewModel.efficiencyInput = efficiency.toString()
                                     viewModel.directionInput = azimuthPosition.toInt().toString()
 
-
                                     val lat = coordinates.first
                                     val lon = coordinates.second
                                     val slope = angle
 
-                                    weatherViewModel.fetchFrostData(
+                                    weatherViewModel.loadWeatherData(
                                         lat, lon,
-                                        listOf(
-                                            "mean(snow_coverage_type P1M)",
-                                            "mean(air_temperature P1M)",
-                                            "mean(cloud_area_fraction P1M)"
-                                        )
-                                    )
-
-
-                                    weatherViewModel.fetchRadiationInfo(
-                                        lat,
-                                        lon,
                                         slope.toInt(),
                                         azimuthPosition.toInt()
                                     )
-                                    navController.navigate("result")
 
+                                    navController.navigate("result")
                                 },
                                 modifier = Modifier.align(Alignment.CenterHorizontally)
                             ) {

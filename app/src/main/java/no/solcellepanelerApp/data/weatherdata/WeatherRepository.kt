@@ -1,25 +1,48 @@
 package no.solcellepanelerApp.data.weatherdata
 
-import no.solcellepanelerApp.model.weather.Radiation
-
 class WeatherRepository(
     private val pvgisDataSource: PVGISApi = PVGISApi(),
     private val frostDataSource: FrostApi = FrostApi(),
+    private val client: CustomHttpClient = CustomHttpClient(),
 ) {
-    suspend fun getRadiationInfo(
+    private suspend fun getRadiationData(
         lat: Double,
         long: Double,
         slope: Int,
         azimuth: Int,
-    ): List<Radiation> {
-        return pvgisDataSource.getRadiation(lat, long, slope, azimuth)
+    ): Result<Array<Double>> {
+        return pvgisDataSource.getRadiation(client, lat, long, slope, azimuth)
     }
 
-    suspend fun getFrostData(
+    private suspend fun getFrostData(
         lat: Double,
         lon: Double,
         elements: List<String>,
-    ): Map<String, Array<Double>> {
-        return frostDataSource.fetchFrostData(lat, lon, elements)
+    ): Result<MutableMap<String, Array<Double>>> {
+        return frostDataSource.fetchFrostData(client, lat, lon, elements)
+    }
+
+    suspend fun getPanelWeatherData(
+        lat: Double,
+        lon: Double,
+        slope: Int,
+        azimuth: Int,
+    ): Result<Map<String, Array<Double>>> {
+        val radiationResult = getRadiationData(lat, lon, slope, azimuth)
+        if (radiationResult.isFailure) return Result.failure(radiationResult.exceptionOrNull()!!)
+        val radiationData = radiationResult.getOrNull()
+        val frostElements = listOf(
+            "mean(snow_coverage_type P1M)",
+            "mean(air_temperature P1M)",
+            "mean(cloud_area_fraction P1M)"
+        )
+        val frostResult = getFrostData(lat, lon, frostElements)
+        if (frostResult.isFailure) return Result.failure(frostResult.exceptionOrNull()!!)
+
+        val dataMap: MutableMap<String, Array<Double>> = frostResult.getOrNull()?: mutableMapOf()
+        if (radiationData != null) {
+            dataMap["mean(PVGIS_radiation P1M)"] = radiationData
+        }
+        return Result.success(dataMap)
     }
 }

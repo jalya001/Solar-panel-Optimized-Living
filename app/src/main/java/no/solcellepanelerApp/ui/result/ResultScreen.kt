@@ -25,6 +25,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
@@ -56,12 +57,9 @@ fun ResultScreen(
     navController: NavController, viewModel: MapScreenViewModel, weatherViewModel: WeatherViewModel,
     fontScaleViewModel: FontScaleViewModel, priceScreenViewModel: ElectricityPriceRepository,
 ) {
-    val frostData by weatherViewModel.frostData.collectAsState()
-    Log.d("frostData", frostData.toString())
-    val radiationData by weatherViewModel.radiationData.collectAsState()
-    val radiationList = remember(radiationData) { radiationData.map { it.radiation } }
-    val loading by weatherViewModel.isLoading.collectAsState()
-    var startloading by remember { mutableStateOf(false) }
+    val weatherData by weatherViewModel.weatherData.collectAsState()
+    val errorMessage by weatherViewModel.errorMessage.collectAsState()
+    val uiState by weatherViewModel.uiState.collectAsState()
     val panelArea = viewModel.areaInput.toDouble()
     val efficiency = viewModel.efficiencyInput.toDouble()
     val direction = viewModel.directionInput.toInt()
@@ -128,27 +126,32 @@ fun ResultScreen(
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.Top
         ) {
-            if (loading) {
-                startloading = true
-            } else if (frostData.isNotEmpty()) {
-                startloading = false
-                val snowCoverData = frostData["mean(snow_coverage_type P1M)"] ?: emptyArray()
-                val airTempData = frostData["mean(air_temperature P1M)"] ?: emptyArray()
-                val cloudCoverData = frostData["mean(cloud_area_fraction P1M)"] ?: emptyArray()
+            if (uiState == UiState.LOADING) {
+                LoadingScreen()
+            } else if (uiState == UiState.ERROR) {
+                Text(
+                    text = errorMessage,
+                    fontSize = 40.sp
+                )
+            } else {
+                val snowCoverData = weatherData["mean(snow_coverage_type P1M)"] ?: emptyArray()
+                val airTempData = weatherData["mean(air_temperature P1M)"] ?: emptyArray()
+                val cloudCoverData = weatherData["mean(cloud_area_fraction P1M)"] ?: emptyArray()
+                val radiationData = weatherData["mean(PVGIS_radiation P1M)"] ?: emptyArray()
 
                 val calculatedMonthly = calculateMonthlyEnergyOutput(
                     airTempData,
                     cloudCoverData,
                     snowCoverData,
+                    radiationData,
                     panelArea,
                     efficiency,
-                    -0.44,
-                    radiationList
+                    -0.44
                 )
 
                 val adjustedRadiation = mutableListOf<Double>()
-                val monthlyEnergyOutput = radiationList.indices.map { month ->
-                    adjustedRadiation.add(radiationList[month] * (1 - (cloudCoverData[month] / 8)) * (1 - (snowCoverData[month] / 4)))
+                val monthlyEnergyOutput = radiationData.indices.map { month ->
+                    adjustedRadiation.add(radiationData[month] * (1 - (cloudCoverData[month] / 8)) * (1 - (snowCoverData[month] / 4)))
                     val tempFactor = 1 + (-0.44) * (airTempData[month] - 25)
                     adjustedRadiation[month] * panelArea * (efficiency / 100.0) * tempFactor
                 }
@@ -188,10 +191,10 @@ fun ResultScreen(
                 }
 
                 MonthDataDisplay(
-                    radiationList = radiationList,
                     cloudCoverData = cloudCoverData,
                     snowCoverData = snowCoverData,
                     airTempData = airTempData,
+                    radiationData = radiationData,
                     adjustedRadiation = adjustedRadiation,
                     monthlyEnergyOutput = monthlyEnergyOutput,
                     monthlyPowerOutput = monthlyPowerOutput,
@@ -200,10 +203,6 @@ fun ResultScreen(
                     energyPrice = energyPrice,
                     showAllMonths = showAllMonths
                 )
-            }
-
-            if (startloading) {
-                LoadingScreen()
             }
 
             HelpBottomSheet(
@@ -224,10 +223,10 @@ fun calculateMonthlyEnergyOutput(
     avgTemp: Array<Double>,
     cloudCover: Array<Double>,
     snowCover: Array<Double>,
+    radiation: Array<Double>,
     panelArea: Double,
     efficiency: Double,
     tempCoeff: Double,
-    radiation: List<Double>,
 ): List<Double> {
     return radiation.indices.map { month ->
         val adjustedRadiation =
@@ -239,10 +238,10 @@ fun calculateMonthlyEnergyOutput(
 
 @Composable
 fun MonthDataDisplay(
-    radiationList: List<Double>,
     cloudCoverData: Array<Double>,
     snowCoverData: Array<Double>,
     airTempData: Array<Double>,
+    radiationData: Array<Double>,
     adjustedRadiation: List<Double>,
     monthlyEnergyOutput: List<Double>,
     monthlyPowerOutput: List<Double>,
@@ -283,7 +282,7 @@ fun MonthDataDisplay(
             }
             DataCard(
                 month = months[selectedMonthIndex],
-                radiation = radiationList[selectedMonthIndex],
+                radiation = radiationData[selectedMonthIndex],
                 cloud = cloudCoverData[selectedMonthIndex],
                 snow = snowCoverData[selectedMonthIndex],
                 temp = airTempData[selectedMonthIndex],
@@ -306,7 +305,7 @@ fun MonthDataDisplay(
                 items(months.size) { month ->
                     DataCard(
                         month = months[month],
-                        radiation = radiationList[month],
+                        radiation = radiationData[month],
                         cloud = cloudCoverData[month],
                         snow = snowCoverData[month],
                         temp = airTempData[month],
