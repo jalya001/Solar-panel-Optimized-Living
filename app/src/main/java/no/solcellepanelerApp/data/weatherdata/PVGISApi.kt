@@ -27,7 +27,7 @@ class PVGISApi {
 
     suspend fun getRadiation(
         client: CustomHttpClient,
-        lat: Double, long: Double,
+        lat: Double, lon: Double,
         slope: Int,
         azimuth: Int
     ): Result<Array<Double>> {
@@ -38,7 +38,7 @@ class PVGISApi {
         // Slope: 35
         // URL for grid connected solar energy: https://re.jrc.ec.europa.eu/api/v5_3/PVcalc?lat=59.943&lon=10.718&angle=35&azimuth=0&peakpower=1&loss=14&outputformat=json
 
-        val url = "https://re.jrc.ec.europa.eu/api/v5_3/PVcalc?lat=$lat&lon=$long&angle=$slope&azimuth=$azimuth&peakpower=1&loss=14&outputformat=json"
+        val url = "https://re.jrc.ec.europa.eu/api/v5_3/PVcalc?lat=$lat&lon=$lon&angle=$slope&azimuth=$azimuth&peakpower=1&loss=14&outputformat=json"
 
         val result: Result<PVGISResponse?> = client.httpRequest(url)
         val radiationData = Array<Double>(12) {0.0}

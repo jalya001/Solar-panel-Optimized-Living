@@ -40,7 +40,7 @@ class WeatherRepository(
         if (frostResult.isFailure) return Result.failure(frostResult.exceptionOrNull()!!)
 
         val dataMap: MutableMap<String, Array<Double>> = frostResult.getOrNull()?: mutableMapOf()
-        if (radiationData != null) {
+        if (!radiationData.isNullOrEmpty()) {
             dataMap["mean(PVGIS_radiation P1M)"] = radiationData
         }
         return Result.success(dataMap)
