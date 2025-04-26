@@ -1,4 +1,5 @@
 package no.solcellepaneller.data.weatherdata
+import android.util.Log
 import io.ktor.client.*
 import io.ktor.client.engine.cio.*
 import io.ktor.client.request.*
@@ -969,6 +970,7 @@ class FrostApi {
         )
     ): Result<Array<Double>> {
         val center = LocationValue(lat, lon)
+        Log.e("center", center.toString())
         //val elements = encode(elements.joinToString(","))
         val element = encode(elementRaw)
         val timeRange = TimeRange(rawTimeRange.first, rawTimeRange.second) // kotlin bad
@@ -980,9 +982,11 @@ class FrostApi {
         result.onSuccess { body ->
             if (body == null) return Result.failure(ApiException(ApiError.UNKNOWN_ERROR)) // It should always get a body
             val rimStationsQueue = body.data.toMutableList() // Makes a copy
-            rimStationsQueue.sortedBy { rimStation ->
+            rimStationsQueue.sortBy { rimStation ->
                 val rimLocation = LocationValue(rimStation.geometry.coordinates[1], rimStation.geometry.coordinates[0])
-                calculateDistance(center, rimLocation)
+                val distance = calculateDistance(center, rimLocation)
+                Log.e("distance", calculateDistance(center, rimLocation).toString())
+                distance
             }
             val stationTimeData: Map<String, MutableMap<String, MutableMap<Int, Pair<Double, Int>>>> = mapOf(elementRaw to mutableMapOf())
             while(true) {
