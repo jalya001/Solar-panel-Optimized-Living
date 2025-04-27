@@ -7,7 +7,6 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 import no.solcellepanelerApp.data.weatherdata.WeatherRepository
 
-
 enum class UiState {
     LOADING, SUCCESS, ERROR
 }
