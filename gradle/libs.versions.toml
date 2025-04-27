@@ -40,6 +40,7 @@ uiToolingPreview = "1.7.8"
 
 runtimeLivedata = "1.7.8"
 ycharts = "2.1.0"
+roomRuntimeAndroid = "2.7.1"
 
 [libraries]
 accompanist-permissions = { module = "com.google.accompanist:accompanist-permissions", version.ref = "accompanistPermissions" }
@@ -89,6 +90,7 @@ ui = { module = "androidx.compose.ui:ui", version.ref = "ui" }
 
 androidx-runtime-livedata = { group = "androidx.compose.runtime", name = "runtime-livedata", version.ref = "runtimeLivedata" }
 ycharts = { module = "co.yml:ycharts", version.ref = "ycharts" }
+androidx-room-runtime-android = { group = "androidx.room", name = "room-runtime-android", version.ref = "roomRuntimeAndroid" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }

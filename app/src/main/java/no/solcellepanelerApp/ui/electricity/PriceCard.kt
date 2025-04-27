@@ -85,33 +85,46 @@ fun PriceCard(
                     )
                     Spacer(modifier = Modifier.height(12.dp))
 
-                    Row(
+                    Column(
                         modifier = Modifier
                             .fillMaxWidth()
-                            .padding(8.dp),
-                        horizontalArrangement = Arrangement.End,
-                        verticalAlignment = Alignment.CenterVertically
+                            .padding(vertical = 8.dp),
+                        horizontalAlignment = Alignment.CenterHorizontally
                     ) {
-                        Icon(
-                            imageVector = Icons.Default.ArrowBack,
-                            contentDescription = "Forrige time",
-                            modifier = Modifier
-                                .padding(2.dp)
-                                .clickable {
-                                    if (hourIndex > 0) onHourChange(hourIndex - 1)
-                                },
-                            tint = MaterialTheme.colorScheme.primary
+                        Text(
+                            text = "Bruk pilene for å bytte time",
+                            style = MaterialTheme.typography.bodySmall,
+                            color = MaterialTheme.colorScheme.onSurfaceVariant
                         )
-                        Icon(
-                            imageVector = Icons.Default.ArrowForward,
-                            contentDescription = "Neste time",
+
+                        Row(
                             modifier = Modifier
-                                .padding(2.dp)
-                                .clickable {
-                                    if (hourIndex < prices.lastIndex) onHourChange(hourIndex + 1)
-                                },
-                            tint = MaterialTheme.colorScheme.primary
-                        )
+                                .fillMaxWidth()
+                                .padding(8.dp),
+                            horizontalArrangement = Arrangement.Center,
+                            verticalAlignment = Alignment.CenterVertically
+                        ) {
+                            Icon(
+                                imageVector = Icons.Default.ArrowBack,
+                                contentDescription = "Forrige time",
+                                modifier = Modifier
+                                    .padding(2.dp)
+                                    .clickable {
+                                        if (hourIndex > 0) onHourChange(hourIndex - 1)
+                                    },
+                                tint = MaterialTheme.colorScheme.primary
+                            )
+                            Icon(
+                                imageVector = Icons.Default.ArrowForward,
+                                contentDescription = "Neste time",
+                                modifier = Modifier
+                                    .padding(2.dp)
+                                    .clickable {
+                                        if (hourIndex < prices.lastIndex) onHourChange(hourIndex + 1)
+                                    },
+                                tint = MaterialTheme.colorScheme.primary
+                            )
+                        }
                     }
                 }
             }
@@ -140,17 +153,19 @@ fun PriceCard(
 
 @Composable
 fun PriceRow(
-    icon: ImageVector,
+    icon: ImageVector?,
     label: String,
     price: Double,
     time: String,
 ) {
     Row(verticalAlignment = Alignment.CenterVertically) {
-        Icon(
-            imageVector = icon,
-            contentDescription = label,
-            tint = if (ThemeState.themeMode == ThemeMode.DARK) MaterialTheme.colorScheme.tertiary else MaterialTheme.colorScheme.primary
-        )
+        if (icon != null) {
+            Icon(
+                imageVector = icon,
+                contentDescription = label,
+                tint = if (ThemeState.themeMode == ThemeMode.DARK) MaterialTheme.colorScheme.tertiary else MaterialTheme.colorScheme.primary
+            )
+        }
         Spacer(modifier = Modifier.width(8.dp))
         Column {
             Text(
@@ -177,9 +192,14 @@ fun HomePriceCard(
     prices: List<ElectricityPrice>,
     selectedRegion: Region?
 ) {
-    if (selectedRegion == null) {
-        LoadingScreen()
-        return
+    Column(
+        horizontalAlignment = Alignment.CenterHorizontally,
+        verticalArrangement = Arrangement.Center
+    ) {
+        if (selectedRegion == null) {
+            LoadingScreen()
+            return
+        }
     }
 
     val currentHour = ZonedDateTime.now(ZoneId.of("Europe/Oslo")).hour
@@ -195,24 +215,25 @@ fun HomePriceCard(
     currentPrice?.let {
         Column(
             modifier = Modifier
-                .fillMaxSize()
-                .padding(12.dp),
+                .fillMaxSize(),
             verticalArrangement = Arrangement.Top,
-            //horizontalAlignment = Alignment.
+            horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            Text(
-                text = "Strømpris akkurat nå i ${selectedRegion.name}:",
-                style = MaterialTheme.typography.titleLarge,
-                color = MaterialTheme.colorScheme.primary
-            )
+            val label = "Strømpris akkurat nå i ${selectedRegion?.name}"
             Spacer(modifier = Modifier.height(8.dp))
             PriceRow(
-                icon = Icons.Default.AccessTime,
-                label = "Pris nå",
+                icon = null,
+                label = label,
                 price = it.NOK_per_kWh,
                 time = it.getTimeRange()
             )
-            LightningAnimation()
+            Column(
+                modifier = Modifier
+                    .fillMaxSize(),
+                horizontalAlignment = Alignment.End
+            ) {
+                LightningAnimation()
+            }
         }
     }
 }
