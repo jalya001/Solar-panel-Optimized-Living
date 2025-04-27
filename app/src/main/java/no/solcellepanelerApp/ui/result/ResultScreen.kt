@@ -151,7 +151,11 @@ fun ResultScreen(
 
                 val adjustedRadiation = mutableListOf<Double>()
                 val monthlyEnergyOutput = radiationData.indices.map { month ->
-                    adjustedRadiation.add(radiationData[month] * (1 - (cloudCoverData[month] / 8)) * (1 - (snowCoverData[month] / 4)))
+                    adjustedRadiation.add(
+                        radiationData[month] *
+                            (1 - (cloudCoverData[month].coerceIn(0.0, 8.0) / 8)) *
+                            (1 - (snowCoverData[month].coerceIn(0.0, 4.0) / 4))
+                    )
                     val tempFactor = 1 + (-0.44) * (airTempData[month] - 25)
                     adjustedRadiation[month] * panelArea * (efficiency / 100.0) * tempFactor
                 }

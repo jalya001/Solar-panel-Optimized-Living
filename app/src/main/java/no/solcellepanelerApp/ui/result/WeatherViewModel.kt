@@ -39,6 +39,9 @@ class WeatherViewModel(
                 if (_weatherData.value.isEmpty()) {
                     _errorMessage.value = result.exceptionOrNull()?.message ?: "Empty error"
                     _uiState.value = UiState.ERROR
+                } else if (_weatherData.value.size != 4) {
+                    _errorMessage.value = result.exceptionOrNull()?.message ?: "Some elements missing. Guesstimation not implemented."
+                    _uiState.value = UiState.ERROR
                 } else {
                     _uiState.value = UiState.SUCCESS
                 }
