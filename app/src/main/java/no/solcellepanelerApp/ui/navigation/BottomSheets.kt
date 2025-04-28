@@ -12,14 +12,19 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Create
+import androidx.compose.material.icons.filled.Info
 import androidx.compose.material3.Button
 import androidx.compose.material3.Checkbox
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.ModalBottomSheet
 import androidx.compose.material3.Slider
@@ -42,6 +47,7 @@ import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalDensity
+import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.Density
@@ -63,7 +69,6 @@ import no.solcellepanelerApp.ui.reusables.ExpandInfoSection
 import no.solcellepanelerApp.ui.reusables.ModeCard
 import no.solcellepanelerApp.ui.theme.ThemeMode
 import no.solcellepanelerApp.ui.theme.ThemeState
-import no.solcellepanelerApp.util.RequestLocationPermission
 
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -292,6 +297,37 @@ fun getCompassDirection(degree: Int): String {
     }
 }
 
+//Hjelpe funksjon for å formattere hjelpe knapp og hjelp info
+@Composable
+fun InfoHelpButton(
+    label: String,
+    helpText: String,
+) {
+    var isVisible by remember { mutableStateOf(false) }
+
+    Column(modifier = Modifier.fillMaxWidth()) {
+        Row(verticalAlignment = Alignment.CenterVertically) {
+            Text(label, fontWeight = FontWeight.Bold)
+            Spacer(modifier = Modifier.width(4.dp))
+            IconButton(
+                onClick = { isVisible = !isVisible },
+                modifier = Modifier.size(20.dp)
+            ) {
+                Icon(
+                    imageVector = Icons.Default.Info,
+                    contentDescription = "Info",
+                    modifier = Modifier.size(16.dp)
+                )
+            }
+        }
+
+        if (isVisible) {
+            Spacer(modifier = Modifier.height(4.dp))
+            Text(helpText, style = MaterialTheme.typography.bodyMedium)
+        }
+    }
+}
+
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun AdditionalInputBottomSheet(
@@ -306,27 +342,14 @@ fun AdditionalInputBottomSheet(
 ) {
     var angle by remember { mutableStateOf(0f) }
     var areaState by remember { mutableStateOf(area) }
+    var azimuthPosition by remember { mutableStateOf(0f) }
+    var efficiency by remember { mutableStateOf(0f) }
 
     val context = LocalContext.current
     val activity = context as? Activity
 
     LaunchedEffect(area) {
         areaState = area
-    }
-
-    // var direction by remember { mutableStateOf("") } bruker azimuthpostion istendefor
-    var azimuthPosition by remember { mutableStateOf(0f) } // never null ans starts at 0
-    var efficiency by remember { mutableStateOf(0f) }
-    //focus
-    //val focusRequester = remember {
-    // FocusRequester()
-    //}
-    var activeInput by remember { mutableStateOf<String?>(null) }
-
-    var selectedRegion by rememberSaveable { mutableStateOf<Region?>(null) }
-
-    RequestLocationPermission { region ->
-        selectedRegion = region
     }
 
     if (visible) {
@@ -348,28 +371,24 @@ fun AdditionalInputBottomSheet(
                 contentColor = MaterialTheme.colorScheme.tertiary,
                 scrimColor = Color.Black.copy(alpha = 0.8f)
             ) {
-                Box(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(16.dp)
-                ) {
+                val focusManager = LocalFocusManager.current
+                val decimalFormatter = DecimalFormatter()
 
-                }
                 Column(
                     modifier = Modifier
                         .fillMaxSize()
-                        .padding(horizontal = 16.dp),
+                        .verticalScroll(rememberScrollState())
+                        .padding(horizontal = 16.dp, vertical = 8.dp)
+                        .padding(bottom = 150.dp),
                     horizontalAlignment = Alignment.CenterHorizontally
                 ) {
                     Text(
-                        stringResource(id = R.string.additional_input),
+                        text = stringResource(id = R.string.additional_input),
                         style = MaterialTheme.typography.headlineLarge,
                         fontWeight = FontWeight.Thin,
                     )
 
                     Spacer(modifier = Modifier.height(20.dp))
-
-                    val decimalFormatter = DecimalFormatter()
 
                     Row {
                         DecimalInputField(
@@ -380,13 +399,7 @@ fun AdditionalInputBottomSheet(
                             modifier = Modifier
                                 .weight(1f)
                                 .padding(end = 4.dp)
-                                //.focusRequester(focusRequester)
-                                //Pop opp som viser info når bruker trykker på den
-                                .onFocusChanged {
-                                    activeInput = if (it.isFocused) "area" else null
-                                }
                         )
-
 
                         Button(
                             onClick = {
@@ -404,176 +417,134 @@ fun AdditionalInputBottomSheet(
                                 Text(
                                     stringResource(id = R.string.draw_area),
                                     style = MaterialTheme.typography.bodyMedium
-                                ) //Kanksje lurt å legge til noe som hindrer bruker i å klikkevekk, men samtidig vil vi at de skal kunne bytte posisjon hvis ufornøyde
+                                )
                             }
                         }
                     }
-                    Spacer(modifier = Modifier.height(5.dp))
 
-                    //Pop opp som viser info når bruker trykker på den
-                    if (activeInput == "area") {
-                        Text(stringResource(id = R.string.roofAreaHelp))
-                    }
+                    Spacer(modifier = Modifier.height(8.dp))
+
+                    InfoHelpButton(
+                        label = stringResource(id = R.string.area_label),
+                        helpText = stringResource(id = R.string.roofAreaHelp)
+                    )
 
                     Spacer(modifier = Modifier.height(16.dp))
 
+                    Text(
+                        text = stringResource(id = R.string.slope_label),
+                        style = MaterialTheme.typography.titleMedium
+                    )
 
-                    Column {
+                    Slider(
+                        value = angle,
+                        onValueChange = {
+                            angle = it
+                            focusManager.clearFocus()
+                        },
+                        valueRange = 0f..90f,
+                        modifier = Modifier.fillMaxWidth()
+                    )
 
-                        Text(
-                            text = stringResource(id = R.string.slope_label),
-                            style = MaterialTheme.typography.titleMedium
-                        )
+                    InfoHelpButton(
+                        label = stringResource(id = R.string.angle) + " ${angle.toInt()}°",
+                        helpText = stringResource(id = R.string.roofAngleHelp)
+                    )
 
-                        Spacer(Modifier.height(8.dp))
+                    Spacer(modifier = Modifier.height(16.dp))
 
-                        Slider(
-                            value = angle,
-                            onValueChange = {
-                                angle = it
-                                activeInput = "angle"
-                            },
-                            valueRange = 0f..90f,
-                            modifier = Modifier.fillMaxWidth()
-                        )
+                    Text(
+                        stringResource(id = R.string.efficiency_label),
+                        style = MaterialTheme.typography.titleMedium
+                    )
 
-                        Text(
-                            stringResource(id = R.string.angle) + " ${angle.toInt()}°",
-                            fontWeight = FontWeight.Bold
-                        )
+                    Slider(
+                        value = efficiency,
+                        onValueChange = {
+                            efficiency = it
+                            focusManager.clearFocus()
+                        },
+                        valueRange = 0f..100f,
+                        modifier = Modifier.fillMaxWidth()
+                    )
 
-                        //Pop opp som viser info når bruker trykker på den
-                        if (activeInput == "angle") {
-                            Text(stringResource(id = R.string.roofAngleHelp))
+                    InfoHelpButton(
+                        label = stringResource(id = R.string.effectivity) + " ${efficiency.toInt()}%",
+                        helpText = stringResource(id = R.string.panelEfficencyHelp)
+                    )
+
+                    Spacer(modifier = Modifier.height(16.dp))
+
+                    Text(
+                        text = stringResource(id = R.string.direction_label),
+                        style = MaterialTheme.typography.titleMedium
+                    )
+
+                    Slider(
+                        value = azimuthPosition,
+                        onValueChange = {
+                            azimuthPosition = it
+                            focusManager.clearFocus()
+                        },
+                        valueRange = 0f..315f,
+                        modifier = Modifier.fillMaxWidth()
+                    )
+
+                    InfoHelpButton(
+                        label = stringResource(id = R.string.direction) + " ${azimuthPosition.toInt()}° (${getCompassDirection(azimuthPosition.toInt())})",
+                        helpText = stringResource(id = R.string.panelDirectionHelp)
+                    )
+
+                    Spacer(modifier = Modifier.height(16.dp))
+
+                    var selectedRegion by remember { mutableStateOf(Region.OSLO) }
+                    RegionDropdown(
+                        selectedRegion = viewModel.selectedRegion,
+                        onRegionSelected = { newRegion ->
+                            viewModel.selectedRegion = newRegion
                         }
+                    )
 
-                        Spacer(Modifier.height(25.dp))
+                    Spacer(modifier = Modifier.height(32.dp))
 
-                        Text(
-                            stringResource(id = R.string.efficiency_label),
-                            style = MaterialTheme.typography.titleMedium
-                        )
+                    if (areaState.isNotEmpty() && coordinates != null) {
+                        Button(
+                            onClick = {
+                                viewModel.areaInput = areaState
+                                viewModel.angleInput = angle.toString()
+                                viewModel.efficiencyInput = efficiency.toString()
+                                viewModel.directionInput = azimuthPosition.toInt().toString()
 
-                        Slider(
-                            value = efficiency,
-                            onValueChange = {
-                                efficiency = it
-                                activeInput = "efficiency" // or "efficiency", "direction", etc.
-                            },
-                            valueRange = 0f..100f,
-                            modifier = Modifier.fillMaxWidth()
-                        )
+                                val (lat, lon) = coordinates
 
-                        Text(
-                            stringResource(id = R.string.effectivity) + " ${efficiency.toInt()}%",
-                            fontWeight = FontWeight.Bold
-                        )
+                                weatherViewModel.fetchFrostData(
+                                    lat, lon,
+                                    listOf(
+                                        "mean(snow_coverage_type P1M)",
+                                        "mean(air_temperature P1M)",
+                                        "mean(cloud_area_fraction P1M)"
+                                    )
+                                )
 
-                        //Pop opp som viser info når bruker trykker på den
-                        if (activeInput == "efficiency") {
-                            Text(stringResource(id = R.string.panelEfficencyHelp))
-                        }
-
-                        Spacer(Modifier.height(25.dp))
-
-                        Text(
-                            text = stringResource(id = R.string.direction_label),
-                            style = MaterialTheme.typography.titleMedium
-                        )
-
-                        Spacer(Modifier.height(8.dp))
-
-                        Slider(
-                            value = azimuthPosition,
-                            onValueChange = {
-                                azimuthPosition = it
-                                activeInput = "azimuth" // or "efficiency", "direction", etc.
-                            },
-                            valueRange = 0f..315f,
-                            modifier = Modifier.fillMaxWidth()
-                        )
-
-                        Text(
-                            stringResource(id = R.string.direction) + " ${azimuthPosition.toInt()}° (${
-                                getCompassDirection(
+                                weatherViewModel.fetchRadiationInfo(
+                                    lat,
+                                    lon,
+                                    angle.toInt(),
                                     azimuthPosition.toInt()
                                 )
-                            })",
-                            fontWeight = FontWeight.Bold
-                        )
 
-                        //Pop opp som viser info når bruker trykker på den
-                        if (activeInput == "azimuth") {
-                            Text(stringResource(id = R.string.panelDirectionHelp))
-                        }
-
-                        Spacer(Modifier.height(25.dp))
-
-                        Text("Region", style = MaterialTheme.typography.titleMedium)
-                        Spacer(Modifier.height(8.dp))
-
-                        if (selectedRegion != null) {
-                            RegionDropdown(selectedRegion!!) { newRegion ->
-                                selectedRegion = newRegion
-                            }
-                        } else {
-                            CircularProgressIndicator()
-                        }
-
-                        Spacer(Modifier.height(16.dp))
-
-                        //UI er ikke updatert
-
-                        Log.d("region", "$selectedRegion")
-
-                        Spacer(modifier = Modifier.height(10.dp))
-
-                        if (areaState.isNotEmpty() && coordinates != null) {
-                            Button(
-                                onClick = {
-                                    viewModel.areaInput = areaState
-                                    viewModel.angleInput = angle.toString()
-                                    viewModel.efficiencyInput = efficiency.toString()
-                                    viewModel.directionInput = azimuthPosition.toInt().toString()
-
-                                    val lat = coordinates.first
-                                    val lon = coordinates.second
-                                    val slope = angle
-
-                                    weatherViewModel.loadWeatherData(
-                                        lat, lon,
-<<<<<<< HEAD
-=======
-                                        listOf(
-                                            "mean(snow_coverage_type P1M)",
-                                            "mean(air_temperature P1M)",
-                                            "mean(cloud_area_fraction P1M)"
-                                        )
-                                    )
-//                                    weatherViewModel.fetchRimData(
-//                                        lat,lon,"mean(surface_downwelling_shortwave_flux_in_air PT1H)"
-//                                    )
-
-
-
-                                    weatherViewModel.fetchRadiationInfo(
-                                        lat,
-                                        lon,
->>>>>>> origin/price+nergy
-                                        slope.toInt(),
-                                        azimuthPosition.toInt()
-                                    )
-
-                                    navController.navigate("result")
-                                },
-                                modifier = Modifier.align(Alignment.CenterHorizontally)
-                            ) {
-                                Text("Gå til resultater")
-                            }
+                                navController.navigate("result")
+                            },
+                            modifier = Modifier.align(Alignment.CenterHorizontally)
+                        ) {
+                            Text("Gå til resultater")
                         }
                     }
+
+                    Spacer(modifier = Modifier.height(16.dp))
                 }
             }
         }
     }
 }
+

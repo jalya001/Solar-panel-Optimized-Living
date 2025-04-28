@@ -182,6 +182,7 @@ fun DataCard(
                 text = stringResource(R.string.adj_radiation, adjusted)
             )
 
+
             Button(
                 onClick = {
                     navController.navigate("monthly_savings/$month/${energy}/${energyPrice}")

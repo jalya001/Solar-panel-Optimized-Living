@@ -142,6 +142,7 @@
     <string name="show_one_month">Vis Èn Måned</string>
     <string name="show_all_months">Vis Alle Måneder</string>
     <string name="selected_month">Måned: %1$s</string>
+    <string name="savedGlobe"> Hurra! Du har spart kloden for: %.2f kg CO₂ denne måneden</string>
 
     <!-- Months -->
     <string name="month_january">Januar</string>
@@ -171,7 +172,7 @@
     <string name="temp_factor">Temperaturfaktor: %.2f °C</string>
     <string name="adj_radiation">Justert stråling: %.2f kWh/m²</string>
     <string name="estimated_energy_prod">Estimert produsert energi: %.2f kWh </string>
-    <string name="estimated_powerpr_hour">Estimert kraft produsert per time: %.2f kW</string>
+    <string name="estimated_powerpr_hour">Estimert kraft produsert per time: %.2f kWh</string>
     <string name="show_monthly_savings">Vis Din Månedlige Sparing I %1$s</string>
 
     <!--Savings Screen-->

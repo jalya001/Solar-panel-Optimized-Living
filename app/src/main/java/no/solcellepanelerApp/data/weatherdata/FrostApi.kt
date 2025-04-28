@@ -1,35 +1,24 @@
-<<<<<<< HEAD
 package no.solcellepanelerApp.data.weatherdata
 
-import java.net.URLEncoder
-import java.nio.charset.StandardCharsets
-import kotlinx.serialization.*
-import kotlinx.serialization.descriptors.*
-import kotlinx.serialization.encoding.*
-=======
-package no.solcellepaneller.data.weatherdata
 import android.util.Log
 import io.ktor.client.*
-import io.ktor.client.engine.cio.*
-import io.ktor.client.request.*
-import io.ktor.http.HttpHeaders
 import io.ktor.client.call.*
+import io.ktor.client.engine.cio.*
+import io.ktor.client.plugins.contentnegotiation.*
+import io.ktor.client.request.*
 import io.ktor.client.statement.*
-import java.net.URLEncoder
-import java.nio.charset.StandardCharsets
+import io.ktor.serialization.kotlinx.json.*
 import kotlinx.coroutines.*
 import kotlinx.serialization.*
-import kotlinx.serialization.json.*
 import kotlinx.serialization.descriptors.*
 import kotlinx.serialization.encoding.*
-import io.ktor.client.plugins.contentnegotiation.*
-import io.ktor.serialization.kotlinx.json.*
->>>>>>> origin/price+nergy
-import kotlin.math.*
-import java.time.ZonedDateTime
+import kotlinx.serialization.json.*
+import java.net.URLEncoder
+import java.nio.charset.StandardCharsets
 import java.time.ZoneId
+import java.time.ZonedDateTime
 import java.time.format.DateTimeFormatter
-<<<<<<< HEAD
+import kotlin.math.*
 
 class FrostApi {
     private val basicAuth = "4868c766-7477-484f-b767-6e5776a60a26:49ee1988-7461-4452-97a3-8ae5cbb133d7"
@@ -40,10 +29,7 @@ class FrostApi {
 
     @Serializable
     private data class StationsResponse(
-=======
-import java.io.IOException
-import io.ktor.http.*
-import io.ktor.client.plugins.*
+}
 
 class FrostApi {
     // remember to make all this stuff private properties

@@ -143,6 +143,7 @@
     <string name="show_one_month">Show One Month</string>
     <string name="show_all_months">Show All Months</string>
     <string name="selected_month">Month: %1$s</string>
+    <string name="savedGlobe"> Hooray! You have saved the planet: %.2f kg CO₂ this month</string>
 
     <!--Months-->
     <string name="month_january">January</string>
@@ -168,8 +169,8 @@
     <string name="avg_snow_cover">Average Snow Cover: %.2f</string>
     <string name="temp_factor">Temperature Factor: %.2f °C</string>
     <string name="adj_radiation">Adjusted Radiation: %.2f kWh/m²</string>
-    <string name="estimated_energy_prod">Estimated Energy Produced: %.2f kW </string>
-    <string name="estimated_powerpr_hour">Estimated Power Produced per Hour: %.2f kWh</string>
+    <string name="estimated_energy_prod">Estimated Energy Produced: %.2f kWh </string>
+    <string name="estimated_powerpr_hour">Estimated Power Produced per Hour: %.2f kW</string>
     <string name="show_monthly_savings">Show Your Savings In %1$s</string>
 
     <!--Savings Screen-->
