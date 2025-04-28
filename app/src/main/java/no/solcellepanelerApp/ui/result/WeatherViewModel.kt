@@ -24,9 +24,6 @@ class WeatherViewModel(
     private val _frostDataRim = MutableStateFlow<Array<Double>>(emptyArray())
     val frostDataRim: StateFlow<Array<Double>> = _frostDataRim
 
-    //private val lastWeatherData: Map<String, Array<Double>>? = null
-    //fun getLastWeatherData(): Map<String, Array<Double>>? = lastWeatherData
-
     fun loadWeatherData(
         lat: Double,
         lon: Double,
@@ -39,22 +36,22 @@ class WeatherViewModel(
             if (result.isSuccess) {
                 _weatherData.value = result.getOrNull()?: emptyMap()
                 if (_weatherData.value.isEmpty()) {
-                    _errorMessage.value = result.exceptionOrNull()?.message ?: "Empty error"
+                    _errorMessage.value = result.exceptionOrNull()?.message ?: "There is no data on this region. We are sorry."
                     _uiState.value = UiState.ERROR
                 } else if (_weatherData.value.size != 4) {
-                    _errorMessage.value = result.exceptionOrNull()?.message ?: "Some elements missing. Guesstimation not implemented."
+                    _errorMessage.value = result.exceptionOrNull()?.message ?: "Some data missing on this region, and we cannot provide you an estimate. We are sorry."
                     _uiState.value = UiState.ERROR
                 } else {
                     _uiState.value = UiState.SUCCESS
                 }
             } else {
                 _uiState.value = UiState.ERROR
-                _errorMessage.value = result.exceptionOrNull()?.message ?: "Unexpected behavior"
+                _errorMessage.value = result.exceptionOrNull()?.message ?: "Unexpected behavior. Please report to developers."
             }
         }
     }
 
-    fun fetchRimData(lat: Double, lon: Double, elements: String) { // PRODUCTION: Set to private
+    fun fetchRimData(lat: Double, lon: Double, elements: String) {
         viewModelScope.launch {
             _uiState.value = UiState.LOADING
             _frostDataRim.value = repository.getRimData(lat, lon, elements)
