@@ -1,24 +1,24 @@
 package no.solcellepanelerApp.data.weatherdata
 
-import android.util.Log
-import io.ktor.client.*
-import io.ktor.client.call.*
-import io.ktor.client.engine.cio.*
-import io.ktor.client.plugins.contentnegotiation.*
-import io.ktor.client.request.*
-import io.ktor.client.statement.*
-import io.ktor.serialization.kotlinx.json.*
-import kotlinx.coroutines.*
-import kotlinx.serialization.*
-import kotlinx.serialization.descriptors.*
-import kotlinx.serialization.encoding.*
-import kotlinx.serialization.json.*
+import kotlinx.serialization.KSerializer
+import kotlinx.serialization.SerialName
+import kotlinx.serialization.Serializable
+import kotlinx.serialization.descriptors.PrimitiveKind
+import kotlinx.serialization.descriptors.PrimitiveSerialDescriptor
+import kotlinx.serialization.descriptors.SerialDescriptor
+import kotlinx.serialization.encoding.Decoder
+import kotlinx.serialization.encoding.Encoder
 import java.net.URLEncoder
 import java.nio.charset.StandardCharsets
 import java.time.ZoneId
 import java.time.ZonedDateTime
 import java.time.format.DateTimeFormatter
-import kotlin.math.*
+import kotlin.math.abs
+import kotlin.math.atan2
+import kotlin.math.cos
+import kotlin.math.pow
+import kotlin.math.sin
+import kotlin.math.sqrt
 
 class FrostApi {
     private val basicAuth = "4868c766-7477-484f-b767-6e5776a60a26:49ee1988-7461-4452-97a3-8ae5cbb133d7"
@@ -29,34 +29,6 @@ class FrostApi {
 
     @Serializable
     private data class StationsResponse(
-}
-
-class FrostApi {
-    // remember to make all this stuff private properties
-    val basicAuth = "4868c766-7477-484f-b767-6e5776a60a26:49ee1988-7461-4452-97a3-8ae5cbb133d7"
-    val encodedAuth = java.util.Base64.getEncoder().encodeToString(basicAuth.toByteArray())
-    val encode = { json: String -> URLEncoder.encode(json, StandardCharsets.UTF_8.toString()) }
-    val radiusIncrement = 20.0
-
-    enum class ApiError {
-        TIMEOUT_ERROR,
-        AUTHORIZATION_ERROR,
-        SERVER_ERROR,
-        OVERLOAD_ERROR,
-        NETWORK_ERROR,
-        UNKNOWN_ERROR
-    }
-
-    class ApiException(val errorCode: ApiError) : Throwable() {
-        override fun toString(): String {
-            return "$errorCode"
-        }
-    }
-
-
-    @Serializable
-    data class StationsResponse(
->>>>>>> origin/price+nergy
         val data: Data
     )
 
@@ -78,11 +50,7 @@ class FrostApi {
         val extra: Extra,
         val available: TimeRange? = null
     )
-<<<<<<< HEAD
     private object IntAsStringSerializer : KSerializer<String> {
-=======
-    object IntAsStringSerializer : KSerializer<String> {
->>>>>>> origin/price+nergy
         override val descriptor: SerialDescriptor = PrimitiveSerialDescriptor("IntAsString", PrimitiveKind.STRING)
         override fun serialize(encoder: Encoder, value: String) { encoder.encodeString(value) }
         override fun deserialize(decoder: Decoder): String { return decoder.decodeInt().toString() }
@@ -216,11 +184,7 @@ class FrostApi {
     )
 
 
-<<<<<<< HEAD
     private fun latPlusKm(latitude: Double, deltaKm: Double): Double {
-=======
-    fun latPlusKm(latitude: Double, deltaKm: Double): Double {
->>>>>>> origin/price+nergy
         val kmPerDegreeLat = 111.32
         val newLat = latitude + (deltaKm / kmPerDegreeLat)
         return newLat
@@ -279,7 +243,6 @@ class FrostApi {
         return radius * c
     }
 
-<<<<<<< HEAD
     private enum class Mode {
         NEAREST, INTERPOLATION, EXTRAPOLATION, FAIL // Fail means you need to add a guesstimate value in the viewmodel or something
     }
@@ -312,48 +275,10 @@ class FrostApi {
         } else if (modes[element] != Mode.EXTRAPOLATION) {
             modes[element] = Mode.EXTRAPOLATION
             println("SET TO EXTRAPOLATION: "+element)
-=======
-    enum class Mode {
-        NEAREST, INTERPOLATION, EXTRAPOLATION, FAIL // Fail means you need to add a guesstimate value in the viewmodel or something
-    }
-
-    fun setModes(modes: MutableMap<String, Mode>, searchAdvancements: Map<String, MutableMap<Quadrant, Int>>) {
-        println(modes)
-        searchAdvancements.forEach { (element, quadrants) ->
-            if (modes[element] != Mode.NEAREST && modes[element] != Mode.FAIL) resetMode(modes, element, quadrants)
->>>>>>> origin/price+nergy
         }
-        println(modes)
     }
 
-<<<<<<< HEAD
     private val quadrantAngles = mapOf(
-=======
-    fun isDiagonal(q1: Quadrant, q2: Quadrant): Boolean {
-        return !((q1.value.first == q2.value.first && abs(q1.value.second - q2.value.second) == 2) || (q1.value.second == q2.value.second && abs(q1.value.first - q2.value.first) == 2))
-    }
-
-    fun resetMode(modes: MutableMap<String, Mode>, element: String, quadrants: MutableMap<Quadrant, Int>) {
-        val exceeders = mutableListOf<Quadrant>()
-        quadrants.forEach { (quadrant, value) ->
-            if (value >= 4) exceeders.add(quadrant)
-        }
-        println(element)
-        println(exceeders)
-        if (exceeders.size <= 1 || (exceeders.size == 2 && isDiagonal(exceeders[0], exceeders[1]))) {
-            println("SET TO INTERPOLATION: "+element)
-            modes[element] = Mode.INTERPOLATION
-        } else if (exceeders.size == 4) {
-            modes[element] = Mode.FAIL
-            println("SET TO FAIL: "+element)
-        } else if (modes[element] != Mode.EXTRAPOLATION) {
-            modes[element] = Mode.EXTRAPOLATION
-            println("SET TO EXTRAPOLATION: "+element)
-        }
-    }
-
-    val quadrantAngles = mapOf(
->>>>>>> origin/price+nergy
         Quadrant.NORTHEAST to 0.0,
         Quadrant.SOUTHEAST to 90.0,
         Quadrant.SOUTHWEST to 180.0,
@@ -400,20 +325,12 @@ class FrostApi {
         return readOnlySectorPoints
     }
 
-<<<<<<< HEAD
     private fun formatTime(timeRange: TimeRange): String {
-=======
-    fun formatTime(timeRange: TimeRange): String {
->>>>>>> origin/price+nergy
         val formatter = DateTimeFormatter.ISO_INSTANT
         return "${timeRange.from!!.format(formatter)}/${timeRange.to!!.format(formatter)}"
     }
 
-<<<<<<< HEAD
     private fun buildStationsUrl(
-=======
-    fun buildStationsUrl(
->>>>>>> origin/price+nergy
         center: LocationValue,
         requestedQuadrants: MutableMap<String, MutableSet<Quadrant>>,
         searchAdvancements: Map<String, MutableMap<Quadrant, Int>>,
@@ -470,11 +387,7 @@ class FrostApi {
         return url
     }
 
-<<<<<<< HEAD
     private fun testIDWWeight(searchAdvancements: Map<String, MutableMap<Quadrant, Int>>, element: String, quadrant: Quadrant): Double {
-=======
-    fun testIDWWeight(searchAdvancements: Map<String, MutableMap<Quadrant, Int>>, element: String, quadrant: Quadrant): Double {
->>>>>>> origin/price+nergy
         var sum = 0.0
         var thisDistance = 0.0
         searchAdvancements[element]!!.forEach { (searchedQuadrant, distance) ->
@@ -559,11 +472,7 @@ class FrostApi {
         return requestedQuadrants
     }
 
-<<<<<<< HEAD
     private fun addToRequestedQuadrants(requestedQuadrants: MutableMap<String, MutableSet<Quadrant>>, searchAdvancements: Map<String, MutableMap<Quadrant, Int>>, usableStations: Map<String, Map<Quadrant, MutableList<String>>>, currentStationsCount: Int, element: String, quadrant: Quadrant, mode: Mode) {
-=======
-    fun addToRequestedQuadrants(requestedQuadrants: MutableMap<String, MutableSet<Quadrant>>, searchAdvancements: Map<String, MutableMap<Quadrant, Int>>, usableStations: Map<String, Map<Quadrant, MutableList<String>>>, currentStationsCount: Int, element: String, quadrant: Quadrant, mode: Mode) {
->>>>>>> origin/price+nergy
         if (mode == Mode.INTERPOLATION) { // tests if it is worth to keep searching in a quadrant
             if (
                 usableStations[element]!![quadrant]!!.size == 0 &&
@@ -581,120 +490,6 @@ class FrostApi {
                 requestedQuadrants.getOrPut(element) { mutableSetOf() }.add(quadrant)
             }
         }
-<<<<<<< HEAD
-=======
-    }
-
-    val client = HttpClient {
-        install(ContentNegotiation) {
-            json(Json { ignoreUnknownKeys = true }) // PRODUCTION: remove all the irrelevant keys
-        }
-        install(HttpTimeout) {
-            requestTimeoutMillis = 15_000  // 15 seconds timeout
-            connectTimeoutMillis = 15_000  // 15 seconds connect timeout
-            socketTimeoutMillis = 15_000   // 15 seconds socket timeout
-        }
-    }
-
-    suspend inline fun <reified T> httpRequest(
-        url: String,
-        headers: Map<String, String> = emptyMap(),
-        body: Any? = null,
-        method: HttpMethod = HttpMethod.Get,
-        maxRetries: Int = 3
-    ): Result<T?> {
-        var attempt = 0
-        var delayTime = 1000L
-
-        while (attempt < maxRetries + 1) {
-            try {
-                val response: HttpResponse = client.request(url) {
-                    this.method = method
-                    headers.forEach { (key, value) -> header(key, value) }
-
-                    if (body != null) {
-                        contentType(ContentType.Application.Json)
-                        setBody(body)
-                    }
-                }
-                return when (response.status) {
-                    HttpStatusCode.OK, HttpStatusCode.Created -> {
-                        val data: T = response.body()
-                        Result.success(data)
-                    }
-                    HttpStatusCode.Unauthorized, HttpStatusCode.Forbidden -> {
-                        Result.failure(ApiException(ApiError.AUTHORIZATION_ERROR))
-                    }
-                    HttpStatusCode.NotFound, HttpStatusCode.PreconditionFailed -> {
-                        Result.success(null)
-                    }
-                    HttpStatusCode.TooManyRequests -> {
-                        if (attempt >= maxRetries) return Result.failure(ApiException(ApiError.OVERLOAD_ERROR))
-                        println("Rate limit exceeded, retrying in ${delayTime}ms...")
-                        delay(delayTime)
-                        delayTime *= 2
-                        attempt++
-                        continue
-                    }
-                    HttpStatusCode.InternalServerError -> {
-                        Result.failure(ApiException(ApiError.SERVER_ERROR))
-                    }
-                    else -> {
-                        Result.failure(ApiException(ApiError.UNKNOWN_ERROR))
-                    }
-                }
-            } catch (e: HttpRequestTimeoutException) {
-                if (attempt >= maxRetries) return Result.failure(ApiException(ApiError.TIMEOUT_ERROR))
-                println("Timeout, retrying in ${delayTime}ms...")
-            } catch (e: IOException) {
-                if (attempt >= maxRetries) return Result.failure(ApiException(ApiError.NETWORK_ERROR))
-                println("Network error: ${e.message}, retrying in ${delayTime}ms...")
-            } catch (e: Exception) {
-                println(e)
-                return Result.failure(ApiException(ApiError.UNKNOWN_ERROR))
-            }
-
-            delay(delayTime)
-            delayTime *= 2
-            attempt++
-        }
-
-        return Result.failure(ApiException(ApiError.UNKNOWN_ERROR))
-    }
-
-    fun buildStationDataUrl(stationids: MutableSet<String>, missingElements: MutableSet<String>, timeRange: TimeRange): String {
-        val sources = stationids.joinToString(",") { "SN$it" }
-        val time = encode(formatTime(timeRange))
-        val elements = encode(missingElements.joinToString(","))
-
-        val url = "https://frost.met.no/observations/v0.jsonld?sources=$sources&referencetime=$time&elements=$elements"
-
-        println(url)
-
-        return url
-    }
-
-    enum class TimeInterval {
-        SECOND,
-        MINUTE,
-        HOUR,
-        DAY,
-        WEEK,
-        MONTH,
-        YEAR
-    }
-
-    fun ZonedDateTime.toIntervalBucket(interval: TimeInterval): Int {
-        return when (interval) {
-            TimeInterval.SECOND -> this.second+1
-            TimeInterval.MINUTE -> this.minute+1
-            TimeInterval.HOUR -> this.hour+1
-            TimeInterval.DAY -> this.dayOfMonth
-            TimeInterval.WEEK -> this.get(java.time.temporal.IsoFields.WEEK_OF_WEEK_BASED_YEAR)
-            TimeInterval.MONTH -> this.monthValue
-            TimeInterval.YEAR -> this.year
-        }
->>>>>>> origin/price+nergy
     }
 
     private fun buildStationDataUrl(stationids: MutableSet<String>, missingElements: MutableSet<String>, timeRange: TimeRange): String {
@@ -841,10 +636,6 @@ class FrostApi {
             val mode = modes[element]!!
             if (mode == Mode.INTERPOLATION || mode == Mode.EXTRAPOLATION) { // refractor to only one if of this?
                 val usableStationsCount = usableStations[element]!!.count { it.value.isNotEmpty() }
-<<<<<<< HEAD
-=======
-                val mode = modes[element]!!
->>>>>>> origin/price+nergy
                 quadrants.forEach { quadrant ->
                     val nextAdvancement = abs(queueAdvancements[element]!![quadrant]!!)+1
                     if (nextAdvancement <= stationQueues[element]!![quadrant]!!.size) {
@@ -861,10 +652,7 @@ class FrostApi {
     }
 
     suspend fun fetchFrostData(
-<<<<<<< HEAD
         client: CustomHttpClient,
-=======
->>>>>>> origin/price+nergy
         lat: Double,
         lon: Double,
         elements: List<String>,
@@ -872,11 +660,7 @@ class FrostApi {
             ZonedDateTime.of(1800, 1, 1, 0, 0, 0, 0, ZoneId.of("UTC")),
             ZonedDateTime.now(ZoneId.of("UTC"))
         )
-<<<<<<< HEAD
     ): Result<MutableMap<String, Array<Double>>> {
-=======
-    ): Result<Map<String, Array<Double>>> {
->>>>>>> origin/price+nergy
         val timeRange = TimeRange(from = rawTimeRange.first, to = rawTimeRange.second)
         val center = LocationValue(lat, lon)
         //val center = LocationValue(60.386163, 8.259478) // middle of the mountains
@@ -905,11 +689,7 @@ class FrostApi {
             while (true) {
                 setModes(modes, searchAdvancements) // if it has gone 150km in two directions (which means it has not found anything in them) (it can well interpolate with three quadrants, but four is optimal). if the two directions are diagonal to each other, it's also fine however. if it has found nothing in 150km in all directions, it goes to guesstimation
                 val url = buildStationsUrl(center, requestedQuadrants, searchAdvancements, elementsConst, timeRange, modes)
-<<<<<<< HEAD
                 val result: Result<StationsResponse?> = client.httpRequest(url, mapOf("Authorization" to "Basic $encodedAuth"))
-=======
-                val result: Result<StationsResponse?> = httpRequest(url, mapOf("Authorization" to "Basic $encodedAuth"))
->>>>>>> origin/price+nergy
                 callCounter += 1
                 result.onSuccess { body ->
                     requestedQuadrants = assignStations(center, body, stationLocations, stationQueues, queueAdvancements, modes, modesData, elementsConst, searchAdvancements, usableStations) // extrapolation makes it stop requesting quadrants it doesn't have
@@ -923,11 +703,7 @@ class FrostApi {
                 val (missingIds, missingElements) = getNexts(requestedQuadrants, usableStations, stationQueues, queueAdvancements, stationTimeData, searchAdvancements, modes, modesData) // goes through the queue to where we last left off. don't even bother with timerange finding, just get from 1800 to currentdate. if the queue is at max, adds the missing data to requestedQuadrants instead of checkQuadrants
                 if (missingIds.isEmpty()) break
                 val url = buildStationDataUrl(missingIds, missingElements, timeRange)
-<<<<<<< HEAD
                 val result: Result<ObservationsResponse?> = client.httpRequest(url, mapOf("Authorization" to "Basic $encodedAuth"))
-=======
-                val result: Result<ObservationsResponse?> = httpRequest(url, mapOf("Authorization" to "Basic $encodedAuth"))
->>>>>>> origin/price+nergy
                 callCounter += 1
                 result.onSuccess { body ->
                     if (body != null) {
@@ -954,22 +730,14 @@ class FrostApi {
         return Result.success(dataF)
     }
 
-<<<<<<< HEAD
     private fun formatData(
-=======
-    fun formatData(
->>>>>>> origin/price+nergy
         center: LocationValue,
         stationLocations: MutableMap<String, LocationValue>,
         stationTimeData: Map<String, MutableMap<String, MutableMap<Int, Pair<Double, Int>>>>,
         usableStations: Map<String, Map<Quadrant, MutableList<String>>>,
         modes: MutableMap<String, Mode>,
         modesData: MutableMap<String, Pair<MutableList<Pair<String, Double>>, Boolean>>
-<<<<<<< HEAD
     ): MutableMap<String, Array<Double>> { // returns elements to month averages
-=======
-    ): Map<String, Array<Double>> { // returns elements to month averages
->>>>>>> origin/price+nergy
         val resultsFormatted: MutableMap<String, Array<Double>> = mutableMapOf()
         println(modes)
         println(modesData)
@@ -995,11 +763,7 @@ class FrostApi {
                 println("EXTRAPOLATE "+element)
                 val intervalLength = 12 /*TBD: FIX .referenceTime.toIntervalBucket(interval)*/
                 val interceptsArray: Array<Pair<Double, Int>> = Array(intervalLength) { Pair(0.0, 0) } // index is month, sum to counter
-<<<<<<< HEAD
                 usableStations[element]!!.forEach { (_, stations) ->
-=======
-                usableStations[element]!!.forEach { (quadrant, stations) ->
->>>>>>> origin/price+nergy
                     if (stations.size >= 2) {
                         val distanceList: MutableList<Pair<Double, Array<Double>>> = mutableListOf()
                         stations.forEach { stationid ->
@@ -1020,11 +784,7 @@ class FrostApi {
         return resultsFormatted
     }
 
-<<<<<<< HEAD
     private fun averageArray(timeData: MutableMap<Int, Pair<Double, Int>>, length: Int): Array<Double> {
-=======
-    fun averageArray(timeData: MutableMap<Int, Pair<Double, Int>>, length: Int): Array<Double> {
->>>>>>> origin/price+nergy
         val timeArray = Array(length) { 0.0 }
         timeData.forEach { (time, pair) ->
             val (sum, count) = pair
@@ -1033,11 +793,7 @@ class FrostApi {
         return timeArray
     }
 
-<<<<<<< HEAD
     private fun getIDWAverages(center: LocationValue, valuesHolder: MutableMap<String, Array<Double>>, stationLocations: MutableMap<String, LocationValue>): Array<Double> {
-=======
-    fun getIDWAverages(center: LocationValue, valuesHolder: MutableMap<String, Array<Double>>, stationLocations: MutableMap<String, LocationValue>): Array<Double> {
->>>>>>> origin/price+nergy
         val averagedArray = Array(12) { 0.0 }
         val distances = valuesHolder.map { (id, _) -> id to calculateDistance(center, stationLocations[id]!!) }
         val power = 2
@@ -1056,11 +812,7 @@ class FrostApi {
         return averagedArray
     }
 
-<<<<<<< HEAD
     private fun multiYLinearRegression(data: List<Pair<Double, Array<Double>>>, interceptsArray: Array<Pair<Double, Int>>) {
-=======
-    fun multiYLinearRegression(data: List<Pair<Double, Array<Double>>>, interceptsArray: Array<Pair<Double, Int>>) {
->>>>>>> origin/price+nergy
         val n = data.size
         val meanX = data.sumOf { it.first } / n
         val outputCount = data[0].second.size
@@ -1086,20 +838,12 @@ class FrostApi {
 
 
     @Serializable
-<<<<<<< HEAD
     private data class RimStationsResponse(
-=======
-    data class RimStationsResponse(
->>>>>>> origin/price+nergy
         val data: List<RimStation>
     )
 
     @Serializable
-<<<<<<< HEAD
     private data class RimStation(
-=======
-    data class RimStation(
->>>>>>> origin/price+nergy
         @SerialName("@type") val type: String,
         val id: String,
         val name: String,
@@ -1114,38 +858,23 @@ class FrostApi {
     )
 
     @Serializable
-<<<<<<< HEAD
     private data class RimGeometry( // coords in lon, lat format
-=======
-    data class RimGeometry( // coords in lon, lat format
->>>>>>> origin/price+nergy
         @SerialName("@type") val type: String,
         val coordinates: List<Double>
     )
 
 
     suspend fun fetchRimData( // This function is for gimmick use and not implemented well
-<<<<<<< HEAD
         client: CustomHttpClient,
-=======
->>>>>>> origin/price+nergy
         lat: Double,
         lon: Double,
         elementRaw: String,
         rawTimeRange: Pair<ZonedDateTime, ZonedDateTime> = Pair(
-<<<<<<< HEAD
             ZonedDateTime.of(2025, 1, 1, 0, 0, 0, 0, ZoneId.of("UTC")),
-=======
-            ZonedDateTime.now(ZoneId.of("UTC")).toLocalDate().atStartOfDay(ZoneId.of("UTC")),
->>>>>>> origin/price+nergy
             ZonedDateTime.now(ZoneId.of("UTC"))
         )
     ): Result<Array<Double>> {
         val center = LocationValue(lat, lon)
-<<<<<<< HEAD
-=======
-        Log.e("center", center.toString())
->>>>>>> origin/price+nergy
         //val elements = encode(elements.joinToString(","))
         val element = encode(elementRaw)
         val timeRange = TimeRange(rawTimeRange.first, rawTimeRange.second) // kotlin bad
@@ -1153,50 +882,28 @@ class FrostApi {
 
         val stationsUrl = "https://rim.k8s.met.no/api/v1/stations?weatherElements=$element&from=${encode(rawTimeRange.first.format(formatter))}&to=${encode(rawTimeRange.second.format(formatter))}"
         println(stationsUrl)
-<<<<<<< HEAD
         val result: Result<RimStationsResponse?> = client.httpRequest(stationsUrl)
-=======
-        val result: Result<RimStationsResponse?> = httpRequest(stationsUrl)
->>>>>>> origin/price+nergy
         result.onSuccess { body ->
             if (body == null) return Result.failure(ApiException(ApiError.UNKNOWN_ERROR)) // It should always get a body
             val rimStationsQueue = body.data.toMutableList() // Makes a copy
             rimStationsQueue.sortBy { rimStation ->
                 val rimLocation = LocationValue(rimStation.geometry.coordinates[1], rimStation.geometry.coordinates[0])
-<<<<<<< HEAD
                 calculateDistance(center, rimLocation)
-=======
-                val distance = calculateDistance(center, rimLocation)
-                Log.e("distance", calculateDistance(center, rimLocation).toString())
-                distance
->>>>>>> origin/price+nergy
             }
             val stationTimeData: Map<String, MutableMap<String, MutableMap<Int, Pair<Double, Int>>>> = mapOf(elementRaw to mutableMapOf())
             while(true) {
                 val stationid = rimStationsQueue[0].id.substringBeforeLast(":").removePrefix("SN")
                 val dataUrl = buildStationDataUrl(mutableSetOf(stationid), mutableSetOf(elementRaw), timeRange) // unmutable them later
-<<<<<<< HEAD
                 val dataResult: Result<ObservationsResponse?> = client.httpRequest(dataUrl, mapOf("Authorization" to "Basic $encodedAuth")) // could use rim's for same effect but avoid using api key
-=======
-                val dataResult: Result<ObservationsResponse?> = httpRequest(dataUrl, mapOf("Authorization" to "Basic $encodedAuth")) // could use rim's for same effect but avoid using api key
->>>>>>> origin/price+nergy
                 dataResult.onSuccess { dataBody ->
                     if (dataBody != null) {
                         assignData(dataBody, stationTimeData, TimeInterval.HOUR)
                         val stationData = stationTimeData[elementRaw]!![stationid]!!
-<<<<<<< HEAD
                         if (stationData.size == 24) { // Make the minimum months based on how many months in the timerange if we care enough
                             val dataF = averageArray(stationData, 24) // make take a length and then null test for everything
                             println(dataF.contentToString())
                             return Result.success(dataF)
                         }
-=======
-                        //if (stationData.size == 24) { // Make the minimum months based on how many months in the timerange if we care enough
-                            val dataF = averageArray(stationData, 24) // make take a length and then null test for everything
-                            println(dataF.contentToString())
-                            return Result.success(dataF)
-                       // }
->>>>>>> origin/price+nergy
                     }
                     rimStationsQueue.removeAt(0)
                 }.onFailure { error ->
@@ -1211,8 +918,4 @@ class FrostApi {
         return Result.failure(ApiException(ApiError.UNKNOWN_ERROR)) // Did I mention I hate kotlin?
     }
 
-<<<<<<< HEAD
 }
-=======
-}
->>>>>>> origin/price+nergy

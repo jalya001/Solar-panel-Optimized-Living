@@ -1,6 +1,5 @@
 package no.solcellepanelerApp.ui.result
 
-import android.annotation.SuppressLint
 import android.util.Log
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -9,14 +8,10 @@ import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
@@ -28,7 +23,6 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -63,20 +57,9 @@ fun ResultScreen(
     navController: NavController, viewModel: MapScreenViewModel, weatherViewModel: WeatherViewModel,
     fontScaleViewModel: FontScaleViewModel, priceScreenViewModel: ElectricityPriceRepository,
 ) {
-<<<<<<< HEAD
     val weatherData by weatherViewModel.weatherData.collectAsState()
     val errorMessage by weatherViewModel.errorMessage.collectAsState()
     val uiState by weatherViewModel.uiState.collectAsState()
-=======
-    val frostData by weatherViewModel.frostData.collectAsState()
-    Log.d("frostData", frostData.toString())
-    val rimData by weatherViewModel.frostDataRim.collectAsState()
-    Log.d("rimData", rimData.joinToString())
-    val radiationData by weatherViewModel.radiationData.collectAsState()
-    val radiationList = remember(radiationData) { radiationData.map { it.radiation } }
-    val loading by weatherViewModel.isLoading.collectAsState()
-    var startloading by remember { mutableStateOf(false) }
->>>>>>> origin/price+nergy
     val panelArea = viewModel.areaInput.toDouble()
     val efficiency = viewModel.efficiencyInput.toDouble()
     val direction = viewModel.directionInput.toInt()
@@ -170,8 +153,8 @@ fun ResultScreen(
                 val monthlyEnergyOutput = radiationData.indices.map { month ->
                     adjustedRadiation.add(
                         radiationData[month] *
-                            (1 - (cloudCoverData[month].coerceIn(0.0, 8.0) / 8)) *
-                            (1 - (snowCoverData[month].coerceIn(0.0, 4.0) / 4))
+                                (1 - (cloudCoverData[month].coerceIn(0.0, 8.0) / 8)) *
+                                (1 - (snowCoverData[month].coerceIn(0.0, 4.0) / 4))
                     )
                     val tempFactor = 1 + (-0.44) * (airTempData[month] - 25)
                     adjustedRadiation[month] * panelArea * (efficiency / 100.0) * tempFactor
@@ -257,7 +240,6 @@ fun calculateMonthlyEnergyOutput(
     }
 }
 
-@SuppressLint("DefaultLocale")
 @Composable
 fun MonthDataDisplay(
     cloudCoverData: Array<Double>,
@@ -316,22 +298,9 @@ fun MonthDataDisplay(
                 allMonths = false
             )
 
-
-                Column(
-                    modifier = Modifier
-                        .weight(1f)
-                        .padding(8.dp)
-                        .verticalScroll(rememberScrollState()),
-                    horizontalAlignment = Alignment.CenterHorizontally
-                ) {
-                    GlobeAnimation()
-                    Text(
-                        stringResource(id = R.string.savedGlobe, calculateSavedCO2(monthlyPowerOutput[selectedMonthIndex])),
-                        style = MaterialTheme.typography.bodyMedium
-                    )
-                }
-
-
+            Column {
+                SunAnimation(monthlyEnergyOutput[selectedMonthIndex])
+            }
 
         } else {
             LazyColumn(
@@ -355,31 +324,6 @@ fun MonthDataDisplay(
             }
         }
     }
-}
-
-@Composable
-fun GlobeAnimation(){
-
-    val animationFile = "globe_anim.json"
-
-    // Force new composition when value changes
-    val composition by rememberLottieComposition(
-        LottieCompositionSpec.Asset(animationFile)
-    )
-
-    // Reset animation state when value changes
-    val progress by animateLottieCompositionAsState(
-        composition = composition,
-        iterations = LottieConstants.IterateForever,
-        // Add a key to restart animation when value changes
-    )
-
-    LottieAnimation(
-        composition = composition,
-        progress = { progress },
-        modifier = Modifier
-            .size(150.dp)
-    )
 }
 
 @Composable
@@ -408,14 +352,8 @@ fun SunAnimation(value: Double) {
         composition = composition,
         progress = { progress },
         modifier = Modifier
-            .size(150.dp)
+            .height(400.dp)
+            .fillMaxWidth()
     )
     Log.d("SunAnimation", "Animating with value: $value")
-}
-
-fun calculateSavedCO2(energy: Double) : Double{
-    val norwayEmissionFactor = 0.03 //0.03 kg CO2/kWh
-    val norwaySavedCO2 = energy * norwayEmissionFactor
-
-    return norwaySavedCO2
 }
