@@ -129,4 +129,8 @@ dependencies {
 //    implementation("androidx.compose.ui:ui:1.3.0")
 //    implementation("androidx.compose.material3:material3:1.0.0")
 
+    testImplementation("org.junit.jupiter:junit-jupiter:5.10.0")
+    testImplementation("io.mockk:mockk:1.13.8")
+    testImplementation("org.jetbrains.kotlinx:kotlinx-coroutines-test:1.7.3")
+    testImplementation("io.ktor:ktor-client-mock:2.3.4")
 }
