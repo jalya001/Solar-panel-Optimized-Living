@@ -11,7 +11,10 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material3.DropdownMenu
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.DropdownMenuItem
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
@@ -26,6 +29,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.compose.foundation.layout.size
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
@@ -298,8 +302,18 @@ fun MonthDataDisplay(
                 allMonths = false
             )
 
-            Column {
-                SunAnimation(monthlyEnergyOutput[selectedMonthIndex])
+            Column(
+                modifier = Modifier
+                    .weight(1f)
+                    .padding(8.dp)
+                    .verticalScroll(rememberScrollState()),
+                horizontalAlignment = Alignment.CenterHorizontally
+            ) {
+                GlobeAnimation()
+                Text(
+                    stringResource(id = R.string.savedGlobe, calculateSavedCO2(monthlyPowerOutput[selectedMonthIndex])),
+                    style = MaterialTheme.typography.bodyMedium
+                )
             }
 
         } else {
@@ -324,6 +338,31 @@ fun MonthDataDisplay(
             }
         }
     }
+}
+
+@Composable
+fun GlobeAnimation(){
+
+    val animationFile = "globe_anim.json"
+
+    // Force new composition when value changes
+    val composition by rememberLottieComposition(
+        LottieCompositionSpec.Asset(animationFile)
+    )
+
+    // Reset animation state when value changes
+    val progress by animateLottieCompositionAsState(
+        composition = composition,
+        iterations = LottieConstants.IterateForever,
+        // Add a key to restart animation when value changes
+    )
+
+    LottieAnimation(
+        composition = composition,
+        progress = { progress },
+        modifier = Modifier
+            .size(150.dp)
+    )
 }
 
 @Composable
@@ -356,4 +395,11 @@ fun SunAnimation(value: Double) {
             .fillMaxWidth()
     )
     Log.d("SunAnimation", "Animating with value: $value")
+}
+
+fun calculateSavedCO2(energy: Double) : Double{
+    val norwayEmissionFactor = 0.03 //0.03 kg CO2/kWh
+    val norwaySavedCO2 = energy * norwayEmissionFactor
+
+    return norwaySavedCO2
 }
