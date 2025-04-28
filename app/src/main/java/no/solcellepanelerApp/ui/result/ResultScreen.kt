@@ -57,9 +57,20 @@ fun ResultScreen(
     navController: NavController, viewModel: MapScreenViewModel, weatherViewModel: WeatherViewModel,
     fontScaleViewModel: FontScaleViewModel, priceScreenViewModel: ElectricityPriceRepository,
 ) {
+<<<<<<< HEAD
     val weatherData by weatherViewModel.weatherData.collectAsState()
     val errorMessage by weatherViewModel.errorMessage.collectAsState()
     val uiState by weatherViewModel.uiState.collectAsState()
+=======
+    val frostData by weatherViewModel.frostData.collectAsState()
+    Log.d("frostData", frostData.toString())
+    val rimData by weatherViewModel.frostDataRim.collectAsState()
+    Log.d("rimData", rimData.joinToString())
+    val radiationData by weatherViewModel.radiationData.collectAsState()
+    val radiationList = remember(radiationData) { radiationData.map { it.radiation } }
+    val loading by weatherViewModel.isLoading.collectAsState()
+    var startloading by remember { mutableStateOf(false) }
+>>>>>>> origin/price+nergy
     val panelArea = viewModel.areaInput.toDouble()
     val efficiency = viewModel.efficiencyInput.toDouble()
     val direction = viewModel.directionInput.toInt()

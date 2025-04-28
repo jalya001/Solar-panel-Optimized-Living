@@ -97,6 +97,7 @@ private fun fetchLocation(
     }
 }
 
+
 // Funksjon for å mappe lokasjon til region
 fun mapLocationToRegion(location: Location): Region {
     val lat = location.latitude
@@ -115,5 +116,19 @@ fun mapLocationToRegion(location: Location): Region {
         lat in 60.0..61.5 && lon in 4.5..6.5 -> Region.BERGEN
         // Fallback hvis vi ikke finner match
         else -> Region.OSLO
+    }
+}
+suspend fun fetchCoordinates(
+    context: Context,
+    activity: Activity?,
+
+    ): Location? {
+    val locationService = LocationService(activity!!)
+    return try {
+        locationService.getCurrentLocation()
+
+    }catch (e: Exception) {
+        Log.e("LocationPermission", "Feil ved henting av lokasjon", e)
+        null
     }
 }

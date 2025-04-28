@@ -14,17 +14,54 @@ enum class UiState {
 class WeatherViewModel(
     private val repository: WeatherRepository = WeatherRepository(),
 ) : ViewModel() {
+<<<<<<< HEAD
     private val _weatherData = MutableStateFlow<Map<String, Array<Double>>>(emptyMap())
     val weatherData: StateFlow<Map<String, Array<Double>>> = _weatherData
     private val _uiState = MutableStateFlow(UiState.LOADING)
     val uiState: StateFlow<UiState> = _uiState
     private val _errorMessage = MutableStateFlow("")
     val errorMessage: StateFlow<String> = _errorMessage
+=======
+    private val _radiationData = MutableStateFlow<List<Radiation>>(emptyList())
+    val radiationData: StateFlow<List<Radiation>> = _radiationData
+    private val _frostData = MutableStateFlow<Map<String, Array<Double>>>(emptyMap())
+    val frostData: StateFlow<Map<String, Array<Double>>> = _frostData
+
+    private val _frostDataRim = MutableStateFlow<Array<Double>>(emptyArray())
+    val frostDataRim: StateFlow<Array<Double>> = _frostDataRim
+
+    private val _isloading = MutableStateFlow(false)
+    val isLoading: StateFlow<Boolean> = _isloading
+>>>>>>> origin/price+nergy
 
     //private val lastWeatherData: Map<String, Array<Double>>? = null
     //fun getLastWeatherData(): Map<String, Array<Double>>? = lastWeatherData
 
+<<<<<<< HEAD
     fun loadWeatherData(
+=======
+            _radiationData.value = repository.getRadiationInfo(lat, long, slope, azimuth)
+
+        }
+    }
+
+    fun fetchFrostData(lat: Double, lon: Double, elements: List<String>) { // PRODUCTION: Set to private
+        viewModelScope.launch {
+            _isloading.value = true
+            _frostData.value = repository.getFrostData(lat, lon, elements)
+            _isloading.value = false
+        }
+    }
+    fun fetchRimData(lat: Double, lon: Double, elements: String) { // PRODUCTION: Set to private
+        viewModelScope.launch {
+            _isloading.value = true
+            _frostDataRim.value = repository.getRimData(lat, lon, elements)
+            _isloading.value = false
+        }
+    }
+
+    fun fetchWeatherData(
+>>>>>>> origin/price+nergy
         lat: Double,
         lon: Double,
         slope: Int,

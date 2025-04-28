@@ -542,6 +542,24 @@ fun AdditionalInputBottomSheet(
 
                                     weatherViewModel.loadWeatherData(
                                         lat, lon,
+<<<<<<< HEAD
+=======
+                                        listOf(
+                                            "mean(snow_coverage_type P1M)",
+                                            "mean(air_temperature P1M)",
+                                            "mean(cloud_area_fraction P1M)"
+                                        )
+                                    )
+//                                    weatherViewModel.fetchRimData(
+//                                        lat,lon,"mean(surface_downwelling_shortwave_flux_in_air PT1H)"
+//                                    )
+
+
+
+                                    weatherViewModel.fetchRadiationInfo(
+                                        lat,
+                                        lon,
+>>>>>>> origin/price+nergy
                                         slope.toInt(),
                                         azimuthPosition.toInt()
                                     )
