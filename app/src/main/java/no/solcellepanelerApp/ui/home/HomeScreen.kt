@@ -4,6 +4,7 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -15,15 +16,19 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import com.airbnb.lottie.compose.LottieAnimation
 import com.airbnb.lottie.compose.LottieCompositionSpec
@@ -31,13 +36,21 @@ import com.airbnb.lottie.compose.LottieConstants
 import com.airbnb.lottie.compose.animateLottieCompositionAsState
 import com.airbnb.lottie.compose.rememberLottieComposition
 import no.solcellepanelerApp.R
+import no.solcellepanelerApp.data.homedata.ElectricityPriceRepository
+import no.solcellepanelerApp.model.electricity.Region
+import no.solcellepanelerApp.ui.electricity.HomePriceCard
+import no.solcellepanelerApp.ui.electricity.PriceScreenViewModel
+import no.solcellepanelerApp.ui.electricity.PriceUiState
+import no.solcellepanelerApp.ui.electricity.PriceViewModelFactory
 import no.solcellepanelerApp.ui.font.FontScaleViewModel
+import no.solcellepanelerApp.ui.handling.ErrorScreen
 import no.solcellepanelerApp.ui.handling.LoadingScreen
 import no.solcellepanelerApp.ui.navigation.AppearanceBottomSheet
 import no.solcellepanelerApp.ui.navigation.BottomBar
 import no.solcellepanelerApp.ui.navigation.HelpBottomSheet
 import no.solcellepanelerApp.ui.navigation.TopBar
 import no.solcellepanelerApp.ui.reusables.MyNavCard
+import no.solcellepanelerApp.util.RequestLocationPermission
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -49,9 +62,16 @@ fun HomeScreen(
     var showAppearance by remember { mutableStateOf(false) }
     var isLoading by remember { mutableStateOf(false) }
 
+    var selectedRegion by rememberSaveable { mutableStateOf<Region?>(null) }
+
     if (isLoading) {
         LoadingScreen()
         return
+    }
+
+    //Request location permission and fetch region
+    RequestLocationPermission { region ->
+        selectedRegion = region
     }
 
     Scaffold(
@@ -106,14 +126,63 @@ fun HomeScreen(
                 )
 
                 MyNavCard(
-                    text = stringResource(id = R.string.prices),
+                    //text = stringResource(id = R.string.prices),
                     route = "prices",
                     navController = navController,
                     modifier = Modifier
                         .weight(1f)
                         .height(400.dp),
                     style = MaterialTheme.typography.displaySmall,
-                    content = { LightningAnimation() },
+                    //content = { LightningAnimation() },
+                    content = {
+                        Column(modifier = Modifier
+                            .fillMaxSize()
+                            .padding(10.dp),
+                            horizontalAlignment = Alignment.CenterHorizontally,
+                            verticalArrangement = Arrangement.Top
+                        ) {
+                            Column(
+                                horizontalAlignment = Alignment.CenterHorizontally
+                            ) {
+                                Text(
+                                    text = "Sjekk strømprisene!",
+                                    style = MaterialTheme.typography.titleLarge,
+                                    color = MaterialTheme.colorScheme.primary
+                                )
+                                Spacer(modifier = Modifier.height(10.dp))
+
+                                //Spacer(modifier = Modifier.height(10.dp))
+                                // Show loading screen until the region is selected
+                                if (selectedRegion == null) {
+                                    LoadingScreen()
+                                } else {
+                                    val repository =
+                                        ElectricityPriceRepository(priceArea = selectedRegion!!.regionCode)
+
+                                    val viewModel: PriceScreenViewModel = viewModel(
+                                        factory = PriceViewModelFactory(
+                                            repository,
+                                            selectedRegion!!.regionCode
+                                        ),
+                                        key = selectedRegion!!.regionCode
+                                    )
+
+                                    val priceUiState by viewModel.priceUiState.collectAsStateWithLifecycle()
+
+                                    when (priceUiState) {
+                                        is PriceUiState.Loading -> LoadingScreen()
+                                        is PriceUiState.Error -> ErrorScreen()
+                                        is PriceUiState.Success -> {
+                                            val prices = (priceUiState as PriceUiState.Success).prices
+                                            Column {
+                                                HomePriceCard(prices, selectedRegion)
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
                     color = MaterialTheme.colorScheme.primary
                 )
             }

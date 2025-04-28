@@ -168,8 +168,8 @@
     <string name="avg_snow_cover">Average Snow Cover: %.2f</string>
     <string name="temp_factor">Temperature Factor: %.2f °C</string>
     <string name="adj_radiation">Adjusted Radiation: %.2f kWh/m²</string>
-    <string name="estimated_energy_prod">Estimated Energy Produced: %.2f kWh </string>
-    <string name="estimated_powerpr_hour">Estimated Power Produced per Hour: %.2f kW</string>
+    <string name="estimated_energy_prod">Estimated Energy Produced: %.2f kW </string>
+    <string name="estimated_powerpr_hour">Estimated Power Produced per Hour: %.2f kWh</string>
     <string name="show_monthly_savings">Show Your Savings In %1$s</string>
 
     <!--Savings Screen-->

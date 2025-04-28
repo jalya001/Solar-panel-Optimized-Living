@@ -1,5 +1,6 @@
 package no.solcellepanelerApp.ui.navigation
 
+import android.app.Activity
 import android.util.Log
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -16,6 +17,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Create
 import androidx.compose.material3.Button
 import androidx.compose.material3.Checkbox
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
@@ -32,11 +34,13 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
@@ -59,6 +63,7 @@ import no.solcellepanelerApp.ui.reusables.ExpandInfoSection
 import no.solcellepanelerApp.ui.reusables.ModeCard
 import no.solcellepanelerApp.ui.theme.ThemeMode
 import no.solcellepanelerApp.ui.theme.ThemeState
+import no.solcellepanelerApp.util.RequestLocationPermission
 
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -302,6 +307,9 @@ fun AdditionalInputBottomSheet(
     var angle by remember { mutableStateOf(0f) }
     var areaState by remember { mutableStateOf(area) }
 
+    val context = LocalContext.current
+    val activity = context as? Activity
+
     LaunchedEffect(area) {
         areaState = area
     }
@@ -315,7 +323,11 @@ fun AdditionalInputBottomSheet(
     //}
     var activeInput by remember { mutableStateOf<String?>(null) }
 
+    var selectedRegion by rememberSaveable { mutableStateOf<Region?>(null) }
 
+    RequestLocationPermission { region ->
+        selectedRegion = region
+    }
 
     if (visible) {
         val currentDensity = LocalDensity.current
@@ -497,13 +509,18 @@ fun AdditionalInputBottomSheet(
 
                         Spacer(Modifier.height(25.dp))
 
-                        var selectedRegion by remember { mutableStateOf(Region.OSLO) }
-                        RegionDropdown(
-                            selectedRegion = viewModel.selectedRegion,
-                            onRegionSelected = { newRegion ->
-                                viewModel.selectedRegion = newRegion
+                        Text("Region", style = MaterialTheme.typography.titleMedium)
+                        Spacer(Modifier.height(8.dp))
+
+                        if (selectedRegion != null) {
+                            RegionDropdown(selectedRegion!!) { newRegion ->
+                                selectedRegion = newRegion
                             }
-                        )
+                        } else {
+                            CircularProgressIndicator()
+                        }
+
+                        Spacer(Modifier.height(16.dp))
 
                         //UI er ikke updatert
 
@@ -548,11 +565,9 @@ fun AdditionalInputBottomSheet(
                                 Text("Gå til resultater")
                             }
                         }
-
                     }
                 }
             }
         }
     }
-
 }
