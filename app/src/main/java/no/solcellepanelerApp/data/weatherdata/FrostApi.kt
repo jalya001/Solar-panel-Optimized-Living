@@ -95,7 +95,7 @@ class FrostApi {
 
     @Serializable
     private data class LocationValue(
-        val latitude: Double? = null,
+        val latitude: Double? = null, // Why are these nullable if we later nonnull assert them?
         val longitude: Double? = null,
         @SerialName("elevation(masl/hs)") val elevation: Double? = null
     )
@@ -240,7 +240,14 @@ class FrostApi {
         val c = 2 * atan2(sqrt(a), sqrt(1 - a))
 
         val radius = 6371.0
-        return radius * c
+        val surfaceDistance = radius * c
+
+        return if (location1.elevation != null && location2.elevation != null) {
+            val heightDifference = (location2.elevation!! - location1.elevation!!) / 1000
+            sqrt(surfaceDistance.pow(2) + heightDifference.pow(2))
+        } else {
+            surfaceDistance
+        }
     }
 
     private enum class Mode {
@@ -655,6 +662,7 @@ class FrostApi {
         client: CustomHttpClient,
         lat: Double,
         lon: Double,
+        elevation: Double?,
         elements: List<String>,
         rawTimeRange: Pair<ZonedDateTime, ZonedDateTime> = Pair(
             ZonedDateTime.of(1800, 1, 1, 0, 0, 0, 0, ZoneId.of("UTC")),
@@ -662,7 +670,7 @@ class FrostApi {
         )
     ): Result<MutableMap<String, Array<Double>>> {
         val timeRange = TimeRange(from = rawTimeRange.first, to = rawTimeRange.second)
-        val center = LocationValue(lat, lon)
+        val center = LocationValue(lat, lon, elevation)
         //val center = LocationValue(60.386163, 8.259478) // middle of the mountains
         //val center = LocationValue(60.771442, 4.695727) // westmost region
         val elementsConst = elements
@@ -738,9 +746,29 @@ class FrostApi {
         modes: MutableMap<String, Mode>,
         modesData: MutableMap<String, Pair<MutableList<Pair<String, Double>>, Boolean>>
     ): MutableMap<String, Array<Double>> { // returns elements to month averages
+        fun adjustBasedOnElement(element: String): (Double, Int, MutableMap<String, Array<Double>>, Array<Double>) -> Double? {
+            return when (element) {
+                "mean(air_temperature P1M)" -> { elevationDifference: Double, _, _, _ -> elevationDifference * -0.0065 }
+                "mean(snow_coverage_type P1M)" -> { _, index, prevs, tempGainedArray ->
+                    val originalTemp: Double? = prevs["mean(air_temperature P1M)"]?.getOrNull(index)?.let { it - tempGainedArray[index] }
+                    if (originalTemp == null) null
+                    if (originalTemp!! - tempGainedArray[index] < 5.0) {
+                        -tempGainedArray[index] * 0.02
+                    } else {
+                        0.0
+                    }
+                }
+                "mean(cloud_area_fraction P1M)" -> { elevationDifference: Double, _, _, _ -> elevationDifference / 2000.0 }
+                else -> { _, _, _, _ -> null }
+            }
+        }
+
         val resultsFormatted: MutableMap<String, Array<Double>> = mutableMapOf()
+        val interestElevation = center.elevation
+        var dataElevation: Double? = null
         println(modes)
         println(modesData)
+
         usableStations.forEach { (element, quadrants) ->
             val mode = modes[element]!!
             if (mode == Mode.NEAREST) {
@@ -748,6 +776,7 @@ class FrostApi {
                 println("NEAREST OF "+element+" THAT IS "+nearestId)
                 val monthArray = averageArray(stationTimeData[element]!![nearestId]!!, 12)
                 resultsFormatted[element] = monthArray // It isn't set to Mode.NEAREST without there being something, and it always gets set out if it turns out there isn't
+                dataElevation = stationLocations[nearestId]!!.elevation
             } else if (mode == Mode.INTERPOLATION) {
                 val valuesHolder: MutableMap<String, Array<Double>> = mutableMapOf()
                 quadrants.forEach { (_, stations) ->
@@ -758,16 +787,26 @@ class FrostApi {
                         valuesHolder[station] = monthArray
                     }
                 }
-                resultsFormatted[element] = getIDWAverages(center, valuesHolder, stationLocations)
+                val averagePair = getIDWAverages(center, valuesHolder, stationLocations)
+                resultsFormatted[element] = averagePair.first
+                dataElevation = averagePair.second
             } else if (mode == Mode.EXTRAPOLATION) {
                 println("EXTRAPOLATE "+element)
                 val intervalLength = 12 /*TBD: FIX .referenceTime.toIntervalBucket(interval)*/
                 val interceptsArray: Array<Pair<Double, Int>> = Array(intervalLength) { Pair(0.0, 0) } // index is month, sum to counter
+                var elevationSum: Double? = 0.0
+                var elevationCounter = 0
                 usableStations[element]!!.forEach { (_, stations) ->
                     if (stations.size >= 2) {
                         val distanceList: MutableList<Pair<Double, Array<Double>>> = mutableListOf()
                         stations.forEach { stationid ->
                             distanceList.add(Pair(calculateDistance(center, stationLocations[stationid]!!), averageArray(stationTimeData[element]!![stationid]!!, intervalLength)))
+                            if (stationLocations[stationid]!!.elevation == null) {
+                                elevationSum = null
+                            } else if (elevationSum != null) {
+                                elevationSum = elevationSum!! + stationLocations[stationid]!!.elevation!!
+                            }
+                            elevationCounter++
                         }
                         multiYLinearRegression(distanceList, interceptsArray)
                     }
@@ -777,10 +816,23 @@ class FrostApi {
                     val (sum, count) = pair
                     averagedIntercepts[index] = sum / count.toDouble()
                 }
+                if (elevationSum != null) dataElevation = elevationSum!! / elevationCounter
                 resultsFormatted[element] = averagedIntercepts
             }
+
+            val tempGainedArray = Array(12) { 0.0 }
+            if (dataElevation != null) {
+                val elevationDifference = interestElevation!! - dataElevation!!
+                val adjuster = adjustBasedOnElement(element)
+                resultsFormatted[element]!!.forEachIndexed { index, value ->
+                    val addition = adjuster(elevationDifference, index, resultsFormatted, tempGainedArray)
+                    if (addition != null) {
+                        if (element == "mean(air_temperature P1M)") tempGainedArray[index] = addition
+                        resultsFormatted[element]!![index] = resultsFormatted[element]!![index] + addition
+                    }
+                }
+            }
         }
-        //val readOnlyResultsFormatted: Map<String, Array<Double>> = resultsFormatted
         return resultsFormatted
     }
 
@@ -793,7 +845,7 @@ class FrostApi {
         return timeArray
     }
 
-    private fun getIDWAverages(center: LocationValue, valuesHolder: MutableMap<String, Array<Double>>, stationLocations: MutableMap<String, LocationValue>): Array<Double> {
+    private fun getIDWAverages(center: LocationValue, valuesHolder: MutableMap<String, Array<Double>>, stationLocations: MutableMap<String, LocationValue>): Pair<Array<Double>, Double?> {
         val averagedArray = Array(12) { 0.0 }
         val distances = valuesHolder.map { (id, _) -> id to calculateDistance(center, stationLocations[id]!!) }
         val power = 2
@@ -803,13 +855,19 @@ class FrostApi {
             rawWeightSum += rawWeight
             id to rawWeight
         }
+        var elevationSum: Double? = 0.0
         valuesHolder.forEach { (id, months) ->
             val weight = rawWeights[id]!! / rawWeightSum
+            if (stationLocations[id]!!.elevation == null) {
+                elevationSum = null
+            } else if (elevationSum != null) {
+                elevationSum = elevationSum!! + stationLocations[id]!!.elevation!!
+            }
             months.forEachIndexed { index, value ->
                 averagedArray[index] = averagedArray[index] + (value * weight)
             }
         }
-        return averagedArray
+        return Pair(averagedArray, elevationSum)
     }
 
     private fun multiYLinearRegression(data: List<Pair<Double, Array<Double>>>, interceptsArray: Array<Pair<Double, Int>>) {
