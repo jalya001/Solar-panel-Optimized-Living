@@ -41,12 +41,13 @@ class WeatherViewModel(
     fun loadWeatherData(
         lat: Double,
         lon: Double,
+        height: Double?,
         slope: Int,
         azimuth: Int,
     ) {
         viewModelScope.launch {
             _uiState.value = UiState.LOADING
-            val result = repository.getPanelWeatherData(lat, lon, slope, azimuth)
+            val result = repository.getPanelWeatherData(lat, lon, height, slope, azimuth)
             if (result.isSuccess) {
                 _weatherData.value = result.getOrNull() ?: emptyMap()
                 if (_weatherData.value.isEmpty()) {
