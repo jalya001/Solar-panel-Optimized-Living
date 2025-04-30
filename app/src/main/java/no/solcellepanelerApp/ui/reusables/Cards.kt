@@ -10,7 +10,8 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
-import androidx.compose.material3.Button
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.KeyboardArrowRight
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ElevatedCard
 import androidx.compose.material3.Icon
@@ -22,9 +23,13 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.buildAnnotatedString
+import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.DpSize
 import androidx.compose.ui.unit.dp
@@ -38,6 +43,8 @@ fun MyCard(
     width: Dp = 240.dp,
     style: TextStyle,
     elevation: Dp = 3.dp,
+    route: String = "",
+    navController: NavController,
     content: (@Composable () -> Unit)? = null,
 ) {
     ElevatedCard(
@@ -45,6 +52,13 @@ fun MyCard(
         modifier = modifier
             .padding(8.dp)
             .width(width),
+        onClick = {
+            if (route != "") {
+                navController.navigate(route)
+            } else {
+
+            }
+        },
     ) {
         Box(
             modifier = Modifier,
@@ -179,70 +193,108 @@ fun DataCard(
         .fillMaxWidth()
 
     MyCard(
+//        modifier = cardModifier,
+//        elevation = 4.dp,
+//        style = MaterialTheme.typography.bodyLarge,
+//        route = "",
+//        navController = navController
+//
         modifier = cardModifier,
         elevation = 4.dp,
         style = MaterialTheme.typography.bodyLarge,
+        route = "monthly_savings/$month/${energy}/${energyPrice}",
+        navController = navController
     ) {
-        Column(
-            modifier = Modifier.padding(16.dp), verticalArrangement = Arrangement.spacedBy(6.dp)
-        ) {
-            if (allMonths) {
+        Box(modifier = Modifier.fillMaxWidth()) {
+            Icon(
+                imageVector = Icons.AutoMirrored.Filled.KeyboardArrowRight,
+                contentDescription = null,
+                modifier = Modifier
+                    .align(Alignment.TopEnd)
+                    .padding(top = 12.dp, end = 4.dp)
+                    .size(40.dp),
+                tint = MaterialTheme.colorScheme.primary
+            )
+            Column(
+                modifier = Modifier.padding(16.dp), verticalArrangement = Arrangement.spacedBy(6.dp)
+            ) {
+                if (allMonths) {
+                    IconTextRow(
+                        iconRes = R.drawable.baseline_calendar_month_24,
+                        text = month,
+                        textStyle = MaterialTheme.typography.titleLarge,
+                        fontWeight = FontWeight.Bold
+                    )
+                }
+
                 IconTextRow(
-                    iconRes = R.drawable.baseline_calendar_month_24,
-                    text = month,
-                    textStyle = MaterialTheme.typography.titleLarge,
+                    iconRes = R.drawable.baseline_battery_6_bar_24,
+                    text = stringResource(R.string.estimated_energy_prod, energy),
                     fontWeight = FontWeight.Bold
                 )
+                Text("*kort forklaring*", style = MaterialTheme.typography.bodyMedium)
+
+
+                IconTextRow(
+                    iconRes = R.drawable.baseline_power_24,
+                    text = stringResource(R.string.estimated_powerpr_hour, power)
+                )
+                Text("*kort forklaring*", style = MaterialTheme.typography.bodyMedium)
+
+//            IconTextRow(
+//                iconRes = R.drawable.rounded_nest_sunblock_24,
+//                text = stringResource(R.string.global_radiation, radiation)
+//            )
+
+//            IconTextRow(
+//                iconRes = R.drawable.baseline_cloud_24,
+//                text = stringResource(R.string.avg_cloud_cover, cloud / 8)
+//            )
+
+//            IconTextRow(
+//                iconRes = R.drawable.outline_mode_cool_24,
+//                text = stringResource(R.string.avg_snow_cover, snow / 4)
+//            )
+
+
+                IconTextRow(
+                    iconRes = R.drawable.rounded_nest_sunblock_24,
+                    text = stringResource(R.string.adj_radiation, adjusted)
+                )
+                Text("*kort forklaring*", style = MaterialTheme.typography.bodyMedium)
+
+                IconTextRow(
+                    iconRes = R.drawable.baseline_device_thermostat_24,
+                    text = stringResource(R.string.temp_factor, 1 + (-0.44) * (temp - 25))
+                )
+
+                Text(
+                    buildAnnotatedString {
+                        withStyle(style = SpanStyle(fontStyle = FontStyle.Italic)) {
+                            append(
+                                stringResource(R.string.show_monthly_savings, month)
+                            )
+                        }
+                    }
+                )
+
+
+//            Button(
+//                onClick = {
+//                    navController.navigate("monthly_savings/$month/${energy}/${energyPrice}")
+//                },
+//                modifier = modifier.fillMaxWidth()
+//            ) {
+//                Text(stringResource(R.string.show_monthly_savings, month))
+//            }
+//
+
             }
 
-            IconTextRow(
-                iconRes = R.drawable.baseline_battery_6_bar_24,
-                text = stringResource(R.string.estimated_energy_prod, energy),
-                fontWeight = FontWeight.Bold
-            )
-
-            IconTextRow(
-                iconRes = R.drawable.baseline_power_24,
-                text = stringResource(R.string.estimated_powerpr_hour, power)
-            )
-
-            IconTextRow(
-                iconRes = R.drawable.rounded_nest_sunblock_24,
-                text = stringResource(R.string.global_radiation, radiation)
-            )
-
-            IconTextRow(
-                iconRes = R.drawable.baseline_cloud_24,
-                text = stringResource(R.string.avg_cloud_cover, cloud / 8)
-            )
-
-            IconTextRow(
-                iconRes = R.drawable.outline_mode_cool_24,
-                text = stringResource(R.string.avg_snow_cover, snow / 4)
-            )
-
-            IconTextRow(
-                iconRes = R.drawable.baseline_device_thermostat_24,
-                text = stringResource(R.string.temp_factor, 1 + (-0.44) * (temp - 25))
-            )
-
-            IconTextRow(
-                iconRes = R.drawable.rounded_nest_sunblock_24,
-                text = stringResource(R.string.adj_radiation, adjusted)
-            )
-
-
-            Button(
-                onClick = {
-                    navController.navigate("monthly_savings/$month/${energy}/${energyPrice}")
-                },
-                modifier = modifier.fillMaxWidth()
-            ) {
-                Text(stringResource(R.string.show_monthly_savings, month))
-            }
         }
     }
 }
+
 
 @Composable
 fun ModeCard(

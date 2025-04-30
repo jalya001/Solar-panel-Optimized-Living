@@ -169,15 +169,15 @@
     <string name="avg_snow_cover">Average Snow Cover: %.2f</string>
     <string name="temp_factor">Temperature Factor: %.2f °C</string>
     <string name="adj_radiation">Adjusted Radiation: %.2f kWh/m²</string>
-    <string name="estimated_energy_prod">Estimated Energy Produced: %.2f kWh </string>
-    <string name="estimated_powerpr_hour">Estimated Power Produced per Hour: %.2f kW</string>
-    <string name="show_monthly_savings">Show Your Savings In %1$s</string>
+    <string name="estimated_energy_prod">Estimated Energy Produced: \n%.2f kWh </string>
+    <string name="estimated_powerpr_hour">Estimated Power Produced per Hour: \n%.2f kW</string>
+    <string name="show_monthly_savings">Click to see Your Savings In %1$s</string>
 
     <!--Savings Screen-->
     <string name="yearly_savings">Saved annually</string>
-    <string name="yearly_savings_text">You will save <b>%.2f</b> kroner per year on electricity from solar panels</string>
-    <string name="monthly_savings">Savings in: <b>%1$s</b></string>
-    <string name="monthly_savings_text">You will save <b>%1$.2f kroner</b> in <b>%2$s</b> with electricity from solar panels</string>
+    <string name="yearly_savings_text">You will save %.2f kroner per year on electricity from solar panels</string>
+    <string name="monthly_savings">Savings in: %1$s</string>
+    <string name="monthly_savings_text">You will save %1$.2f kroner in %2$s with electricity from solar panels</string>
     <string name="area_drawn">Size of area:</string>
 
 </resources>

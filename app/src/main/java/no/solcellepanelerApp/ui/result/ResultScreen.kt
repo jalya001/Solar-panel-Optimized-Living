@@ -7,11 +7,9 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material3.DropdownMenu
-import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedButton
@@ -26,9 +24,9 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.compose.foundation.layout.size
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
@@ -263,7 +261,7 @@ fun MonthDataDisplay(
     ) {
 
         if (!showAllMonths) {
-            OutlinedButton(onClick = { expanded = true }, modifier = Modifier.width(250.dp)) {
+            OutlinedButton(onClick = { expanded = true }, modifier = Modifier) {
                 IconTextRow(
                     R.drawable.baseline_calendar_month_24,
                     text = stringResource(R.string.selected_month, months[selectedMonthIndex])
@@ -299,15 +297,19 @@ fun MonthDataDisplay(
 
             Column(
                 modifier = Modifier
-                    .weight(1f)
-                    .padding(8.dp)
-                    .verticalScroll(rememberScrollState()),
+                    .padding(start = 10.dp, end = 10.dp)
+//                    .background(Color.Red)
+                ,
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
                 GlobeAnimation()
                 Text(
-                    stringResource(id = R.string.savedGlobe, calculateSavedCO2(monthlyPowerOutput[selectedMonthIndex])),
-                    style = MaterialTheme.typography.bodyMedium
+                    stringResource(
+                        id = R.string.savedGlobe,
+                        calculateSavedCO2(monthlyPowerOutput[selectedMonthIndex])
+                    ),
+                    style = MaterialTheme.typography.bodyMedium,
+                    textAlign = TextAlign.Center
                 )
             }
 
@@ -336,7 +338,7 @@ fun MonthDataDisplay(
 }
 
 @Composable
-fun GlobeAnimation(){
+fun GlobeAnimation() {
 
     val animationFile = "globe_anim.json"
 
@@ -357,11 +359,12 @@ fun GlobeAnimation(){
         progress = { progress },
         modifier = Modifier
             .size(150.dp)
+//            .background(Color.Blue)
     )
 }
 
 
-fun calculateSavedCO2(energy: Double) : Double{
+fun calculateSavedCO2(energy: Double): Double {
     val norwayEmissionFactor = 0.03 //0.03 kg CO2/kWh
     val norwaySavedCO2 = energy * norwayEmissionFactor
 

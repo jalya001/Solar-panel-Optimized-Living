@@ -171,15 +171,15 @@
     <string name="avg_snow_cover">Gjennomsnittlig snødekke: %.2f</string>
     <string name="temp_factor">Temperaturfaktor: %.2f °C</string>
     <string name="adj_radiation">Justert stråling: %.2f kWh/m²</string>
-    <string name="estimated_energy_prod">Estimert produsert energi: %.2f kWh </string>
-    <string name="estimated_powerpr_hour">Estimert kraft produsert per time: %.2f kWh</string>
-    <string name="show_monthly_savings">Vis Din Månedlige Sparing I %1$s</string>
+    <string name="estimated_energy_prod">Estimert produsert energi: \n%.2f kWh </string>
+    <string name="estimated_powerpr_hour">Estimert kraft produsert per time:\n%.2f kWh</string>
+    <string name="show_monthly_savings"><i>Vis Din Månedlige Sparing I %1$s</i></string>
 
     <!--Savings Screen-->
     <string name="yearly_savings">Spares årlig</string>
-    <string name="yearly_savings_text">Du vil spare <b>%.2f kroner</b> i året på strøm fra solcellepaneler</string>
-    <string name="monthly_savings">Sparing i: <b>%1$s</b></string>
-    <string name="monthly_savings_text">Du vil spare <b>%1$.2f kroner</b>  i <b>%2$s</b>  på strøm fra solcellepaneler</string>
+    <string name="yearly_savings_text">Du vil spare %.2f kroner i året på strøm fra solcellepaneler</string>
+    <string name="monthly_savings">Sparing i: %1$s</string>
+    <string name="monthly_savings_text">Du vil spare %1$.2f kroner  i %2$s  på strøm fra solcellepaneler</string>
 
     <string name="area_drawn">Tegnet areal:</string>
 
