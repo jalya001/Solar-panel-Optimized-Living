@@ -260,7 +260,6 @@ fun HomeScreen(
                         .weight(1f)
                         .height(400.dp),
                     style = MaterialTheme.typography.displaySmall,
-                    //content = { LightningAnimation() },
                     content = {
                         Column(
                             modifier = Modifier
@@ -352,6 +351,45 @@ fun PanelAnimation() {
             modifier = Modifier
                 .width(130.dp)
                 .aspectRatio(400.dp / 1000.dp),
+        )
+    }
+}
+
+@Composable
+fun ElectricityTowers() {
+
+    val isDark = when (ThemeState.themeMode) {
+        ThemeMode.DARK -> true
+        ThemeMode.LIGHT -> false
+        ThemeMode.SYSTEM -> isSystemInDarkTheme()
+    }
+
+
+    val animationFile =
+        if (isDark) "electricity_tower_dark.json" else "electricity_tower_dark_light.json"
+
+    val composition by rememberLottieComposition(
+        LottieCompositionSpec.Asset(animationFile)
+    )
+
+    val progress by animateLottieCompositionAsState(
+        composition = composition,
+        iterations = LottieConstants.IterateForever,
+    )
+
+    Box(
+        modifier = Modifier
+//            .background(Color.Blue)
+        ,
+        contentAlignment = Alignment.Center
+    ) {
+        LottieAnimation(
+            composition = composition,
+            progress = { progress },
+            modifier = Modifier
+                .width(150.dp)
+                .aspectRatio(400.dp / 400.dp),
+//                .background(Color.Red)
         )
     }
 }

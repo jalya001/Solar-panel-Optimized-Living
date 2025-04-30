@@ -31,7 +31,7 @@ import androidx.compose.ui.unit.sp
 import no.solcellepanelerApp.model.electricity.ElectricityPrice
 import no.solcellepanelerApp.model.electricity.Region
 import no.solcellepanelerApp.ui.handling.LoadingScreen
-import no.solcellepanelerApp.ui.home.LightningAnimation
+import no.solcellepanelerApp.ui.home.ElectricityTowers
 import no.solcellepanelerApp.ui.theme.ThemeMode
 import no.solcellepanelerApp.ui.theme.ThemeState
 import java.time.ZoneId
@@ -41,7 +41,7 @@ import java.time.ZonedDateTime
 fun PriceCard(
     prices: List<ElectricityPrice>,
     hourIndex: Int,
-    onHourChange: (Int) -> Unit
+    onHourChange: (Int) -> Unit,
 ) {
     val currentHour = ZonedDateTime.now(ZoneId.of("Europe/Oslo")).hour
 
@@ -190,7 +190,7 @@ fun PriceRow(
 @Composable
 fun HomePriceCard(
     prices: List<ElectricityPrice>,
-    selectedRegion: Region?
+    selectedRegion: Region?,
 ) {
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
@@ -215,7 +215,8 @@ fun HomePriceCard(
     currentPrice?.let {
         Column(
             modifier = Modifier
-                .fillMaxSize(),
+//                .fillMaxSize()
+            ,
             verticalArrangement = Arrangement.Top,
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
@@ -230,9 +231,12 @@ fun HomePriceCard(
             Column(
                 modifier = Modifier
                     .fillMaxSize(),
-                horizontalAlignment = Alignment.End
+                horizontalAlignment = Alignment.CenterHorizontally
             ) {
-                LightningAnimation()
+                Spacer(modifier = Modifier.height(20.dp))
+
+                ElectricityTowers()
+
             }
         }
     }
