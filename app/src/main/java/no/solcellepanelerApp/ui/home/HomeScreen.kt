@@ -222,7 +222,7 @@ fun HomeScreen(
                                     RoundedCornerShape(15.dp)
                                 )
 //                                .background(MaterialTheme.colorScheme.surfaceVariant)
-                                .padding(10.dp), // Padding inside the card to separate text from edges
+                                .padding(start = 10.dp, end = 10.dp, top = 20.dp),
 
                             horizontalAlignment = Alignment.CenterHorizontally // Center text horizontally
                         ) {
@@ -265,15 +265,13 @@ fun HomeScreen(
                         Column(
                             modifier = Modifier
                                 .fillMaxSize()
-                                .padding(10.dp),
-                            horizontalAlignment = Alignment.CenterHorizontally,
-                            verticalArrangement = Arrangement.Top
+                                .padding(start = 10.dp, end = 10.dp, top = 20.dp),
                         ) {
                             Column(
                                 horizontalAlignment = Alignment.CenterHorizontally,
                             ) {
                                 Text(
-                                    text = "Sjekk strømprisene!",
+                                    text = "Se strømprisene!",
                                     style = MaterialTheme.typography.titleLarge,
                                     color = MaterialTheme.colorScheme.tertiary,
                                 )
