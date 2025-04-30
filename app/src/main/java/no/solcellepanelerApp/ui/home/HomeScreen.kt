@@ -366,7 +366,7 @@ fun ElectricityTowers() {
 
 
     val animationFile =
-        if (isDark) "electricity_tower_dark.json" else "electricity_tower_dark_light.json"
+        if (isDark) "electricity_tower_dark.json" else "electricity_tower_light.json"
 
     val composition by rememberLottieComposition(
         LottieCompositionSpec.Asset(animationFile)
