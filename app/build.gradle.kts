@@ -48,6 +48,8 @@ android {
 
 dependencies {
 
+    implementation(libs.androidx.core.splashscreen)
+
     implementation("androidx.compose.ui:ui:1.5.15")
     implementation("androidx.compose.material3:material3:1.1.2")
     implementation("androidx.compose.foundation:foundation:1.5.0")

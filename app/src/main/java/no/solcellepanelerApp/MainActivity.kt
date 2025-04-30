@@ -6,6 +6,7 @@ import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.platform.LocalDensity
+import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.compose.rememberNavController
 import no.solcellepanelerApp.ui.font.FontScaleViewModel
@@ -19,6 +20,8 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         val languageCode = LanguageUtils.getSavedLanguage(this) ?: "en"
         LanguageUtils.setLanguage(this, languageCode)
+        installSplashScreen()
+
         enableEdgeToEdge()
         setContent {
             SolcellepanelerAppTheme {
