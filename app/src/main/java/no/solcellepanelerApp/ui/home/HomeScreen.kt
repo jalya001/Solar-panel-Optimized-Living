@@ -162,8 +162,6 @@ fun HomeScreen(
         topBar = {
             Surface(
                 modifier = Modifier
-//                    .fillMaxWidth()
-//                    .background(Color.Blue)
                     .padding(top = 30.dp, start = 20.dp, end = 20.dp, bottom = 10.dp)
             ) {
                 Image(
@@ -231,18 +229,23 @@ fun HomeScreen(
                             val timenow = LocalTime.now().hour
                             Text(
                                 "LIVE ENERGY $timenow:00 ",
-                                style = MaterialTheme.typography.displaySmall,
+                                style = MaterialTheme.typography.titleLarge,
                                 color = MaterialTheme.colorScheme.tertiary
                             )
                             Text(
-                                text = currentHourValueny?.let { String.format("%.4f", it) + " kW/m²" } ?: "No data",
+                                text = currentHourValueny?.let {
+                                    String.format(
+                                        "%.4f",
+                                        it
+                                    ) + " kW/m²"
+                                } ?: "No data",
                                 // Optional fallback for null
                                 style = MaterialTheme.typography.headlineSmall,
                                 fontWeight = FontWeight.ExtraLight,
                                 color = MaterialTheme.colorScheme.primary
                             )
 
-                                SunAnimation(currentHourValueny ?: 0.0)
+                            SunAnimation(currentHourValueny ?: 0.0)
 
 
                         }
@@ -267,16 +270,16 @@ fun HomeScreen(
                             verticalArrangement = Arrangement.Top
                         ) {
                             Column(
-                                horizontalAlignment = Alignment.CenterHorizontally
+                                horizontalAlignment = Alignment.CenterHorizontally,
                             ) {
                                 Text(
                                     text = "Sjekk strømprisene!",
                                     style = MaterialTheme.typography.titleLarge,
-                                    color = MaterialTheme.colorScheme.tertiary
+                                    color = MaterialTheme.colorScheme.tertiary,
                                 )
                                 Spacer(modifier = Modifier.height(10.dp))
 
-                                //Spacer(modifier = Modifier.height(10.dp))
+
                                 // Show loading screen until the region is selected
                                 if (selectedRegion == null) {
                                     LoadingScreen()
@@ -382,6 +385,7 @@ fun LightningAnimation() {
         )
     }
 }
+
 @Composable
 fun SunAnimation(value: Double) {
     val animationFile = when {
