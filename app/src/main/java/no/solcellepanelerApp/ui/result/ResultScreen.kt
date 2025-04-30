@@ -365,37 +365,6 @@ fun GlobeAnimation(){
     )
 }
 
-@Composable
-fun SunAnimation(value: Double) {
-    val animationFile = when {
-        value < 50.0 -> "solar_verylow.json"
-        value in 50.0..500.0 -> "solar_low.json"
-        value in 500.0..3000.0 -> "solar_half.json"
-        value > 3000.0 -> "solar_full.json"
-        else -> "solar_verylow.json" // Default animation
-    }
-
-    // Force new composition when value changes
-    val composition by rememberLottieComposition(
-        LottieCompositionSpec.Asset(animationFile)
-    )
-
-    // Reset animation state when value changes
-    val progress by animateLottieCompositionAsState(
-        composition = composition,
-        iterations = LottieConstants.IterateForever,
-        // Add a key to restart animation when value changes
-    )
-
-    LottieAnimation(
-        composition = composition,
-        progress = { progress },
-        modifier = Modifier
-            .height(400.dp)
-            .fillMaxWidth()
-    )
-    Log.d("SunAnimation", "Animating with value: $value")
-}
 
 fun calculateSavedCO2(energy: Double) : Double{
     val norwayEmissionFactor = 0.03 //0.03 kg CO2/kWh

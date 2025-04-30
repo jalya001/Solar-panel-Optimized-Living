@@ -1,5 +1,6 @@
 package no.solcellepanelerApp.ui.home
 
+import android.annotation.SuppressLint
 import android.location.Location
 import android.util.Log
 import androidx.compose.foundation.Image
@@ -27,12 +28,14 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
@@ -69,6 +72,7 @@ import no.solcellepanelerApp.util.RequestLocationPermission
 import no.solcellepanelerApp.util.fetchCoordinates
 import java.time.ZonedDateTime
 
+@SuppressLint("DefaultLocale")
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun HomeScreen(
@@ -89,7 +93,7 @@ fun HomeScreen(
     var locationPermissionGranted by remember { mutableStateOf(false) }
     var dataFetched by remember { mutableStateOf(false) }
 
-    var currentHour by remember { mutableStateOf(ZonedDateTime.now().minusHours(2).hour) }
+    val currentHour by remember { mutableIntStateOf(ZonedDateTime.now().minusHours(2).hour) }
     //var currentHourValue by remember { mutableStateOf(radiationArray[currentHour]) }
     // The value for the current hour
     Log.e("HomeScreen", "currentHour: $currentHour")
@@ -217,25 +221,28 @@ fun HomeScreen(
                                     3.dp,
                                     MaterialTheme.colorScheme.primary,
                                     RoundedCornerShape(15.dp)
-                                ) // Border settings
+                                )
 //                                .background(MaterialTheme.colorScheme.surfaceVariant)
                                 .padding(10.dp), // Padding inside the card to separate text from edges
-                            // Center text vertically
+
                             horizontalAlignment = Alignment.CenterHorizontally // Center text horizontally
                         ) {
 
                             Text(
                                 "LIVE ENERGY:",
-                                style = MaterialTheme.typography.displaySmall, // Use a larger, bolder text style
-                                color = MaterialTheme.colorScheme.onSurface
+                                style = MaterialTheme.typography.displaySmall,
+                                color = MaterialTheme.colorScheme.tertiary
                             )
                             Text(
-                                text = "${currentHourValueny ?: "No data"} Kwh", // Optional fallback for null
+                                text = currentHourValueny?.let { String.format("%.4f", it) + " kWh" } ?: "No data",
+                                // Optional fallback for null
                                 style = MaterialTheme.typography.headlineSmall,
                                 fontWeight = FontWeight.ExtraLight,
-                                color = MaterialTheme.colorScheme.primary // Use an appropriate text color
+                                color = MaterialTheme.colorScheme.primary
                             )
-                            LightningAnimation()
+
+                                SunAnimation(currentHourValueny ?: 0.0)
+
 
                         }
                     },
@@ -264,7 +271,7 @@ fun HomeScreen(
                                 Text(
                                     text = "Sjekk strømprisene!",
                                     style = MaterialTheme.typography.titleLarge,
-                                    color = MaterialTheme.colorScheme.primary
+                                    color = MaterialTheme.colorScheme.tertiary
                                 )
                                 Spacer(modifier = Modifier.height(10.dp))
 
@@ -373,5 +380,40 @@ fun LightningAnimation() {
 
         )
     }
+}
+@Composable
+fun SunAnimation(value: Double) {
+    val animationFile = when {
+        value < 0.03 -> "solar_verylow.json"
+        value in 0.03..0.1 -> "solar_low.json"
+        value in 0.1..0.3 -> "solar_half.json"
+        value > 0.3 -> "solar_full.json"
+        else -> "solar_verylow.json" // Default animation
+    }
+
+    // Force new composition when value changes
+    val composition by rememberLottieComposition(
+        spec = LottieCompositionSpec.Asset(animationFile),
+    )
+
+    // Reset animation state when value changes
+    val progress by animateLottieCompositionAsState(
+        composition = composition,
+        iterations = LottieConstants.IterateForever,
+        // Add a key to restart animation when value changes
+    )
+
+    LottieAnimation(
+        composition = composition,
+        progress = { progress },
+        modifier = Modifier
+            .height(450.dp)
+            .fillMaxWidth()
+            .graphicsLayer(
+                scaleX = 1.8f,
+                scaleY = 1.8f
+            )
+    )
+    Log.d("SunAnimation", "Animating with value: $value")
 }
 

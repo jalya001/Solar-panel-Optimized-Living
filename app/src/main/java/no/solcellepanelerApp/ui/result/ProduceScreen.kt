@@ -1,6 +1,7 @@
 package no.solcellepanelerApp.ui.result
 
 //import androidx.compose.foundation.layout.FlowRow
+import android.annotation.SuppressLint
 import androidx.compose.animation.animateColorAsState
 import androidx.compose.animation.core.LinearEasing
 import androidx.compose.animation.core.animateFloatAsState
@@ -48,6 +49,7 @@ import no.solcellepanelerApp.ui.font.FontScaleViewModel
 import no.solcellepanelerApp.ui.reusables.IconTextRow
 
 
+@SuppressLint("MutableCollectionMutableState")
 @OptIn(ExperimentalLayoutApi::class)
 @Composable
 fun ShowProduce(
@@ -61,7 +63,7 @@ fun ShowProduce(
 
     //dette må oversettes
     val devices = listOf(
-        "Tester" to 1000000.0,
+
         "El-Car" to 100.0,
         "Fridge" to 30.0,
         "Heater" to 60.0,
@@ -87,8 +89,16 @@ fun ShowProduce(
         "Vacuum Cleaner" to R.drawable.vacuum_24px,
     )
 
-    var connectedDevices by remember { mutableStateOf(mutableMapOf<String, Double>()) }
+    val preConnected = listOf("Fridge", "TV", "Laptop")
 
+    var connectedDevices by remember {
+        mutableStateOf(
+            devices
+                .filter { it.first in preConnected }
+                .associate { it.first to it.second }
+                .toMutableMap()
+        )
+    }
     // Animation for current energy value
     val animatedEnergy = animateFloatAsState(
         targetValue = currentEnergy.toFloat(),
