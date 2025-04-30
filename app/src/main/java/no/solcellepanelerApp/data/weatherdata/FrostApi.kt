@@ -821,8 +821,8 @@ class FrostApi {
             }
 
             val tempGainedArray = Array(12) { 0.0 }
-            if (dataElevation != null) {
-                val elevationDifference = interestElevation!! - dataElevation!!
+            if (dataElevation != null && interestElevation != null) {
+                val elevationDifference = interestElevation - dataElevation!!
                 val adjuster = adjustBasedOnElement(element)
                 resultsFormatted[element]!!.forEachIndexed { index, value ->
                     val addition = adjuster(elevationDifference, index, resultsFormatted, tempGainedArray)
