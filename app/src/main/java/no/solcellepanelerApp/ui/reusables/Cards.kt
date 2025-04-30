@@ -80,9 +80,58 @@ fun MyNavCard(
         modifier = modifier
             .padding(8.dp)
             .size(size),
-        onClick = { navController.navigate(route) },
+        onClick = {
+            if (route != "") {
+                navController.navigate(route)
+            } else {
+
+            }
+        },
 
         ) {
+        Box(modifier = Modifier.fillMaxSize()) {
+
+            content?.let {
+                Box(
+                    modifier = Modifier
+                        .fillMaxSize(),
+                    contentAlignment = Alignment.BottomEnd
+                ) {
+                    it()
+                }
+            }
+
+            Box(
+                modifier = Modifier.fillMaxSize(),
+                contentAlignment = Alignment.Center
+            ) {
+                Text(
+                    text = text,
+                    textAlign = TextAlign.Center,
+                    style = style,
+                    modifier = Modifier.padding(16.dp),
+                    color = color
+                )
+            }
+        }
+    }
+}
+
+@Composable
+fun MyDisplayCard(
+    text: String = "",
+    modifier: Modifier = Modifier,
+    size: DpSize = DpSize(width = 240.dp, height = 100.dp),
+    style: TextStyle,
+    content: (@Composable () -> Unit)? = null,
+    color: Color,
+) {
+    ElevatedCard(
+        elevation = CardDefaults.cardElevation(defaultElevation = 3.dp),
+        modifier = modifier
+            .padding(8.dp)
+            .size(size),
+    ) {
         Box(modifier = Modifier.fillMaxSize()) {
 
             content?.let {

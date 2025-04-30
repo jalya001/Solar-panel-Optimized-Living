@@ -1,6 +1,7 @@
 package no.solcellepanelerApp.ui.navigation
 
 import android.app.Activity
+import android.location.Location
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -36,6 +37,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -50,6 +52,7 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
+import no.solcellepanelerApp.MainActivity
 import no.solcellepanelerApp.R
 import no.solcellepanelerApp.model.electricity.Region
 import no.solcellepanelerApp.ui.electricity.RegionDropdown
@@ -62,8 +65,11 @@ import no.solcellepanelerApp.ui.reusables.DecimalFormatter
 import no.solcellepanelerApp.ui.reusables.DecimalInputField
 import no.solcellepanelerApp.ui.reusables.ExpandInfoSection
 import no.solcellepanelerApp.ui.reusables.ModeCard
+import no.solcellepanelerApp.ui.reusables.MySection
 import no.solcellepanelerApp.ui.theme.ThemeMode
 import no.solcellepanelerApp.ui.theme.ThemeState
+import no.solcellepanelerApp.util.RequestLocationPermission
+import no.solcellepanelerApp.util.fetchCoordinates
 
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -77,6 +83,14 @@ fun HelpBottomSheet(
     val sheetState = rememberModalBottomSheetState(
         skipPartiallyExpanded = true
     )
+    var showPermissionRequest by remember { mutableStateOf(false) }
+
+    var selectedRegion by rememberSaveable { mutableStateOf<Region?>(null) }
+    var currentLocation by remember { mutableStateOf<Location?>(null) }
+    var locationPermissionGranted by remember { mutableStateOf(false) }
+    var context = LocalContext.current
+    val activity = (context as? MainActivity)
+
 
     if (visible) {
         ModalBottomSheet(
@@ -102,16 +116,34 @@ fun HelpBottomSheet(
                         .padding(16.dp)
                 ) {
                     item {
+                        MySection(
+                            title = "Aksepter enhetslokasjon",
+                            onClick = {
+                                showPermissionRequest = true
+                            },
+                            iconRes = R.drawable.baseline_my_location_24
+                        )
+                    }
+
+                    item {
+                        MySection(
+                            title = "Open Tutorial",
+                            onClick = {
+                            },
+                            iconRes = R.drawable.school_24px
+                        )
+                    }
+                    item {
                         ExpandInfoSection(
                             title = stringResource(id = R.string.help_draw),
-
                             content = stringResource(id = R.string.how_to_draw),
                             initiallyExpanded = expandSection == "draw"
                         )
                     }
                     item {
                         ExpandInfoSection(
-                            title = stringResource(id = R.string.tech_problems_title),
+//                            title = stringResource(id = R.string.tech_problems_title),
+                            title = "*Noe noe*",
                             content = stringResource(id = R.string.tech_problems_content)
                         )
                     }
@@ -125,6 +157,22 @@ fun HelpBottomSheet(
                         stringResource(id = R.string.close),
                         style = MaterialTheme.typography.bodySmall
                     )
+                }
+            }
+        }
+        if (showPermissionRequest) {
+            //Request location permission and fetch region
+            RequestLocationPermission { region ->
+                selectedRegion = region
+                locationPermissionGranted = true
+
+            }
+
+            LaunchedEffect(locationPermissionGranted) {
+                if (locationPermissionGranted && activity != null) {
+                    val location = fetchCoordinates(context, activity)
+                    currentLocation = location
+
                 }
             }
         }
@@ -486,7 +534,11 @@ fun AdditionalInputBottomSheet(
                     )
 
                     InfoHelpButton(
-                        label = stringResource(id = R.string.direction) + " ${azimuthPosition.toInt()}° (${getCompassDirection(azimuthPosition.toInt())})",
+                        label = stringResource(id = R.string.direction) + " ${azimuthPosition.toInt()}° (${
+                            getCompassDirection(
+                                azimuthPosition.toInt()
+                            )
+                        })",
                         helpText = stringResource(id = R.string.panelDirectionHelp)
                     )
 

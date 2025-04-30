@@ -2,6 +2,9 @@ package no.solcellepanelerApp.ui.home
 
 import android.location.Location
 import android.util.Log
+import androidx.compose.foundation.Image
+import androidx.compose.foundation.border
+import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -11,14 +14,14 @@ import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
-import androidx.compose.material3.Card
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -31,7 +34,9 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
@@ -55,9 +60,11 @@ import no.solcellepanelerApp.ui.handling.LoadingScreen
 import no.solcellepanelerApp.ui.navigation.AppearanceBottomSheet
 import no.solcellepanelerApp.ui.navigation.BottomBar
 import no.solcellepanelerApp.ui.navigation.HelpBottomSheet
-import no.solcellepanelerApp.ui.navigation.TopBar
 import no.solcellepanelerApp.ui.result.WeatherViewModel
+import no.solcellepanelerApp.ui.reusables.MyDisplayCard
 import no.solcellepanelerApp.ui.reusables.MyNavCard
+import no.solcellepanelerApp.ui.theme.ThemeMode
+import no.solcellepanelerApp.ui.theme.ThemeState
 import no.solcellepanelerApp.util.RequestLocationPermission
 import no.solcellepanelerApp.util.fetchCoordinates
 import java.time.ZonedDateTime
@@ -89,7 +96,7 @@ fun HomeScreen(
     Log.e("HomeScreen", "radiationArray: ${radiationArray.joinToString(", ")}")
     var currentHourValueny by remember { mutableStateOf<Double?>(null) }
     Log.e("HomeScreen", "currentHourValueny: $currentHourValueny")
-    LaunchedEffect(currentHour,radiationArray) {
+    LaunchedEffect(currentHour, radiationArray) {
         radiationArray.let {
             if (it.isNotEmpty()) {
                 it[currentHour]?.let { currentHourValue ->
@@ -116,30 +123,52 @@ fun HomeScreen(
 
     }
 
-        LaunchedEffect(locationPermissionGranted) {
-            if(locationPermissionGranted && activity!=null){
-            val location= fetchCoordinates(context,activity)
+    LaunchedEffect(locationPermissionGranted) {
+        if (locationPermissionGranted && activity != null) {
+            val location = fetchCoordinates(context, activity)
             currentLocation = location
 
-        }}
+        }
+    }
 
     Log.d("HomeScreen", "currentLocation: $currentLocation")
-    if(currentLocation!=null && !dataFetched){
-        Log.e("HomeScreen", "currentLocation is now not null and is: ${currentLocation!!.latitude}, ${currentLocation!!.longitude}")
+    if (currentLocation != null && !dataFetched) {
+        Log.e(
+            "HomeScreen",
+            "currentLocation is now not null and is: ${currentLocation!!.latitude}, ${currentLocation!!.longitude}"
+        )
         weatherViewModel.fetchRimData(
-            currentLocation!!.latitude,currentLocation!!.longitude,"mean(surface_downwelling_shortwave_flux_in_air PT1H)"
+            currentLocation!!.latitude,
+            currentLocation!!.longitude,
+            "mean(surface_downwelling_shortwave_flux_in_air PT1H)"
         )
         dataFetched = true
         Log.d("HomeScreen", "radiationArray: $radiationArray")
     }
 
+    val isDark = when (ThemeState.themeMode) {
+        ThemeMode.DARK -> true
+        ThemeMode.LIGHT -> false
+        ThemeMode.SYSTEM -> isSystemInDarkTheme()
+    }
+
+
     Scaffold(
         topBar = {
-            TopBar(
-                navController = navController,
-                text = "*IKON og APPNAVN*",
-                backClick = false,
-            )
+            Surface(
+                modifier = Modifier
+//                    .fillMaxWidth()
+//                    .background(Color.Blue)
+                    .padding(top = 30.dp, start = 20.dp, end = 20.dp, bottom = 10.dp)
+            ) {
+                Image(
+                    painter = painterResource(
+                        id = if (isDark) R.drawable.logo_topbar_dark else R.drawable.logo_topbar_light
+                    ),
+                    contentDescription = "",
+                    modifier = Modifier
+                )
+            }
         },
         bottomBar = {
             BottomBar(
@@ -157,6 +186,7 @@ fun HomeScreen(
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.Center
         ) {
+
             MyNavCard(
                 text = stringResource(id = R.string.install_panels),
                 route = "map",
@@ -173,38 +203,46 @@ fun HomeScreen(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.spacedBy(1.dp)
             ) {
-                Card(
+
+                MyDisplayCard(
                     modifier = Modifier
                         .weight(1f)
-                        .height(400.dp)
-                        .align(Alignment.CenterVertically)
-                        .padding(16.dp) // Add padding around the card
-                         // Add shadow for a nice elevation effect
-                    , // Rounded corners // Elevation for a more card-like appearance
-                ) {
-                    Column(
-                        modifier = Modifier
-                            .fillMaxSize()
-                            .padding(16.dp), // Padding inside the card to separate text from edges
-                         // Center text vertically
-                        horizontalAlignment = Alignment.CenterHorizontally // Center text horizontally
-                    ) {
+                        .height(400.dp),
+                    style = MaterialTheme.typography.displaySmall,
+                    content = {
+                        Column(
+                            modifier = Modifier
+                                .fillMaxSize()
+                                .border(
+                                    3.dp,
+                                    MaterialTheme.colorScheme.primary,
+                                    RoundedCornerShape(15.dp)
+                                ) // Border settings
+//                                .background(MaterialTheme.colorScheme.surfaceVariant)
+                                .padding(10.dp), // Padding inside the card to separate text from edges
+                            // Center text vertically
+                            horizontalAlignment = Alignment.CenterHorizontally // Center text horizontally
+                        ) {
 
-                        Text("LIVE ENERGY:",style = MaterialTheme.typography.displaySmall, // Use a larger, bolder text style
-                            color = MaterialTheme.colorScheme.onSurface)
-                        Text(
-                            text = "${currentHourValueny  ?: "No data"} Kwh", // Optional fallback for null
-                            style = MaterialTheme.typography.displaySmall, // Use a larger, bolder text style
-                            color = MaterialTheme.colorScheme.primary // Use an appropriate text color
-                        )
-                        LightningAnimation()
+                            Text(
+                                "LIVE ENERGY:",
+                                style = MaterialTheme.typography.displaySmall, // Use a larger, bolder text style
+                                color = MaterialTheme.colorScheme.onSurface
+                            )
+                            Text(
+                                text = "${currentHourValueny ?: "No data"} Kwh", // Optional fallback for null
+                                style = MaterialTheme.typography.headlineSmall,
+                                fontWeight = FontWeight.ExtraLight,
+                                color = MaterialTheme.colorScheme.primary // Use an appropriate text color
+                            )
+                            LightningAnimation()
 
-                    }
-                }
-
+                        }
+                    },
+                    color = MaterialTheme.colorScheme.primary
+                )
 
                 MyNavCard(
-                    //text = stringResource(id = R.string.prices),
                     route = "prices",
                     navController = navController,
                     modifier = Modifier
@@ -213,9 +251,10 @@ fun HomeScreen(
                     style = MaterialTheme.typography.displaySmall,
                     //content = { LightningAnimation() },
                     content = {
-                        Column(modifier = Modifier
-                            .fillMaxSize()
-                            .padding(10.dp),
+                        Column(
+                            modifier = Modifier
+                                .fillMaxSize()
+                                .padding(10.dp),
                             horizontalAlignment = Alignment.CenterHorizontally,
                             verticalArrangement = Arrangement.Top
                         ) {
@@ -251,7 +290,8 @@ fun HomeScreen(
                                         is PriceUiState.Loading -> LoadingScreen()
                                         is PriceUiState.Error -> ErrorScreen()
                                         is PriceUiState.Success -> {
-                                            val prices = (priceUiState as PriceUiState.Success).prices
+                                            val prices =
+                                                (priceUiState as PriceUiState.Success).prices
                                             Column {
                                                 HomePriceCard(prices, selectedRegion)
                                             }
@@ -263,6 +303,7 @@ fun HomeScreen(
                     },
                     color = MaterialTheme.colorScheme.primary
                 )
+
             }
 
             HelpBottomSheet(

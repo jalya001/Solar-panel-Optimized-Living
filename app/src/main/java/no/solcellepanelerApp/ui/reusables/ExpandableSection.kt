@@ -19,6 +19,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 
@@ -94,6 +95,39 @@ fun ExpandInfoSectionContent(title: String, content: @Composable () -> Unit) {
             if (expanded) {
                 content()
             }
+        }
+    }
+}
+
+@Composable
+fun MySection(title: String, onClick: () -> Unit, iconRes: Int) {
+
+    Card(
+        onClick = onClick,
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(vertical = 8.dp)
+    ) {
+        Column(modifier = Modifier.padding(16.dp)) {
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.SpaceBetween,
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Text(
+                    text = title,
+                    style = MaterialTheme.typography.headlineSmall,
+                    fontWeight = FontWeight.Thin,
+                    color = MaterialTheme.colorScheme.primary
+                )
+
+                Icon(
+                    painter = painterResource(id = iconRes),
+                    contentDescription = null,
+                )
+
+            }
+
         }
     }
 }
