@@ -70,6 +70,7 @@ import no.solcellepanelerApp.ui.theme.ThemeMode
 import no.solcellepanelerApp.ui.theme.ThemeState
 import no.solcellepanelerApp.util.RequestLocationPermission
 import no.solcellepanelerApp.util.fetchCoordinates
+import java.time.LocalTime
 import java.time.ZonedDateTime
 
 @SuppressLint("DefaultLocale")
@@ -227,14 +228,14 @@ fun HomeScreen(
 
                             horizontalAlignment = Alignment.CenterHorizontally // Center text horizontally
                         ) {
-
+                            val timenow = LocalTime.now().hour
                             Text(
-                                "LIVE ENERGY:",
+                                "LIVE ENERGY $timenow:00 ",
                                 style = MaterialTheme.typography.displaySmall,
                                 color = MaterialTheme.colorScheme.tertiary
                             )
                             Text(
-                                text = currentHourValueny?.let { String.format("%.4f", it) + " kWh" } ?: "No data",
+                                text = currentHourValueny?.let { String.format("%.4f", it) + " kW/m²" } ?: "No data",
                                 // Optional fallback for null
                                 style = MaterialTheme.typography.headlineSmall,
                                 fontWeight = FontWeight.ExtraLight,
