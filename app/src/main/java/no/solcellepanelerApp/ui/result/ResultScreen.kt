@@ -6,7 +6,6 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
@@ -63,6 +62,8 @@ fun ResultScreen(
 ) {
     val weatherData by weatherViewModel.weatherData.collectAsState()
     val errorMessage by weatherViewModel.errorMessage.collectAsState()
+    val calc by weatherViewModel.calculationResults.collectAsState()
+    Log.d("ResultScreen", "weatherData: ${calc.toString()}")
     val uiState by weatherViewModel.uiState.collectAsState()
     val panelArea = viewModel.areaInput.toDouble()
     val efficiency = viewModel.efficiencyInput.toDouble()
@@ -143,16 +144,8 @@ fun ResultScreen(
                 val cloudCoverData = weatherData["mean(cloud_area_fraction P1M)"] ?: emptyArray()
                 val radiationData = weatherData["mean(PVGIS_radiation P1M)"] ?: emptyArray()
 
-                val calculatedMonthly = calculateMonthlyEnergyOutput(
-                    airTempData,
-                    cloudCoverData,
-                    snowCoverData,
-                    radiationData,
-                    panelArea,
-                    efficiency,
-                    -0.44
-                )
 
+                weatherViewModel.calculateSolarPanelOutput(panelArea, efficiency)
                 val adjustedRadiation = mutableListOf<Double>()
                 val monthlyEnergyOutput = radiationData.indices.map { month ->
                     adjustedRadiation.add(
@@ -198,19 +191,21 @@ fun ResultScreen(
                     )
                 }
 
-                MonthDataDisplay(
-                    cloudCoverData = cloudCoverData,
-                    snowCoverData = snowCoverData,
-                    airTempData = airTempData,
-                    radiationData = radiationData,
-                    adjustedRadiation = adjustedRadiation,
-                    monthlyEnergyOutput = monthlyEnergyOutput,
-                    monthlyPowerOutput = monthlyPowerOutput,
-                    months = months,
-                    navController = navController,
-                    energyPrice = energyPrice,
-                    showAllMonths = showAllMonths
-                )
+                calc?.let {
+                    MonthDataDisplay(
+                        cloudCoverData = cloudCoverData,
+                        snowCoverData = snowCoverData,
+                        airTempData = airTempData,
+                        radiationData = radiationData,
+                        adjustedRadiation = it.adjustedRadiation,
+                        monthlyEnergyOutput = it.monthlyEnergyOutput,
+                        monthlyPowerOutput = it.monthlyPowerOutput,
+                        months = months,
+                        navController = navController,
+                        energyPrice = energyPrice,
+                        showAllMonths = showAllMonths
+                    )
+                }
             }
 
             HelpBottomSheet(
@@ -228,10 +223,10 @@ fun ResultScreen(
 }
 
 fun calculateMonthlyEnergyOutput(
-    avgTemp: Array<Double>,
-    cloudCover: Array<Double>,
-    snowCover: Array<Double>,
-    radiation: Array<Double>,
+    avgTemp: List<Double>,
+    cloudCover: List<Double>,
+    snowCover: List<Double>,
+    radiation: List<Double>,
     panelArea: Double,
     efficiency: Double,
     tempCoeff: Double,
