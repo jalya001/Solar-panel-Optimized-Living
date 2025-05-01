@@ -12,16 +12,19 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.google.android.gms.maps.model.LatLng
 import com.google.maps.android.SphericalUtil
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 import no.solcellepanelerApp.data.mapdata.AddressRepository
 import no.solcellepanelerApp.data.mapdata.AdressDataSource
+import no.solcellepanelerApp.data.mapdata.ElevationApi
 import no.solcellepanelerApp.model.electricity.Region
 
 import kotlin.math.abs
 import kotlin.math.ceil
 
 class MapScreenViewModel(
-    private val repository: AddressRepository = AddressRepository(AdressDataSource()),
+    private val repository: AddressRepository = AddressRepository(AdressDataSource(), ElevationApi()),
 ) : ViewModel() {
 
     var areaInput by mutableStateOf("")
@@ -34,6 +37,9 @@ class MapScreenViewModel(
 
     private val _coordinates = MutableLiveData<Pair<Double, Double>?>()
     val coordinates: LiveData<Pair<Double, Double>?> get() = _coordinates
+
+    private val _height = MutableStateFlow<Double?>(null)
+    val height: StateFlow<Double?> = _height
 
 
     //could add adress name
@@ -94,6 +100,7 @@ class MapScreenViewModel(
                 val result = repository.getCoordinates(address)
                 if (result.isNotEmpty()) {
                     val coordinate = result[0]
+                    _height.value = repository.getHeight(Pair(coordinate.lat.toDouble(), coordinate.lon.toDouble()))
                     _coordinates.postValue(
                         Pair(
                             coordinate.lat.toDouble(),
@@ -113,7 +120,12 @@ class MapScreenViewModel(
 
     // to change if map is clicked not used
     fun selectLocation(lat: Double, lon: Double) {
-        _coordinates.postValue(lat to lon)  //  Updates lat/lon
+        viewModelScope.launch {
+            _coordinates.postValue(lat to lon)  //  Updates lat/lon
+            if (_coordinates.value != null) {
+                _height.value = repository.getHeight(_coordinates.value!!)
+            }
+        }
     }
 
     

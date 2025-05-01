@@ -17,14 +17,16 @@ class WeatherRepository(
     private suspend fun getFrostData(
         lat: Double,
         lon: Double,
+        height: Double?,
         elements: List<String>,
     ): Result<MutableMap<String, Array<Double>>> {
-        return frostDataSource.fetchFrostData(client, lat, lon, elements)
+        return frostDataSource.fetchFrostData(client, lat, lon, height, elements)
     }
 
     suspend fun getPanelWeatherData(
         lat: Double,
         lon: Double,
+        height: Double?,
         slope: Int,
         azimuth: Int,
     ): Result<Map<String, Array<Double>>> {
@@ -32,11 +34,11 @@ class WeatherRepository(
         if (radiationResult.isFailure) return Result.failure(radiationResult.exceptionOrNull()!!)
         val radiationData = radiationResult.getOrNull()
         val frostElements = listOf(
-            "mean(snow_coverage_type P1M)",
             "mean(air_temperature P1M)",
+            "mean(snow_coverage_type P1M)",
             "mean(cloud_area_fraction P1M)"
         )
-        val frostResult = getFrostData(lat, lon, frostElements)
+        val frostResult = getFrostData(lat, lon, height, frostElements)
         if (frostResult.isFailure) return Result.failure(frostResult.exceptionOrNull()!!)
 
         val dataMap: MutableMap<String, Array<Double>> = frostResult.getOrNull()?: mutableMapOf()
