@@ -17,14 +17,14 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 import no.solcellepanelerApp.data.mapdata.AddressRepository
 import no.solcellepanelerApp.data.mapdata.AdressDataSource
-import no.solcellepanelerApp.data.mapdata.OpenElevationApi
+import no.solcellepanelerApp.data.mapdata.ElevationApi
 import no.solcellepanelerApp.model.electricity.Region
 
 import kotlin.math.abs
 import kotlin.math.ceil
 
 class MapScreenViewModel(
-    private val repository: AddressRepository = AddressRepository(AdressDataSource(), OpenElevationApi()),
+    private val repository: AddressRepository = AddressRepository(AdressDataSource(), ElevationApi()),
 ) : ViewModel() {
 
     var areaInput by mutableStateOf("")

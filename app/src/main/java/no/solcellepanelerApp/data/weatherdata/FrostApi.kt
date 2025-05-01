@@ -752,13 +752,13 @@ class FrostApi {
                 "mean(snow_coverage_type P1M)" -> { _, index, prevs, tempGainedArray ->
                     val originalTemp: Double? = prevs["mean(air_temperature P1M)"]?.getOrNull(index)?.let { it - tempGainedArray[index] }
                     if (originalTemp == null) null
-                    if (originalTemp!! - tempGainedArray[index] < 5.0) {
-                        -tempGainedArray[index] * 0.02
+                    if (originalTemp!! + tempGainedArray[index] < 5.0) {
+                        -tempGainedArray[index] * 0.08
                     } else {
                         0.0
                     }
                 }
-                "mean(cloud_area_fraction P1M)" -> { elevationDifference: Double, _, _, _ -> elevationDifference / 2000.0 }
+                "mean(cloud_area_fraction P1M)" -> { elevationDifference: Double, _, _, _ -> -elevationDifference / 2000.0 }
                 else -> { _, _, _, _ -> null }
             }
         }
@@ -823,10 +823,15 @@ class FrostApi {
             val tempGainedArray = Array(12) { 0.0 }
             if (dataElevation != null && interestElevation != null) {
                 val elevationDifference = interestElevation - dataElevation!!
+                println("interest elevation: $interestElevation")
+                println("data elevation: $dataElevation")
+                println("elevation difference: $elevationDifference")
                 val adjuster = adjustBasedOnElement(element)
                 resultsFormatted[element]!!.forEachIndexed { index, value ->
                     val addition = adjuster(elevationDifference, index, resultsFormatted, tempGainedArray)
+                    println("original: ${resultsFormatted[element]!![index]}")
                     if (addition != null) {
+                        println("addition: $addition")
                         if (element == "mean(air_temperature P1M)") tempGainedArray[index] = addition
                         resultsFormatted[element]!![index] = resultsFormatted[element]!![index] + addition
                     }
@@ -861,7 +866,7 @@ class FrostApi {
             if (stationLocations[id]!!.elevation == null) {
                 elevationSum = null
             } else if (elevationSum != null) {
-                elevationSum = elevationSum!! + stationLocations[id]!!.elevation!!
+                elevationSum = elevationSum!! + (stationLocations[id]!!.elevation!! * weight)
             }
             months.forEachIndexed { index, value ->
                 averagedArray[index] = averagedArray[index] + (value * weight)

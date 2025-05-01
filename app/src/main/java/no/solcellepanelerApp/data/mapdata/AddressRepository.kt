@@ -4,7 +4,7 @@ import no.solcellepanelerApp.model.map.GeocodingResponse
 
 class AddressRepository(
     private val dataSource: AdressDataSource,
-    private val openElevationApi: OpenElevationApi
+    private val elevationApi: ElevationApi
 ) {
 
     suspend fun getCoordinates(address: String): List<GeocodingResponse> {
@@ -12,7 +12,7 @@ class AddressRepository(
     }
 
     suspend fun getHeight(coordinates: Pair<Double,Double>): Double? {
-        return openElevationApi.fetchElevation(coordinates)
+        return elevationApi.fetchElevation(coordinates)
     }
 }
 
