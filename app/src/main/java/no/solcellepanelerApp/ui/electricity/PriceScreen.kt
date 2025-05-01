@@ -119,6 +119,7 @@ fun PriceScreen(
             }
 
             HelpBottomSheet(
+                navController = navController,
                 visible = showHelp,
                 onDismiss = { showHelp = false })
             AppearanceBottomSheet(

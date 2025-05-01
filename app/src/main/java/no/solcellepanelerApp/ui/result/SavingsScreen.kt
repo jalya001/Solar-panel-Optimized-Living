@@ -71,6 +71,7 @@ fun ShowMonthlySavings(
             ShowProduce(energyProduced, navController, fontScaleViewModel)
 
             HelpBottomSheet(
+                navController = navController,
                 visible = showHelp,
                 onDismiss = { showHelp = false })
             AppearanceBottomSheet(
@@ -126,6 +127,7 @@ fun ShowYearlySavings(
             ShowProduce(energyProduced, navController, fontScaleViewModel)
 
             HelpBottomSheet(
+                navController = navController,
                 visible = showHelp,
                 onDismiss = { showHelp = false })
             AppearanceBottomSheet(

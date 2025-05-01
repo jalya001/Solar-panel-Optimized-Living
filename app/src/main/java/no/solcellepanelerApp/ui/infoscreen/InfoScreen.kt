@@ -128,6 +128,7 @@ fun InfoScreen(
         }
 
         HelpBottomSheet(
+            navController = navController,
             visible = showHelp,
             onDismiss = { showHelp = false },
         )

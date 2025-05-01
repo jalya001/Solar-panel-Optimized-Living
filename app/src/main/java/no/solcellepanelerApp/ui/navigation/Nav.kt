@@ -39,6 +39,7 @@ import no.solcellepanelerApp.ui.home.HomeScreen
 import no.solcellepanelerApp.ui.infoscreen.InfoScreen
 import no.solcellepanelerApp.ui.map.MapScreen
 import no.solcellepanelerApp.ui.map.MapScreenViewModel
+import no.solcellepanelerApp.ui.onboarding.OnboardingScreen
 import no.solcellepanelerApp.ui.result.ResultScreen
 import no.solcellepanelerApp.ui.result.ShowMonthlySavings
 import no.solcellepanelerApp.ui.result.ShowYearlySavings
@@ -52,6 +53,9 @@ fun Nav(navController: NavHostController, fontScaleViewModel: FontScaleViewModel
     val priceRepository = ElectricityPriceRepository("NO1")
 
     NavHost(navController, startDestination = "home") {
+        composable("onboarding") { OnboardingScreen(onFinished = { navController.popBackStack() }) }
+
+
         composable("home") { HomeScreen(navController, fontScaleViewModel, WviewModel) }
         composable("map") {
             MapScreen(viewModel, navController, fontScaleViewModel, WviewModel)

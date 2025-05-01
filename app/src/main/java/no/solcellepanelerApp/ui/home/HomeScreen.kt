@@ -315,6 +315,7 @@ fun HomeScreen(
             }
 
             HelpBottomSheet(
+                navController = navController,
                 visible = showHelp,
                 onDismiss = { showHelp = false },
             )
