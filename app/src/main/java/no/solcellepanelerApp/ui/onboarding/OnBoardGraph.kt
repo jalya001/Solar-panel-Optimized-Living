@@ -1,6 +1,7 @@
 package no.solcellepanelerApp.ui.onboarding
 
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -13,14 +14,120 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.AnnotatedString
+import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
+import no.solcellepanelerApp.R
 
 @Composable
 fun OnboardingGraphUI(OnBoardModel: OnBoardModel) {
+    val isDark = isSystemInDarkTheme()
+
+    val imageRes = when (OnBoardModel) {
+        is OnBoardModel.FirstPage -> if (isDark) R.drawable.onboard_logo_dark else R.drawable.onboard_logo_light
+        is OnBoardModel.SecondPage -> R.drawable.home_24px
+        is OnBoardModel.ThirdPage -> R.drawable.school_24px
+        is OnBoardModel.FourthPage -> R.drawable.baseline_my_location_24
+    }
+
+    val descriptionText: AnnotatedString = when (OnBoardModel) {
+        is OnBoardModel.FirstPage -> buildAnnotatedString {
+            withStyle(style = MaterialTheme.typography.bodyLarge.toSpanStyle()) {
+                append(stringResource(id = R.string.onboard_desc_1))
+            }
+        }
+
+        is OnBoardModel.SecondPage -> buildAnnotatedString {
+            withStyle(style = MaterialTheme.typography.titleLarge.toSpanStyle()) {
+                append(stringResource(id = R.string.onboard_highlight_1))
+            }
+            append("\n")
+            withStyle(style = MaterialTheme.typography.bodyLarge.toSpanStyle()) {
+                append(stringResource(id = R.string.onboard_desc_2_1))
+            }
+            append("\n\n")
+
+            withStyle(style = MaterialTheme.typography.titleLarge.toSpanStyle()) {
+                append(stringResource(id = R.string.onboard_highlight_2))
+            }
+            append("\n")
+            withStyle(style = MaterialTheme.typography.bodyLarge.toSpanStyle()) {
+                append(stringResource(id = R.string.onboard_desc_2_2))
+            }
+            append("\n\n")
+
+            withStyle(style = MaterialTheme.typography.titleLarge.toSpanStyle()) {
+                append(stringResource(id = R.string.onboard_highlight_3))
+            }
+            append("\n")
+            withStyle(style = MaterialTheme.typography.bodyLarge.toSpanStyle()) {
+
+                append(stringResource(id = R.string.onboard_desc_2_3))
+            }
+            append("\n\n")
+
+            withStyle(style = MaterialTheme.typography.titleLarge.toSpanStyle()) {
+                append(stringResource(id = R.string.onboard_highlight_4))
+            }
+            append("\n")
+            withStyle(style = MaterialTheme.typography.bodyLarge.toSpanStyle()) {
+                append(stringResource(id = R.string.onboard_desc_2_4))
+            }
+        }
+
+        is OnBoardModel.ThirdPage -> buildAnnotatedString {
+            withStyle(style = MaterialTheme.typography.titleLarge.toSpanStyle()) {
+                append(stringResource(id = R.string.onboard_how_1))
+            }
+            append("\n")
+            withStyle(style = MaterialTheme.typography.bodyLarge.toSpanStyle()) {
+
+                append(stringResource(id = R.string.onboard_how_desc_1))
+            }
+            append("\n\n")
+
+            withStyle(style = MaterialTheme.typography.titleLarge.toSpanStyle()) {
+                append(stringResource(id = R.string.onboard_how_2))
+            }
+            append("\n")
+            withStyle(style = MaterialTheme.typography.bodyLarge.toSpanStyle()) {
+
+                append(stringResource(id = R.string.onboard_how_desc_2))
+            }
+            append("\n\n")
+
+            withStyle(style = MaterialTheme.typography.titleLarge.toSpanStyle()) {
+                append(stringResource(id = R.string.onboard_how_3))
+            }
+            append("\n")
+            withStyle(style = MaterialTheme.typography.bodyLarge.toSpanStyle()) {
+
+                append(stringResource(id = R.string.onboard_how_desc_3))
+            }
+            append("\n\n")
+
+            withStyle(style = MaterialTheme.typography.titleLarge.toSpanStyle()) {
+                append(stringResource(id = R.string.onboard_how_4))
+            }
+            append("\n")
+            withStyle(style = MaterialTheme.typography.bodyLarge.toSpanStyle()) {
+
+                append(stringResource(id = R.string.onboard_how_desc_4))
+            }
+        }
+
+        is OnBoardModel.FourthPage -> buildAnnotatedString {
+            withStyle(style = MaterialTheme.typography.bodyLarge.toSpanStyle()) {
+
+                append(stringResource(id = R.string.onboard_desc_4))
+            }
+        }
+    }
 
     Column(
         modifier = Modifier.fillMaxSize(),
@@ -28,28 +135,27 @@ fun OnboardingGraphUI(OnBoardModel: OnBoardModel) {
         verticalArrangement = Arrangement.Center
     ) {
 
+        val logo = if (isDark) R.drawable.onboard_logo_dark else R.drawable.onboard_logo_light
 
         Image(
-            painter = painterResource(id = OnBoardModel.image),
+            painter = painterResource(id = imageRes),
             contentDescription = null,
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(40.dp, 0.dp),
-            alignment = Alignment.Center
+            modifier =
+                if (imageRes != logo) Modifier.size(50.dp) else Modifier.size(200.dp),
+            alignment = Alignment.Center,
+            colorFilter = if (imageRes != logo) ColorFilter.tint(MaterialTheme.colorScheme.primary) else null
         )
 
-        Spacer(
-            modifier = Modifier.size(50.dp)
-        )
+        Spacer(modifier = Modifier.size(50.dp))
 
         Text(
-            text = OnBoardModel.title,
+            text = stringResource(OnBoardModel.titleRes),
             modifier = Modifier.fillMaxWidth(),
-            fontSize = 20.sp,
             textAlign = TextAlign.Center,
-            style = MaterialTheme.typography.titleMedium,
-            color = MaterialTheme.colorScheme.onBackground
+            style = MaterialTheme.typography.headlineSmall,
+            color = MaterialTheme.colorScheme.tertiary
         )
+
         Spacer(
             modifier = Modifier
                 .fillMaxWidth()
@@ -57,11 +163,10 @@ fun OnboardingGraphUI(OnBoardModel: OnBoardModel) {
         )
 
         Text(
-            text = OnBoardModel.description,
+            text = descriptionText,
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(25.dp, 0.dp),
-            fontSize = 16.sp,
             textAlign = TextAlign.Center,
             style = MaterialTheme.typography.bodySmall,
             color = MaterialTheme.colorScheme.onSurface,
@@ -72,27 +177,5 @@ fun OnboardingGraphUI(OnBoardModel: OnBoardModel) {
                 .fillMaxWidth()
                 .size(60.dp)
         )
-
     }
-
-
-}
-
-
-@Preview(showBackground = true)
-@Composable
-fun OnboardingGraphUIPreview1() {
-    OnboardingGraphUI(OnBoardModel.FirstPage)
-}
-
-@Preview(showBackground = true)
-@Composable
-fun OnboardingGraphUIPreview2() {
-    OnboardingGraphUI(OnBoardModel.SecondPage)
-}
-
-@Preview(showBackground = true)
-@Composable
-fun OnboardingGraphUIPreview3() {
-    OnboardingGraphUI(OnBoardModel.ThirdPages)
 }

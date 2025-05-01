@@ -21,13 +21,17 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import kotlinx.coroutines.launch
+import no.solcellepanelerApp.ui.theme.SolcellepanelerAppTheme
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun OnboardingScreen(onFinished: () -> Unit) {
 
     val pages = listOf(
-        OnBoardModel.FirstPage, OnBoardModel.SecondPage, OnBoardModel.ThirdPages
+        OnBoardModel.FirstPage,
+        OnBoardModel.SecondPage,
+        OnBoardModel.ThirdPage,
+        OnBoardModel.FourthPage
     )
 
     val pagerState = rememberPagerState(initialPage = 0) {
@@ -38,7 +42,8 @@ fun OnboardingScreen(onFinished: () -> Unit) {
             when (pagerState.currentPage) {
                 0 -> listOf("", "Next")
                 1 -> listOf("Back", "Next")
-                2 -> listOf("Back", "Start")
+                2 -> listOf("Back", "Next")
+                3 -> listOf("Back", "Start")
                 else -> listOf("", "")
             }
         }
@@ -114,7 +119,9 @@ fun OnboardingScreen(onFinished: () -> Unit) {
 @Preview(showBackground = true)
 @Composable
 fun OnboardingScreenPreview() {
-    OnboardingScreen {
+    SolcellepanelerAppTheme(darkTheme = true) {
+        OnboardingScreen {
 
+        }
     }
 }

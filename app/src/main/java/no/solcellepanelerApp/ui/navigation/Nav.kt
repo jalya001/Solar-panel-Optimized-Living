@@ -44,7 +44,6 @@ import no.solcellepanelerApp.ui.result.ResultScreen
 import no.solcellepanelerApp.ui.result.ShowMonthlySavings
 import no.solcellepanelerApp.ui.result.ShowYearlySavings
 import no.solcellepanelerApp.ui.result.WeatherViewModel
-import no.solcellepanelerApp.ui.savedLocations.SavedLocationsScreen
 
 @Composable
 fun Nav(navController: NavHostController, fontScaleViewModel: FontScaleViewModel) {
@@ -66,7 +65,6 @@ fun Nav(navController: NavHostController, fontScaleViewModel: FontScaleViewModel
                 priceScreenViewModel = priceRepository
             )
         }
-        composable("last_location") { SavedLocationsScreen(navController, fontScaleViewModel) }
         composable("prices") {
             val repository = ElectricityPriceRepository("NO1")
             PriceScreen(

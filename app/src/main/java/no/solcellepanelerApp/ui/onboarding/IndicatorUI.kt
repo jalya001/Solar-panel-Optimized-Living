@@ -52,7 +52,7 @@ fun IndicatorUI(
 @Composable
 fun IndicatorUIPreview1() {
 
-    IndicatorUI(pageSize = 3, currentPage = 0)
+    IndicatorUI(pageSize = 4, currentPage = 0)
 
 }
 
@@ -60,7 +60,7 @@ fun IndicatorUIPreview1() {
 @Composable
 fun IndicatorUIPreview2() {
 
-    IndicatorUI(pageSize = 3, currentPage = 1)
+    IndicatorUI(pageSize = 4, currentPage = 1)
 
 }
 
@@ -68,6 +68,14 @@ fun IndicatorUIPreview2() {
 @Composable
 fun IndicatorUIPreview3() {
 
-    IndicatorUI(pageSize = 3, currentPage = 2)
+    IndicatorUI(pageSize = 4, currentPage = 2)
+
+}
+
+@Preview(showBackground = true)
+@Composable
+fun IndicatorUIPreview4() {
+
+    IndicatorUI(pageSize = 4, currentPage = 3)
 
 }

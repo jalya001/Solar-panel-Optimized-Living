@@ -10,7 +10,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
+
 
 @Composable
 fun ButtonUi(
@@ -18,7 +18,6 @@ fun ButtonUi(
     backgroundColor: Color = MaterialTheme.colorScheme.primary,
     textColor: Color = MaterialTheme.colorScheme.onPrimary,
     textStyle: TextStyle = MaterialTheme.typography.titleMedium,
-    fontSize: Int = 14,
     onClick: () -> Unit,
 ) {
 
@@ -30,7 +29,7 @@ fun ButtonUi(
 
 
         Text(
-            text = text, fontSize = fontSize.sp, style = textStyle
+            text = text, style = textStyle
         )
 
 
@@ -55,7 +54,6 @@ fun BackButton() {
         backgroundColor = Color.Transparent,
         textColor = Color.Gray,
         textStyle = MaterialTheme.typography.bodySmall,
-        fontSize = 13
     ) {
     }
 

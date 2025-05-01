@@ -180,4 +180,32 @@
     <string name="monthly_savings_text">You will save %1$.2f kroner in %2$s with electricity from solar panels</string>
     <string name="area_drawn">Size of area:</string>
 
+    <!-- Onboarding -->
+
+    <string name="onboard_title_1">Welcome to SOL</string>
+    <string name="onboard_desc_1">Your digital advisor for optimal solar panel placement and usage.</string>
+
+    <string name="onboard_title_2">What does the app do?</string>
+    <string name="onboard_highlight_1">Save money:</string>
+    <string name="onboard_desc_2_1">Use solar energy instead of electricity from the grid.</string>
+    <string name="onboard_highlight_2">Compare electricity prices:</string>
+    <string name="onboard_desc_2_2">View live electricity prices in your area.</string>
+    <string name="onboard_highlight_3">Reduce carbon footprint:</string>
+    <string name="onboard_desc_2_3">Track how much CO₂ you’re saving.</string>
+    <string name="onboard_highlight_4">Get insights:</string>
+    <string name="onboard_desc_2_4">Visualize your potential savings over time.</string>
+
+    <string name="onboard_title_3">How does it work?</string>
+    <string name="onboard_how_1">Find address:</string>
+    <string name="onboard_how_desc_1">Choose your house on the map or search by address.</string>
+    <string name="onboard_how_2">Fill in details:</string>
+    <string name="onboard_how_desc_2">Enter roof tilt, energy usage, and other info for accuracy.</string>
+    <string name="onboard_how_3">Draw area (optional):</string>
+    <string name="onboard_how_desc_3">Mark where on your roof you want solar panels for better results.</string>
+    <string name="onboard_how_4">View results:</string>
+    <string name="onboard_how_desc_4">See production estimates, savings, and environmental impact.</string>
+
+    <string name="onboard_title_4">Location access</string>
+    <string name="onboard_desc_4">Grant location access to find your nearest address and optimize the experience.</string>
+
 </resources>
