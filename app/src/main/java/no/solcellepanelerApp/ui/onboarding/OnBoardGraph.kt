@@ -9,9 +9,14 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.material3.Button
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.ColorFilter
@@ -23,10 +28,23 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
 import no.solcellepanelerApp.R
+import no.solcellepanelerApp.model.electricity.Region
+import no.solcellepanelerApp.ui.home.RememberLocationWithPermission
 
 @Composable
 fun OnboardingGraphUI(OnBoardModel: OnBoardModel) {
     val isDark = isSystemInDarkTheme()
+
+    var triggerLocationFetch by remember { mutableStateOf(false) }
+
+    var region: Region? by remember { mutableStateOf(null) }
+    val (currentLocation, locationGranted) = if (triggerLocationFetch) {
+        RememberLocationWithPermission { resolvedRegion ->
+            region = resolvedRegion
+        }
+    } else {
+        Pair(null, false)
+    }
 
     val imageRes = when (OnBoardModel) {
         is OnBoardModel.FirstPage -> if (isDark) R.drawable.onboard_logo_dark else R.drawable.onboard_logo_light
@@ -125,6 +143,11 @@ fun OnboardingGraphUI(OnBoardModel: OnBoardModel) {
             withStyle(style = MaterialTheme.typography.bodyLarge.toSpanStyle()) {
 
                 append(stringResource(id = R.string.onboard_desc_4))
+            }
+            Button(onClick = {
+                triggerLocationFetch = true
+            }) {
+                Text("Grant Location Access")
             }
         }
     }

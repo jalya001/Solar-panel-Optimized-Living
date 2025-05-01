@@ -1,7 +1,6 @@
 package no.solcellepanelerApp.ui.navigation
 
 import android.app.Activity
-import android.location.Location
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -37,7 +36,6 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
-import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -52,12 +50,12 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
-import no.solcellepanelerApp.MainActivity
 import no.solcellepanelerApp.R
 import no.solcellepanelerApp.model.electricity.Region
 import no.solcellepanelerApp.ui.electricity.RegionDropdown
 import no.solcellepanelerApp.ui.font.FontScaleViewModel
 import no.solcellepanelerApp.ui.font.FontSizeState
+import no.solcellepanelerApp.ui.home.RememberLocationWithPermission
 import no.solcellepanelerApp.ui.language.langSwitch
 import no.solcellepanelerApp.ui.map.MapScreenViewModel
 import no.solcellepanelerApp.ui.result.WeatherViewModel
@@ -68,8 +66,6 @@ import no.solcellepanelerApp.ui.reusables.ModeCard
 import no.solcellepanelerApp.ui.reusables.MySection
 import no.solcellepanelerApp.ui.theme.ThemeMode
 import no.solcellepanelerApp.ui.theme.ThemeState
-import no.solcellepanelerApp.util.RequestLocationPermission
-import no.solcellepanelerApp.util.fetchCoordinates
 
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -81,17 +77,21 @@ fun HelpBottomSheet(
     navController: NavController,
 ) {
 
+    var triggerLocationFetch by remember { mutableStateOf(false) }
+
+    var region: Region? by remember { mutableStateOf(null) }
+    val (currentLocation, locationGranted) = if (triggerLocationFetch) {
+        RememberLocationWithPermission { resolvedRegion ->
+            region = resolvedRegion
+        }
+    } else {
+        Pair(null, false)
+    }
+
+
     val sheetState = rememberModalBottomSheetState(
         skipPartiallyExpanded = true
     )
-    var showPermissionRequest by remember { mutableStateOf(false) }
-
-    var selectedRegion by rememberSaveable { mutableStateOf<Region?>(null) }
-    var currentLocation by remember { mutableStateOf<Location?>(null) }
-    var locationPermissionGranted by remember { mutableStateOf(false) }
-    var context = LocalContext.current
-    val activity = (context as? MainActivity)
-
     if (visible) {
         ModalBottomSheet(
             onDismissRequest = onDismiss,
@@ -119,9 +119,10 @@ fun HelpBottomSheet(
                         MySection(
                             title = "Aksepter enhetslokasjon",
                             onClick = {
-                                showPermissionRequest = true
+                                triggerLocationFetch = true
                             },
-                            iconRes = R.drawable.baseline_my_location_24
+                            iconRes = R.drawable.baseline_my_location_24,
+                            enabled = !locationGranted
                         )
                     }
 
@@ -158,22 +159,6 @@ fun HelpBottomSheet(
                         stringResource(id = R.string.close),
                         style = MaterialTheme.typography.bodySmall
                     )
-                }
-            }
-        }
-        if (showPermissionRequest) {
-            //Request location permission and fetch region
-            RequestLocationPermission { region ->
-                selectedRegion = region
-                locationPermissionGranted = true
-
-            }
-
-            LaunchedEffect(locationPermissionGranted) {
-                if (locationPermissionGranted && activity != null) {
-                    val location = fetchCoordinates(context, activity)
-                    currentLocation = location
-
                 }
             }
         }
