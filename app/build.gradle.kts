@@ -55,7 +55,6 @@ dependencies {
     implementation("androidx.compose.foundation:foundation:1.5.0")
     implementation("androidx.activity:activity-compose:1.7.2")
 
-
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.lifecycle.runtime.ktx)
     implementation(libs.androidx.activity.compose)
@@ -135,4 +134,5 @@ dependencies {
     testImplementation("io.mockk:mockk:1.13.8")
     testImplementation("org.jetbrains.kotlinx:kotlinx-coroutines-test:1.7.3")
     testImplementation("io.ktor:ktor-client-mock:2.3.4")
+    
 }

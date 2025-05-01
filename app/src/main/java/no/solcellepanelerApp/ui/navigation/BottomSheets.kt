@@ -60,6 +60,7 @@ import no.solcellepanelerApp.ui.font.FontScaleViewModel
 import no.solcellepanelerApp.ui.font.FontSizeState
 import no.solcellepanelerApp.ui.language.langSwitch
 import no.solcellepanelerApp.ui.map.MapScreenViewModel
+import no.solcellepanelerApp.ui.onboarding.OnboardingUtils
 import no.solcellepanelerApp.ui.result.WeatherViewModel
 import no.solcellepanelerApp.ui.reusables.DecimalFormatter
 import no.solcellepanelerApp.ui.reusables.DecimalInputField
@@ -90,6 +91,7 @@ fun HelpBottomSheet(
     var locationPermissionGranted by remember { mutableStateOf(false) }
     var context = LocalContext.current
     val activity = (context as? MainActivity)
+    val onboardingUtils = remember { OnboardingUtils(context) }
 
 
     if (visible) {
@@ -129,6 +131,7 @@ fun HelpBottomSheet(
                         MySection(
                             title = "Open Tutorial",
                             onClick = {
+
                             },
                             iconRes = R.drawable.school_24px
                         )

@@ -53,7 +53,6 @@ fun SavedLocationsScreen(
                 style = MaterialTheme.typography.bodyMedium
             )
 
-
             HelpBottomSheet(
                 visible = showHelp,
                 onDismiss = { showHelp = false },

@@ -59,7 +59,7 @@ fun Nav(navController: NavHostController, fontScaleViewModel: FontScaleViewModel
         composable("result") {
             ResultScreen(
                 navController, viewModel, WviewModel, fontScaleViewModel,
-                priceScreenViewModel = priceRepository //hvorfor heter den viewmodel hvis den tar en repo?
+                priceScreenViewModel = priceRepository
             )
         }
         composable("last_location") { SavedLocationsScreen(navController, fontScaleViewModel) }
