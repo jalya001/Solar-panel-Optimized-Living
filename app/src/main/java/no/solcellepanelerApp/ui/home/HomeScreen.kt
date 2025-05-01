@@ -162,15 +162,23 @@ fun HomeScreen(
         topBar = {
             Surface(
                 modifier = Modifier
-                    .padding(top = 30.dp, start = 20.dp, end = 20.dp, bottom = 10.dp)
+                    .padding(top = 35.dp),
             ) {
-                Image(
-                    painter = painterResource(
-                        id = if (isDark) R.drawable.logo_topbar_dark else R.drawable.logo_topbar_light
-                    ),
-                    contentDescription = "",
-                    modifier = Modifier
-                )
+                Box(
+                    modifier = Modifier.fillMaxWidth()
+//                        .background(Color.Red)
+                    ,
+                    contentAlignment = Alignment.Center
+                ) {
+                    Image(
+                        painter = painterResource(
+                            id = if (isDark) R.drawable.logo_topbar_dark else R.drawable.logo_topbar_light
+                        ),
+                        contentDescription = "",
+                        modifier = Modifier
+                            .height(100.dp)
+                    )
+                }
             }
         },
         bottomBar = {
@@ -185,7 +193,8 @@ fun HomeScreen(
             modifier = Modifier
                 .fillMaxSize()
                 .padding(contentPadding)
-                .padding(5.dp),
+//                .background(Color.Blue)
+            ,
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.Center
         ) {
