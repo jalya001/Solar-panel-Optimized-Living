@@ -49,7 +49,7 @@ class WeatherViewModel(
             _uiState.value = UiState.LOADING
             val result = repository.getPanelWeatherData(lat, lon, height, slope, azimuth)
             if (result.isSuccess) {
-                _weatherData.value = result.getOrNull() ?: emptyMap()
+                _weatherData.value = result.getOrNull()?: emptyMap()
                 if (_weatherData.value.isEmpty()) {
                     _errorMessage.value = result.exceptionOrNull()?.toString()?: "There is no data on this region. We are sorry."
                     _uiState.value = UiState.ERROR
