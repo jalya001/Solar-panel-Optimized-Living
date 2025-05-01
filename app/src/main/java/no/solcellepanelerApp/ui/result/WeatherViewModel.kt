@@ -37,17 +37,19 @@ class WeatherViewModel(
             if (result.isSuccess) {
                 _weatherData.value = result.getOrNull()?: emptyMap()
                 if (_weatherData.value.isEmpty()) {
-                    _errorMessage.value = result.exceptionOrNull()?.message ?: "There is no data on this region. We are sorry."
+                    _errorMessage.value = result.exceptionOrNull()?.toString()?: "There is no data on this region. We are sorry."
                     _uiState.value = UiState.ERROR
                 } else if (_weatherData.value.size != 4) {
-                    _errorMessage.value = result.exceptionOrNull()?.message ?: "Some data missing on this region, and we cannot provide you an estimate. We are sorry."
+                    _errorMessage.value = result.exceptionOrNull()?.toString()?: "Some data missing on this region, and we cannot provide you an estimate. We are sorry."
                     _uiState.value = UiState.ERROR
                 } else {
                     _uiState.value = UiState.SUCCESS
                 }
             } else {
                 _uiState.value = UiState.ERROR
-                _errorMessage.value = result.exceptionOrNull()?.message ?: "Unexpected behavior. Please report to developers."
+                println("qwdwqdwq")
+                println(result.exceptionOrNull())
+                _errorMessage.value = result.exceptionOrNull()?.toString()?: "Unexpected behavior. Please report to developers."
             }
         }
     }
