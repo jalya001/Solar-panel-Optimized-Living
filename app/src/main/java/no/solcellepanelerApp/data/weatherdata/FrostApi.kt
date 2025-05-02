@@ -512,8 +512,8 @@ class FrostApi {
                 modes,
                 element,
                 searchAdvancements[element]!!
-            ) // idk where to put this            val mode = modes[element]!!
-
+            ) // idk where to put this
+            val mode = modes[element]!!
             var queuableOrUsableStationsCount = 0 // Does not need to be muted later
             usableStations[element]!!.forEach { (quadrant, usableQueue) -> // refractor
                 if (usableQueue.isNotEmpty() || (queueAdvancements[element]!![quadrant]!! <= stationQueues[element]!![quadrant]!!.size)) {
