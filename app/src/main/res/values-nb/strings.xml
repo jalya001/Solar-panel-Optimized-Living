@@ -4,7 +4,7 @@
     <!--Home Screen-->
     <string name="home"> Hjemme</string>
     <string name="install_panels_title">Finn ditt \n solcellepotensial!</string>
-    <string name="install_panels_desc">Legg inn adresse og detaljer — se estimert strøm og besparelse med solcellepaneler.</string>
+    <string name="install_panels_desc">Legg inn adresse og detaljer — se estimert strøm og besparelse med solcellepaneler. *må jobbes med*</string>
     <string name="last_location">Siste posisjon (trenger bedre navn)</string>
     <string name="prices"> Strømpriser </string>
     <string name="help"> Hjelp</string>
@@ -178,15 +178,22 @@
 
     <!--Savings Screen-->
     <string name="yearly_savings">Spares årlig</string>
-    <string name="yearly_savings_text">Du vil spare %.2f kroner i året på strøm fra solcellepaneler</string>
+    <!--    <string name="yearly_savings_text">Du vil spare %.2f kroner i året på strøm fra solcellepaneler</string>-->
     <string name="monthly_savings">Sparing i: %1$s</string>
-    <string name="monthly_savings_text">Du vil spare %1$.2f kroner  i %2$s  på strøm fra solcellepaneler</string>
+    <!--    <string name="monthly_savings_text">Du vil spare %1$.2f kroner  i %2$s  på strøm fra solcellepaneler</string>-->
+
+    <string name="monthly_savings_prefix">Du vil spare </string>
+    <string name="monthly_savings_suffix_part1"> kroner i </string>
+    <string name="monthly_savings_suffix_part2"> på strøm fra solcellepaneler</string>
+
+    <string name="yearly_savings_prefix">Du vil spare </string>
+    <string name="yearly_savings_suffix">i året på strøm fra solcellepaneler</string>
+
 
     <string name="area_drawn">Tegnet areal:</string>
     <string name="snow_info">Dette er dine årlige snødekke-data:</string>
     <string name="cloud_info">Dette er dine årlige skydekke-data:</string>
     <string name="temp_info">Dette er dine årlige temperaturfaktor-data:</string>
-
 
 
     <!-- Onboarding -->
