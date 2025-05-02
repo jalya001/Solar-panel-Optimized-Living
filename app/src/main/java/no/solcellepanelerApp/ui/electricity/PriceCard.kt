@@ -26,8 +26,9 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import no.solcellepanelerApp.model.electricity.ElectricityPrice
 import no.solcellepanelerApp.model.electricity.Region
 import no.solcellepanelerApp.ui.handling.LoadingScreen
@@ -158,7 +159,9 @@ fun PriceRow(
     price: Double,
     time: String,
 ) {
-    Row(verticalAlignment = Alignment.CenterVertically) {
+    Row(
+        verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.Center,
+    ) {
         if (icon != null) {
             Icon(
                 imageVector = icon,
@@ -167,13 +170,19 @@ fun PriceRow(
             )
         }
         Spacer(modifier = Modifier.width(8.dp))
-        Column {
+        Column(
+            horizontalAlignment = Alignment.CenterHorizontally,
+        ) {
             Text(
                 text = "$label:",
-                style = MaterialTheme.typography.titleMedium,
+                style = MaterialTheme.typography.titleLarge,
+//                style = MaterialTheme.typography.headlineSmall,
+                fontWeight = FontWeight.ExtraLight,
                 color = MaterialTheme.colorScheme.primary,
-                fontSize = 18.sp
+                textAlign = TextAlign.Center
+//                fontSize = 18.sp
             )
+            Spacer(modifier = Modifier.height(8.dp))
 
             Text(
                 text = "${"%2f".format(price)} NOK/kWh",
@@ -193,8 +202,8 @@ fun HomePriceCard(
     selectedRegion: Region?,
 ) {
     Column(
-        horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.Center
+//        horizontalAlignment = Alignment.CenterHorizontally,
+//        verticalArrangement = Arrangement.Center
     ) {
         if (selectedRegion == null) {
             LoadingScreen()
@@ -220,14 +229,20 @@ fun HomePriceCard(
             verticalArrangement = Arrangement.Top,
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            val label = "Strømpris akkurat nå i ${selectedRegion?.name}"
+            val label = "Nåværende strømpris i region: ${selectedRegion?.name}"
             Spacer(modifier = Modifier.height(8.dp))
-            PriceRow(
-                icon = null,
-                label = label,
-                price = it.NOK_per_kWh,
-                time = it.getTimeRange()
-            )
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.Center
+            ) {
+                PriceRow(
+                    icon = null,
+                    label = label,
+                    price = it.NOK_per_kWh,
+                    time = it.getTimeRange()
+                )
+            }
+
             Column(
                 modifier = Modifier
                     .fillMaxSize(),

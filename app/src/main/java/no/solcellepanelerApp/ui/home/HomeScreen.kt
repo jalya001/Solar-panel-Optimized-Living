@@ -211,6 +211,8 @@ fun HomeScreen(
                 style = MaterialTheme.typography.displaySmall,
 //                content = { PanelAnimation() },
                 color = MaterialTheme.colorScheme.tertiary
+//                color = MaterialTheme.colorScheme.primary
+//                color = MaterialTheme.colorScheme.secondary
             )
 
             Row(
@@ -241,8 +243,11 @@ fun HomeScreen(
                             Text(
                                 "LIVE ENERGY $timenow:00 ",
                                 style = MaterialTheme.typography.titleLarge,
-                                color = MaterialTheme.colorScheme.tertiary
+                                color = MaterialTheme.colorScheme.secondary
+//                                color = MaterialTheme.colorScheme.tertiary Oransje fargen. bare å fjerne kommentaren her hvis dere vil bruke oransj d
                             )
+                            Spacer(modifier = Modifier.height(10.dp))
+
                             if (currentHourValueny != null) {
                                 Text(
                                     text = currentHourValueny?.let {
@@ -273,7 +278,7 @@ fun HomeScreen(
                     modifier = Modifier
                         .weight(1f)
                         .height(400.dp),
-                    style = MaterialTheme.typography.displaySmall,
+                    style = MaterialTheme.typography.headlineSmall,
                     content = {
                         Column(
                             modifier = Modifier
@@ -286,7 +291,8 @@ fun HomeScreen(
                                 Text(
                                     text = "Se strømprisene!",
                                     style = MaterialTheme.typography.titleLarge,
-                                    color = MaterialTheme.colorScheme.tertiary,
+                                    color = MaterialTheme.colorScheme.secondary
+//                                color = MaterialTheme.colorScheme.tertiary Oransje fargen. bare å fjerne kommentaren her hvis dere vil bruke oransj d
                                 )
                                 Spacer(modifier = Modifier.height(10.dp))
 
