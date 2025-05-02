@@ -21,39 +21,49 @@ import kotlin.math.sin
 import kotlin.math.sqrt
 
 class FrostApi {
-    private val basicAuth = "4868c766-7477-484f-b767-6e5776a60a26:49ee1988-7461-4452-97a3-8ae5cbb133d7"
+    private val basicAuth =
+        "4868c766-7477-484f-b767-6e5776a60a26:49ee1988-7461-4452-97a3-8ae5cbb133d7"
     private val encodedAuth = java.util.Base64.getEncoder().encodeToString(basicAuth.toByteArray())
-    private val encode = { json: String -> URLEncoder.encode(json, StandardCharsets.UTF_8.toString()) }
+    private val encode =
+        { json: String -> URLEncoder.encode(json, StandardCharsets.UTF_8.toString()) }
     private val radiusIncrement = 20.0
 
 
     @Serializable
     private data class StationsResponse(
-        val data: Data
+        val data: Data,
     )
 
     @Serializable
     private data class Data(
         val tstype: String,
-        val tseries: List<TSeries>
+        val tseries: List<TSeries>,
     )
 
     @Serializable
     private data class TSeries(
         val header: Header,
-        val observations: String? = null
+        val observations: String? = null,
     )
 
     @Serializable
     private data class Header(
         val id: Id,
         val extra: Extra,
-        val available: TimeRange? = null
+        val available: TimeRange? = null,
     )
+
     private object IntAsStringSerializer : KSerializer<String> {
-        override val descriptor: SerialDescriptor = PrimitiveSerialDescriptor("IntAsString", PrimitiveKind.STRING)
-        override fun serialize(encoder: Encoder, value: String) { encoder.encodeString(value) }
-        override fun deserialize(decoder: Decoder): String { return decoder.decodeInt().toString() }
+        override val descriptor: SerialDescriptor =
+            PrimitiveSerialDescriptor("IntAsString", PrimitiveKind.STRING)
+
+        override fun serialize(encoder: Encoder, value: String) {
+            encoder.encodeString(value)
+        }
+
+        override fun deserialize(decoder: Decoder): String {
+            return decoder.decodeInt().toString()
+        }
     }
 
     @Serializable
@@ -62,14 +72,14 @@ class FrostApi {
         val parameterid: Int,
         val sensor: Int,
         @Serializable(with = IntAsStringSerializer::class)
-        val stationid: String
+        val stationid: String,
     )
 
     @Serializable
     private data class Extra(
         val element: Element,
         val station: Station,
-        val timeseries: TimeSeries
+        val timeseries: TimeSeries,
     )
 
     @Serializable
@@ -77,62 +87,65 @@ class FrostApi {
         val description: String,
         val id: String,
         val name: String,
-        val unit: String
+        val unit: String,
     )
 
     @Serializable
     private data class Station(
         val location: List<Location>,
-        val shortname: String? = null
+        val shortname: String? = null,
     )
 
     @Serializable
     private data class Location(
         @Serializable(with = ZonedDateTimeSerializer::class) val from: ZonedDateTime,
         @Serializable(with = ZonedDateTimeSerializer::class) val to: ZonedDateTime,
-        val value: LocationValue
+        val value: LocationValue,
     )
 
     @Serializable
     private data class LocationValue(
         val latitude: Double? = null, // Why are these nullable if we later nonnull assert them?
         val longitude: Double? = null,
-        @SerialName("elevation(masl/hs)") val elevation: Double? = null
+        @SerialName("elevation(masl/hs)") val elevation: Double? = null,
     )
 
     @Serializable
     private data class TimeSeries(
         val quality: Quality,
         val timeoffset: String,
-        val timeresolution: String? = null
+        val timeresolution: String? = null,
     )
 
     @Serializable
     private data class Quality(
         val exposure: List<QualityEntry>,
-        val performance: List<QualityEntry>
+        val performance: List<QualityEntry>,
     )
 
     @Serializable
     private data class QualityEntry(
         val from: String,
         val to: String,
-        val value: String
+        val value: String,
     )
 
     @Serializable
     private data class TimeRange(
         @Serializable(with = ZonedDateTimeSerializer::class) val from: ZonedDateTime? = null,
-        @Serializable(with = ZonedDateTimeSerializer::class) val to: ZonedDateTime? = null
+        @Serializable(with = ZonedDateTimeSerializer::class) val to: ZonedDateTime? = null,
     )
 
 
     private object ZonedDateTimeSerializer : KSerializer<ZonedDateTime> {
         private val formatter = DateTimeFormatter.ISO_ZONED_DATE_TIME
-        override val descriptor: SerialDescriptor = PrimitiveSerialDescriptor("ZonedDateTime", PrimitiveKind.STRING)
+        override val descriptor: SerialDescriptor =
+            PrimitiveSerialDescriptor("ZonedDateTime", PrimitiveKind.STRING)
+
         override fun serialize(encoder: Encoder, value: ZonedDateTime) {
             encoder.encodeString(value.format(formatter))
         }
+
         override fun deserialize(decoder: Decoder): ZonedDateTime {
             return ZonedDateTime.parse(decoder.decodeString(), formatter)
         }
@@ -152,14 +165,14 @@ class FrostApi {
         val offset: Int,
         val totalItemCount: Int,
         val currentLink: String,
-        val data: List<ObservationData>
+        val data: List<ObservationData>,
     )
 
     @Serializable
     private data class ObservationData(
         val sourceId: String,
         @Serializable(with = ZonedDateTimeSerializer::class) val referenceTime: ZonedDateTime,
-        val observations: List<Observation>
+        val observations: List<Observation>,
     )
 
     @Serializable
@@ -173,14 +186,14 @@ class FrostApi {
         val performanceCategory: String,
         val exposureCategory: String,
         val qualityCode: Int? = null,
-        val level: ObservationLevel? = null
+        val level: ObservationLevel? = null,
     )
 
     @Serializable
     private data class ObservationLevel(
         val levelType: String,
         val unit: String,
-        val value: Int
+        val value: Int,
     )
 
 
@@ -204,7 +217,15 @@ class FrostApi {
             smallString += """{"type":"polygon","pos":["""
             coordinateList.forEachIndexed { index2, coordinates ->
                 if (index2 > 0) smallString += ","
-                smallString += """{"lat":${String.format(java.util.Locale.US, "%.4f", coordinates.first).toDouble()},"lon":${String.format(java.util.Locale.US, "%.4f", coordinates.second).toDouble()}}""" // They say on api.met.no ToS 4 decimals is max, so 4 it is
+                smallString += """{"lat":${
+                    String.format(
+                        java.util.Locale.US,
+                        "%.4f",
+                        coordinates.first
+                    ).toDouble()
+                },"lon":${
+                    String.format(java.util.Locale.US, "%.4f", coordinates.second).toDouble()
+                }}""" // They say on api.met.no ToS 4 decimals is max, so 4 it is
             }
             smallString += "]}"
             bigString += smallString
@@ -254,34 +275,51 @@ class FrostApi {
         NEAREST, INTERPOLATION, EXTRAPOLATION, FAIL // Fail means you need to add a guesstimate value in the viewmodel or something
     }
 
-    private fun setModes(modes: MutableMap<String, Mode>, searchAdvancements: Map<String, MutableMap<Quadrant, Int>>) {
+    private fun setModes(
+        modes: MutableMap<String, Mode>,
+        searchAdvancements: Map<String, MutableMap<Quadrant, Int>>,
+    ) {
         println(modes)
         searchAdvancements.forEach { (element, quadrants) ->
-            if (modes[element] != Mode.NEAREST && modes[element] != Mode.FAIL) resetMode(modes, element, quadrants)
+            if (modes[element] != Mode.NEAREST && modes[element] != Mode.FAIL) resetMode(
+                modes,
+                element,
+                quadrants
+            )
         }
         println(modes)
     }
 
     private fun isDiagonal(q1: Quadrant, q2: Quadrant): Boolean {
-        return !((q1.value.first == q2.value.first && abs(q1.value.second - q2.value.second) == 2) || (q1.value.second == q2.value.second && abs(q1.value.first - q2.value.first) == 2))
+        return !((q1.value.first == q2.value.first && abs(q1.value.second - q2.value.second) == 2) || (q1.value.second == q2.value.second && abs(
+            q1.value.first - q2.value.first
+        ) == 2))
     }
 
-    private fun resetMode(modes: MutableMap<String, Mode>, element: String, quadrants: MutableMap<Quadrant, Int>) {
+    private fun resetMode(
+        modes: MutableMap<String, Mode>,
+        element: String,
+        quadrants: MutableMap<Quadrant, Int>,
+    ) {
         val exceeders = mutableListOf<Quadrant>()
         quadrants.forEach { (quadrant, value) ->
             if (value >= 4) exceeders.add(quadrant)
         }
         println(element)
         println("exceeders: $exceeders")
-        if (exceeders.size <= 1 || (exceeders.size == 2 && isDiagonal(exceeders[0], exceeders[1]))) {
-            println("SET TO INTERPOLATION: "+element)
+        if (exceeders.size <= 1 || (exceeders.size == 2 && isDiagonal(
+                exceeders[0],
+                exceeders[1]
+            ))
+        ) {
+            println("SET TO INTERPOLATION: " + element)
             modes[element] = Mode.INTERPOLATION
         } else if (exceeders.size == 4) {
             modes[element] = Mode.FAIL
-            println("SET TO FAIL: "+element)
+            println("SET TO FAIL: " + element)
         } else if (modes[element] != Mode.EXTRAPOLATION) {
             modes[element] = Mode.EXTRAPOLATION
-            println("SET TO EXTRAPOLATION: "+element)
+            println("SET TO EXTRAPOLATION: " + element)
         }
     }
 
@@ -302,7 +340,7 @@ class FrostApi {
     private fun makeAnnularSector(
         center: LocationValue,
         radius: Double,
-        quadrant: Quadrant
+        quadrant: Quadrant,
     ): List<Pair<Double, Double>> {
         val points = 5
         val sectorPoints = mutableListOf<Pair<Double, Double>>()
@@ -343,10 +381,11 @@ class FrostApi {
         searchAdvancements: Map<String, MutableMap<Quadrant, Int>>,
         elementsConst: List<String>,
         timeRange: TimeRange,
-        modes: MutableMap<String, Mode>
+        modes: MutableMap<String, Mode>,
     ): String {
         val elements: String
-        val polygons: MutableList<List<Pair<Double, Double>>> = mutableListOf() // if two elements in the same quadrant are at different progress, it makes another polygon. if they are at the same progress, it ignores it if it already made a polygon there. change to LocationValue
+        val polygons: MutableList<List<Pair<Double, Double>>> =
+            mutableListOf() // if two elements in the same quadrant are at different progress, it makes another polygon. if they are at the same progress, it ignores it if it already made a polygon there. change to LocationValue
 
         //one polygonmaking function, which simply checks "if progress is at one" to know if to make inner circle or not and combine the polygons into one
 
@@ -369,16 +408,24 @@ class FrostApi {
                     missingElements.add(element)
                 }
             }
-            val currentAreas: Map<Quadrant, MutableSet<Int>> = enumValues<Quadrant>().associateWith { mutableSetOf() }
+            val currentAreas: Map<Quadrant, MutableSet<Int>> =
+                enumValues<Quadrant>().associateWith { mutableSetOf() }
             requestedQuadrants.forEach { (element, quadrants) ->
                 quadrants.forEach { quadrant ->
                     println("increasing $quadrant ${searchAdvancements[element]!![quadrant]} with one")
-                    searchAdvancements[element]!![quadrant] = searchAdvancements[element]!![quadrant]!! + 1
+                    searchAdvancements[element]!![quadrant] =
+                        searchAdvancements[element]!![quadrant]!! + 1
                     val next = searchAdvancements[element]!![quadrant]!!
                     if (!currentAreas[quadrant]!!.contains(next)) {
                         currentAreas[quadrant]!!.add(next)
                         val radius = next * radiusIncrement
-                        polygons.add(makeAnnularSector(center, radius, quadrant)) // BUG: sometimes it requests multiple of these in the same quadrant. why?
+                        polygons.add(
+                            makeAnnularSector(
+                                center,
+                                radius,
+                                quadrant
+                            )
+                        ) // BUG: sometimes it requests multiple of these in the same quadrant. why?
                     }
                 }
             }
@@ -387,15 +434,19 @@ class FrostApi {
 
         val url = buildString {
             append("https://frost-beta.met.no/api/v1/obs/met.no/filter/get?incobs=false&elementids=$elements")
-            append("&time="+encode(formatTime(timeRange)))
-            append("&inside="+encode(formatPolygons(polygons)))
+            append("&time=" + encode(formatTime(timeRange)))
+            append("&inside=" + encode(formatPolygons(polygons)))
         }
         println(url)
 
         return url
     }
 
-    private fun testIDWWeight(searchAdvancements: Map<String, MutableMap<Quadrant, Int>>, element: String, quadrant: Quadrant): Double {
+    private fun testIDWWeight(
+        searchAdvancements: Map<String, MutableMap<Quadrant, Int>>,
+        element: String,
+        quadrant: Quadrant,
+    ): Double {
         var sum = 0.0
         var thisDistance = 0.0
         searchAdvancements[element]!!.forEach { (searchedQuadrant, distance) ->
@@ -408,7 +459,7 @@ class FrostApi {
             val weight = 1.0 / useDistance.toDouble().pow(2) // We know distance is never 0
             sum += weight
         }
-        return (1/thisDistance.toDouble().pow(2)) / sum
+        return (1 / thisDistance.toDouble().pow(2)) / sum
         // connect this weighing to determining if a quadrant is defunct, and thus whether to extrapolate, guesstimate, etc.
     }
 
@@ -422,9 +473,12 @@ class FrostApi {
         modesData: MutableMap<String, Pair<MutableList<Pair<String, Double>>, Boolean>>,
         elementConst: List<String>,
         searchAdvancements: Map<String, MutableMap<Quadrant, Int>>,
-        usableStations: Map<String, Map<Quadrant, MutableList<String>>>
+        usableStations: Map<String, Map<Quadrant, MutableList<String>>>,
     ): MutableMap<String, MutableSet<Quadrant>> {
-        val appendix: Map<String, Map<Quadrant, MutableList<Pair<String, Double>>>> = elementConst.associateWith { element -> Quadrant.values().associateWith { mutableListOf() } }
+        val appendix: Map<String, Map<Quadrant, MutableList<Pair<String, Double>>>> =
+            elementConst.associateWith { element ->
+                Quadrant.values().associateWith { mutableListOf() }
+            }
         val requestedQuadrants: MutableMap<String, MutableSet<Quadrant>> = mutableMapOf()
 
         if (responseBody != null) {
@@ -447,15 +501,18 @@ class FrostApi {
                     val index = modesData[elementid]!!.first.binarySearchBy(distance) { it.second }
                     val insertionPoint = if (index < 0) -index - 1 else index
                     modesData[elementid]!!.first.add(insertionPoint, Pair(stationid, distance))
-                    println("SET "+elementid+" TO NEAREST")
+                    println("SET " + elementid + " TO NEAREST")
                 }
 
                 appendix[elementid]!![quadrant]!!.add(Pair(stationid, distance))
             }
         }
         stationQueues.forEach { (element, quadrants) ->
-            resetMode(modes, element, searchAdvancements[element]!!) // idk where to put this
-            val mode = modes[element]!!
+            if (modes[element]!! != Mode.NEAREST) resetMode(
+                modes,
+                element,
+                searchAdvancements[element]!!
+            ) // idk where to put this            val mode = modes[element]!!
 
             var queuableOrUsableStationsCount = 0 // Does not need to be muted later
             usableStations[element]!!.forEach { (quadrant, usableQueue) -> // refractor
@@ -469,11 +526,19 @@ class FrostApi {
             println(queuableOrUsableStationsCount)
             quadrants.forEach { (quadrant, queue) ->
                 if (responseBody != null) {
-                    appendix[element]!![quadrant]!!.sortBy{ it.second }
+                    appendix[element]!![quadrant]!!.sortBy { it.second }
                     queue.addAll(appendix[element]!![quadrant]!!.map { it.first })
                 }
                 if (queue.size == 0) {
-                    addToRequestedQuadrants(requestedQuadrants, searchAdvancements, usableStations, queuableOrUsableStationsCount, element, quadrant, mode)
+                    addToRequestedQuadrants(
+                        requestedQuadrants,
+                        searchAdvancements,
+                        usableStations,
+                        queuableOrUsableStationsCount,
+                        element,
+                        quadrant,
+                        mode
+                    )
                 }
             }
         }
@@ -481,11 +546,23 @@ class FrostApi {
         return requestedQuadrants
     }
 
-    private fun addToRequestedQuadrants(requestedQuadrants: MutableMap<String, MutableSet<Quadrant>>, searchAdvancements: Map<String, MutableMap<Quadrant, Int>>, usableStations: Map<String, Map<Quadrant, MutableList<String>>>, currentStationsCount: Int, element: String, quadrant: Quadrant, mode: Mode) {
+    private fun addToRequestedQuadrants(
+        requestedQuadrants: MutableMap<String, MutableSet<Quadrant>>,
+        searchAdvancements: Map<String, MutableMap<Quadrant, Int>>,
+        usableStations: Map<String, Map<Quadrant, MutableList<String>>>,
+        currentStationsCount: Int,
+        element: String,
+        quadrant: Quadrant,
+        mode: Mode,
+    ) {
         if (mode == Mode.INTERPOLATION) { // tests if it is worth to keep searching in a quadrant
             if (
                 usableStations[element]!![quadrant]!!.size == 0 &&
-                (currentStationsCount < 3 || testIDWWeight(searchAdvancements, element, quadrant) > 0.04) // Or save on calculating by simply checking if it has searched 4 times?
+                (currentStationsCount < 3 || testIDWWeight(
+                    searchAdvancements,
+                    element,
+                    quadrant
+                ) > 0.04) // Or save on calculating by simply checking if it has searched 4 times?
                 && searchAdvancements[element]!![quadrant]!! <= 3
             ) {
                 /*println(usableStations)
@@ -501,12 +578,17 @@ class FrostApi {
         }
     }
 
-    private fun buildStationDataUrl(stationids: MutableSet<String>, missingElements: MutableSet<String>, timeRange: TimeRange): String {
+    private fun buildStationDataUrl(
+        stationids: MutableSet<String>,
+        missingElements: MutableSet<String>,
+        timeRange: TimeRange,
+    ): String {
         val sources = stationids.joinToString(",") { "SN$it" }
         val time = encode(formatTime(timeRange))
         val elements = encode(missingElements.joinToString(","))
 
-        val url = "https://frost.met.no/observations/v0.jsonld?sources=$sources&referencetime=$time&elements=$elements"
+        val url =
+            "https://frost.met.no/observations/v0.jsonld?sources=$sources&referencetime=$time&elements=$elements"
 
         println(url)
 
@@ -525,9 +607,9 @@ class FrostApi {
 
     private fun ZonedDateTime.toIntervalBucket(interval: TimeInterval): Int {
         return when (interval) {
-            TimeInterval.SECOND -> this.second+1
-            TimeInterval.MINUTE -> this.minute+1
-            TimeInterval.HOUR -> this.hour+1
+            TimeInterval.SECOND -> this.second + 1
+            TimeInterval.MINUTE -> this.minute + 1
+            TimeInterval.HOUR -> this.hour + 1
             TimeInterval.DAY -> this.dayOfMonth
             TimeInterval.WEEK -> this.get(java.time.temporal.IsoFields.WEEK_OF_WEEK_BASED_YEAR)
             TimeInterval.MONTH -> this.monthValue
@@ -538,10 +620,11 @@ class FrostApi {
     private fun assignData(
         rawData: ObservationsResponse,
         stationTimeData: Map<String, MutableMap<String, MutableMap<Int, Pair<Double, Int>>>>,
-        interval: TimeInterval
+        interval: TimeInterval,
     ) {
         rawData.data.forEach { observationData ->
-            val id = observationData.sourceId.substringBeforeLast(":").removePrefix("SN") // Because Frost non-beta puts :0 at the end of station ids for whatever reason
+            val id = observationData.sourceId.substringBeforeLast(":")
+                .removePrefix("SN") // Because Frost non-beta puts :0 at the end of station ids for whatever reason
             val timeKey = observationData.referenceTime.toIntervalBucket(interval)
             observationData.observations.forEach { observation ->
                 val element = observation.elementId
@@ -563,7 +646,8 @@ class FrostApi {
                 }
                 if (timeData.contains(timeKey)) {
                     val (prevValue, prevCount) = stationTimeData[element]!![id]!![timeKey]!!
-                    stationTimeData[element]!![id]!![timeKey] = Pair(prevValue+useValue, prevCount+1)
+                    stationTimeData[element]!![id]!![timeKey] =
+                        Pair(prevValue + useValue, prevCount + 1)
                 } else {
                     stationTimeData[element]!![id]!![timeKey] = Pair(useValue, 1)
                 }
@@ -579,34 +663,33 @@ class FrostApi {
         stationTimeData: Map<String, MutableMap<String, MutableMap<Int, Pair<Double, Int>>>>,
         searchAdvancements: Map<String, MutableMap<Quadrant, Int>>,
         modes: MutableMap<String, Mode>,
-        modesData: MutableMap<String, Pair<MutableList<Pair<String, Double>>, Boolean>>
+        modesData: MutableMap<String, Pair<MutableList<Pair<String, Double>>, Boolean>>,
     ): Pair<MutableSet<String>, MutableSet<String>> { // Returns missingids and missingelements
         val checkQuadrants: MutableMap<String, MutableSet<Quadrant>> = mutableMapOf()
         val missingIds: MutableSet<String> = mutableSetOf()
         val missingElements: MutableSet<String> = mutableSetOf()
 
         usableStations.forEach { (element, quadrants) ->
-            println("mode of "+element+" is "+modes[element]!!.toString())
+            println("mode of " + element + " is " + modes[element]!!.toString())
             if (modes[element]!! == Mode.NEAREST && modesData[element]!!.second == false) {
                 println(modesData)
                 val stationid = modesData[element]!!.first[0].first
                 if (stationid in stationTimeData[element]!! && stationTimeData[element]!![stationid]!!.size == 12) {
-                    println("satisfied station "+stationid)
+                    println("satisfied station " + stationid)
                     modesData[element] = Pair(modesData[element]!!.first, true)
                 } else {
                     if (modes[element] == Mode.NEAREST && modesData[element]!!.first[0].first == stationid) {
-                        println("popped station "+stationid)
+                        println("popped station " + stationid)
                         modesData[element]!!.first.removeAt(0)
                     }
                 }
                 if (modesData[element]!!.second == false) {
                     if (modesData[element]!!.first.isNotEmpty()) {
-                        println("ELEMENT GOOD "+element)
+                        println("ELEMENT GOOD " + element)
                         missingElements.add(element)
                         missingIds.add(modesData[element]!!.first[0].first)
-                    }
-                    else {
-                        println("RESETTING "+element)
+                    } else {
+                        println("RESETTING " + element)
                         resetMode(modes, element, searchAdvancements[element]!!)
                     }
                 }
@@ -616,16 +699,17 @@ class FrostApi {
                     val advancement = queueAdvancements[element]!![quadrant]!!
                     if (advancement > 0) {
                         if (advancement <= stationQueues[element]!![quadrant]!!.size) {
-                            val stationid = stationQueues[element]!![quadrant]!![advancement-1]
+                            val stationid = stationQueues[element]!![quadrant]!![advancement - 1]
                             stationTimeData[element]!![stationid]?.let { data ->
                                 if (data.size == 12) {
-                                    println(stationid+" is usable")
+                                    println(stationid + " is usable")
                                     usableQueue.add(stationid)
                                 } else {
-                                    println("NON USABLE "+stationid+" SIZE OF "+data.size.toString())
+                                    println("NON USABLE " + stationid + " SIZE OF " + data.size.toString())
                                 }
                             }
-                            queueAdvancements[element]!![quadrant] = (advancement * -1) // Means it has already tested this. forgot where this is used
+                            queueAdvancements[element]!![quadrant] =
+                                (advancement * -1) // Means it has already tested this. forgot where this is used
                         }
                     }
                     if (modes[element]!! == Mode.INTERPOLATION) {
@@ -645,13 +729,21 @@ class FrostApi {
             if (mode == Mode.INTERPOLATION || mode == Mode.EXTRAPOLATION) { // refractor to only one if of this?
                 val usableStationsCount = usableStations[element]!!.count { it.value.isNotEmpty() }
                 quadrants.forEach { quadrant ->
-                    val nextAdvancement = abs(queueAdvancements[element]!![quadrant]!!)+1
+                    val nextAdvancement = abs(queueAdvancements[element]!![quadrant]!!) + 1
                     if (nextAdvancement <= stationQueues[element]!![quadrant]!!.size) {
-                        missingIds.add(stationQueues[element]!![quadrant]!![nextAdvancement-1])
+                        missingIds.add(stationQueues[element]!![quadrant]!![nextAdvancement - 1])
                         missingElements.add(element)
                         queueAdvancements[element]!![quadrant] = nextAdvancement
                     } else {
-                        addToRequestedQuadrants(requestedQuadrants, searchAdvancements, usableStations, usableStationsCount, element, quadrant, mode)
+                        addToRequestedQuadrants(
+                            requestedQuadrants,
+                            searchAdvancements,
+                            usableStations,
+                            usableStationsCount,
+                            element,
+                            quadrant,
+                            mode
+                        )
                     }
                 }
             }
@@ -668,7 +760,7 @@ class FrostApi {
         rawTimeRange: Pair<ZonedDateTime, ZonedDateTime> = Pair(
             ZonedDateTime.of(1800, 1, 1, 0, 0, 0, 0, ZoneId.of("UTC")),
             ZonedDateTime.now(ZoneId.of("UTC"))
-        )
+        ),
     ): Result<MutableMap<String, Array<Double>>> {
         val timeRange = TimeRange(from = rawTimeRange.first, to = rawTimeRange.second)
         val center = LocationValue(lat, lon, elevation)
@@ -676,14 +768,27 @@ class FrostApi {
         //val center = LocationValue(60.771442, 4.695727) // westmost region
         val elementsConst = elements
 
-        val stationLocations: MutableMap<String, LocationValue> = mutableMapOf() //id to distances and angle from straight up, for easy weight recalculation. if a station is already in, it does not re-add it (e.g. if same station different element)
-        val stationTimeData: Map<String, MutableMap<String, MutableMap<Int, Pair<Double, Int>>>> = elementsConst.associateWith { mutableMapOf() }// element to id to month to sum to counter. separated by elements because the same station can have multiple elements.
-        val stationQueues: Map<String, Map<Quadrant, MutableList<String>>> = elementsConst.associateWith { enumValues<Quadrant>().associateWith { mutableListOf() } } //quadrants for each element. each quadrant points to a queue of stations from the closest to the furthest. where when a station. the sorting of the queues are done before adding, not by adding
-        val queueAdvancements: Map<String, MutableMap<Quadrant, Int>> = elementsConst.associateWith { enumValues<Quadrant>().associateWith { 0 }.toMutableMap() } // elements to quadrants to a counter of where you last dropped off in the queue. they begin at one, and all indexing require -1 on it. fine to start at 1 because it begins by incrementing it with 1?? idk i forgor
-        val usableStations: Map<String, Map<Quadrant, MutableList<String>>> = elementsConst.associateWith { enumValues<Quadrant>().associateWith { mutableListOf() } } // stationQueues but only the usable stations // elements to quadrants
-        val searchAdvancements: Map<String, MutableMap<Quadrant, Int>> = elementsConst.associateWith { enumValues<Quadrant>().associateWith { 1 }.toMutableMap() }
-        val modes: MutableMap<String, Mode> = elementsConst.associateWith { Mode.INTERPOLATION }.toMutableMap()// elements to mode
-        val modesData: MutableMap<String, Pair<MutableList<Pair<String, Double>>, Boolean>> = elementsConst.associateWith { Pair(mutableListOf<Pair<String, Double>>(), false) }.toMutableMap()
+        val stationLocations: MutableMap<String, LocationValue> =
+            mutableMapOf() //id to distances and angle from straight up, for easy weight recalculation. if a station is already in, it does not re-add it (e.g. if same station different element)
+        val stationTimeData: Map<String, MutableMap<String, MutableMap<Int, Pair<Double, Int>>>> =
+            elementsConst.associateWith { mutableMapOf() }// element to id to month to sum to counter. separated by elements because the same station can have multiple elements.
+        val stationQueues: Map<String, Map<Quadrant, MutableList<String>>> =
+            elementsConst.associateWith { enumValues<Quadrant>().associateWith { mutableListOf() } } //quadrants for each element. each quadrant points to a queue of stations from the closest to the furthest. where when a station. the sorting of the queues are done before adding, not by adding
+        val queueAdvancements: Map<String, MutableMap<Quadrant, Int>> =
+            elementsConst.associateWith {
+                enumValues<Quadrant>().associateWith { 0 }.toMutableMap()
+            } // elements to quadrants to a counter of where you last dropped off in the queue. they begin at one, and all indexing require -1 on it. fine to start at 1 because it begins by incrementing it with 1?? idk i forgor
+        val usableStations: Map<String, Map<Quadrant, MutableList<String>>> =
+            elementsConst.associateWith { enumValues<Quadrant>().associateWith { mutableListOf() } } // stationQueues but only the usable stations // elements to quadrants
+        val searchAdvancements: Map<String, MutableMap<Quadrant, Int>> =
+            elementsConst.associateWith {
+                enumValues<Quadrant>().associateWith { 1 }.toMutableMap()
+            }
+        val modes: MutableMap<String, Mode> =
+            elementsConst.associateWith { Mode.INTERPOLATION }.toMutableMap()// elements to mode
+        val modesData: MutableMap<String, Pair<MutableList<Pair<String, Double>>, Boolean>> =
+            elementsConst.associateWith { Pair(mutableListOf<Pair<String, Double>>(), false) }
+                .toMutableMap()
 
         var requestedQuadrants: MutableMap<String, MutableSet<Quadrant>> = mutableMapOf()
         var first = true
@@ -693,12 +798,34 @@ class FrostApi {
         while (first || requestedQuadrants.isNotEmpty()) {
             first = false
             while (true) {
-                setModes(modes, searchAdvancements) // if it has gone 150km in two directions (which means it has not found anything in them) (it can well interpolate with three quadrants, but four is optimal). if the two directions are diagonal to each other, it's also fine however. if it has found nothing in 150km in all directions, it goes to guesstimation
-                val url = buildStationsUrl(center, requestedQuadrants, searchAdvancements, elementsConst, timeRange, modes)
-                val result: Result<StationsResponse?> = client.httpRequest(url, mapOf("Authorization" to "Basic $encodedAuth"))
+                setModes(
+                    modes,
+                    searchAdvancements
+                ) // if it has gone 150km in two directions (which means it has not found anything in them) (it can well interpolate with three quadrants, but four is optimal). if the two directions are diagonal to each other, it's also fine however. if it has found nothing in 150km in all directions, it goes to guesstimation
+                val url = buildStationsUrl(
+                    center,
+                    requestedQuadrants,
+                    searchAdvancements,
+                    elementsConst,
+                    timeRange,
+                    modes
+                )
+                val result: Result<StationsResponse?> =
+                    client.httpRequest(url, mapOf("Authorization" to "Basic $encodedAuth"))
                 callCounter += 1
                 result.onSuccess { body ->
-                    requestedQuadrants = assignStations(center, body, stationLocations, stationQueues, queueAdvancements, modes, modesData, elementsConst, searchAdvancements, usableStations) // extrapolation makes it stop requesting quadrants it doesn't have
+                    requestedQuadrants = assignStations(
+                        center,
+                        body,
+                        stationLocations,
+                        stationQueues,
+                        queueAdvancements,
+                        modes,
+                        modesData,
+                        elementsConst,
+                        searchAdvancements,
+                        usableStations
+                    ) // extrapolation makes it stop requesting quadrants it doesn't have
                 }.onFailure { error ->
                     println(error)
                     return Result.failure(error)
@@ -706,14 +833,28 @@ class FrostApi {
                 if (requestedQuadrants.isEmpty()) break
             }
             while (true) {
-                val (missingIds, missingElements) = getNexts(requestedQuadrants, usableStations, stationQueues, queueAdvancements, stationTimeData, searchAdvancements, modes, modesData) // goes through the queue to where we last left off. don't even bother with timerange finding, just get from 1800 to currentdate. if the queue is at max, adds the missing data to requestedQuadrants instead of checkQuadrants
+                val (missingIds, missingElements) = getNexts(
+                    requestedQuadrants,
+                    usableStations,
+                    stationQueues,
+                    queueAdvancements,
+                    stationTimeData,
+                    searchAdvancements,
+                    modes,
+                    modesData
+                ) // goes through the queue to where we last left off. don't even bother with timerange finding, just get from 1800 to currentdate. if the queue is at max, adds the missing data to requestedQuadrants instead of checkQuadrants
                 if (missingIds.isEmpty()) break
                 val url = buildStationDataUrl(missingIds, missingElements, timeRange)
-                val result: Result<ObservationsResponse?> = client.httpRequest(url, mapOf("Authorization" to "Basic $encodedAuth"))
+                val result: Result<ObservationsResponse?> =
+                    client.httpRequest(url, mapOf("Authorization" to "Basic $encodedAuth"))
                 callCounter += 1
                 result.onSuccess { body ->
                     if (body != null) {
-                        assignData(body, stationTimeData, TimeInterval.MONTH) // averages the data into stationTimeData. choosing to put data there depending on the mode it will use later, since calculating all of them will be too expensive. if a data does not have a combined full year available, it requests a new one. if data wasn't sufficient, it advances the queue on it. if the data was found, it adds it to usableStations, which we will use for interpolation. if for extrapolation, we need multiple in usableStations
+                        assignData(
+                            body,
+                            stationTimeData,
+                            TimeInterval.MONTH
+                        ) // averages the data into stationTimeData. choosing to put data there depending on the mode it will use later, since calculating all of them will be too expensive. if a data does not have a combined full year available, it requests a new one. if data wasn't sufficient, it advances the queue on it. if the data was found, it adds it to usableStations, which we will use for interpolation. if for extrapolation, we need multiple in usableStations
                     }
                 }.onFailure { error ->
                     println(error)
@@ -727,7 +868,14 @@ class FrostApi {
         println("success?")
         println(callCounter)
 
-        val dataF = formatData(center, stationLocations, stationTimeData, usableStations, modes, modesData) // also calculates the final weights. guesstimation also done here
+        val dataF = formatData(
+            center,
+            stationLocations,
+            stationTimeData,
+            usableStations,
+            modes,
+            modesData
+        ) // also calculates the final weights. guesstimation also done here
         //File("testfile123.txt").writeText(Json.encodeToString(dataF))
         dataF.forEach { (key, values) ->
             println("$key: ${values.contentToString()}")
@@ -742,14 +890,15 @@ class FrostApi {
         stationTimeData: Map<String, MutableMap<String, MutableMap<Int, Pair<Double, Int>>>>,
         usableStations: Map<String, Map<Quadrant, MutableList<String>>>,
         modes: MutableMap<String, Mode>,
-        modesData: MutableMap<String, Pair<MutableList<Pair<String, Double>>, Boolean>>
+        modesData: MutableMap<String, Pair<MutableList<Pair<String, Double>>, Boolean>>,
     ): MutableMap<String, Array<Double>> { // returns elements to month averages
         fun adjustBasedOnElement(element: String): (Double, Int, MutableMap<String, Array<Double>>, Array<Double>) -> Double? {
             return when (element) {
                 "mean(air_temperature P1M)" -> { elevationDifference: Double, _, _, _ -> elevationDifference * -0.0065 }
                 "mean(snow_coverage_type P1M)" -> { _, index, prevs, tempGainedArray ->
                     println(tempGainedArray[index])
-                    val originalTemp: Double? = prevs["mean(air_temperature P1M)"]?.getOrNull(index)?.let { it - tempGainedArray[index] }
+                    val originalTemp: Double? = prevs["mean(air_temperature P1M)"]?.getOrNull(index)
+                        ?.let { it - tempGainedArray[index] }
                     if (originalTemp == null) null
                     if (tempGainedArray[index] > 0.0 || (originalTemp!! + tempGainedArray[index] < 5.0)) {
                         -tempGainedArray[index] * 0.08
@@ -757,6 +906,7 @@ class FrostApi {
                         0.0
                     }
                 }
+
                 "mean(cloud_area_fraction P1M)" -> { elevationDifference: Double, _, _, _ -> -elevationDifference / 2000.0 }
                 else -> { _, _, _, _ -> null }
             }
@@ -773,9 +923,10 @@ class FrostApi {
             val mode = modes[element]!!
             if (mode == Mode.NEAREST) {
                 val nearestId = modesData[element]!!.first[0].first
-                println("NEAREST OF "+element+" THAT IS "+nearestId)
+                println("NEAREST OF " + element + " THAT IS " + nearestId)
                 val monthArray = averageArray(stationTimeData[element]!![nearestId]!!, 12)
-                resultsFormatted[element] = monthArray // It isn't set to Mode.NEAREST without there being something, and it always gets set out if it turns out there isn't
+                resultsFormatted[element] =
+                    monthArray // It isn't set to Mode.NEAREST without there being something, and it always gets set out if it turns out there isn't
                 dataElevation = stationLocations[nearestId]!!.elevation
             } else if (mode == Mode.INTERPOLATION) {
                 val valuesHolder: MutableMap<String, Array<Double>> = mutableMapOf()
@@ -791,20 +942,33 @@ class FrostApi {
                 resultsFormatted[element] = averagePair.first
                 dataElevation = averagePair.second
             } else if (mode == Mode.EXTRAPOLATION) {
-                println("EXTRAPOLATE "+element)
+                println("EXTRAPOLATE " + element)
                 val intervalLength = 12 /*TBD: FIX .referenceTime.toIntervalBucket(interval)*/
-                val interceptsArray: Array<Pair<Double, Int>> = Array(intervalLength) { Pair(0.0, 0) } // index is month, sum to counter
+                val interceptsArray: Array<Pair<Double, Int>> =
+                    Array(intervalLength) { Pair(0.0, 0) } // index is month, sum to counter
                 var elevationSum: Double? = 0.0
                 var elevationCounter = 0
                 usableStations[element]!!.forEach { (_, stations) ->
                     if (stations.size >= 2) {
                         val distanceList: MutableList<Pair<Double, Array<Double>>> = mutableListOf()
                         stations.forEach { stationid ->
-                            distanceList.add(Pair(calculateDistance(center, stationLocations[stationid]!!), averageArray(stationTimeData[element]!![stationid]!!, intervalLength)))
+                            distanceList.add(
+                                Pair(
+                                    calculateDistance(
+                                        center,
+                                        stationLocations[stationid]!!
+                                    ),
+                                    averageArray(
+                                        stationTimeData[element]!![stationid]!!,
+                                        intervalLength
+                                    )
+                                )
+                            )
                             if (stationLocations[stationid]!!.elevation == null) {
                                 elevationSum = null
                             } else if (elevationSum != null) {
-                                elevationSum = elevationSum!! + stationLocations[stationid]!!.elevation!!
+                                elevationSum =
+                                    elevationSum!! + stationLocations[stationid]!!.elevation!!
                             }
                             elevationCounter++
                         }
@@ -828,12 +992,19 @@ class FrostApi {
                     if (abs(elevationDifference) > 250) {
                         val adjuster = adjustBasedOnElement(element)
                         resultsFormatted[element]!!.forEachIndexed { index, value ->
-                            val addition = adjuster(elevationDifference, index, resultsFormatted, tempGainedArray)
+                            val addition = adjuster(
+                                elevationDifference,
+                                index,
+                                resultsFormatted,
+                                tempGainedArray
+                            )
                             println("original: ${resultsFormatted[element]!![index]}")
                             if (addition != null) {
                                 println("addition: $addition")
-                                if (element == "mean(air_temperature P1M)") tempGainedArray[index] = addition
-                                resultsFormatted[element]!![index] = resultsFormatted[element]!![index] + addition
+                                if (element == "mean(air_temperature P1M)") tempGainedArray[index] =
+                                    addition
+                                resultsFormatted[element]!![index] =
+                                    resultsFormatted[element]!![index] + addition
                             }
                         }
                     }
@@ -843,18 +1014,26 @@ class FrostApi {
         return resultsFormatted
     }
 
-    private fun averageArray(timeData: MutableMap<Int, Pair<Double, Int>>, length: Int): Array<Double> {
+    private fun averageArray(
+        timeData: MutableMap<Int, Pair<Double, Int>>,
+        length: Int,
+    ): Array<Double> {
         val timeArray = Array(length) { 0.0 }
         timeData.forEach { (time, pair) ->
             val (sum, count) = pair
-            timeArray[time-1] = sum / count.toDouble()
+            timeArray[time - 1] = sum / count.toDouble()
         }
         return timeArray
     }
 
-    private fun getIDWAverages(center: LocationValue, valuesHolder: MutableMap<String, Array<Double>>, stationLocations: MutableMap<String, LocationValue>): Pair<Array<Double>, Double?> {
+    private fun getIDWAverages(
+        center: LocationValue,
+        valuesHolder: MutableMap<String, Array<Double>>,
+        stationLocations: MutableMap<String, LocationValue>,
+    ): Pair<Array<Double>, Double?> {
         val averagedArray = Array(12) { 0.0 }
-        val distances = valuesHolder.map { (id, _) -> id to calculateDistance(center, stationLocations[id]!!) }
+        val distances =
+            valuesHolder.map { (id, _) -> id to calculateDistance(center, stationLocations[id]!!) }
         val power = 2
         var rawWeightSum = 0.0
         val rawWeights: Map<String, Double> = distances.associate { (id, distance) ->
@@ -877,7 +1056,10 @@ class FrostApi {
         return Pair(averagedArray, elevationSum)
     }
 
-    private fun multiYLinearRegression(data: List<Pair<Double, Array<Double>>>, interceptsArray: Array<Pair<Double, Int>>) {
+    private fun multiYLinearRegression(
+        data: List<Pair<Double, Array<Double>>>,
+        interceptsArray: Array<Pair<Double, Int>>,
+    ) {
         val n = data.size
         val meanX = data.sumOf { it.first } / n
         val outputCount = data[0].second.size
@@ -896,15 +1078,15 @@ class FrostApi {
 
             val slope = numerator / denominator
             val intercept = meanYs[i] - slope * meanX
-            interceptsArray[i] = Pair(interceptsArray[i].first + intercept, interceptsArray[i].second + 1)
+            interceptsArray[i] =
+                Pair(interceptsArray[i].first + intercept, interceptsArray[i].second + 1)
         }
     }
 
 
-
     @Serializable
     private data class RimStationsResponse(
-        val data: List<RimStation>
+        val data: List<RimStation>,
     )
 
     @Serializable
@@ -919,17 +1101,19 @@ class FrostApi {
         val masl: Int,
         val county: String,
         val municipality: String,
-        val stationHolders: List<String>
+        val stationHolders: List<String>,
     )
 
     @Serializable
-    private data class RimGeometry( // coords in lon, lat format
+    private data class RimGeometry(
+        // coords in lon, lat format
         @SerialName("@type") val type: String,
-        val coordinates: List<Double>
+        val coordinates: List<Double>,
     )
 
 
-    suspend fun fetchRimData( // This function is for gimmick use and not implemented well
+    suspend fun fetchRimData(
+        // This function is for gimmick use and not implemented well
         client: CustomHttpClient,
         lat: Double,
         lon: Double,
@@ -937,7 +1121,7 @@ class FrostApi {
         rawTimeRange: Pair<ZonedDateTime, ZonedDateTime> = Pair(
             ZonedDateTime.of(2025, 1, 1, 0, 0, 0, 0, ZoneId.of("UTC")),
             ZonedDateTime.now(ZoneId.of("UTC"))
-        )
+        ),
     ): Result<Array<Double>> {
         val center = LocationValue(lat, lon)
         //val elements = encode(elements.joinToString(","))
@@ -945,27 +1129,43 @@ class FrostApi {
         val timeRange = TimeRange(rawTimeRange.first, rawTimeRange.second) // kotlin bad
         val formatter = DateTimeFormatter.ISO_INSTANT
 
-        val stationsUrl = "https://rim.k8s.met.no/api/v1/stations?weatherElements=$element&from=${encode(rawTimeRange.first.format(formatter))}&to=${encode(rawTimeRange.second.format(formatter))}"
+        val stationsUrl = "https://rim.k8s.met.no/api/v1/stations?weatherElements=$element&from=${
+            encode(rawTimeRange.first.format(formatter))
+        }&to=${encode(rawTimeRange.second.format(formatter))}"
         println(stationsUrl)
         val result: Result<RimStationsResponse?> = client.httpRequest(stationsUrl)
         result.onSuccess { body ->
             if (body == null) return Result.failure(ApiException(ApiError.UNKNOWN_ERROR)) // It should always get a body
             val rimStationsQueue = body.data.toMutableList() // Makes a copy
             rimStationsQueue.sortBy { rimStation ->
-                val rimLocation = LocationValue(rimStation.geometry.coordinates[1], rimStation.geometry.coordinates[0])
+                val rimLocation = LocationValue(
+                    rimStation.geometry.coordinates[1],
+                    rimStation.geometry.coordinates[0]
+                )
                 calculateDistance(center, rimLocation)
             }
-            val stationTimeData: Map<String, MutableMap<String, MutableMap<Int, Pair<Double, Int>>>> = mapOf(elementRaw to mutableMapOf())
-            while(true) {
+            val stationTimeData: Map<String, MutableMap<String, MutableMap<Int, Pair<Double, Int>>>> =
+                mapOf(elementRaw to mutableMapOf())
+            while (true) {
                 val stationid = rimStationsQueue[0].id.substringBeforeLast(":").removePrefix("SN")
-                val dataUrl = buildStationDataUrl(mutableSetOf(stationid), mutableSetOf(elementRaw), timeRange) // unmutable them later
-                val dataResult: Result<ObservationsResponse?> = client.httpRequest(dataUrl, mapOf("Authorization" to "Basic $encodedAuth")) // could use rim's for same effect but avoid using api key
+                val dataUrl = buildStationDataUrl(
+                    mutableSetOf(stationid),
+                    mutableSetOf(elementRaw),
+                    timeRange
+                ) // unmutable them later
+                val dataResult: Result<ObservationsResponse?> = client.httpRequest(
+                    dataUrl,
+                    mapOf("Authorization" to "Basic $encodedAuth")
+                ) // could use rim's for same effect but avoid using api key
                 dataResult.onSuccess { dataBody ->
                     if (dataBody != null) {
                         assignData(dataBody, stationTimeData, TimeInterval.HOUR)
                         val stationData = stationTimeData[elementRaw]!![stationid]!!
                         if (stationData.size == 24) { // Make the minimum months based on how many months in the timerange if we care enough
-                            val dataF = averageArray(stationData, 24) // make take a length and then null test for everything
+                            val dataF = averageArray(
+                                stationData,
+                                24
+                            ) // make take a length and then null test for everything
                             println(dataF.contentToString())
                             return Result.success(dataF)
                         }
