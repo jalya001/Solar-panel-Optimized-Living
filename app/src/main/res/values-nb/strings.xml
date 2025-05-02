@@ -183,7 +183,7 @@
     <!--    <string name="monthly_savings_text">Du vil spare %1$.2f kroner  i %2$s  på strøm fra solcellepaneler</string>-->
 
     <string name="monthly_savings_prefix">Du vil spare </string>
-    <string name="monthly_savings_suffix_part1"> kroner i </string>
+    <string name="monthly_savings_suffix_part1"> i </string>
     <string name="monthly_savings_suffix_part2"> på strøm fra solcellepaneler</string>
 
     <string name="yearly_savings_prefix">Du vil spare </string>

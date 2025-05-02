@@ -80,7 +80,7 @@ fun ShowMonthlySavings(
                     }
                     append(
                         AnnotatedString(
-                            String.format("%.2f", savings),
+                            String.format(" %.2f kroner", savings),
                             MaterialTheme.typography.headlineSmall.toSpanStyle()
                         )
                     )
