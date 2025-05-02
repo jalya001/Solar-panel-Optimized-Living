@@ -152,15 +152,23 @@ fun HomeScreen(
         topBar = {
             Surface(
                 modifier = Modifier
-                    .padding(top = 30.dp, start = 20.dp, end = 20.dp, bottom = 10.dp)
+                    .padding(top = 35.dp),
             ) {
-                Image(
-                    painter = painterResource(
-                        id = if (isDark) R.drawable.logo_topbar_dark else R.drawable.logo_topbar_light
-                    ),
-                    contentDescription = "",
-                    modifier = Modifier
-                )
+                Box(
+                    modifier = Modifier.fillMaxWidth()
+//                        .background(Color.Red)
+                    ,
+                    contentAlignment = Alignment.Center
+                ) {
+                    Image(
+                        painter = painterResource(
+                            id = if (isDark) R.drawable.logo_topbar_dark else R.drawable.logo_topbar_light
+                        ),
+                        contentDescription = "",
+                        modifier = Modifier
+                            .height(100.dp)
+                    )
+                }
             }
         },
         bottomBar = {
@@ -175,7 +183,8 @@ fun HomeScreen(
             modifier = Modifier
                 .fillMaxSize()
                 .padding(contentPadding)
-                .padding(5.dp),
+//                .background(Color.Blue)
+            ,
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.Center
         ) {
@@ -222,21 +231,31 @@ fun HomeScreen(
                                 style = MaterialTheme.typography.titleLarge,
                                 color = MaterialTheme.colorScheme.tertiary
                             )
-                            Text(
-                                text = currentHourValueny?.let {
-                                    String.format(
-                                        "%.4f",
-                                        it
-                                    ) + " kW/m²"
-                                } ?: "No data",
-                                // Optional fallback for null
-                                style = MaterialTheme.typography.headlineSmall,
-                                fontWeight = FontWeight.ExtraLight,
-                                color = MaterialTheme.colorScheme.primary
-                            )
+//                            Text(
+//                                text = currentHourValueny?.let {
+//                                    String.format(
+//                                        "%.4f",
+//                                        it
+//                                    ) + " kW/m²"
+//                                } ?: "No data",
+//                                // Optional fallback for null
+//                                style = MaterialTheme.typography.headlineSmall,
+//                                fontWeight = FontWeight.ExtraLight,
+//                                color = MaterialTheme.colorScheme.primary
+//                            )
+//                            SunAnimation(currentHourValueny ?: 0.0)
 
-                            SunAnimation(currentHourValueny ?: 0.0)
-
+                            if (currentHourValueny != null) {
+                                Text(
+                                    text = String.format("%.4f", currentHourValueny) + " kW/m²",
+                                    style = MaterialTheme.typography.headlineSmall,
+                                    fontWeight = FontWeight.ExtraLight,
+                                    color = MaterialTheme.colorScheme.primary
+                                )
+                                SunAnimation(currentHourValueny!!)
+                            } else {
+                                LoadingScreen()
+                            }
 
                         }
                     },

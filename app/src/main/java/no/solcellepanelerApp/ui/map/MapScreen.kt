@@ -47,6 +47,7 @@ import androidx.compose.material3.TextFieldColors
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.mutableIntStateOf
@@ -182,6 +183,7 @@ fun DisplayScreen(
     val coroutineScope = rememberCoroutineScope()
     var address by remember { mutableStateOf("") }
     val coordinates by viewModel.coordinates.observeAsState()
+    val height by viewModel.height.collectAsState()
     val polygonPoints = viewModel.polygondata
     var isPolygonvisible by remember { mutableStateOf(false) }
     var drawingEnabled by remember { mutableStateOf(false) }
@@ -476,6 +478,7 @@ fun DisplayScreen(
                 index = 0
             },
             coordinates = coordinates,
+            height = height,
             area = viewModel.areaInput,
             navController = navController,
             viewModel = viewModel,

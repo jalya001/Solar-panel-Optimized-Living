@@ -421,6 +421,7 @@ fun AdditionalInputBottomSheet(
     onDismiss: () -> Unit,
     onStartDrawing: () -> Unit,
     coordinates: Pair<Double, Double>?,
+    height: Double?,
     area: String,
     navController: NavController,
     viewModel: MapScreenViewModel,
@@ -610,7 +611,7 @@ fun AdditionalInputBottomSheet(
                                 val slope = angle
 
                                 weatherViewModel.loadWeatherData(
-                                    lat, lon,
+                                    lat, lon, height,
                                     slope.toInt(),
                                     azimuthPosition.toInt()
                                 )
