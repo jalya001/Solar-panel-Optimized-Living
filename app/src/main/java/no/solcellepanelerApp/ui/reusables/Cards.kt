@@ -81,6 +81,7 @@ fun MyCard(
 @Composable
 fun MyNavCard(
     text: String = "",
+    desc: String = "",
     route: String,
     navController: NavController,
     modifier: Modifier = Modifier,
@@ -119,13 +120,23 @@ fun MyNavCard(
                 modifier = Modifier.fillMaxSize(),
                 contentAlignment = Alignment.Center
             ) {
-                Text(
-                    text = text,
-                    textAlign = TextAlign.Center,
-                    style = style,
-                    modifier = Modifier.padding(16.dp),
-                    color = color
-                )
+                Column {
+                    Text(
+                        text = text,
+                        textAlign = TextAlign.Center,
+                        style = style,
+                        modifier = Modifier.padding(16.dp),
+                        color = color
+                    )
+                    if (desc != "") {
+                        Text(
+                            text = desc,
+                            textAlign = TextAlign.Center,
+                            style = MaterialTheme.typography.bodyLarge,
+//                            modifier = Modifier.padding(16.dp),
+                        )
+                    }
+                }
             }
         }
     }

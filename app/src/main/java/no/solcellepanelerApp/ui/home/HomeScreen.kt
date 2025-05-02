@@ -190,14 +190,15 @@ fun HomeScreen(
         ) {
 
             MyNavCard(
-                text = stringResource(id = R.string.install_panels),
+                text = stringResource(id = R.string.install_panels_title),
+                desc = stringResource(id = R.string.install_panels_desc),
                 route = "map",
                 navController = navController,
                 modifier = Modifier
                     .fillMaxWidth()
                     .height(250.dp),
-                style = MaterialTheme.typography.displayLarge,
-                content = { PanelAnimation() },
+                style = MaterialTheme.typography.displaySmall,
+//                content = { PanelAnimation() },
                 color = MaterialTheme.colorScheme.tertiary
             )
 
