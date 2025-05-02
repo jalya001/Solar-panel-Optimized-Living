@@ -1,5 +1,9 @@
 package no.solcellepanelerApp.ui.onboarding
 
+import android.content.Intent
+import android.content.pm.PackageManager
+import android.net.Uri
+import android.provider.Settings
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Arrangement
@@ -20,6 +24,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.ColorFilter
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.AnnotatedString
@@ -27,6 +32,7 @@ import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
+import androidx.core.content.ContextCompat
 import no.solcellepanelerApp.R
 import no.solcellepanelerApp.model.electricity.Region
 import no.solcellepanelerApp.ui.home.RememberLocationWithPermission
@@ -144,11 +150,6 @@ fun OnboardingGraphUI(OnBoardModel: OnBoardModel) {
 
                 append(stringResource(id = R.string.onboard_desc_4))
             }
-            Button(onClick = {
-                triggerLocationFetch = true
-            }) {
-                Text("Grant Location Access")
-            }
         }
     }
 
@@ -194,6 +195,60 @@ fun OnboardingGraphUI(OnBoardModel: OnBoardModel) {
             style = MaterialTheme.typography.bodySmall,
             color = MaterialTheme.colorScheme.onSurface,
         )
+
+        Spacer(
+            modifier = Modifier
+                .fillMaxWidth()
+                .size(10.dp)
+        )
+
+        if (OnBoardModel is OnBoardModel.FourthPage) {
+            val context = LocalContext.current
+            val locationGranted = ContextCompat.checkSelfPermission(
+                context,
+                android.Manifest.permission.ACCESS_FINE_LOCATION
+            ) == PackageManager.PERMISSION_GRANTED
+
+            var showDialog by remember { mutableStateOf(false) }
+
+            if (showDialog) {
+                androidx.compose.material3.AlertDialog(
+                    onDismissRequest = { showDialog = false },
+                    title = { Text("Location Permission Already Granted") },
+                    text = { Text("If you want to change location permissions, go to settings.") },
+                    confirmButton = {
+                        Button(onClick = {
+                            val intent =
+                                Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS).apply {
+                                    data = Uri.fromParts("package", context.packageName, null)
+                                    addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+                                }
+                            context.startActivity(intent)
+                            showDialog = false
+                        }) {
+                            Text("Go to Settings")
+                        }
+                    },
+                    dismissButton = {
+                        Button(onClick = { showDialog = false }) {
+                            Text("Cancel")
+                        }
+                    }
+                )
+            }
+
+            Button(onClick = {
+                if (locationGranted) {
+                    showDialog = true
+                } else {
+                    triggerLocationFetch = true
+                }
+            }) {
+                Text(if (locationGranted) "Change Location Settings" else "Grant Location Access")
+            }
+        }
+
+
 
         Spacer(
             modifier = Modifier

@@ -1,6 +1,9 @@
 package no.solcellepanelerApp.ui.navigation
 
 import android.app.Activity
+import android.content.Intent
+import android.net.Uri
+import android.provider.Settings
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -80,12 +83,8 @@ fun HelpBottomSheet(
     var triggerLocationFetch by remember { mutableStateOf(false) }
 
     var region: Region? by remember { mutableStateOf(null) }
-    val (currentLocation, locationGranted) = if (triggerLocationFetch) {
-        RememberLocationWithPermission { resolvedRegion ->
-            region = resolvedRegion
-        }
-    } else {
-        Pair(null, false)
+    val (currentLocation, locationGranted) = RememberLocationWithPermission { resolvedRegion ->
+        region = resolvedRegion
     }
 
 
@@ -116,15 +115,25 @@ fun HelpBottomSheet(
                         .padding(16.dp)
                 ) {
                     item {
+                        val context = LocalContext.current
+
                         MySection(
-                            title = "Aksepter enhetslokasjon",
+                            title = "Endre lokasjonsinnstillinger",
                             onClick = {
-                                triggerLocationFetch = true
+                                if (locationGranted) {
+                                    val intent =
+                                        Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS).apply {
+                                            data =
+                                                Uri.fromParts("package", context.packageName, null)
+                                            addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+                                        }
+                                    context.startActivity(intent)
+                                }
                             },
-                            iconRes = R.drawable.baseline_my_location_24,
-                            enabled = !locationGranted
+                            iconRes = R.drawable.baseline_my_location_24
                         )
                     }
+
 
                     item {
                         MySection(

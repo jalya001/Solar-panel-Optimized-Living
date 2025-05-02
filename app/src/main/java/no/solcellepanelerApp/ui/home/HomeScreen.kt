@@ -89,8 +89,6 @@ fun HomeScreen(
     fontScaleViewModel: FontScaleViewModel,
     weatherViewModel: WeatherViewModel,
 ) {
-    var context = LocalContext.current
-    val activity = (context as? MainActivity)
     val radiationArray by weatherViewModel.frostDataRim.collectAsState()
 
     var showHelp by remember { mutableStateOf(false) }
@@ -99,7 +97,6 @@ fun HomeScreen(
 
     var selectedRegion by rememberSaveable { mutableStateOf<Region?>(null) }
     var currentLocation by remember { mutableStateOf<Location?>(null) }
-    var locationPermissionGranted by remember { mutableStateOf(false) }
     var dataFetched by remember { mutableStateOf(false) }
 
     val currentHour by remember { mutableIntStateOf(ZonedDateTime.now().minusHours(2).hour) }
@@ -128,21 +125,6 @@ fun HomeScreen(
         LoadingScreen()
         return
     }
-
-//    //Request location permission and fetch region
-//    RequestLocationPermission { region ->
-//        selectedRegion = region
-//        locationPermissionGranted = true
-//
-//    }
-//
-//    LaunchedEffect(locationPermissionGranted) {
-//        if (locationPermissionGranted && activity != null) {
-//            val location = fetchCoordinates(context, activity)
-//            currentLocation = location
-//
-//        }
-//    }
 
     Log.d("HomeScreen", "currentLocation: $currentLocation")
     if (currentLocation != null && !dataFetched) {

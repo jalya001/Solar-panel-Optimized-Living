@@ -32,12 +32,11 @@ class MainActivity : ComponentActivity() {
         enableEdgeToEdge()
         setContent {
             SolcellepanelerAppTheme {
-//                if (onboardingUtils.isOnboardingCompleted()) {
-//                    App()
-//                } else {
-//                    ShowOnboardingScreen()
-//                }
-                ShowOnboardingScreen()
+                if (onboardingUtils.isOnboardingCompleted()) {
+                    App()
+                } else {
+                    ShowOnboardingScreen()
+                }
 
 
             }
