@@ -454,7 +454,7 @@ class FrostApi {
             }
         }
         stationQueues.forEach { (element, quadrants) ->
-            resetMode(modes, element, searchAdvancements[element]!!) // idk where to put this
+            if (modes[element]!! != Mode.NEAREST) resetMode(modes, element, searchAdvancements[element]!!) // idk where to put this
             val mode = modes[element]!!
 
             var queuableOrUsableStationsCount = 0 // Does not need to be muted later
