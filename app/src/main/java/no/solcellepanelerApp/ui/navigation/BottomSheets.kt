@@ -60,7 +60,6 @@ import no.solcellepanelerApp.model.electricity.Region
 import no.solcellepanelerApp.ui.electricity.RegionDropdown
 import no.solcellepanelerApp.ui.font.FontScaleViewModel
 import no.solcellepanelerApp.ui.font.FontSizeState
-import no.solcellepanelerApp.ui.home.RememberLocationWithPermission
 import no.solcellepanelerApp.ui.language.langSwitch
 import no.solcellepanelerApp.ui.map.MapScreenViewModel
 import no.solcellepanelerApp.ui.result.WeatherViewModel
@@ -71,6 +70,7 @@ import no.solcellepanelerApp.ui.reusables.ModeCard
 import no.solcellepanelerApp.ui.reusables.MySection
 import no.solcellepanelerApp.ui.theme.ThemeMode
 import no.solcellepanelerApp.ui.theme.ThemeState
+import no.solcellepanelerApp.util.RememberLocationWithPermission
 
 
 @OptIn(ExperimentalMaterial3Api::class)
