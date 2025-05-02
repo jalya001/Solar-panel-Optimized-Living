@@ -97,6 +97,7 @@ fun HomeScreen(
 
     var selectedRegion by rememberSaveable { mutableStateOf<Region?>(null) }
     var currentLocation by remember { mutableStateOf<Location?>(null) }
+    Log.d("HomeScreen", "currentLocation: $currentLocation")
     var dataFetched by remember { mutableStateOf(false) }
 
     val currentHour by remember { mutableIntStateOf(ZonedDateTime.now().minusHours(2).hour) }

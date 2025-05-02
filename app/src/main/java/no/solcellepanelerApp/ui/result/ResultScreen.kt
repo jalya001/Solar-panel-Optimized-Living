@@ -61,7 +61,7 @@ fun ResultScreen(
     val weatherData by weatherViewModel.weatherData.collectAsState()
     val errorMessage by weatherViewModel.errorMessage.collectAsState()
     val calc by weatherViewModel.calculationResults.collectAsState()
-    Log.d("ResultScreen", "weatherData: ${calc.toString()}")
+
     val uiState by weatherViewModel.uiState.collectAsState()
     val panelArea = viewModel.areaInput.toDouble()
     val efficiency = viewModel.efficiencyInput.toDouble()

@@ -2,6 +2,7 @@ package no.solcellepanelerApp.ui.result
 
 //import androidx.compose.foundation.layout.FlowRow
 import android.annotation.SuppressLint
+import android.util.Log
 import androidx.compose.animation.animateColorAsState
 import androidx.compose.animation.core.LinearEasing
 import androidx.compose.animation.core.animateFloatAsState
@@ -9,6 +10,7 @@ import androidx.compose.animation.core.tween
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.BoxWithConstraints
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ExperimentalLayoutApi
 import androidx.compose.foundation.layout.Spacer
@@ -21,6 +23,7 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedCard
@@ -33,11 +36,26 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.shadow
+import androidx.compose.ui.graphics.Brush
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.graphicsLayer
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
+import co.yml.charts.axis.AxisData
+import co.yml.charts.common.model.Point
+import co.yml.charts.ui.barchart.models.BarData
+import co.yml.charts.ui.linechart.LineChart
+import co.yml.charts.ui.linechart.model.IntersectionPoint
+import co.yml.charts.ui.linechart.model.Line
+import co.yml.charts.ui.linechart.model.LineChartData
+import co.yml.charts.ui.linechart.model.LinePlotData
+import co.yml.charts.ui.linechart.model.LineStyle
+import co.yml.charts.ui.linechart.model.SelectionHighlightPoint
+import co.yml.charts.ui.linechart.model.SelectionHighlightPopUp
+import co.yml.charts.ui.linechart.model.ShadowUnderLine
 import com.airbnb.lottie.compose.LottieAnimation
 import com.airbnb.lottie.compose.LottieCompositionSpec
 import com.airbnb.lottie.compose.LottieConstants
@@ -45,8 +63,11 @@ import com.airbnb.lottie.compose.animateLottieCompositionAsState
 import com.airbnb.lottie.compose.rememberLottieComposition
 import com.google.accompanist.flowlayout.FlowRow
 import no.solcellepanelerApp.R
+import no.solcellepanelerApp.ui.electricity.ChartType
 import no.solcellepanelerApp.ui.font.FontScaleViewModel
 import no.solcellepanelerApp.ui.reusables.IconTextRow
+import no.solcellepanelerApp.ui.theme.ThemeMode
+import no.solcellepanelerApp.ui.theme.ThemeState
 
 
 @SuppressLint("MutableCollectionMutableState")
@@ -54,13 +75,15 @@ import no.solcellepanelerApp.ui.reusables.IconTextRow
 @Composable
 fun ShowProduce(
     energy: Double,
+    weatherData:Map<String, Array<Double>> = emptyMap(),
     navController: NavController,
     fontScaleViewModel: FontScaleViewModel,
+
 ) {
     var showHelp by remember { mutableStateOf(false) }
     var showAppearance by remember { mutableStateOf(false) }
     var currentEnergy by remember { mutableStateOf(energy) }
-
+    Log.e("snowList", weatherData.toString())
     //dette må oversettes
     val devices = listOf(
 
@@ -137,10 +160,10 @@ fun ShowProduce(
                 textColor = energyColor,
                 iconColor = energyColor
             )
+            EnergyFlowAnimationDown()
         }
-        EnergyFlowAnimationDown()
-        HouseAnimation()
-        EnergyFlowDown()
+
+
 
         Column(
             modifier = Modifier
@@ -148,6 +171,9 @@ fun ShowProduce(
                 .verticalScroll(rememberScrollState()),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
+
+            HouseAnimation()
+            EnergyFlowDown()
             FlowRow(
                 mainAxisSpacing = 12.dp,
                 crossAxisSpacing = 12.dp,
@@ -212,6 +238,21 @@ fun ShowProduce(
                     }
                 }
             }
+            Spacer(modifier = Modifier.height(16.dp))
+            Text(text = stringResource(R.string.snow_info),style = MaterialTheme.typography.bodyMedium,
+                color = MaterialTheme.colorScheme.primary,
+                fontWeight = FontWeight.Bold)
+            Chart(weatherData["mean(snow_coverage_type P1M)"] ?: emptyArray(),"")
+            Spacer(modifier = Modifier.height(16.dp))
+            Text(text = stringResource(R.string.cloud_info),style = MaterialTheme.typography.bodyMedium,
+                color = MaterialTheme.colorScheme.primary,
+                fontWeight = FontWeight.Bold)
+            Chart(weatherData["mean(cloud_area_fraction P1M)"] ?: emptyArray(),"")
+            Spacer(modifier = Modifier.height(16.dp))
+            Text(text = stringResource(R.string.temp_info),style = MaterialTheme.typography.bodyMedium,
+                color = MaterialTheme.colorScheme.primary,
+                fontWeight = FontWeight.Bold)
+            Chart(weatherData["mean(air_temperature P1M)"] ?: emptyArray(),"°C")
         }
     }
 }
@@ -239,25 +280,25 @@ fun EnergyFlowAnimationDown() {
     }
 }
 
-@Composable
-fun EnergyFlowAnimationUp() {
-    val composition by rememberLottieComposition(LottieCompositionSpec.Asset("energy_down.json"))
-    val progress by animateLottieCompositionAsState(
-        composition,
-        iterations = LottieConstants.IterateForever
-    )
-
-    LottieAnimation(
-        composition = composition,
-        progress = { progress },
-        modifier = Modifier
-            .height(100.dp)
-            .graphicsLayer(
-                rotationZ = 180f // rotate 180 degrees
-            )
-    )
-
-}
+//@Composable
+//fun EnergyFlowAnimationUp() {
+//    val composition by rememberLottieComposition(LottieCompositionSpec.Asset("energy_down.json"))
+//    val progress by animateLottieCompositionAsState(
+//        composition,
+//        iterations = LottieConstants.IterateForever
+//    )
+//
+//    LottieAnimation(
+//        composition = composition,
+//        progress = { progress },
+//        modifier = Modifier
+//            .height(100.dp)
+//            .graphicsLayer(
+//                rotationZ = 180f // rotate 180 degrees
+//            )
+//    )
+//
+//}
 
 @Composable
 fun HouseAnimation() {
@@ -301,3 +342,128 @@ fun EnergyFlowDown() {
     )
 
 }
+@SuppressLint("UnusedBoxWithConstraintsScope")
+@Composable
+fun Chart(data: Array<Double>, measure: String = "cm") {
+    ChartType.LINE
+    val selectedPoint = remember { mutableStateOf<Point?>(null) }
+
+    val points = data.mapIndexed { index, value ->
+        Point(((index +1).toFloat()), value.toFloat())
+    }
+
+    val barColor =
+        if (ThemeState.themeMode == ThemeMode.DARK) MaterialTheme.colorScheme.tertiary else MaterialTheme.colorScheme.primary
+
+    data.mapIndexed { index, value ->
+        BarData(
+            point = Point((index + 1).toFloat(), value.toFloat()),
+            label = "M${index + 1}",
+            color = barColor
+        )
+    }
+
+    val xAxisData = AxisData.Builder()
+        .axisStepSize(20.dp)
+        .steps(12)
+        .labelData { i -> if (i in 1..12) "$i" else "" }
+        .axisLabelColor(MaterialTheme.colorScheme.tertiary)
+        .axisLineColor(MaterialTheme.colorScheme.tertiary)
+        .axisLabelAngle(0f)
+        .bottomPadding(32.dp)
+        .build()
+    
+    val maxDepth = data.maxOrNull() ?: 0.0
+    val minDepth = data.maxOrNull() ?: 0.0
+    val stepSize = ((maxDepth - minDepth) / 5).coerceAtLeast(1.0)
+
+    val yAxisData = AxisData.Builder()
+        .steps(5)
+        .topPadding(20.dp)
+        .labelData { i -> "%.1f".format(minDepth + stepSize * i) }
+        .axisStepSize(stepSize.toFloat().dp)
+        .axisLabelColor(MaterialTheme.colorScheme.tertiary)
+        .axisLineColor(MaterialTheme.colorScheme.tertiary)
+        .build()
+
+
+
+    Card(
+        modifier = Modifier
+            .fillMaxWidth()
+            .height(350.dp),
+        elevation = CardDefaults.cardElevation(defaultElevation = 0.dp),
+        colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.background)
+    ) {
+
+        Spacer(modifier = Modifier.height(10.dp))
+
+        Box(
+            modifier = Modifier
+                .height(20.dp)
+                .fillMaxWidth(),
+            contentAlignment = Alignment.Center
+        ) {
+            selectedPoint.value?.let {
+                val month = it.x.toInt()
+                val depth = it.y
+                Text(
+                    text = "Måned $month: %.1f $measure".format(depth),
+                    style = MaterialTheme.typography.bodyMedium,
+                    color = MaterialTheme.colorScheme.primary,
+                    fontWeight = FontWeight.Bold
+                )
+            }
+        }
+
+        BoxWithConstraints(modifier = Modifier.height(320.dp)) {
+                    val lineChartData = LineChartData(
+                        linePlotData = LinePlotData(
+                            lines = listOf(
+                                Line(
+                                dataPoints = points,
+                                LineStyle(color = if (ThemeState.themeMode == ThemeMode.DARK) MaterialTheme.colorScheme.tertiary else MaterialTheme.colorScheme.primary),
+                                IntersectionPoint(color = if (ThemeState.themeMode == ThemeMode.DARK) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.tertiary),
+                                SelectionHighlightPoint(
+                                    color = if (ThemeState.themeMode == ThemeMode.DARK) MaterialTheme.colorScheme.tertiary else MaterialTheme.colorScheme.primary,
+                                    draw = { offset ->
+                                        drawCircle(
+                                            color = if (ThemeState.themeMode == ThemeMode.DARK) {
+                                                Color(0xFFF3BD6E)
+                                            } else {
+                                                Color(0xFF00696D)
+                                            },
+                                            radius = 6.dp.toPx(),
+                                            center = offset
+                                        )
+                                    },
+                                    isHighlightLineRequired = true
+                                ),
+                                ShadowUnderLine(
+                                    alpha = 0.5f,
+                                    brush = Brush.verticalGradient(
+                                        colors = listOf(
+                                            if (ThemeState.themeMode == ThemeMode.DARK) MaterialTheme.colorScheme.tertiary else MaterialTheme.colorScheme.primary,
+                                            Color.Transparent
+                                        )
+                                    )
+                                ),
+                                selectionHighlightPopUp = SelectionHighlightPopUp { offset, point ->
+                                    selectedPoint.value = point
+                                }
+                            )
+                            )
+                        ),
+                        xAxisData = xAxisData,
+                        yAxisData = yAxisData,
+                        isZoomAllowed = true,
+                        backgroundColor = MaterialTheme.colorScheme.background,
+
+                    )
+                    LineChart(modifier = Modifier.fillMaxSize(), lineChartData = lineChartData)
+                }
+
+            }
+        }
+
+

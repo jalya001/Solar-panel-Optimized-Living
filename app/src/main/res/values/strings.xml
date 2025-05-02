@@ -179,7 +179,9 @@
     <string name="monthly_savings">Savings in: %1$s</string>
     <string name="monthly_savings_text">You will save %1$.2f kroner in %2$s with electricity from solar panels</string>
     <string name="area_drawn">Size of area:</string>
-
+    <string name="snow_info">This is your yearly snow cover data:</string>
+    <string name="cloud_info">This is your yearly cloud cover data:</string>
+    <string name="temp_info">This is your yearly temperature factor data:</string>
     <!-- Onboarding -->
 
     <string name="onboard_title_1">Welcome to SOL</string>
