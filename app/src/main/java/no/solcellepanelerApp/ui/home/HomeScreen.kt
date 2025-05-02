@@ -232,21 +232,24 @@ fun HomeScreen(
                                 style = MaterialTheme.typography.titleLarge,
                                 color = MaterialTheme.colorScheme.tertiary
                             )
-                            Text(
-                                text = currentHourValueny?.let {
-                                    String.format(
-                                        "%.4f",
-                                        it
-                                    ) + " kW/m²"
-                                } ?: "No data",
-                                // Optional fallback for null
-                                style = MaterialTheme.typography.headlineSmall,
-                                fontWeight = FontWeight.ExtraLight,
-                                color = MaterialTheme.colorScheme.primary
-                            )
+                            if (currentHourValueny != null) {
+                                Text(
+                                    text = currentHourValueny?.let {
+                                        String.format(
+                                            "%.4f",
+                                            it
+                                        ) + " kW/m²"
+                                    } ?: "No data",
+                                    // Optional fallback for null
+                                    style = MaterialTheme.typography.headlineSmall,
+                                    fontWeight = FontWeight.ExtraLight,
+                                    color = MaterialTheme.colorScheme.primary
+                                )
 
-                            SunAnimation(currentHourValueny ?: 0.0)
-
+                                SunAnimation(currentHourValueny ?: 0.0)
+                            } else {
+                                LoadingScreen()
+                            }
 
                         }
                     },
