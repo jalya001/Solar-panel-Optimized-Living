@@ -125,7 +125,9 @@ fun MyNavCard(
                         text = text,
                         textAlign = TextAlign.Center,
                         style = style,
-                        modifier = Modifier.padding(16.dp),
+                        modifier = Modifier
+                            .padding(16.dp)
+                            .fillMaxWidth(),
                         color = color
                     )
                     if (desc != "") {
