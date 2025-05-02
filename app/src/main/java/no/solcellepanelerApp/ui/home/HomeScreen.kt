@@ -470,7 +470,8 @@ fun RememberLocationWithPermission(
     }
 
     // Request location permission and fetch region
-    if (triggerRequest && !locationPermissionGranted && !permissionDeniedPermanently) {
+//    if (triggerRequest && !locationPermissionGranted && !permissionDeniedPermanently) {  var ikke detet som var problemet
+    if (triggerRequest && !locationPermissionGranted) {
         RequestLocationPermission { region ->
             onRegionDetermined(region)
             locationPermissionGranted = true
