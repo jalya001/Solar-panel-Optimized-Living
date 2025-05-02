@@ -183,6 +183,10 @@
     <string name="monthly_savings_text">Du vil spare %1$.2f kroner  i %2$s  på strøm fra solcellepaneler</string>
 
     <string name="area_drawn">Tegnet areal:</string>
+    <string name="snow_info">Dette er dine årlige snødekke-data:</string>
+    <string name="cloud_info">Dette er dine årlige skydekke-data:</string>
+    <string name="temp_info">Dette er dine årlige temperaturfaktor-data:</string>
+
 
 
     <!-- Onboarding -->
