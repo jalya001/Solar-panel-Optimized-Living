@@ -53,6 +53,9 @@ class CustomHttpClient {
                     HttpStatusCode.Unauthorized, HttpStatusCode.Forbidden -> {
                         Result.failure(ApiException(ApiError.AUTHORIZATION_ERROR))
                     }
+                    HttpStatusCode.BadRequest -> {
+                        Result.failure(ApiException(ApiError.REQUEST_ERROR))
+                    }
                     HttpStatusCode.NotFound, HttpStatusCode.PreconditionFailed -> {
                         Result.success(null)
                     }

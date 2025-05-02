@@ -61,7 +61,6 @@ class WeatherViewModel(
                 }
             } else {
                 _uiState.value = UiState.ERROR
-                println("qwdwqdwq")
                 println(result.exceptionOrNull())
                 _errorMessage.value = result.exceptionOrNull()?.toString()?: "Unexpected behavior. Please report to developers."
             }
