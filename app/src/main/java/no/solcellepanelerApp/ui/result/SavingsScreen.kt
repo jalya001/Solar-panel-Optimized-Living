@@ -1,5 +1,6 @@
 package no.solcellepanelerApp.ui.result
 
+import android.annotation.SuppressLint
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.padding
@@ -16,7 +17,11 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.AnnotatedString
+import androidx.compose.ui.text.buildAnnotatedString
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import no.solcellepanelerApp.R
@@ -34,10 +39,9 @@ fun ShowMonthlySavings(
     energyPrice: Double,
     navController: NavController,
     fontScaleViewModel: FontScaleViewModel,
-    weatherViewModel: WeatherViewModel
+    weatherViewModel: WeatherViewModel,
 ) {
     val savings: Double = energyProduced * energyPrice
-    val fontScale = fontScaleViewModel.fontScale.floatValue.toFloat()
     val weather by weatherViewModel.weatherData.collectAsState()
 
     var showHelp by remember { mutableStateOf(false) }
@@ -66,13 +70,37 @@ fun ShowMonthlySavings(
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             Text(
-                text = stringResource(R.string.monthly_savings_text, savings, month),
-                textAlign = TextAlign.Center,
-                style = MaterialTheme.typography.headlineSmall
+                text = buildAnnotatedString {
+                    withStyle(
+                        style = MaterialTheme.typography.headlineSmall.toSpanStyle().copy(
+                            fontWeight = FontWeight.ExtraLight
+                        )
+                    ) {
+                        append(stringResource(R.string.monthly_savings_prefix))
+                    }
+                    append(
+                        AnnotatedString(
+                            String.format(" %.2f kroner ", savings),
+                            MaterialTheme.typography.headlineSmall.toSpanStyle()
+                        )
+                    )
+                    withStyle(
+                        style = MaterialTheme.typography.headlineSmall.toSpanStyle().copy(
+                            fontWeight = FontWeight.ExtraLight
+                        )
+                    ) {
+                        append(stringResource(R.string.monthly_savings_suffix_part1))
+                        append(month)
+                        append(stringResource(R.string.monthly_savings_suffix_part2))
+                    }
+                },
+                textAlign = TextAlign.Center
             )
 
-            ShowProduce(energyProduced,
-                weather, navController, fontScaleViewModel)
+            ShowProduce(
+                energyProduced,
+                weather, navController, fontScaleViewModel
+            )
 
             HelpBottomSheet(
                 navController = navController,
@@ -87,16 +115,16 @@ fun ShowMonthlySavings(
     }
 }
 
+@SuppressLint("DefaultLocale")
 @Composable
 fun ShowYearlySavings(
     energyProduced: Double,
     energyPrice: Double,
     navController: NavController,
     fontScaleViewModel: FontScaleViewModel,
-    weatherViewModel: WeatherViewModel
+    weatherViewModel: WeatherViewModel,
 ) {
     val savings: Double = energyProduced * energyPrice
-    val fontScale = fontScaleViewModel.fontScale.floatValue.toFloat()
     val weather by weatherViewModel.weatherData.collectAsState()
     var showHelp by remember { mutableStateOf(false) }
     var showAppearance by remember { mutableStateOf(false) }
@@ -124,12 +152,34 @@ fun ShowYearlySavings(
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             Text(
-                text = stringResource(R.string.yearly_savings_text, savings),
-                textAlign = TextAlign.Center,
-                style = MaterialTheme.typography.headlineSmall
+                text = buildAnnotatedString {
+                    withStyle(
+                        style = MaterialTheme.typography.headlineSmall.toSpanStyle().copy(
+                            fontWeight = FontWeight.ExtraLight
+                        )
+                    ) {
+                        append(stringResource(R.string.yearly_savings_prefix))
+                    }
+                    append(
+                        AnnotatedString(
+                            String.format(" %.2f kroner ", savings),
+                            MaterialTheme.typography.headlineSmall.toSpanStyle()
+                        )
+                    )
+                    withStyle(
+                        style = MaterialTheme.typography.headlineSmall.toSpanStyle().copy(
+                            fontWeight = FontWeight.ExtraLight
+                        )
+                    ) {
+                        append(stringResource(R.string.yearly_savings_suffix))
+                    }
+                },
+                textAlign = TextAlign.Center
             )
-            ShowProduce(energyProduced,
-                weather, navController, fontScaleViewModel)
+            ShowProduce(
+                energyProduced,
+                weather, navController, fontScaleViewModel
+            )
 
 
             HelpBottomSheet(

@@ -35,12 +35,11 @@ import androidx.compose.ui.unit.dp
 import androidx.core.content.ContextCompat
 import no.solcellepanelerApp.R
 import no.solcellepanelerApp.model.electricity.Region
-import no.solcellepanelerApp.ui.home.RememberLocationWithPermission
+import no.solcellepanelerApp.util.RememberLocationWithPermission
 
 @Composable
 fun OnboardingGraphUI(OnBoardModel: OnBoardModel) {
     val isDark = isSystemInDarkTheme()
-
     var triggerLocationFetch by remember { mutableStateOf(false) }
 
     var region: Region? by remember { mutableStateOf(null) }
@@ -196,7 +195,6 @@ fun OnboardingGraphUI(OnBoardModel: OnBoardModel) {
             style = MaterialTheme.typography.bodySmall,
             color = MaterialTheme.colorScheme.onSurface,
         )
-
         Spacer(
             modifier = Modifier
                 .fillMaxWidth()

@@ -3,8 +3,8 @@
 
     <!--Home Screen-->
     <string name="home"> Home</string>
-    <string name="install_panels_title">Find Your Solar Potential!</string>
-    <string name="install_panels_desc">Enter your address and details — see your estimated power and savings from solar panels.</string>
+    <string name="install_panels_title">Find Your \n Solar Potential!</string>
+    <string name="install_panels_desc">Enter your address and details — see your estimated power and savings from solar panels.  *må jobbes med* </string>
     <string name="last_location"> Last location (trenger bedre navn)</string>
     <string name="prices"> Electricity prices </string>
     <string name="help">Help</string>
@@ -176,13 +176,21 @@
 
     <!--Savings Screen-->
     <string name="yearly_savings">Saved annually</string>
-    <string name="yearly_savings_text">You will save %.2f kroner per year on electricity from solar panels</string>
+    <!--    <string name="yearly_savings_text">You will save %.2f kroner per year on electricity from solar panels</string>-->
     <string name="monthly_savings">Savings in: %1$s</string>
-    <string name="monthly_savings_text">You will save %1$.2f kroner in %2$s with electricity from solar panels</string>
+    <!--    <string name="monthly_savings_text">You will save %1$.2f kroner in %2$s with electricity from solar panels</string>-->
     <string name="area_drawn">Size of area:</string>
     <string name="snow_info">This is your yearly snow cover data:</string>
     <string name="cloud_info">This is your yearly cloud cover data:</string>
     <string name="temp_info">This is your yearly temperature factor data:</string>
+    <string name="monthly_savings_prefix">You will save </string>
+
+    <string name="monthly_savings_suffix_part1"> in </string>
+    <string name="monthly_savings_suffix_part2"> from solar panel electricity</string>
+    <string name="yearly_savings_prefix">You will save </string>
+    <string name="yearly_savings_suffix">per year on electricity from solar panels</string>
+
+
     <!-- Onboarding -->
 
     <string name="onboard_title_1">Welcome to SOL</string>
@@ -210,5 +218,4 @@
 
     <string name="onboard_title_4">Location access</string>
     <string name="onboard_desc_4">Grant location access to find your nearest address and optimize the experience.</string>
-
 </resources>

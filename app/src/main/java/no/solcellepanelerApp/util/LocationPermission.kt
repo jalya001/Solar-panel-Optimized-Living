@@ -1,10 +1,15 @@
 package no.solcellepanelerApp.util
 
 import android.Manifest
+import android.annotation.SuppressLint
 import android.app.Activity
+import android.app.AlertDialog
 import android.content.Context
+import android.content.Intent
 import android.content.pm.PackageManager
 import android.location.Location
+import android.net.Uri
+import android.provider.Settings
 import android.util.Log
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
@@ -12,23 +17,29 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.platform.LocalContext
 import androidx.core.app.ActivityCompat
+import androidx.core.content.ContextCompat
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import no.solcellepanelerApp.MainActivity
 import no.solcellepanelerApp.data.location.LocationService
 import no.solcellepanelerApp.model.electricity.Region
 
 // Funksjon for å sjekke og lagre tillatelse
 fun isLocationPermissionGranted(context: Context): Boolean {
-    val sharedPreferences = context.getSharedPreferences("LocationPreferences", Context.MODE_PRIVATE)
+    val sharedPreferences =
+        context.getSharedPreferences("LocationPreferences", Context.MODE_PRIVATE)
     return sharedPreferences.getBoolean("LocationPermissionGranted", false)
 }
 
 fun setLocationPermissionGranted(context: Context, granted: Boolean) {
-    val sharedPreferences = context.getSharedPreferences("LocationPreferences", Context.MODE_PRIVATE)
+    val sharedPreferences =
+        context.getSharedPreferences("LocationPreferences", Context.MODE_PRIVATE)
     val editor = sharedPreferences.edit()
     editor.putBoolean("LocationPermissionGranted", granted)
     editor.apply()
@@ -37,7 +48,7 @@ fun setLocationPermissionGranted(context: Context, granted: Boolean) {
 // Funksjon for å be om lokasjonstillatelse og hente region
 @Composable
 fun RequestLocationPermission(
-    onLocationFetched: (Region) -> Unit
+    onLocationFetched: (Region) -> Unit,
 ) {
     val context = androidx.compose.ui.platform.LocalContext.current
     val activity = context as? Activity
@@ -76,7 +87,7 @@ fun RequestLocationPermission(
 private fun fetchLocation(
     context: Context,
     activity: Activity?,
-    onLocationFetched: (Region) -> Unit
+    onLocationFetched: (Region) -> Unit,
 ) {
     val locationService = LocationService(activity!!)
     try {
@@ -118,6 +129,7 @@ fun mapLocationToRegion(location: Location): Region {
         else -> Region.OSLO
     }
 }
+
 suspend fun fetchCoordinates(
     context: Context,
     activity: Activity?,
@@ -127,8 +139,75 @@ suspend fun fetchCoordinates(
     return try {
         locationService.getCurrentLocation()
 
-    }catch (e: Exception) {
+    } catch (e: Exception) {
         Log.e("LocationPermission", "Feil ved henting av lokasjon", e)
         null
     }
+}
+
+@SuppressLint("MissingPermission")
+@Composable
+fun RememberLocationWithPermission(
+    triggerRequest: Boolean,
+    onRegionDetermined: (Region?) -> Unit,
+): Pair<Location?, Boolean> {
+    val context = LocalContext.current
+    val activity = context as? MainActivity
+
+    var locationPermissionGranted by remember { mutableStateOf(false) }
+    var currentLocation by remember { mutableStateOf<Location?>(null) }
+    var permissionDeniedPermanently by remember { mutableStateOf(false) }
+
+    val permissionCheck =
+        ContextCompat.checkSelfPermission(context, Manifest.permission.ACCESS_FINE_LOCATION)
+    val showRationale = ActivityCompat.shouldShowRequestPermissionRationale(
+        activity!!,
+        Manifest.permission.ACCESS_FINE_LOCATION
+    )
+
+    // Check permission on recomposition
+    LaunchedEffect(Unit) {
+        if (permissionCheck == PackageManager.PERMISSION_GRANTED) {
+            locationPermissionGranted = true
+        } else if (!showRationale && permissionCheck != PackageManager.PERMISSION_GRANTED) {
+            permissionDeniedPermanently = true
+        }
+    }
+
+    // Request location permission and fetch region
+//    if (triggerRequest && !locationPermissionGranted && !permissionDeniedPermanently) {  var ikke detet som var problemet
+    if (triggerRequest && !locationPermissionGranted) {
+        RequestLocationPermission { region ->
+            onRegionDetermined(region)
+            locationPermissionGranted = true
+        }
+    }
+
+    // Once permission is granted, fetch coordinates
+    LaunchedEffect(locationPermissionGranted) {
+        if (locationPermissionGranted && activity != null) {
+            val location = fetchCoordinates(context, activity)
+            currentLocation = location
+        }
+    }
+
+    // Show alert dialog if permission is denied permanently
+    if (permissionDeniedPermanently) {
+        LaunchedEffect(Unit) {
+            AlertDialog.Builder(context)
+                .setTitle("Location Permission Needed")
+                .setMessage("Please enable location permission in settings to use this feature.")
+                .setPositiveButton("Go to Settings") { _, _ ->
+                    val intent = Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS).apply {
+                        data = Uri.fromParts("package", context.packageName, null)
+                        addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+                    }
+                    context.startActivity(intent)
+                }
+                .setNegativeButton("Cancel", null)
+                .show()
+        }
+    }
+
+    return Pair(currentLocation, locationPermissionGranted)
 }
