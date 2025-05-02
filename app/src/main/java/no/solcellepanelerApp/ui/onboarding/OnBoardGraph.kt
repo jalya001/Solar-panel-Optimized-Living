@@ -195,6 +195,11 @@ fun OnboardingGraphUI(OnBoardModel: OnBoardModel) {
             style = MaterialTheme.typography.bodySmall,
             color = MaterialTheme.colorScheme.onSurface,
         )
+        Spacer(
+            modifier = Modifier
+                .fillMaxWidth()
+                .size(10.dp)
+        )
 
         if (OnBoardModel is OnBoardModel.FourthPage) {
             val context = LocalContext.current

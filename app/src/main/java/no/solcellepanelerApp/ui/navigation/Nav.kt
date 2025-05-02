@@ -92,7 +92,8 @@ fun Nav(navController: NavHostController, fontScaleViewModel: FontScaleViewModel
                 energyProduced,
                 energyPrice,
                 navController,
-                fontScaleViewModel
+                fontScaleViewModel,
+                WviewModel
             )
         }
         composable(
@@ -107,7 +108,7 @@ fun Nav(navController: NavHostController, fontScaleViewModel: FontScaleViewModel
             val energyPrice =
                 backStackEntry.arguments?.getString("energyPrice")?.toDoubleOrNull() ?: 0.0
 
-            ShowYearlySavings(energyProduced, energyPrice, navController, fontScaleViewModel)
+            ShowYearlySavings(energyProduced, energyPrice, navController, fontScaleViewModel,WviewModel)
         }
     }
 }

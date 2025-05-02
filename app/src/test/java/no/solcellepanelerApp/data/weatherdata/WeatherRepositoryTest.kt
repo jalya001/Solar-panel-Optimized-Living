@@ -25,9 +25,9 @@ class WeatherRepositoryTest {
     @Test
     fun `test successful weather data retrieval`() = runBlocking {
         coEvery { mockPvgisApi.getRadiation(any(), any(), any(), any(), any()) } returns Result.success(testArray)
-        coEvery { mockFrostApi.fetchFrostData(any(), any(), any(), any(), any()) } returns Result.success(testMap)
+        coEvery { mockFrostApi.fetchFrostData(any(), any(), any(), any(), any(), any()) } returns Result.success(testMap)
 
-        val result = weatherRepository.getPanelWeatherData(10.0, 20.0, 30, 40)
+        val result = weatherRepository.getPanelWeatherData(10.0, 20.0, 30.0, 30, 40)
         assertTrue(result.isSuccess)
         val data = result.getOrNull()
         assertEquals(4, data?.size)
@@ -37,27 +37,27 @@ class WeatherRepositoryTest {
     @Test
     fun `test failure when radiation data fails`() = runBlocking {
         coEvery { mockPvgisApi.getRadiation(any(), any(), any(), any(), any()) } returns Result.failure(ApiException(ApiError.UNKNOWN_ERROR))
-        coEvery { mockFrostApi.fetchFrostData(any(), any(), any(), any(), any()) } returns Result.success(testMap)
+        coEvery { mockFrostApi.fetchFrostData(any(), any(), any(), any(), any(), any()) } returns Result.success(testMap)
 
-        val result = weatherRepository.getPanelWeatherData(10.0, 20.0, 30, 40)
+        val result = weatherRepository.getPanelWeatherData(10.0, 20.0, 30.0, 30, 40)
         assertTrue(result.isFailure)
     }
 
     @Test
     fun `test failure when frost data fails`() = runBlocking {
         coEvery { mockPvgisApi.getRadiation(any(), any(), any(), any(), any()) } returns Result.success(testArray)
-        coEvery { mockFrostApi.fetchFrostData(any(), any(), any(), any(), any()) } returns Result.failure(ApiException(ApiError.UNKNOWN_ERROR))
+        coEvery { mockFrostApi.fetchFrostData(any(), any(), any(), any(), any(), any()) } returns Result.failure(ApiException(ApiError.UNKNOWN_ERROR))
 
-        val result = weatherRepository.getPanelWeatherData(10.0, 20.0, 30, 40)
+        val result = weatherRepository.getPanelWeatherData(10.0, 20.0, 30.0, 30, 40)
         assertTrue(result.isFailure)
     }
 
     @Test
     fun `test success when frost is empty`() = runBlocking {
         coEvery { mockPvgisApi.getRadiation(any(), any(), any(), any(), any()) } returns Result.success(testArray)
-        coEvery { mockFrostApi.fetchFrostData(any(), any(), any(), any(), any()) } returns Result.success(mutableMapOf())
+        coEvery { mockFrostApi.fetchFrostData(any(), any(), any(), any(), any(), any()) } returns Result.success(mutableMapOf())
 
-        val result = weatherRepository.getPanelWeatherData(10.0, 20.0, 30, 40)
+        val result = weatherRepository.getPanelWeatherData(10.0, 20.0, 30.0, 30, 40)
         assertTrue(result.isSuccess)
         val data = result.getOrNull()
         assertEquals(1, data?.size)
@@ -67,9 +67,9 @@ class WeatherRepositoryTest {
     @Test
     fun `test success when pvgis is empty`() = runBlocking {
         coEvery { mockPvgisApi.getRadiation(any(), any(), any(), any(), any()) } returns Result.success(arrayOf())
-        coEvery { mockFrostApi.fetchFrostData(any(), any(), any(), any(), any()) } returns Result.success(testMap)
+        coEvery { mockFrostApi.fetchFrostData(any(), any(), any(), any(), any(), any()) } returns Result.success(testMap)
 
-        val result = weatherRepository.getPanelWeatherData(10.0, 20.0, 30, 40)
+        val result = weatherRepository.getPanelWeatherData(10.0, 20.0, 30.0, 30, 40)
         assertTrue(result.isSuccess)
         val data = result.getOrNull()
         assertEquals(3, data?.size)

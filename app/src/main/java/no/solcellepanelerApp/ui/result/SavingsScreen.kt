@@ -8,6 +8,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -33,9 +34,11 @@ fun ShowMonthlySavings(
     energyPrice: Double,
     navController: NavController,
     fontScaleViewModel: FontScaleViewModel,
+    weatherViewModel: WeatherViewModel
 ) {
     val savings: Double = energyProduced * energyPrice
     val fontScale = fontScaleViewModel.fontScale.floatValue.toFloat()
+    val weather by weatherViewModel.weatherData.collectAsState()
 
     var showHelp by remember { mutableStateOf(false) }
     var showAppearance by remember { mutableStateOf(false) }
@@ -68,7 +71,8 @@ fun ShowMonthlySavings(
                 style = MaterialTheme.typography.headlineSmall
             )
 
-            ShowProduce(energyProduced, navController, fontScaleViewModel)
+            ShowProduce(energyProduced,
+                weather, navController, fontScaleViewModel)
 
             HelpBottomSheet(
                 navController = navController,
@@ -89,10 +93,11 @@ fun ShowYearlySavings(
     energyPrice: Double,
     navController: NavController,
     fontScaleViewModel: FontScaleViewModel,
+    weatherViewModel: WeatherViewModel
 ) {
     val savings: Double = energyProduced * energyPrice
     val fontScale = fontScaleViewModel.fontScale.floatValue.toFloat()
-
+    val weather by weatherViewModel.weatherData.collectAsState()
     var showHelp by remember { mutableStateOf(false) }
     var showAppearance by remember { mutableStateOf(false) }
 
@@ -123,8 +128,9 @@ fun ShowYearlySavings(
                 textAlign = TextAlign.Center,
                 style = MaterialTheme.typography.headlineSmall
             )
+            ShowProduce(energyProduced,
+                weather, navController, fontScaleViewModel)
 
-            ShowProduce(energyProduced, navController, fontScaleViewModel)
 
             HelpBottomSheet(
                 navController = navController,
