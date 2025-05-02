@@ -424,6 +424,7 @@ fun SunAnimation(value: Double) {
 @SuppressLint("MissingPermission")
 @Composable
 fun RememberLocationWithPermission(
+    triggerRequest: Boolean,
     onRegionDetermined: (Region?) -> Unit,
 ): Pair<Location?, Boolean> {
     val context = LocalContext.current
@@ -450,7 +451,7 @@ fun RememberLocationWithPermission(
     }
 
     // Request location permission and fetch region
-    if (!locationPermissionGranted && !permissionDeniedPermanently) {
+    if (triggerRequest && !locationPermissionGranted && !permissionDeniedPermanently) {
         RequestLocationPermission { region ->
             onRegionDetermined(region)
             locationPermissionGranted = true

@@ -2,6 +2,7 @@ package no.solcellepanelerApp.ui.navigation
 
 import android.app.Activity
 import android.content.Intent
+import android.content.pm.PackageManager
 import android.net.Uri
 import android.provider.Settings
 import androidx.compose.foundation.layout.Arrangement
@@ -50,6 +51,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.Density
 import androidx.compose.ui.unit.dp
+import androidx.core.content.ContextCompat
 import androidx.navigation.NavController
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
@@ -83,8 +85,13 @@ fun HelpBottomSheet(
     var triggerLocationFetch by remember { mutableStateOf(false) }
 
     var region: Region? by remember { mutableStateOf(null) }
-    val (currentLocation, locationGranted) = RememberLocationWithPermission { resolvedRegion ->
-        region = resolvedRegion
+    val (currentLocation, locationGranted) = if (triggerLocationFetch) {
+        RememberLocationWithPermission(
+            triggerRequest = true,
+            onRegionDetermined = { region = it }
+        )
+    } else {
+        Pair(null, false)
     }
 
 
@@ -116,18 +123,59 @@ fun HelpBottomSheet(
                 ) {
                     item {
                         val context = LocalContext.current
+                        val locationGranted = ContextCompat.checkSelfPermission(
+                            context,
+                            android.Manifest.permission.ACCESS_FINE_LOCATION
+                        ) == PackageManager.PERMISSION_GRANTED
 
+                        var showDialog by remember { mutableStateOf(false) }
+
+                        if (showDialog) {
+                            androidx.compose.material3.AlertDialog(
+                                onDismissRequest = { showDialog = false },
+                                title = { Text("Location Permission Already Granted") },
+                                text = { Text("If you want to change location permissions, go to settings.") },
+                                confirmButton = {
+                                    Button(onClick = {
+                                        val intent =
+                                            Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS).apply {
+                                                data = Uri.fromParts(
+                                                    "package",
+                                                    context.packageName,
+                                                    null
+                                                )
+                                                addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+                                            }
+                                        context.startActivity(intent)
+                                        showDialog = false
+                                    }) {
+                                        Text("Go to Settings")
+                                    }
+                                },
+                                dismissButton = {
+                                    Button(onClick = { showDialog = false }) {
+                                        Text("Cancel")
+                                    }
+                                }
+                            )
+                        }
                         MySection(
-                            title = "Endre lokasjonsinnstillinger",
+                            title = if (locationGranted) "Change Location Settings" else "Grant Location Access",
                             onClick = {
+//                                if (locationGranted) {
+//                                    val intent =
+//                                        Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS).apply {
+//                                            data =
+//                                                Uri.fromParts("package", context.packageName, null)
+//                                            addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+//                                        }
+//                                    context.startActivity(intent)
+//                                }
+
                                 if (locationGranted) {
-                                    val intent =
-                                        Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS).apply {
-                                            data =
-                                                Uri.fromParts("package", context.packageName, null)
-                                            addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
-                                        }
-                                    context.startActivity(intent)
+                                    showDialog = true
+                                } else {
+                                    triggerLocationFetch = true
                                 }
                             },
                             iconRes = R.drawable.baseline_my_location_24

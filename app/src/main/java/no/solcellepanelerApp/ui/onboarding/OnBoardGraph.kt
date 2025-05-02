@@ -45,9 +45,10 @@ fun OnboardingGraphUI(OnBoardModel: OnBoardModel) {
 
     var region: Region? by remember { mutableStateOf(null) }
     val (currentLocation, locationGranted) = if (triggerLocationFetch) {
-        RememberLocationWithPermission { resolvedRegion ->
-            region = resolvedRegion
-        }
+        RememberLocationWithPermission(
+            triggerRequest = true,
+            onRegionDetermined = { region = it }
+        )
     } else {
         Pair(null, false)
     }
