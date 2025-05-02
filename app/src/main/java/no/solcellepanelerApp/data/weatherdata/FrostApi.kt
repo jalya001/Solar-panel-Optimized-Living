@@ -272,7 +272,7 @@ class FrostApi {
             if (value >= 4) exceeders.add(quadrant)
         }
         println(element)
-        println(exceeders)
+        println("exceeders: $exceeders")
         if (exceeders.size <= 1 || (exceeders.size == 2 && isDiagonal(exceeders[0], exceeders[1]))) {
             println("SET TO INTERPOLATION: "+element)
             modes[element] = Mode.INTERPOLATION
@@ -372,6 +372,7 @@ class FrostApi {
             val currentAreas: Map<Quadrant, MutableSet<Int>> = enumValues<Quadrant>().associateWith { mutableSetOf() }
             requestedQuadrants.forEach { (element, quadrants) ->
                 quadrants.forEach { quadrant ->
+                    println("increasing $quadrant ${searchAdvancements[element]!![quadrant]} with one")
                     searchAdvancements[element]!![quadrant] = searchAdvancements[element]!![quadrant]!! + 1
                     val next = searchAdvancements[element]!![quadrant]!!
                     if (!currentAreas[quadrant]!!.contains(next)) {
@@ -453,6 +454,7 @@ class FrostApi {
             }
         }
         stationQueues.forEach { (element, quadrants) ->
+            if (modes[element]!! != Mode.NEAREST) resetMode(modes, element, searchAdvancements[element]!!) // idk where to put this
             val mode = modes[element]!!
 
             var queuableOrUsableStationsCount = 0 // Does not need to be muted later
@@ -584,9 +586,8 @@ class FrostApi {
         val missingElements: MutableSet<String> = mutableSetOf()
 
         usableStations.forEach { (element, quadrants) ->
-            val mode = modes[element]!!
-            println("mode of "+element+" is "+mode.toString())
-            if (mode == Mode.NEAREST && modesData[element]!!.second == false) {
+            println("mode of "+element+" is "+modes[element]!!.toString())
+            if (modes[element]!! == Mode.NEAREST && modesData[element]!!.second == false) {
                 println(modesData)
                 val stationid = modesData[element]!!.first[0].first
                 if (stationid in stationTimeData[element]!! && stationTimeData[element]!![stationid]!!.size == 12) {
@@ -610,7 +611,7 @@ class FrostApi {
                     }
                 }
             }
-            if (mode == Mode.INTERPOLATION || mode == Mode.EXTRAPOLATION) {
+            if (modes[element]!! == Mode.INTERPOLATION || modes[element]!! == Mode.EXTRAPOLATION) {
                 quadrants.forEach { (quadrant, usableQueue) ->
                     val advancement = queueAdvancements[element]!![quadrant]!!
                     if (advancement > 0) {
@@ -627,11 +628,11 @@ class FrostApi {
                             queueAdvancements[element]!![quadrant] = (advancement * -1) // Means it has already tested this. forgot where this is used
                         }
                     }
-                    if (mode == Mode.INTERPOLATION) {
+                    if (modes[element]!! == Mode.INTERPOLATION) {
                         if (usableStations[element]!![quadrant]!!.size == 0) {
                             checkQuadrants.getOrPut(element) { mutableSetOf() }.add(quadrant)
                         }
-                    } else if (mode == Mode.EXTRAPOLATION) {
+                    } else if (modes[element]!! == Mode.EXTRAPOLATION) {
                         if (usableStations[element]!![quadrant]!!.size < 3) {
                             checkQuadrants.getOrPut(element) { mutableSetOf() }.add(quadrant)
                         }
@@ -677,12 +678,9 @@ class FrostApi {
 
         val stationLocations: MutableMap<String, LocationValue> = mutableMapOf() //id to distances and angle from straight up, for easy weight recalculation. if a station is already in, it does not re-add it (e.g. if same station different element)
         val stationTimeData: Map<String, MutableMap<String, MutableMap<Int, Pair<Double, Int>>>> = elementsConst.associateWith { mutableMapOf() }// element to id to month to sum to counter. separated by elements because the same station can have multiple elements.
-        val stationQueues: Map<String, Map<Quadrant, MutableList<String>>> = elementsConst.associateWith {
-            enumValues<Quadrant>().associateWith { mutableListOf() } } //quadrants for each element. each quadrant points to a queue of stations from the closest to the furthest. where when a station. the sorting of the queues are done before adding, not by adding
-        val queueAdvancements: Map<String, MutableMap<Quadrant, Int>> = elementsConst.associateWith {
-            enumValues<Quadrant>().associateWith { 0 }.toMutableMap() } // elements to quadrants to a counter of where you last dropped off in the queue. they begin at one, and all indexing require -1 on it. fine to start at 1 because it begins by incrementing it with 1?? idk i forgor
-        val usableStations: Map<String, Map<Quadrant, MutableList<String>>> = elementsConst.associateWith {
-            enumValues<Quadrant>().associateWith { mutableListOf() } } // stationQueues but only the usable stations // elements to quadrants
+        val stationQueues: Map<String, Map<Quadrant, MutableList<String>>> = elementsConst.associateWith { enumValues<Quadrant>().associateWith { mutableListOf() } } //quadrants for each element. each quadrant points to a queue of stations from the closest to the furthest. where when a station. the sorting of the queues are done before adding, not by adding
+        val queueAdvancements: Map<String, MutableMap<Quadrant, Int>> = elementsConst.associateWith { enumValues<Quadrant>().associateWith { 0 }.toMutableMap() } // elements to quadrants to a counter of where you last dropped off in the queue. they begin at one, and all indexing require -1 on it. fine to start at 1 because it begins by incrementing it with 1?? idk i forgor
+        val usableStations: Map<String, Map<Quadrant, MutableList<String>>> = elementsConst.associateWith { enumValues<Quadrant>().associateWith { mutableListOf() } } // stationQueues but only the usable stations // elements to quadrants
         val searchAdvancements: Map<String, MutableMap<Quadrant, Int>> = elementsConst.associateWith { enumValues<Quadrant>().associateWith { 1 }.toMutableMap() }
         val modes: MutableMap<String, Mode> = elementsConst.associateWith { Mode.INTERPOLATION }.toMutableMap()// elements to mode
         val modesData: MutableMap<String, Pair<MutableList<Pair<String, Double>>, Boolean>> = elementsConst.associateWith { Pair(mutableListOf<Pair<String, Double>>(), false) }.toMutableMap()
@@ -750,9 +748,10 @@ class FrostApi {
             return when (element) {
                 "mean(air_temperature P1M)" -> { elevationDifference: Double, _, _, _ -> elevationDifference * -0.0065 }
                 "mean(snow_coverage_type P1M)" -> { _, index, prevs, tempGainedArray ->
+                    println(tempGainedArray[index])
                     val originalTemp: Double? = prevs["mean(air_temperature P1M)"]?.getOrNull(index)?.let { it - tempGainedArray[index] }
                     if (originalTemp == null) null
-                    if (originalTemp!! + tempGainedArray[index] < 5.0) {
+                    if (tempGainedArray[index] > 0.0 || (originalTemp!! + tempGainedArray[index] < 5.0)) {
                         -tempGainedArray[index] * 0.08
                     } else {
                         0.0
@@ -768,6 +767,7 @@ class FrostApi {
         var dataElevation: Double? = null
         println(modes)
         println(modesData)
+        val tempGainedArray = Array(12) { 0.0 } // TBD: set to interval not 12
 
         usableStations.forEach { (element, quadrants) ->
             val mode = modes[element]!!
@@ -819,21 +819,23 @@ class FrostApi {
                 if (elevationSum != null) dataElevation = elevationSum!! / elevationCounter
                 resultsFormatted[element] = averagedIntercepts
             }
-
-            val tempGainedArray = Array(12) { 0.0 }
-            if (dataElevation != null && interestElevation != null) {
-                val elevationDifference = interestElevation - dataElevation!!
-                println("interest elevation: $interestElevation")
-                println("data elevation: $dataElevation")
-                println("elevation difference: $elevationDifference")
-                val adjuster = adjustBasedOnElement(element)
-                resultsFormatted[element]!!.forEachIndexed { index, value ->
-                    val addition = adjuster(elevationDifference, index, resultsFormatted, tempGainedArray)
-                    println("original: ${resultsFormatted[element]!![index]}")
-                    if (addition != null) {
-                        println("addition: $addition")
-                        if (element == "mean(air_temperature P1M)") tempGainedArray[index] = addition
-                        resultsFormatted[element]!![index] = resultsFormatted[element]!![index] + addition
+            if (mode != Mode.FAIL) {
+                if (dataElevation != null && interestElevation != null) {
+                    val elevationDifference = interestElevation - dataElevation!!
+                    println("interest elevation: $interestElevation")
+                    println("data elevation: $dataElevation")
+                    println("elevation difference: $elevationDifference")
+                    if (abs(elevationDifference) > 250) {
+                        val adjuster = adjustBasedOnElement(element)
+                        resultsFormatted[element]!!.forEachIndexed { index, value ->
+                            val addition = adjuster(elevationDifference, index, resultsFormatted, tempGainedArray)
+                            println("original: ${resultsFormatted[element]!![index]}")
+                            if (addition != null) {
+                                println("addition: $addition")
+                                if (element == "mean(air_temperature P1M)") tempGainedArray[index] = addition
+                                resultsFormatted[element]!![index] = resultsFormatted[element]!![index] + addition
+                            }
+                        }
                     }
                 }
             }
