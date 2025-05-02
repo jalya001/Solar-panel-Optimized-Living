@@ -3,7 +3,8 @@
 
     <!--Home Screen-->
     <string name="home"> Hjemme</string>
-    <string name="install_panels"> Installer paneler</string>
+    <string name="install_panels_title">Finn ditt \n solcellepotensial!</string>
+    <string name="install_panels_desc">Legg inn adresse og detaljer — se estimert strøm og besparelse med solcellepaneler.</string>
     <string name="last_location">Siste posisjon (trenger bedre navn)</string>
     <string name="prices"> Strømpriser </string>
     <string name="help"> Hjelp</string>

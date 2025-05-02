@@ -162,15 +162,23 @@ fun HomeScreen(
         topBar = {
             Surface(
                 modifier = Modifier
-                    .padding(top = 30.dp, start = 20.dp, end = 20.dp, bottom = 10.dp)
+                    .padding(top = 35.dp),
             ) {
-                Image(
-                    painter = painterResource(
-                        id = if (isDark) R.drawable.logo_topbar_dark else R.drawable.logo_topbar_light
-                    ),
-                    contentDescription = "",
-                    modifier = Modifier
-                )
+                Box(
+                    modifier = Modifier.fillMaxWidth()
+//                        .background(Color.Red)
+                    ,
+                    contentAlignment = Alignment.Center
+                ) {
+                    Image(
+                        painter = painterResource(
+                            id = if (isDark) R.drawable.logo_topbar_dark else R.drawable.logo_topbar_light
+                        ),
+                        contentDescription = "",
+                        modifier = Modifier
+                            .height(100.dp)
+                    )
+                }
             }
         },
         bottomBar = {
@@ -191,14 +199,15 @@ fun HomeScreen(
         ) {
 
             MyNavCard(
-                text = stringResource(id = R.string.install_panels),
+                text = stringResource(id = R.string.install_panels_title),
+                desc = stringResource(id = R.string.install_panels_desc),
                 route = "map",
                 navController = navController,
                 modifier = Modifier
                     .fillMaxWidth()
                     .height(250.dp),
-                style = MaterialTheme.typography.displayLarge,
-                content = { PanelAnimation() },
+                style = MaterialTheme.typography.displaySmall,
+//                content = { PanelAnimation() },
                 color = MaterialTheme.colorScheme.tertiary
             )
 
