@@ -157,6 +157,7 @@ fun MapScreen(
         }
     }
     HelpBottomSheet(
+        navController = navController,
         visible = showHelp,
         onDismiss = { showHelp = false },
     )
@@ -533,7 +534,7 @@ fun LocationNotSelectedDialog(
     var showDialog by remember { mutableStateOf(coordinates == null) }
 //    var showHelpBottomSheet by remember { mutableStateOf(false) }
 //    if (showHelpBottomSheet) {
-//        HelpBottomSheet(
+//        HelpBottomSheet(navController = navController,
 //            visible = true,
 //            onDismiss = { showHelpBottomSheet = false },
 //            expandSection = "draw",

@@ -1,7 +1,13 @@
 package no.solcellepanelerApp.ui.home
 
+import android.Manifest
 import android.annotation.SuppressLint
+import android.app.AlertDialog
+import android.content.Intent
+import android.content.pm.PackageManager
 import android.location.Location
+import android.net.Uri
+import android.provider.Settings
 import android.util.Log
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.border
@@ -16,7 +22,6 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -41,6 +46,8 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import androidx.core.app.ActivityCompat
+import androidx.core.content.ContextCompat
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
@@ -73,6 +80,7 @@ import no.solcellepanelerApp.util.fetchCoordinates
 import java.time.LocalTime
 import java.time.ZonedDateTime
 
+
 @SuppressLint("DefaultLocale")
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -81,8 +89,6 @@ fun HomeScreen(
     fontScaleViewModel: FontScaleViewModel,
     weatherViewModel: WeatherViewModel,
 ) {
-    var context = LocalContext.current
-    val activity = (context as? MainActivity)
     val radiationArray by weatherViewModel.frostDataRim.collectAsState()
 
     var showHelp by remember { mutableStateOf(false) }
@@ -91,7 +97,6 @@ fun HomeScreen(
 
     var selectedRegion by rememberSaveable { mutableStateOf<Region?>(null) }
     var currentLocation by remember { mutableStateOf<Location?>(null) }
-    var locationPermissionGranted by remember { mutableStateOf(false) }
     var dataFetched by remember { mutableStateOf(false) }
 
     val currentHour by remember { mutableIntStateOf(ZonedDateTime.now().minusHours(2).hour) }
@@ -121,21 +126,6 @@ fun HomeScreen(
         return
     }
 
-    //Request location permission and fetch region
-    RequestLocationPermission { region ->
-        selectedRegion = region
-        locationPermissionGranted = true
-
-    }
-
-    LaunchedEffect(locationPermissionGranted) {
-        if (locationPermissionGranted && activity != null) {
-            val location = fetchCoordinates(context, activity)
-            currentLocation = location
-
-        }
-    }
-
     Log.d("HomeScreen", "currentLocation: $currentLocation")
     if (currentLocation != null && !dataFetched) {
         Log.e(
@@ -162,15 +152,23 @@ fun HomeScreen(
         topBar = {
             Surface(
                 modifier = Modifier
-                    .padding(top = 30.dp, start = 20.dp, end = 20.dp, bottom = 10.dp)
+                    .padding(top = 35.dp),
             ) {
-                Image(
-                    painter = painterResource(
-                        id = if (isDark) R.drawable.logo_topbar_dark else R.drawable.logo_topbar_light
-                    ),
-                    contentDescription = "",
-                    modifier = Modifier
-                )
+                Box(
+                    modifier = Modifier.fillMaxWidth()
+//                        .background(Color.Red)
+                    ,
+                    contentAlignment = Alignment.Center
+                ) {
+                    Image(
+                        painter = painterResource(
+                            id = if (isDark) R.drawable.logo_topbar_dark else R.drawable.logo_topbar_light
+                        ),
+                        contentDescription = "",
+                        modifier = Modifier
+                            .height(100.dp)
+                    )
+                }
             }
         },
         bottomBar = {
@@ -185,7 +183,8 @@ fun HomeScreen(
             modifier = Modifier
                 .fillMaxSize()
                 .padding(contentPadding)
-                .padding(5.dp),
+//                .background(Color.Blue)
+            ,
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.Center
         ) {
@@ -325,6 +324,7 @@ fun HomeScreen(
             }
 
             HelpBottomSheet(
+                navController = navController,
                 visible = showHelp,
                 onDismiss = { showHelp = false },
             )
@@ -405,34 +405,6 @@ fun ElectricityTowers() {
 }
 
 @Composable
-fun LightningAnimation() {
-    val animationFile = "lightningBolt_anim.json"
-
-    val composition by rememberLottieComposition(
-        LottieCompositionSpec.Asset(animationFile)
-    )
-
-    val progress by animateLottieCompositionAsState(
-        composition = composition,
-        iterations = LottieConstants.IterateForever,
-    )
-
-    Box(
-        modifier = Modifier
-//        .background(color = Color.Blue)
-            .height(500.dp)
-    ) {
-        LottieAnimation(
-            composition = composition,
-            progress = { progress },
-            modifier = Modifier
-                .size(150.dp)
-
-        )
-    }
-}
-
-@Composable
 fun SunAnimation(value: Double) {
     val animationFile = when {
         value < 0.03 -> "solar_verylow.json"
@@ -468,3 +440,69 @@ fun SunAnimation(value: Double) {
     Log.d("SunAnimation", "Animating with value: $value")
 }
 
+@SuppressLint("MissingPermission")
+@Composable
+fun RememberLocationWithPermission(
+    triggerRequest: Boolean,
+    onRegionDetermined: (Region?) -> Unit,
+): Pair<Location?, Boolean> {
+    val context = LocalContext.current
+    val activity = context as? MainActivity
+
+    var locationPermissionGranted by remember { mutableStateOf(false) }
+    var currentLocation by remember { mutableStateOf<Location?>(null) }
+    var permissionDeniedPermanently by remember { mutableStateOf(false) }
+
+    val permissionCheck =
+        ContextCompat.checkSelfPermission(context, Manifest.permission.ACCESS_FINE_LOCATION)
+    val showRationale = ActivityCompat.shouldShowRequestPermissionRationale(
+        activity!!,
+        Manifest.permission.ACCESS_FINE_LOCATION
+    )
+
+    // Check permission on recomposition
+    LaunchedEffect(Unit) {
+        if (permissionCheck == PackageManager.PERMISSION_GRANTED) {
+            locationPermissionGranted = true
+        } else if (!showRationale && permissionCheck != PackageManager.PERMISSION_GRANTED) {
+            permissionDeniedPermanently = true
+        }
+    }
+
+    // Request location permission and fetch region
+//    if (triggerRequest && !locationPermissionGranted && !permissionDeniedPermanently) {  var ikke detet som var problemet
+    if (triggerRequest && !locationPermissionGranted) {
+        RequestLocationPermission { region ->
+            onRegionDetermined(region)
+            locationPermissionGranted = true
+        }
+    }
+
+    // Once permission is granted, fetch coordinates
+    LaunchedEffect(locationPermissionGranted) {
+        if (locationPermissionGranted && activity != null) {
+            val location = fetchCoordinates(context, activity)
+            currentLocation = location
+        }
+    }
+
+    // Show alert dialog if permission is denied permanently
+    if (permissionDeniedPermanently) {
+        LaunchedEffect(Unit) {
+            AlertDialog.Builder(context)
+                .setTitle("Location Permission Needed")
+                .setMessage("Please enable location permission in settings to use this feature.")
+                .setPositiveButton("Go to Settings") { _, _ ->
+                    val intent = Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS).apply {
+                        data = Uri.fromParts("package", context.packageName, null)
+                        addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+                    }
+                    context.startActivity(intent)
+                }
+                .setNegativeButton("Cancel", null)
+                .show()
+        }
+    }
+
+    return Pair(currentLocation, locationPermissionGranted)
+}

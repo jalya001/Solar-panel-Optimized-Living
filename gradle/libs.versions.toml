@@ -1,8 +1,10 @@
 [versions]
+accompanistPager = "0.24.13-rc"
 accompanistPermissions = "0.34.0"
 activityComposeVersion = "1.4.0"
 agp = "8.8.2"
 appcompat = "1.7.0"
+appcompatVersion = "1.0.2"
 coreSplashscreen = "1.0.1"
 kotlin = "2.0.0"
 kotlinx-serialization-json = { group = "org.jetbrains.kotlinx", name = "kotlinx-serialization-json", version = "2.0.0" }
@@ -42,8 +44,12 @@ uiToolingPreview = "1.7.8"
 runtimeLivedata = "1.7.8"
 ycharts = "2.1.0"
 roomRuntimeAndroid = "2.7.1"
+pagerVersion = "1.7.2"
 
 [libraries]
+androidx-appcompat-v102 = { module = "androidx.appcompat:appcompat", version.ref = "appcompatVersion" }
+foundation-pager = { group = "androidx.compose.foundation", name = "foundation", version.ref = "pagerVersion" }
+
 accompanist-permissions = { module = "com.google.accompanist:accompanist-permissions", version.ref = "accompanistPermissions" }
 androidx-appcompat = { module = "androidx.appcompat:appcompat", version.ref = "appcompat" }
 androidx-appcompat-resources = { module = "androidx.appcompat:appcompat-resources", version.ref = "appcompat" }

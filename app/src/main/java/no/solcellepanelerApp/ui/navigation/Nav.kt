@@ -39,11 +39,11 @@ import no.solcellepanelerApp.ui.home.HomeScreen
 import no.solcellepanelerApp.ui.infoscreen.InfoScreen
 import no.solcellepanelerApp.ui.map.MapScreen
 import no.solcellepanelerApp.ui.map.MapScreenViewModel
+import no.solcellepanelerApp.ui.onboarding.OnboardingScreen
 import no.solcellepanelerApp.ui.result.ResultScreen
 import no.solcellepanelerApp.ui.result.ShowMonthlySavings
 import no.solcellepanelerApp.ui.result.ShowYearlySavings
 import no.solcellepanelerApp.ui.result.WeatherViewModel
-import no.solcellepanelerApp.ui.savedLocations.SavedLocationsScreen
 
 @Composable
 fun Nav(navController: NavHostController, fontScaleViewModel: FontScaleViewModel) {
@@ -52,6 +52,9 @@ fun Nav(navController: NavHostController, fontScaleViewModel: FontScaleViewModel
     val priceRepository = ElectricityPriceRepository("NO1")
 
     NavHost(navController, startDestination = "home") {
+        composable("onboarding") { OnboardingScreen(onFinished = { navController.popBackStack() }) }
+
+
         composable("home") { HomeScreen(navController, fontScaleViewModel, WviewModel) }
         composable("map") {
             MapScreen(viewModel, navController, fontScaleViewModel, WviewModel)
@@ -59,10 +62,9 @@ fun Nav(navController: NavHostController, fontScaleViewModel: FontScaleViewModel
         composable("result") {
             ResultScreen(
                 navController, viewModel, WviewModel, fontScaleViewModel,
-                priceScreenViewModel = priceRepository //hvorfor heter den viewmodel hvis den tar en repo?
+                priceScreenViewModel = priceRepository
             )
         }
-        composable("last_location") { SavedLocationsScreen(navController, fontScaleViewModel) }
         composable("prices") {
             val repository = ElectricityPriceRepository("NO1")
             PriceScreen(

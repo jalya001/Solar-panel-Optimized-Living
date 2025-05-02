@@ -104,7 +104,8 @@ fun PriceScreen(
                         ElectricityPriceChart(prices = prices)
                         Spacer(modifier = Modifier.height(16.dp))
                         val currentHour = ZonedDateTime.now(ZoneId.of("Europe/Oslo")).hour
-                        val initialIndex = prices.indexOfFirst { ZonedDateTime.parse(it.time_start).hour == currentHour }
+                        val initialIndex =
+                            prices.indexOfFirst { ZonedDateTime.parse(it.time_start).hour == currentHour }
                         var hourIndex by remember { mutableStateOf(initialIndex.coerceAtLeast(0)) }
                         PriceCard(
                             prices = prices,
@@ -117,7 +118,10 @@ fun PriceScreen(
                 LoadingScreen()
             }
 
-            HelpBottomSheet(visible = showHelp, onDismiss = { showHelp = false })
+            HelpBottomSheet(
+                navController = navController,
+                visible = showHelp,
+                onDismiss = { showHelp = false })
             AppearanceBottomSheet(
                 visible = showAppearance,
                 onDismiss = { showAppearance = false },
@@ -131,7 +135,7 @@ fun PriceScreen(
 @Composable
 fun RegionDropdown(
     selectedRegion: Region,
-    onRegionSelected: (Region) -> Unit
+    onRegionSelected: (Region) -> Unit,
 ) {
     var expanded by remember { mutableStateOf(false) }
     ExposedDropdownMenuBox(
