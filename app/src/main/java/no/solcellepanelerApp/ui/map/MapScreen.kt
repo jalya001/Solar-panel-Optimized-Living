@@ -125,13 +125,29 @@ fun MapScreen(
     var showHelp by remember { mutableStateOf(false) }
     var showAppearance by remember { mutableStateOf(false) }
 
+    var showMapOverlay by remember { mutableStateOf(true) }
+    var showDrawOverlay by remember { mutableStateOf(false) }
+
+
     LaunchedEffect(trigger) {
         if (trigger > lastShownTrigger) {
             snackbarHostState.showSnackbar("Address not found, try again")
             lastShownTrigger = trigger
         }
     }
+    if (showMapOverlay) {
+        SimpleTutorialOverlay(
+            onDismiss = { showMapOverlay = false },
+            message = "Søk etter adressen din, bruk enhetsposisjon, eller trykk på kartet for å velge lokasjon"
+        )
+    }
 
+    if (showDrawOverlay) {
+        SimpleTutorialOverlay(
+            onDismiss = { showDrawOverlay = false },
+            message = "Trykk på kartet for å starte tegningen av ønsket område"
+        )
+    }
     Scaffold(
         snackbarHost = { SnackbarHost(hostState = snackbarHostState) },
         topBar = {
@@ -160,7 +176,9 @@ fun MapScreen(
                 navController = navController,
                 weatherViewModel = weatherViewModel,
                 snackbarHostState = snackbarHostState,
-                modifier = Modifier.padding(contentPadding)
+                modifier = Modifier.padding(contentPadding),
+                showDrawOverlay = showDrawOverlay,
+                setShowDrawOverlay = { showDrawOverlay = it }
             )
         }
     }
@@ -182,6 +200,8 @@ fun DisplayScreen(
     viewModel: MapScreenViewModel,
     navController: NavController,
     weatherViewModel: WeatherViewModel,
+    showDrawOverlay: Boolean,
+    setShowDrawOverlay: (Boolean) -> Unit,
     snackbarHostState: SnackbarHostState,
     modifier: Modifier = Modifier,
 ) {
@@ -218,10 +238,6 @@ fun DisplayScreen(
             currentLocation = location
         }
     }
-
-    var showMapOverlay by remember { mutableStateOf(true) }
-    var showDrawOverlay by remember { mutableStateOf(false) }
-
 
     //Camera and map state
     var cameraPositionState = rememberCameraPositionState {
@@ -328,19 +344,7 @@ fun DisplayScreen(
             }
         }
 
-        if (showMapOverlay) {
-            SimpleTutorialOverlay(
-                onDismiss = { showMapOverlay = false },
-                message = "Søk etter adressen din, bruk enhetsposisjon, eller trykk på kartet for å velge lokasjon"
-            )
-        }
 
-        if (showDrawOverlay) {
-            SimpleTutorialOverlay(
-                onDismiss = { showDrawOverlay = false },
-                message = "Trykk på kartet for å starte tegningen av ønsket område"
-            )
-        }
         //Search bar
 
         Card(
@@ -522,7 +526,7 @@ fun DisplayScreen(
             onDismiss = { showBottomSheet = false },
             onStartDrawing = {
                 drawingEnabled = true
-                showDrawOverlay = true
+                setShowDrawOverlay(true)
                 selectedCoordinates = null
                 viewModel.removePoints()
                 index = 0

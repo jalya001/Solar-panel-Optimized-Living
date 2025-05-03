@@ -245,14 +245,11 @@ fun DataCard(
                     text = stringResource(R.string.estimated_energy_prod, energy),
                     fontWeight = FontWeight.Bold
                 )
-                Text("*kort forklaring*", style = MaterialTheme.typography.bodyMedium)
-
 
                 IconTextRow(
                     iconRes = R.drawable.baseline_power_24,
                     text = stringResource(R.string.estimated_powerpr_hour, power)
                 )
-                Text("*kort forklaring*", style = MaterialTheme.typography.bodyMedium)
 
 //            IconTextRow(
 //                iconRes = R.drawable.rounded_nest_sunblock_24,
@@ -274,7 +271,10 @@ fun DataCard(
                     iconRes = R.drawable.rounded_nest_sunblock_24,
                     text = stringResource(R.string.adj_radiation, adjusted)
                 )
-                Text("*kort forklaring*", style = MaterialTheme.typography.bodyMedium)
+                Text(
+                    "This is the amount of solar radiation your panels receive, adjust with snow,cloud, and temperature data for your location.",
+                    style = MaterialTheme.typography.bodyMedium
+                )
 
                 IconTextRow(
                     iconRes = R.drawable.baseline_device_thermostat_24,

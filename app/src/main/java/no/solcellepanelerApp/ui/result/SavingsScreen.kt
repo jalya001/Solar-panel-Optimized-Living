@@ -64,6 +64,12 @@ fun ShowMonthlySavings(
             )
         }
     ) { paddingValues ->
+        if (showOverlay) {
+            SimpleTutorialOverlay(
+                onDismiss = { showOverlay = false },
+                "Se hvor mye du sparer \n\n Trykk på de ulike enhetene for å se *trenger en god fromulering* \n\nScroll opp for mer informasjon!"
+            )
+        }
         Column(
             modifier = Modifier
                 .padding(paddingValues)
@@ -71,9 +77,7 @@ fun ShowMonthlySavings(
             verticalArrangement = Arrangement.Center,
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            if (showOverlay) {
-                SimpleTutorialOverlay(onDismiss = { showOverlay = false })
-            }
+
 
             Text(
                 text = buildAnnotatedString {
@@ -118,6 +122,7 @@ fun ShowMonthlySavings(
                 fontScaleViewModel = fontScaleViewModel
             )
         }
+
     }
 }
 
