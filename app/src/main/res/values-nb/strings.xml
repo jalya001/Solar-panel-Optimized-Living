@@ -223,6 +223,6 @@
 
     <string name="onboard_title_4">Lokasjonstilgang</string>
     <string name="onboard_desc_4">Gi tilgang til enhetslokasjon for å finne nærmeste adresse og få en bedre opplevelse.</string>
-    <string name="hide_area">Skjul område</string>
+    <string name="hide_area">Skjul\nområde</string>
 
 </resources>

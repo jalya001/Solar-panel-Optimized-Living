@@ -218,5 +218,5 @@
 
     <string name="onboard_title_4">Location access</string>
     <string name="onboard_desc_4">Grant location access to find your nearest address and optimize the experience.</string>
-    <string name="hide_area">Hide Area</string>
+    <string name="hide_area">Hide\nArea</string>
 </resources>

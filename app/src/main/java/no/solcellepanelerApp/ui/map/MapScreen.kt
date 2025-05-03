@@ -19,8 +19,6 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.lazy.grid.GridCells
-import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
@@ -591,16 +589,6 @@ fun LocationNotSelectedDialog(
                 },
                 confirmButton = {
 
-
-//                Button( //Ga ikke mening å ha det på denne skjermen, men burde være på tegneskjermen
-//                    onClick ={
-//                        showHelpBottomSheet = true
-//                    }
-//                ) {
-//                  Text(stringResource(id = R.string.need_help_drawing))
-//                }
-
-
                 },
                 dismissButton = {
                     Button(
@@ -612,18 +600,6 @@ fun LocationNotSelectedDialog(
             )
         }
     }
-
-    AlertDialog(
-        onDismissRequest = onDismiss,
-        title = { Text(stringResource(id = R.string.no_location_title)) },
-        text = { Text(stringResource(id = R.string.no_location_message)) },
-        confirmButton = {},
-        dismissButton = {
-            Button(onClick = onDismiss) {
-                Text(stringResource(id = R.string.dismiss))
-            }
-        }
-    )
 }
 
 @Composable
@@ -636,169 +612,182 @@ private fun DrawingControls(
     Box(
         modifier = Modifier
             .fillMaxSize()
-            .padding(16.dp)
+//            .padding(10.dp)
     ) {
         Column(
             modifier = Modifier
                 .align(Alignment.BottomStart)
+//                .width(300.dp)
         ) {
             var areaShown by remember { mutableStateOf(false) }
 
-            LazyVerticalGrid(
-                columns = GridCells.Fixed(2),
-                horizontalArrangement = Arrangement.spacedBy(8.dp),
-                verticalArrangement = Arrangement.spacedBy(8.dp)
-            ) {
-                item {
-                    if (areaShown) {
-                        Card(
-                            modifier = Modifier
-                                .padding(bottom = 5.dp)
-                                .clickable {
-                                    viewModel.areaInput =
-                                        viewModel.calculateAreaOfPolygon(polygonPoints).toString()
-                                    toggleBottomSheet()
-                                },
-                            colors = CardColors(
-                                containerColor = MaterialTheme.colorScheme.onPrimaryContainer,
-                                contentColor = MaterialTheme.colorScheme.background,
-                                disabledContainerColor = Color(0xFF4CAF50),
-                                disabledContentColor = Color(0xFF4CAF50)
+            Box(
+                modifier = Modifier
+                    .width(270.dp)
+                    .height(200.dp)
+            )
+            {
+                if (areaShown) {
+                    Card(
+                        modifier = Modifier
+                            .clickable {
+                                viewModel.areaInput =
+                                    viewModel.calculateAreaOfPolygon(polygonPoints).toString()
+                                toggleBottomSheet()
+                            }
+                            .width(130.dp)
+                            .align(Alignment.TopEnd),
+                        colors = CardColors(
+                            containerColor = MaterialTheme.colorScheme.onPrimaryContainer,
+                            contentColor = MaterialTheme.colorScheme.background,
+                            disabledContainerColor = Color(0xFF4CAF50),
+                            disabledContentColor = Color(0xFF4CAF50)
+                        )
+                    ) {
+                        Column(horizontalAlignment = Alignment.CenterHorizontally) {
+                            Icon(
+                                Icons.Filled.CheckCircle,
+                                contentDescription = "Confirm Drawing",
+                                modifier = Modifier.padding(top = 6.dp),
                             )
-                        ) {
-                            Column(horizontalAlignment = Alignment.CenterHorizontally) {
-                                Icon(
-                                    Icons.Filled.CheckCircle,
-                                    contentDescription = "Confirm Drawing",
-                                    modifier = Modifier.padding(top = 6.dp),
-                                )
-                                Text(
-                                    text = stringResource(id = R.string.confirm_drawing),
-                                    modifier = Modifier.padding(
+                            Text(
+                                text = stringResource(id = R.string.confirm_drawing),
+                                modifier = Modifier
+                                    .padding(
                                         top = 2.dp,
                                         start = 16.dp,
                                         end = 16.dp,
                                         bottom = 10.dp
-                                    ),
-                                    textAlign = TextAlign.Center,
-                                    color = MaterialTheme.colorScheme.background
-                                )
-                            }
+                                    )
+                                    .width(130.dp),
+                                textAlign = TextAlign.Center,
+                                color = MaterialTheme.colorScheme.background
+                            )
                         }
                     }
                 }
 
-                if (polygonPoints.size > 2) {
-                    item {
-                        Card(
-                            modifier = Modifier
-                                .clickable {
-                                    onToggleVisibility()
-                                    areaShown = true
-                                },
-                            colors = CardColors(
-                                containerColor = MaterialTheme.colorScheme.onPrimaryContainer,
-                                contentColor = MaterialTheme.colorScheme.background,
-                                disabledContainerColor = Color(0xFF4CAF50),
-                                disabledContentColor = Color(0xFF4CAF50)
+
+                if (polygonPoints.size >= 3) {
+                    Card(
+                        modifier = Modifier
+                            .clickable {
+                                onToggleVisibility()
+                                areaShown = !areaShown
+                            }
+                            .width(130.dp)
+                            .align(Alignment.TopStart),
+                        colors = CardColors(
+                            containerColor = MaterialTheme.colorScheme.onPrimaryContainer,
+                            contentColor = MaterialTheme.colorScheme.background,
+                            disabledContainerColor = Color(0xFF4CAF50),
+                            disabledContentColor = Color(0xFF4CAF50)
+                        )
+                    ) {
+                        Column(horizontalAlignment = Alignment.CenterHorizontally) {
+                            Icon(
+                                imageVector = if (!areaShown) Icons.Filled.Visibility else Icons.Filled.VisibilityOff,
+                                contentDescription = "Show area",
+                                modifier = Modifier.padding(top = 6.dp),
                             )
-                        ) {
-                            Column(horizontalAlignment = Alignment.CenterHorizontally) {
-                                Icon(
-                                    imageVector = if (!areaShown) Icons.Filled.Visibility else Icons.Filled.VisibilityOff,
-                                    contentDescription = "Show area",
-                                    modifier = Modifier.padding(top = 6.dp),
-                                )
-                                Text(
-                                    text = stringResource(id = if (!areaShown) R.string.show_area else R.string.hide_area),
-                                    modifier = Modifier.padding(
+                            Text(
+                                text = stringResource(id = if (!areaShown) R.string.show_area else R.string.hide_area),
+                                modifier = Modifier
+                                    .padding(
                                         top = 2.dp,
                                         start = 16.dp,
                                         end = 16.dp,
                                         bottom = 10.dp
-                                    ),
-                                    textAlign = TextAlign.Center,
-                                    color = MaterialTheme.colorScheme.background
-                                )
-                            }
+                                    )
+                                    .width(130.dp),
+                                textAlign = TextAlign.Center,
+                                color = MaterialTheme.colorScheme.background
+                            )
                         }
+                    }
+
+                }
+
+                if (polygonPoints.size >= 2) {
+                    Card(
+                        modifier = Modifier
+                            .clickable {
+                                viewModel.removePoints()
+                                onToggleVisibility()
+                            }
+                            .width(130.dp)
+                            .align(Alignment.BottomEnd),
+                        colors = CardColors(
+                            containerColor = MaterialTheme.colorScheme.background,
+                            contentColor = MaterialTheme.colorScheme.onPrimaryContainer,
+                            disabledContainerColor = Color(0xFF4CAF50),
+                            disabledContentColor = Color(0xFF4CAF50)
+                        )
+                    ) {
+                        Column(horizontalAlignment = Alignment.CenterHorizontally) {
+                            Icon(
+                                Icons.Filled.DeleteForever,
+                                contentDescription = "remove all points",
+                                modifier = Modifier.padding(top = 6.dp),
+                            )
+                            Text(
+                                text = stringResource(id = R.string.remove_points),
+                                modifier = Modifier
+                                    .padding(
+                                        top = 2.dp,
+                                        start = 16.dp,
+                                        end = 16.dp,
+                                        bottom = 10.dp
+                                    )
+                                    .width(130.dp),
+                                textAlign = TextAlign.Center,
+                                color = MaterialTheme.colorScheme.onPrimaryContainer
+                            )
+                        }
+
                     }
                 }
 
                 if (polygonPoints.size >= 1) {
-                    item {
-                        Card(
-                            modifier = Modifier
-                                .clickable {
-                                    viewModel.removeLastPoint()
-                                    onToggleVisibility
-                                },
-                            colors = CardColors(
-                                containerColor = MaterialTheme.colorScheme.background,
-                                contentColor = MaterialTheme.colorScheme.onPrimaryContainer,
-                                disabledContainerColor = Color(0xFF4CAF50),
-                                disabledContentColor = Color(0xFF4CAF50)
-                            )
-                        ) {
-                            Column(horizontalAlignment = Alignment.CenterHorizontally) {
-                                Icon(
-                                    Icons.Filled.Undo,
-                                    contentDescription = "remove last point",
-                                    modifier = Modifier.padding(top = 6.dp),
-                                )
-                                Text(
-                                    text = stringResource(id = R.string.remove_last_point),
-                                    modifier = Modifier.padding(
-                                        top = 2.dp,
-                                        start = 16.dp,
-                                        end = 16.dp,
-                                        bottom = 10.dp
-                                    ),
-                                    textAlign = TextAlign.Center,
-                                    color = MaterialTheme.colorScheme.onPrimaryContainer
-                                )
+                    Card(
+                        modifier = Modifier
+                            .clickable {
+                                viewModel.removeLastPoint()
+                                onToggleVisibility
                             }
-                        }
-                    }
-                }
-
-                if (polygonPoints.isNotEmpty()) {
-                    item {
-                        Card(
-                            modifier = Modifier
-                                .clickable {
-                                    viewModel.removePoints()
-                                    onToggleVisibility()
-                                },
-                            colors = CardColors(
-                                containerColor = MaterialTheme.colorScheme.background,
-                                contentColor = MaterialTheme.colorScheme.onPrimaryContainer,
-                                disabledContainerColor = Color(0xFF4CAF50),
-                                disabledContentColor = Color(0xFF4CAF50)
+                            .width(130.dp)
+                            .align(Alignment.BottomStart),
+                        colors = CardColors(
+                            containerColor = MaterialTheme.colorScheme.background,
+                            contentColor = MaterialTheme.colorScheme.onPrimaryContainer,
+                            disabledContainerColor = Color(0xFF4CAF50),
+                            disabledContentColor = Color(0xFF4CAF50)
+                        )
+                    ) {
+                        Column(horizontalAlignment = Alignment.CenterHorizontally) {
+                            Icon(
+                                Icons.Filled.Undo,
+                                contentDescription = "remove last point",
+                                modifier = Modifier.padding(top = 6.dp),
                             )
-                        ) {
-                            Column(horizontalAlignment = Alignment.CenterHorizontally) {
-                                Icon(
-                                    Icons.Filled.DeleteForever,
-                                    contentDescription = "remove all points",
-                                    modifier = Modifier.padding(top = 6.dp),
-                                )
-                                Text(
-                                    text = stringResource(id = R.string.remove_points),
-                                    modifier = Modifier.padding(
+                            Text(
+                                text = stringResource(id = R.string.remove_last_point),
+                                modifier = Modifier
+                                    .padding(
                                         top = 2.dp,
-                                        start = 16.dp,
-                                        end = 16.dp,
+                                        start = 10.dp,
+                                        end = 10.dp,
                                         bottom = 10.dp
-                                    ),
-                                    textAlign = TextAlign.Center,
-                                    color = MaterialTheme.colorScheme.onPrimaryContainer
-                                )
-                            }
+                                    )
+                                    .width(130.dp),
+                                textAlign = TextAlign.Center,
+                                color = MaterialTheme.colorScheme.onPrimaryContainer
+                            )
                         }
                     }
                 }
             }
+
 
         }
     }
