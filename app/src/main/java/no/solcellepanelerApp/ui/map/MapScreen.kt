@@ -4,7 +4,6 @@ import android.Manifest
 import android.content.Context
 import android.content.pm.PackageManager
 import android.graphics.Canvas
-import android.location.Geocoder
 import android.location.Location
 import android.util.Log
 import androidx.compose.foundation.background
@@ -97,13 +96,13 @@ import no.solcellepanelerApp.ui.navigation.BottomBar
 import no.solcellepanelerApp.ui.navigation.HelpBottomSheet
 import no.solcellepanelerApp.ui.navigation.TopBar
 import no.solcellepanelerApp.ui.result.WeatherViewModel
+import no.solcellepanelerApp.ui.reusables.SimpleTutorialOverlay
 import no.solcellepanelerApp.ui.theme.darkGrey
 import no.solcellepanelerApp.ui.theme.lightBlue
 import no.solcellepanelerApp.ui.theme.lightGrey
 import no.solcellepanelerApp.ui.theme.orange
 import no.solcellepanelerApp.util.RequestLocationPermission
 import no.solcellepanelerApp.util.fetchCoordinates
-import java.util.Locale
 
 
 @Composable
@@ -213,6 +212,10 @@ fun DisplayScreen(
         }
     }
 
+    var showMapOverlay by remember { mutableStateOf(true) }
+    var showDrawOverlay by remember { mutableStateOf(false) }
+
+
     //Camera and map state
     var cameraPositionState = rememberCameraPositionState {
         position = CameraPosition.fromLatLngZoom(LatLng(59.9436145, 10.7182883), 18f)
@@ -222,12 +225,15 @@ fun DisplayScreen(
         MapUiSettings()
     }
 
+
+
     LaunchedEffect(Unit) {
         locationPermissionGranted = ContextCompat.checkSelfPermission(
             context,
             Manifest.permission.ACCESS_FINE_LOCATION
         ) == PackageManager.PERMISSION_GRANTED
     }
+
 
     Box(modifier = Modifier.fillMaxSize()) {
         GoogleMap(
@@ -315,15 +321,19 @@ fun DisplayScreen(
             }
         }
 
-//        funker ikke rn
-//        var detectedAddress by remember { mutableStateOf("") }
-//        LocationButton(
-//            locationPermissionGranted = locationPermissionGranted,
-//            onAddressDetected = { address ->
-//                detectedAddress = address
-//            }
-//        )
+        if (showMapOverlay) {
+            SimpleTutorialOverlay(
+                onDismiss = { showMapOverlay = false },
+                message = "Søk etter adressen din, bruk enhetsposisjon, eller trykk på kartet for å velge lokasjon"
+            )
+        }
 
+        if (showDrawOverlay) {
+            SimpleTutorialOverlay(
+                onDismiss = { showDrawOverlay = false },
+                message = "Trykk på kartet for å starte tegningen av ønsket område"
+            )
+        }
         //Search bar
 
         Card(
@@ -341,7 +351,7 @@ fun DisplayScreen(
                 horizontalArrangement = Arrangement.Center,
                 verticalAlignment = Alignment.CenterVertically
             ) {
-                AdressInputField(
+                AddressInputField(
                     value = address,
                     onValueChange = {
                         address = it
@@ -505,6 +515,7 @@ fun DisplayScreen(
             onDismiss = { showBottomSheet = false },
             onStartDrawing = {
                 drawingEnabled = true
+                showDrawOverlay = true
                 selectedCoordinates = null
                 viewModel.removePoints()
                 index = 0
@@ -520,20 +531,8 @@ fun DisplayScreen(
 }
 
 
-fun getAddressFromLocation(context: Context, location: Location): String? {
-    val geocoder = Geocoder(context, Locale.getDefault())
-    return try {
-        val addresses = geocoder.getFromLocation(location.latitude, location.longitude, 1)
-        addresses?.firstOrNull()?.getAddressLine(0)
-    } catch (e: Exception) {
-        Log.e("Geocoder", "Feil ved henting av adresse", e)
-        null
-    }
-}
-
-
 @Composable
-fun AdressInputField(
+fun AddressInputField(
     value: String,
     onValueChange: (String) -> Unit,
     label: String,
@@ -798,3 +797,5 @@ fun mapUseLocation(
         Log.d("Long", "${currentLocation.longitude}")
     }
 }
+
+

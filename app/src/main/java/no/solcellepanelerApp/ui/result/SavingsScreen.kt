@@ -30,6 +30,7 @@ import no.solcellepanelerApp.ui.navigation.AppearanceBottomSheet
 import no.solcellepanelerApp.ui.navigation.BottomBar
 import no.solcellepanelerApp.ui.navigation.HelpBottomSheet
 import no.solcellepanelerApp.ui.navigation.TopBar
+import no.solcellepanelerApp.ui.reusables.SimpleTutorialOverlay
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -46,6 +47,7 @@ fun ShowMonthlySavings(
 
     var showHelp by remember { mutableStateOf(false) }
     var showAppearance by remember { mutableStateOf(false) }
+    var showOverlay by remember { mutableStateOf(true) }
 
     Scaffold(
         topBar = {
@@ -69,6 +71,10 @@ fun ShowMonthlySavings(
             verticalArrangement = Arrangement.Center,
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
+            if (showOverlay) {
+                SimpleTutorialOverlay(onDismiss = { showOverlay = false })
+            }
+
             Text(
                 text = buildAnnotatedString {
                     withStyle(
