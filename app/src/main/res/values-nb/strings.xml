@@ -80,7 +80,7 @@
     <string name="search_coordinates">Søk koordinater</string>
     <string name="confirm_location">Bekreft lokasjon</string>
     <string name="show_area">Vis område</string>
-    <string name="confirm_drawing">Bekreft tegning</string>
+    <string name="confirm_drawing">Bekreft\ntegning</string>
     <string name="remove_last_point">Fjern siste punkt</string>
     <string name="remove_points">Fjern alle punkter</string>
     <string name="selected_position">Valgt posisjon</string>
@@ -223,5 +223,6 @@
 
     <string name="onboard_title_4">Lokasjonstilgang</string>
     <string name="onboard_desc_4">Gi tilgang til enhetslokasjon for å finne nærmeste adresse og få en bedre opplevelse.</string>
+    <string name="hide_area">Skjul område</string>
 
 </resources>

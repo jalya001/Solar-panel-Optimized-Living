@@ -78,7 +78,7 @@
     <string name="search_coordinates">Search Coordinates</string>
     <string name="confirm_location">Confirm Location</string>
     <string name="show_area">Show Area</string>
-    <string name="confirm_drawing">Confirm Drawing</string>
+    <string name="confirm_drawing">Confirm\nDrawing</string>
     <string name="remove_last_point">Remove Last Point</string>
     <string name="remove_points">Remove All Points</string>
     <string name="selected_position">Selected Position</string>
@@ -218,4 +218,5 @@
 
     <string name="onboard_title_4">Location access</string>
     <string name="onboard_desc_4">Grant location access to find your nearest address and optimize the experience.</string>
+    <string name="hide_area">Hide Area</string>
 </resources>
