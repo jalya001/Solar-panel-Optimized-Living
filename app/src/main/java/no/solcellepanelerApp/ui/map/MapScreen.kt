@@ -1,7 +1,6 @@
 package no.solcellepanelerApp.ui.map
 
 import android.Manifest
-import android.app.Activity
 import android.content.Context
 import android.content.pm.PackageManager
 import android.graphics.Canvas
@@ -24,12 +23,10 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.MyLocation
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonColors
-import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardColors
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -91,7 +88,6 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 import no.solcellepanelerApp.MainActivity
 import no.solcellepanelerApp.R
-import no.solcellepanelerApp.data.location.LocationService
 import no.solcellepanelerApp.model.electricity.Region
 import no.solcellepanelerApp.ui.font.FontScaleViewModel
 import no.solcellepanelerApp.ui.font.FontSizeState
@@ -101,8 +97,6 @@ import no.solcellepanelerApp.ui.navigation.BottomBar
 import no.solcellepanelerApp.ui.navigation.HelpBottomSheet
 import no.solcellepanelerApp.ui.navigation.TopBar
 import no.solcellepanelerApp.ui.result.WeatherViewModel
-import no.solcellepanelerApp.ui.theme.ThemeMode
-import no.solcellepanelerApp.ui.theme.ThemeState
 import no.solcellepanelerApp.ui.theme.darkGrey
 import no.solcellepanelerApp.ui.theme.lightBlue
 import no.solcellepanelerApp.ui.theme.lightGrey
@@ -463,7 +457,6 @@ fun DisplayScreen(
                             .align(Alignment.BottomStart)
                     ) {
 
-                        locationPermissionGranted = false
                         Button(
                             enabled = locationPermissionGranted,
                             onClick = {
@@ -669,7 +662,9 @@ private fun DrawingControls(
                             areaShown = true
                         },
                         colors = ButtonColors(
-                            containerColor = MaterialTheme.colorScheme.tertiary,
+//                            containerColor = MaterialTheme.colorScheme.tertiary,
+//                            contentColor = MaterialTheme.colorScheme.background,
+                            containerColor = MaterialTheme.colorScheme.onPrimaryContainer,
                             contentColor = MaterialTheme.colorScheme.background,
                             disabledContainerColor = Color(color = 0xFF4CAF50),
                             disabledContentColor = Color(color = 0xFF4CAF50)
@@ -686,8 +681,10 @@ private fun DrawingControls(
                             onToggleVisibility
                         },
                         colors = ButtonColors(
-                            containerColor = if (ThemeState.themeMode == ThemeMode.LIGHT) MaterialTheme.colorScheme.error else MaterialTheme.colorScheme.onErrorContainer,
-                            contentColor = if (ThemeState.themeMode == ThemeMode.LIGHT) MaterialTheme.colorScheme.onError else MaterialTheme.colorScheme.background,
+//                            containerColor = if (ThemeState.themeMode == ThemeMode.LIGHT) MaterialTheme.colorScheme.error else MaterialTheme.colorScheme.onErrorContainer,
+//                            contentColor = if (ThemeState.themeMode == ThemeMode.LIGHT) MaterialTheme.colorScheme.onError else MaterialTheme.colorScheme.background,
+                            containerColor = MaterialTheme.colorScheme.background,
+                            contentColor = MaterialTheme.colorScheme.onPrimaryContainer,
                             disabledContainerColor = Color(color = 0xFF4CAF50),
                             disabledContentColor = Color(color = 0xFF4CAF50)
                         )
@@ -702,8 +699,10 @@ private fun DrawingControls(
                             onToggleVisibility()
                         },
                         colors = ButtonColors(
-                            containerColor = if (ThemeState.themeMode == ThemeMode.LIGHT) MaterialTheme.colorScheme.onErrorContainer else MaterialTheme.colorScheme.tertiary,
-                            contentColor = if (ThemeState.themeMode == ThemeMode.LIGHT) MaterialTheme.colorScheme.background else MaterialTheme.colorScheme.background,
+//                            containerColor = if (ThemeState.themeMode == ThemeMode.LIGHT) MaterialTheme.colorScheme.onErrorContainer else MaterialTheme.colorScheme.tertiary,
+//                            contentColor = if (ThemeState.themeMode == ThemeMode.LIGHT) MaterialTheme.colorScheme.background else MaterialTheme.colorScheme.background,
+                            containerColor = MaterialTheme.colorScheme.background,
+                            contentColor = MaterialTheme.colorScheme.onPrimaryContainer,
                             disabledContainerColor = Color(color = 0xFF4CAF50),
                             disabledContentColor = Color(color = 0xFF4CAF50)
                         )
@@ -715,59 +714,8 @@ private fun DrawingControls(
         }
     }
 
-}
 
-@Composable
-fun LocationButton(
-    locationPermissionGranted: Boolean,
-    onAddressDetected: (String) -> Unit,
-) {
-    val context = LocalContext.current
-    val activity = context as? Activity
-    val scope = rememberCoroutineScope()
-    //Current location button
-    Box(
-        modifier = Modifier.fillMaxSize()
-    ) {
-        Box(
-            modifier = Modifier
-                .align(Alignment.BottomEnd)
-                .padding(end = 16.dp, bottom = 150.dp)
-        ) {
-            Button(
-                onClick = {
-                    if (locationPermissionGranted && activity != null) {
-                        scope.launch {
-                            val locationService = LocationService(activity)
-                            try {
-                                val location = locationService.getCurrentLocation()
-                                location?.let {
-                                    val address = getAddressFromLocation(context, it)
-                                    address?.let {
-                                        onAddressDetected(it)
-                                    }
-                                }
-                            } catch (e: Exception) {
-                                Log.e("MapScreen", "Feil ved henting av lokasjon", e)
-                            }
-                        }
-                    }
-                },
-                modifier = Modifier.size(56.dp),
-                colors = ButtonDefaults.buttonColors(
-                    containerColor = MaterialTheme.colorScheme.primaryContainer,
-                    contentColor = MaterialTheme.colorScheme.onPrimaryContainer
-                )
-            ) {
-                Icon(
-                    imageVector = Icons.Default.MyLocation,
-                    contentDescription = stringResource(id = R.string.current_location)
-                )
-            }
-        }
-    }
 }
-
 
 // hentet fra https://stackoverflow.com/questions/70598043/how-to-use-custom-icon-of-google-maps-marker-in-compose
 
