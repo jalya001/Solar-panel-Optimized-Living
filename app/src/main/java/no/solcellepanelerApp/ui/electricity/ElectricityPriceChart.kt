@@ -70,6 +70,11 @@ fun ElectricityPriceChart(prices: List<ElectricityPrice>) {
         )
     }
 
+    val barStyle = BarStyle(
+        paddingBetweenBars = 1.5.dp,
+        barWidth = 10.dp
+    )
+
     //Prepare X-axis (hours) - Showing fewer labels to prevent crowding
     val xAxisData = AxisData.Builder()
         .axisStepSize(12.dp)
@@ -88,7 +93,7 @@ fun ElectricityPriceChart(prices: List<ElectricityPrice>) {
     val steps = 1
     val stepSize = ((maxPrice - minPrice) / steps).coerceAtLeast(0.1)
 
-    val yAxisData = AxisData.Builder()
+    val yAxisDataLine = AxisData.Builder()
         .steps(steps)
         .topPadding(20.dp)
         .labelData { i ->
@@ -98,6 +103,16 @@ fun ElectricityPriceChart(prices: List<ElectricityPrice>) {
         .axisLabelColor(MaterialTheme.colorScheme.tertiary)
         .axisLineColor(MaterialTheme.colorScheme.tertiary)
         .build()
+
+    val yAxisDataBar = AxisData.Builder()
+        .steps(steps)
+        .topPadding(20.dp)
+        .labelData { i -> "%.2f".format(i.toDouble()) }
+        .axisStepSize(((maxPrice - minPrice).toFloat() / 5).dp)
+        .axisLabelColor(MaterialTheme.colorScheme.tertiary)
+        .axisLineColor(MaterialTheme.colorScheme.tertiary)
+        .build()
+
 
     Button(
         onClick = {
@@ -192,7 +207,7 @@ fun ElectricityPriceChart(prices: List<ElectricityPrice>) {
                             ),
                         ),
                         xAxisData = xAxisData,
-                        yAxisData = yAxisData,
+                        yAxisData = yAxisDataLine,
                         gridLines = GridLines(color = Color.LightGray),
                         backgroundColor = MaterialTheme.colorScheme.surface,
                         bottomPadding = 30.dp
@@ -211,11 +226,8 @@ fun ElectricityPriceChart(prices: List<ElectricityPrice>) {
                     val barChartData = BarChartData(
                         chartData = bars,
                         xAxisData = xAxisData,
-                        yAxisData = yAxisData,
-                        barStyle = BarStyle(
-                            paddingBetweenBars = 1.5.dp,
-                            barWidth = 10.dp
-                        ),
+                        yAxisData = yAxisDataBar,
+                        barStyle = barStyle,
                         backgroundColor = MaterialTheme.colorScheme.surface,
                         paddingEnd = 16.dp
                     )
@@ -225,6 +237,23 @@ fun ElectricityPriceChart(prices: List<ElectricityPrice>) {
                             .fillMaxWidth()
                             .padding(8.dp)
                             .height(300.dp),
+//                            .pointerInput(Unit) {
+//                                detectTapGestures { offset ->
+//                                    val clickedIndex = bars.indexOfFirst { bar ->
+//                                        // Check if the click is within the bar's x-range (adjust for bar width)
+//                                        println("Tap detected at offset: $offset")  // Add this line to verify the gesture is triggered
+//
+//                                        val barStartX = bar.point.x - barStyle.barWidth.toPx() / 2
+//                                        val barEndX = bar.point.x + barStyle.barWidth.toPx() / 2
+//                                        offset.x in barStartX..barEndX
+//                                    }
+//
+//                                    if (clickedIndex != -1) {
+//                                        val bar = bars[clickedIndex]
+//                                        selectedPoint.value = Point(bar.point.x, bar.point.y)
+//                                    }
+//                                }
+//                            },
                         barChartData = barChartData
                     )
                 }
