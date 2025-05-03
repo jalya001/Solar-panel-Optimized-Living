@@ -139,6 +139,7 @@ fun ShowYearlySavings(
     val weather by weatherViewModel.weatherData.collectAsState()
     var showHelp by remember { mutableStateOf(false) }
     var showAppearance by remember { mutableStateOf(false) }
+    var showOverlay by remember { mutableStateOf(true) }
 
     Scaffold(
         topBar = {
@@ -155,6 +156,12 @@ fun ShowYearlySavings(
             )
         }
     ) { paddingValues ->
+        if (showOverlay) {
+            SimpleTutorialOverlay(
+                onDismiss = { showOverlay = false },
+                "Se hvor mye du sparer \n\n Trykk på de ulike enhetene for å se *trenger en god fromulering* \n\nScroll opp for mer informasjon!"
+            )
+        }
         Column(
             modifier = Modifier
                 .padding(paddingValues)
