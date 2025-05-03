@@ -8,8 +8,6 @@ import android.graphics.Canvas
 import android.location.Geocoder
 import android.location.Location
 import android.util.Log
-import androidx.activity.compose.rememberLauncherForActivityResult
-import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -54,6 +52,7 @@ import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.runtime.snapshotFlow
 import androidx.compose.ui.Alignment
@@ -87,8 +86,10 @@ import com.google.maps.android.compose.Polygon
 import com.google.maps.android.compose.rememberCameraPositionState
 import com.google.maps.android.compose.rememberMarkerState
 import kotlinx.coroutines.launch
+import no.solcellepanelerApp.MainActivity
 import no.solcellepanelerApp.R
 import no.solcellepanelerApp.data.location.LocationService
+import no.solcellepanelerApp.model.electricity.Region
 import no.solcellepanelerApp.ui.font.FontScaleViewModel
 import no.solcellepanelerApp.ui.font.FontSizeState
 import no.solcellepanelerApp.ui.navigation.AdditionalInputBottomSheet
@@ -101,6 +102,8 @@ import no.solcellepanelerApp.ui.theme.ThemeMode
 import no.solcellepanelerApp.ui.theme.ThemeState
 import no.solcellepanelerApp.ui.theme.lightBlue
 import no.solcellepanelerApp.ui.theme.orange
+import no.solcellepanelerApp.util.RequestLocationPermission
+import no.solcellepanelerApp.util.fetchCoordinates
 import java.util.Locale
 
 
@@ -193,22 +196,41 @@ fun DisplayScreen(
     var showMissingLocationDialog by remember { mutableStateOf(false) }
     var area by remember { mutableStateOf("") }
 
-    //Location permission state
+    val activity = (context as? MainActivity)
+    var selectedRegion by rememberSaveable { mutableStateOf<Region?>(null) }
+    var currentLocation by remember { mutableStateOf<Location?>(null) }
     var locationPermissionGranted by remember { mutableStateOf(false) }
-    val locationPermissionLauncher = rememberLauncherForActivityResult(
-        ActivityResultContracts.RequestPermission()
-    ) { isGranted ->
-        locationPermissionGranted = isGranted
-        if (!isGranted) {
-            coroutineScope.launch {
-                snackbarHostState.showSnackbar("Location permission required")
-            }
+
+    RequestLocationPermission { region ->
+        selectedRegion = region
+        locationPermissionGranted = true
+
+    }
+
+    LaunchedEffect(locationPermissionGranted) {
+        if (locationPermissionGranted && activity != null) {
+            val location = fetchCoordinates(context, activity)
+            currentLocation = location
         }
     }
 
     //Camera and map state
-    val cameraPositionState = rememberCameraPositionState {
+    var cameraPositionState = rememberCameraPositionState {
         position = CameraPosition.fromLatLngZoom(LatLng(59.9436145, 10.7182883), 18f)
+    }
+
+    if (currentLocation != null && locationPermissionGranted) {
+        cameraPositionState = rememberCameraPositionState {
+            position = CameraPosition.fromLatLngZoom(
+                LatLng(
+                    currentLocation!!.latitude,
+                    currentLocation!!.longitude
+                ), 18f
+
+            )
+        }
+        Log.d("Lat", " ${currentLocation!!.latitude}")
+        Log.d("Long", " ${currentLocation!!.longitude}")
     }
 
     val mapUiSettings = remember {
