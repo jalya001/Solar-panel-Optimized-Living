@@ -62,6 +62,7 @@ import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalDensity
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.unit.Density
@@ -76,6 +77,7 @@ import com.google.android.gms.maps.model.BitmapDescriptor
 import com.google.android.gms.maps.model.BitmapDescriptorFactory
 import com.google.android.gms.maps.model.CameraPosition
 import com.google.android.gms.maps.model.LatLng
+import com.google.maps.android.compose.CameraPositionState
 import com.google.maps.android.compose.GoogleMap
 import com.google.maps.android.compose.MapProperties
 import com.google.maps.android.compose.MapType
@@ -85,6 +87,7 @@ import com.google.maps.android.compose.MarkerState
 import com.google.maps.android.compose.Polygon
 import com.google.maps.android.compose.rememberCameraPositionState
 import com.google.maps.android.compose.rememberMarkerState
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 import no.solcellepanelerApp.MainActivity
 import no.solcellepanelerApp.R
@@ -100,7 +103,9 @@ import no.solcellepanelerApp.ui.navigation.TopBar
 import no.solcellepanelerApp.ui.result.WeatherViewModel
 import no.solcellepanelerApp.ui.theme.ThemeMode
 import no.solcellepanelerApp.ui.theme.ThemeState
+import no.solcellepanelerApp.ui.theme.darkGrey
 import no.solcellepanelerApp.ui.theme.lightBlue
+import no.solcellepanelerApp.ui.theme.lightGrey
 import no.solcellepanelerApp.ui.theme.orange
 import no.solcellepanelerApp.util.RequestLocationPermission
 import no.solcellepanelerApp.util.fetchCoordinates
@@ -217,20 +222,6 @@ fun DisplayScreen(
     //Camera and map state
     var cameraPositionState = rememberCameraPositionState {
         position = CameraPosition.fromLatLngZoom(LatLng(59.9436145, 10.7182883), 18f)
-    }
-
-    if (currentLocation != null && locationPermissionGranted) {
-        cameraPositionState = rememberCameraPositionState {
-            position = CameraPosition.fromLatLngZoom(
-                LatLng(
-                    currentLocation!!.latitude,
-                    currentLocation!!.longitude
-                ), 18f
-
-            )
-        }
-        Log.d("Lat", " ${currentLocation!!.latitude}")
-        Log.d("Long", " ${currentLocation!!.longitude}")
     }
 
     val mapUiSettings = remember {
@@ -400,6 +391,7 @@ fun DisplayScreen(
             }
         }
 
+
         Column(
             modifier = Modifier
                 .fillMaxWidth()
@@ -407,13 +399,10 @@ fun DisplayScreen(
                 .zIndex(1f),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-
-            Spacer(modifier = Modifier.height(60.dp))
-
             val coroutineScope = rememberCoroutineScope()
 
             Spacer(
-                modifier = Modifier.height(20.dp)
+                modifier = Modifier.height(80.dp)
             )
 
             if (selectedCoordinates != null) {
@@ -462,23 +451,51 @@ fun DisplayScreen(
                 )
 
             }
-            if (showMissingLocationDialog) {
-                LocationNotSelectedDialog(
-                    coordinates = coordinates,
-                    onDismiss = { showMissingLocationDialog = false },
-                )
-            }
 
+            if (!drawingEnabled) {
+                Box(
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .padding(16.dp)
+                ) {
+                    Column(
+                        modifier = Modifier
+                            .align(Alignment.BottomStart)
+                    ) {
+
+                        locationPermissionGranted = false
+                        Button(
+                            enabled = locationPermissionGranted,
+                            onClick = {
+                                mapUseLocation(
+                                    currentLocation,
+                                    locationPermissionGranted,
+                                    cameraPositionState,
+                                    coroutineScope
+                                )
+                            },
+                            colors = ButtonColors(
+                                containerColor = MaterialTheme.colorScheme.background,
+                                contentColor = MaterialTheme.colorScheme.primary,
+                                disabledContainerColor = darkGrey,
+                                disabledContentColor = lightGrey,
+                            )
+                        ) {
+                            Icon(
+                                painter = painterResource(id = if (locationPermissionGranted) R.drawable.baseline_my_location_24 else R.drawable.baseline_location_disabled_24),
+                                contentDescription = null,
+                                modifier = Modifier.size(30.dp),
+                                tint = if (locationPermissionGranted) MaterialTheme.colorScheme.primary else lightGrey
+                            )
+                        }
+                    }
+                }
+            }
             if (drawingEnabled) {
                 DrawingControls(
                     polygonPoints = polygonPoints,
                     viewModel = viewModel,
                     toggleBottomSheet = { showBottomSheet = true },
-                    onCancel = {
-                        drawingEnabled = false
-                        isPolygonvisible = false
-                        viewModel.removePoints()
-                    },
                     onToggleVisibility = { isPolygonvisible = !isPolygonvisible }
                 )
             }
@@ -554,14 +571,6 @@ fun LocationNotSelectedDialog(
     onDismiss: () -> Unit,
 ) {
     var showDialog by remember { mutableStateOf(coordinates == null) }
-//    var showHelpBottomSheet by remember { mutableStateOf(false) }
-//    if (showHelpBottomSheet) {
-//        HelpBottomSheet(navController = navController,
-//            visible = true,
-//            onDismiss = { showHelpBottomSheet = false },
-//            expandSection = "draw",
-//        )
-//    }
 
     if (showDialog && coordinates == null) {
         val currentDensity = LocalDensity.current
@@ -620,7 +629,6 @@ fun LocationNotSelectedDialog(
 private fun DrawingControls(
     polygonPoints: List<LatLng>,
     viewModel: MapScreenViewModel,
-    onCancel: () -> Unit,
     onToggleVisibility: () -> Unit,
     toggleBottomSheet: () -> Unit,
 ) {
@@ -703,19 +711,6 @@ private fun DrawingControls(
                         Text(text = stringResource(id = R.string.remove_points))
                     }
                 }
-            }
-            Button(
-                onClick = {
-                    onCancel
-                },
-                colors = ButtonColors(
-                    containerColor = MaterialTheme.colorScheme.background,
-                    contentColor = MaterialTheme.colorScheme.tertiary,
-                    disabledContainerColor = Color(color = 0xFF4CAF50), //random farge som ikke brukes
-                    disabledContentColor = Color(color = 0xFF4CAF50)
-                )
-            ) {
-                Text(text = stringResource(id = R.string.cancel))
             }
         }
     }
@@ -832,4 +827,26 @@ fun bitmapDescriptor(
 
     val scaledBitmap = originalBitmap.scale(width, height, false)
     return BitmapDescriptorFactory.fromBitmap(scaledBitmap)
+}
+
+fun mapUseLocation(
+    currentLocation: Location?,
+    locationPermissionGranted: Boolean,
+    cameraPositionState: CameraPositionState,
+    coroutineScope: CoroutineScope,
+) {
+    if (currentLocation != null && locationPermissionGranted) {
+        val newPosition = CameraPosition.fromLatLngZoom(
+            LatLng(currentLocation.latitude, currentLocation.longitude),
+            18f
+        )
+        coroutineScope.launch {
+            cameraPositionState.animate(
+                CameraUpdateFactory.newCameraPosition(newPosition),
+                durationMs = 1000
+            )
+        }
+        Log.d("Lat", "${currentLocation.latitude}")
+        Log.d("Long", "${currentLocation.longitude}")
+    }
 }
