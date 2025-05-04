@@ -29,7 +29,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
+
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
@@ -85,7 +85,7 @@ fun ResultScreen(
     )
 
 
-    var selectedRegion = viewModel.selectedRegion
+    val selectedRegion = viewModel.selectedRegion
 
 
 
@@ -133,16 +133,19 @@ fun ResultScreen(
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.Top
         ) {
-            if (uiState == UiState.LOADING) {
-                LoadingScreen()
-            } else if (uiState == UiState.ERROR) {
-                errorScreen()
-            } else {
-                // REMOVE MERGE REMNANTS
-                val snowCoverData = weatherData["mean(snow_coverage_type P1M)"] ?: emptyArray()
-                val airTempData = weatherData["mean(air_temperature P1M)"] ?: emptyArray()
-                val cloudCoverData = weatherData["mean(cloud_area_fraction P1M)"] ?: emptyArray()
-                val radiationData = weatherData["mean(PVGIS_radiation P1M)"] ?: emptyArray()
+            when (uiState) {
+                UiState.LOADING -> {
+                    LoadingScreen()
+                }
+                UiState.ERROR -> {
+                    errorScreen()
+                }
+                else -> {
+
+                    val snowCoverData = weatherData["mean(snow_coverage_type P1M)"] ?: emptyArray()
+                    val airTempData = weatherData["mean(air_temperature P1M)"] ?: emptyArray()
+                    val cloudCoverData = weatherData["mean(cloud_area_fraction P1M)"] ?: emptyArray()
+                    val radiationData = weatherData["mean(PVGIS_radiation P1M)"] ?: emptyArray()
 
 
                     weatherViewModel.calculateSolarPanelOutput(panelArea, efficiency)
@@ -189,6 +192,7 @@ fun ResultScreen(
                         )
                     }
                 }
+            }
             }
 
             HelpBottomSheet(
