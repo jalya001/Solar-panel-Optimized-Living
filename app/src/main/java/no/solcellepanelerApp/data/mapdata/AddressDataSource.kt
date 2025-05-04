@@ -12,7 +12,7 @@ import kotlinx.serialization.json.Json
 import no.solcellepanelerApp.model.map.GeocodingResponse
 
 
-class AdressDataSource {
+class AddressDataSource {
     private val client = HttpClient(OkHttp) {
         install(ContentNegotiation) {
             json(Json { prettyPrint = true })
@@ -30,12 +30,12 @@ class AdressDataSource {
             }.body()
 
             // Log the raw response for debugging
-            Log.d("AdressDataSource", "Raw API response: $response")
+            Log.d("AddressDataSource", "Raw API response: $response")
 
             // Parse the JSON array directly into a List<GeocodingResponse>
             Json.decodeFromString<List<GeocodingResponse>>(response)
         } catch (e: Exception) {
-            Log.e("AdressDataSource", "Error fetching coordinates", e)
+            Log.e("AddressDataSource", "Error fetching coordinates", e)
             throw e  // Re-throw to allow proper error handling upstream
         }
     }
