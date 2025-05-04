@@ -1,5 +1,6 @@
 package no.solcellepanelerApp.ui.result
 
+import android.util.Log
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -62,7 +63,7 @@ fun ResultScreen(
     val weatherData by weatherViewModel.weatherData.collectAsState()
     val errorMessage by weatherViewModel.errorMessage.collectAsState()
     val calc by weatherViewModel.calculationResults.collectAsState()
-
+    Log.d("CALC", calc.toString())
     val uiState by weatherViewModel.uiState.collectAsState()
     val panelArea = viewModel.areaInput.toDouble()
     val efficiency = viewModel.efficiencyInput.toDouble()

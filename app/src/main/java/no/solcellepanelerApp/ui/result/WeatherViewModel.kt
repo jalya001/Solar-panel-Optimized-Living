@@ -31,6 +31,7 @@ class WeatherViewModel(
     val frostDataRim: StateFlow<Array<Double>> = _frostDataRim
 
     private val _calculationResults = MutableStateFlow<MonthlyCalculationResult?>(null)
+
     val calculationResults: StateFlow<MonthlyCalculationResult?> = _calculationResults
 
     // Default temperature coefficient for solar panels
