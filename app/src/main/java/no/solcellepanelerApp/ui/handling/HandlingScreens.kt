@@ -29,6 +29,8 @@ fun LoadingScreen() {
     }
 }
 
+//Vi må gjøre alle stringa oversettbare
+
 @Composable
 fun ErrorScreen() {
     Box(
@@ -43,13 +45,80 @@ fun ErrorScreen() {
 }
 
 @Composable
-fun InternetErrorScreen() {
-    Box(
-        modifier = Modifier.fillMaxSize(),
-        contentAlignment = Alignment.Center
-    ) {
+fun TimeoutErrorScreen() {
+    Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
         Text(
-            text = "Nettverksfeil! Prøv å koble til nett",
+            text = "Tidsavbrudd. Sjekk internett og prøv igjen.",
+            style = MaterialTheme.typography.bodyLarge
+        )
+    }
+}
+
+@Composable
+fun AuthorizationErrorScreen() {
+    Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
+        Text(
+            text = "Autorisering feilet. Kontakt utviklerne.",
+            style = MaterialTheme.typography.bodyLarge
+        )
+    }
+}
+
+@Composable
+fun ServerErrorScreen() {
+    Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
+        Text(
+            text = "Serverfeil. Prøv igjen senere.",
+            style = MaterialTheme.typography.bodyLarge
+        )
+    }
+}
+
+@Composable
+fun OverloadErrorScreen() {
+    Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
+        Text(
+            text = "Tjenesten er overbelastet. Vent litt og prøv igjen.",
+            style = MaterialTheme.typography.bodyLarge
+        )
+    }
+}
+
+@Composable
+fun NetworkErrorScreen() {
+    Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
+        Text(
+            text = "Nettverksfeil. Sjekk tilkoblingen din.",
+            style = MaterialTheme.typography.bodyLarge
+        )
+    }
+}
+
+@Composable
+fun UnknownErrorScreen() {
+    Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
+        Text(
+            text = "Ukjent feil. Kontakt utviklerne med detaljer.",
+            style = MaterialTheme.typography.bodyLarge
+        )
+    }
+}
+
+@Composable
+fun RequestErrorScreen() {
+    Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
+        Text(
+            text = "Feil i forespørselen. Kontakt utviklerne med detaljer.",
+            style = MaterialTheme.typography.bodyLarge
+        )
+    }
+}
+
+@Composable
+fun SeaErrorScreen() {
+    Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
+        Text(
+            text = "Ugyldig lokasjon. Det er sannsynligvis i havet.",
             style = MaterialTheme.typography.bodyLarge
         )
     }
