@@ -22,9 +22,12 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import no.solcellepanelerApp.R
 
 
 @Composable
@@ -43,23 +46,24 @@ fun LoadingScreen() {
     }
 }
 
-//Vi må gjøre alle stringa oversettbare
-
 @Composable
-fun ErrorScreen() {
+fun ErrorScreenTemplate(
+    icon: ImageVector,
+    message: String
+) {
     Box(
         modifier = Modifier.fillMaxSize(),
         contentAlignment = Alignment.Center
     ) {
         Column(horizontalAlignment = Alignment.CenterHorizontally) {
             Icon(
-                imageVector = Icons.Default.ErrorOutline,
+                imageVector = icon,
                 contentDescription = null,
                 tint = MaterialTheme.colorScheme.error
             )
             Spacer(modifier = Modifier.height(8.dp))
             Text(
-                text = "Noe gikk galt! Prøv igjen senere.",
+                text = message,
                 style = MaterialTheme.typography.bodyLarge,
                 textAlign = TextAlign.Center
             )
@@ -67,158 +71,41 @@ fun ErrorScreen() {
     }
 }
 
-@Composable
-fun TimeoutErrorScreen() {
-    Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
-        Column(horizontalAlignment = Alignment.CenterHorizontally) {
-            Icon(
-                imageVector = Icons.Default.AccessTime,
-                contentDescription = null,
-                tint = MaterialTheme.colorScheme.error
-            )
-            Spacer(modifier = Modifier.height(8.dp))
-            Text(
-                text = "Tidsavbrudd. Sjekk internett og prøv igjen.",
-                style = MaterialTheme.typography.bodyLarge,
-                textAlign = TextAlign.Center
-            )
-        }
-    }
-}
+@Composable fun ErrorScreen() =
+    ErrorScreenTemplate(Icons.Default.ErrorOutline, stringResource(R.string.generic_error))
 
+@Composable fun TimeoutErrorScreen() =
+    ErrorScreenTemplate(Icons.Default.AccessTime, stringResource(R.string.timeout_error))
 
-@Composable
-fun AuthorizationErrorScreen() {
-    Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
-        Column(horizontalAlignment = Alignment.CenterHorizontally) {
-            Icon(
-                imageVector = Icons.Default.Lock,
-                contentDescription = null,
-                tint = MaterialTheme.colorScheme.error
-            )
-            Spacer(modifier = Modifier.height(8.dp))
-            Text(
-                text = "Autorisering feilet. Kontakt utviklerne.",
-                style = MaterialTheme.typography.bodyLarge,
-                textAlign = TextAlign.Center
-            )
-        }
-    }
-}
+@Composable fun AuthorizationErrorScreen() =
+    ErrorScreenTemplate(Icons.Default.Lock, stringResource(R.string.authorization_error))
 
-@Composable
-fun ServerErrorScreen() {
-    Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
-        Column(horizontalAlignment = Alignment.CenterHorizontally) {
-            Icon(
-                imageVector = Icons.Default.CloudOff,
-                contentDescription = null,
-                tint = MaterialTheme.colorScheme.error
-            )
-            Spacer(modifier = Modifier.height(8.dp))
-            Text(
-                text = "Serverfeil. Prøv igjen senere.",
-                style = MaterialTheme.typography.bodyLarge,
-                textAlign = TextAlign.Center
-            )
-        }
-    }
-}
+@Composable fun ServerErrorScreen() =
+    ErrorScreenTemplate(Icons.Default.CloudOff, stringResource(R.string.server_error))
 
-@Composable
-fun OverloadErrorScreen() {
-    Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
-        Column(horizontalAlignment = Alignment.CenterHorizontally) {
-            Icon(
-                imageVector = Icons.Default.TrendingUp,
-                contentDescription = null,
-                tint = MaterialTheme.colorScheme.error
-            )
-            Spacer(modifier = Modifier.height(8.dp))
-            Text(
-                text = "Tjenesten er overbelastet. Vent litt og prøv igjen.",
-                style = MaterialTheme.typography.bodyLarge,
-                textAlign = TextAlign.Center
-            )
-        }
-    }
-}
+@Composable fun OverloadErrorScreen() =
+    ErrorScreenTemplate(Icons.Default.TrendingUp, stringResource(R.string.overload_error))
 
-@Composable
-fun NetworkErrorScreen() {
-    Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
-        Column(horizontalAlignment = Alignment.CenterHorizontally) {
-            Icon(
-                imageVector = Icons.Default.WifiOff,
-                contentDescription = null,
-                tint = MaterialTheme.colorScheme.error
-            )
-            Spacer(modifier = Modifier.height(8.dp))
-            Text(
-                text = "Nettverksfeil. Sjekk tilkoblingen din.",
-                style = MaterialTheme.typography.bodyLarge,
-                textAlign = TextAlign.Center
-            )
-        }
-    }
-}
+@Composable fun NetworkErrorScreen() =
+    ErrorScreenTemplate(Icons.Default.WifiOff, stringResource(R.string.network_error))
 
-@Composable
-fun UnknownErrorScreen() {
-    Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
-        Column(horizontalAlignment = Alignment.CenterHorizontally) {
-            Icon(
-                imageVector = Icons.Default.HelpOutline,
-                contentDescription = null,
-                tint = MaterialTheme.colorScheme.error
-            )
-            Spacer(modifier = Modifier.height(8.dp))
-            Text(
-                text = "Ukjent feil. Kontakt utviklerne med detaljer.",
-                style = MaterialTheme.typography.bodyLarge,
-                textAlign = TextAlign.Center
-            )
-        }
-    }
-}
+@Composable fun UnknownErrorScreen() =
+    ErrorScreenTemplate(Icons.Default.HelpOutline, stringResource(R.string.unknown_error))
 
-@Composable
-fun RequestErrorScreen() {
-    Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
-        Column(horizontalAlignment = Alignment.CenterHorizontally) {
-            Icon(
-                imageVector = Icons.Default.Send,
-                contentDescription = null,
-                tint = MaterialTheme.colorScheme.error
-            )
-            Spacer(modifier = Modifier.height(8.dp))
-            Text(
-                text = "Feil i forespørselen. Kontakt utviklerne med detaljer.",
-                style = MaterialTheme.typography.bodyLarge,
-                textAlign = TextAlign.Center
-            )
-        }
-    }
-}
+@Composable fun RequestErrorScreen() =
+    ErrorScreenTemplate(Icons.Default.Send, stringResource(R.string.request_error))
 
-@Composable
-fun SeaErrorScreen() {
-    Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
-        Column(horizontalAlignment = Alignment.CenterHorizontally) {
-            Icon(
-                imageVector = Icons.Default.Waves,
-                contentDescription = null,
-                tint = MaterialTheme.colorScheme.error
-            )
-            Spacer(modifier = Modifier.height(8.dp))
-            Text(
-                text = "Ugyldig lokasjon. Det er sannsynligvis i havet.",
-                style = MaterialTheme.typography.bodyLarge,
-                textAlign = TextAlign.Center
-            )
-        }
-    }
-}
+@Composable fun SeaErrorScreen() =
+    ErrorScreenTemplate(Icons.Default.Waves, stringResource(R.string.sea_error))
+
+@Composable fun NoDataErrorScreen() =
+    ErrorScreenTemplate(Icons.Default.Waves, stringResource(R.string.nodata_error))
+
+@Composable fun PartialDataErrorScreen() =
+    ErrorScreenTemplate(Icons.Default.Waves, stringResource(R.string.partialdata_error))
+
+@Composable fun UnexpectedErrorScreen() =
+    ErrorScreenTemplate(Icons.Default.Waves, stringResource(R.string.unexpected_error))
 
 @Preview
 @Composable

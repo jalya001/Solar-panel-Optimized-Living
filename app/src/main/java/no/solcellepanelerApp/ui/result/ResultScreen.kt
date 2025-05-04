@@ -60,7 +60,7 @@ fun ResultScreen(
     fontScaleViewModel: FontScaleViewModel, priceScreenViewModel: ElectricityPriceRepository,
 ) {
     val weatherData by weatherViewModel.weatherData.collectAsState()
-    val errorMessage by weatherViewModel.errorMessage.collectAsState()
+    val errorScreen by weatherViewModel.errorScreen.collectAsState()
     val calc by weatherViewModel.calculationResults.collectAsState()
 
     val uiState by weatherViewModel.uiState.collectAsState()
@@ -82,6 +82,7 @@ fun ResultScreen(
         stringResource(R.string.month_december)
     )
 
+    // REMOVE MERGE REMNANTS
     val daysInMonth = arrayOf(31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31)
 
     var selectedRegion = viewModel.selectedRegion
@@ -133,11 +134,9 @@ fun ResultScreen(
             if (uiState == UiState.LOADING) {
                 LoadingScreen()
             } else if (uiState == UiState.ERROR) {
-                Text(
-                    text = errorMessage,
-                    fontSize = 40.sp
-                )
+                errorScreen()
             } else {
+                // REMOVE MERGE REMNANTS
                 val snowCoverData = weatherData["mean(snow_coverage_type P1M)"] ?: emptyArray()
                 val airTempData = weatherData["mean(air_temperature P1M)"] ?: emptyArray()
                 val cloudCoverData = weatherData["mean(cloud_area_fraction P1M)"] ?: emptyArray()

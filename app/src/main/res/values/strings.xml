@@ -219,4 +219,17 @@
     <string name="onboard_title_4">Location access</string>
     <string name="onboard_desc_4">Grant location access to find your nearest address and optimize the experience.</string>
     <string name="hide_area">Hide\nArea</string>
+
+    <string name="generic_error">Something went wrong! Try again later.</string>
+    <string name="timeout_error">Request timed out. Please check your internet connection and try again.</string>
+    <string name="authorization_error">API authorization failed. Please report to developers.</string>
+    <string name="server_error">Server error. Please try again later.</string>
+    <string name="overload_error">An API key has reached rate-limit. Please wait and retry.</string>
+    <string name="network_error">Could not connect to domain. Please check your internet connection or if the domain is down.</string>
+    <string name="unknown_error">An unknown error occurred. Please report how you achieved this to the developers.</string>
+    <string name="request_error">Bad request error. Please report how you achieved this to the developers.</string>
+    <string name="sea_error">Bad PVGIS request. Your chosen location is most likely over the sea, and we do not have data for that.</string>
+    <string name="nodata_error">There is no data on this region. We are sorry.</string>
+    <string name="partialdata_error">Some data missing on this region, and we cannot provide you an estimate. We are sorry.</string>
+    <string name="unexpected_error">Unexpected behavior. Please report to developers.</string>
 </resources>

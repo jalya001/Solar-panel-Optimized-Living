@@ -225,4 +225,16 @@
     <string name="onboard_desc_4">Gi tilgang til enhetslokasjon for å finne nærmeste adresse og få en bedre opplevelse.</string>
     <string name="hide_area">Skjul\nområde</string>
 
+    <string name="generic_error">Noe gikk galt! Prøv igjen senere.</string>
+    <string name="timeout_error">Tidsavbrudd. Sjekk internetttilkoblingen ditt og prøv igjen.</string>
+    <string name="authorization_error">Autorisering feilet. Kontakt utviklerne.</string>
+    <string name="server_error">Serverfeil. Prøv igjen senere.</string>
+    <string name="overload_error">Tjenesten er overbelastet. Vent litt og prøv igjen. Hvis det ikke løser seg, kontakt utviklerne.</string>
+    <string name="network_error">Nettverksfeil. Sjekk tilkoblingen din.</string>
+    <string name="unknown_error">Ukjent feil. Kontakt utviklerne.</string>
+    <string name="request_error">Feil i forespørselen. Kontakt utviklerne.</string>
+    <string name="sea_error">Ugyldig lokasjon. Det er sannsynligvis i havet.</string>
+    <string name="nodata_error">Vi fant ingen data for dette området. Unnskyld!</string>
+    <string name="partialdata_error">Det mangler data for dette området, og vi kan ikke gi et estimat. Unnskyld!</string>
+    <string name="unexpected_error">Uforventet oppførsel. Kontakt utviklerne.</string>
 </resources>
