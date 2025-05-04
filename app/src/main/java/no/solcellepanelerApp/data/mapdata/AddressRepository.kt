@@ -3,7 +3,7 @@ package no.solcellepanelerApp.data.mapdata
 import no.solcellepanelerApp.model.map.GeocodingResponse
 
 class AddressRepository(
-    private val dataSource: AdressDataSource,
+    private val dataSource: AddressDataSource,
     private val elevationApi: ElevationApi
 ) {
 

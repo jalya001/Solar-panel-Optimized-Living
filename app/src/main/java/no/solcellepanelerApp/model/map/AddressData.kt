@@ -1,7 +1,7 @@
 package no.solcellepanelerApp.model.map
 
-data class AdressData(
-    val adress: String,
+data class AddressData(
+    val address: String,
     val lat: Double?,
     val lon: Double?,
     var slope: Double?,
