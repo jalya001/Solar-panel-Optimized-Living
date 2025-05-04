@@ -183,6 +183,11 @@
     <string name="snow_info">This is your yearly snow cover data:</string>
     <string name="cloud_info">This is your yearly cloud cover data:</string>
     <string name="temp_info">This is your yearly temperature factor data:</string>
+
+    <string name="snow_full_info">This is how much snow cover per month your current position has on average:</string>
+    <string name="cloud_full_info">This is how much cloud cover per month your current position has on average:</string>
+    <string name="temp_full_info">This is the average temperature for each month your current position has on average:</string>
+    <string name="difference_info">This chart shows the average global radiation for each month for your current position and the radiation adjusted with the snow cover, cloud cover data:</string>
     <string name="monthly_savings_prefix">You will save </string>
 
     <string name="monthly_savings_suffix_part1"> in </string>

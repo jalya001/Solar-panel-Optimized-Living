@@ -1,5 +1,6 @@
 package no.solcellepanelerApp.ui.result
 
+import android.util.Log
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -19,6 +20,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
@@ -62,11 +64,11 @@ fun ResultScreen(
     val weatherData by weatherViewModel.weatherData.collectAsState()
     val errorScreen by weatherViewModel.errorScreen.collectAsState()
     val calc by weatherViewModel.calculationResults.collectAsState()
-
+    Log.d("CALC", calc.toString())
     val uiState by weatherViewModel.uiState.collectAsState()
     val panelArea = viewModel.areaInput.toDouble()
     val efficiency = viewModel.efficiencyInput.toDouble()
-    val direction = viewModel.directionInput.toInt()
+//    val direction = viewModel.directionInput.toInt()
     val months = listOf(
         stringResource(R.string.month_january),
         stringResource(R.string.month_february),
@@ -82,17 +84,17 @@ fun ResultScreen(
         stringResource(R.string.month_december)
     )
 
-    // REMOVE MERGE REMNANTS
-    val daysInMonth = arrayOf(31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31)
 
     var selectedRegion = viewModel.selectedRegion
 
-    val priceScreenViewModel: PriceScreenViewModel = viewModel(
+
+
+    val priceViewModel: PriceScreenViewModel = viewModel(
         factory = PriceViewModelFactory(priceScreenViewModel, selectedRegion.regionCode),
         key = selectedRegion.regionCode
     )
 
-    val priceUiState by priceScreenViewModel.priceUiState.collectAsStateWithLifecycle()
+    val priceUiState by priceViewModel.priceUiState.collectAsStateWithLifecycle()
 
     val energyPrice = when (priceUiState) {
         is PriceUiState.Success -> {
@@ -143,66 +145,49 @@ fun ResultScreen(
                 val radiationData = weatherData["mean(PVGIS_radiation P1M)"] ?: emptyArray()
 
 
-                weatherViewModel.calculateSolarPanelOutput(panelArea, efficiency)
-                val adjustedRadiation = mutableListOf<Double>()
-                val monthlyEnergyOutput = radiationData.indices.map { month ->
-                    adjustedRadiation.add(
-                        radiationData[month] *
-                                (1 - (cloudCoverData[month].coerceIn(0.0, 8.0) / 8)) *
-                                (1 - (snowCoverData[month].coerceIn(0.0, 4.0) / 4))
-                    )
-                    val tempFactor = 1 + (-0.44) * (airTempData[month] - 25)
-                    adjustedRadiation[month] * panelArea * (efficiency / 100.0) * tempFactor
-                }
+                    weatherViewModel.calculateSolarPanelOutput(panelArea, efficiency)
 
-                val monthlyPowerOutput = monthlyEnergyOutput.mapIndexed { index, energyKWh ->
-                    val totalHours = daysInMonth[index] * 24 // Total hours in the month
-                    energyKWh / totalHours // Convert kWh to kW
-                }
 
-                var yearlyEnergyOutput = 0.0
-                for (nums in 0..11) {
-                    yearlyEnergyOutput += monthlyEnergyOutput[nums]
-                }
 
-                Row(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(vertical = 8.dp),
-                    horizontalArrangement = Arrangement.SpaceEvenly
-                ) {
-                    SavingsMonth_Card(
-                        label = stringResource(R.string.yearly_savings_label),
-                        iconRes = R.drawable.baseline_attach_money_24,
-                        onClick = {
-                            navController.navigate("yearly_savings/${yearlyEnergyOutput}/$energyPrice")
-                        }
-                    )
+                    Row(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(vertical = 8.dp),
+                        horizontalArrangement = Arrangement.SpaceEvenly
+                    ) {
+                        SavingsMonth_Card(
+                            label = stringResource(R.string.yearly_savings_label),
+                            iconRes = R.drawable.baseline_attach_money_24,
+                            onClick = {
+                                navController.navigate("yearly_savings/${calc?.yearlyEnergyOutput}/$energyPrice")
+                            }
+                        )
 
-                    SavingsMonth_Card(
-                        label = if (showAllMonths) stringResource(R.string.show_one_month)
-                        else stringResource(R.string.show_all_months),
-                        iconRes = R.drawable.baseline_calendar_month_24,
-                        onClick = {
-                            showAllMonths = !showAllMonths
-                        }
-                    )
-                }
+                        SavingsMonth_Card(
+                            label = if (showAllMonths) stringResource(R.string.show_one_month)
+                            else stringResource(R.string.show_all_months),
+                            iconRes = R.drawable.baseline_calendar_month_24,
+                            onClick = {
+                                showAllMonths = !showAllMonths
+                            }
+                        )
+                    }
 
-                calc?.let {
-                    MonthDataDisplay(
-                        cloudCoverData = cloudCoverData,
-                        snowCoverData = snowCoverData,
-                        airTempData = airTempData,
-                        radiationData = radiationData,
-                        adjustedRadiation = it.adjustedRadiation,
-                        monthlyEnergyOutput = it.monthlyEnergyOutput,
-                        monthlyPowerOutput = it.monthlyPowerOutput,
-                        months = months,
-                        navController = navController,
-                        energyPrice = energyPrice,
-                        showAllMonths = showAllMonths
-                    )
+                    calc?.let {
+                        MonthDataDisplay(
+                            cloudCoverData = cloudCoverData,
+                            snowCoverData = snowCoverData,
+                            airTempData = airTempData,
+                            radiationData = radiationData,
+                            adjustedRadiation = it.adjustedRadiation,
+                            monthlyEnergyOutput = it.monthlyEnergyOutput,
+                            monthlyPowerOutput = it.monthlyPowerOutput,
+                            months = months,
+                            navController = navController,
+                            energyPrice = energyPrice,
+                            showAllMonths = showAllMonths
+                        )
+                    }
                 }
             }
 
@@ -219,7 +204,7 @@ fun ResultScreen(
         }
 
     }
-}
+
 
 fun calculateMonthlyEnergyOutput(
     avgTemp: List<Double>,
@@ -253,8 +238,7 @@ fun MonthDataDisplay(
     showAllMonths: Boolean,
 ) {
     var expanded by remember { mutableStateOf(false) }
-    var selectedMonthIndex by remember { mutableStateOf(0) }
-    var showAllMonths = showAllMonths
+    var selectedMonthIndex by remember { mutableIntStateOf(0) }
 
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,

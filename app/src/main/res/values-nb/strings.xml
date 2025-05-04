@@ -195,6 +195,12 @@
     <string name="cloud_info">Dette er dine årlige skydekke-data:</string>
     <string name="temp_info">Dette er dine årlige temperaturfaktor-data:</string>
 
+    <string name="snow_full_info">Dette er hvor mye snødekke din nåværende posisjon har i gjennomsnitt per måned:</string>
+    <string name="cloud_full_info">Dette er hvor mye skydekke din nåværende posisjon har i gjennomsnitt per måned:</string>
+    <string name="temp_full_info">Dette er den gjennomsnittlige temperaturen per måned for din nåværende posisjon:</string>
+    <string name="difference_info">Denne grafen viser gjennomsnittlig global stråling for hver måned for din nåværende posisjon og strålingen justert med snødekke og skydekke-data:</string>
+
+
 
     <!-- Onboarding -->
 
