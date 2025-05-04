@@ -34,7 +34,7 @@ class WeatherRepository(
         if (radiationResult.isFailure) return Result.failure(radiationResult.exceptionOrNull()!!)
         val radiationData = radiationResult.getOrNull()
         val frostElements = listOf(
-            "mean(air_temperature P1M)",
+            "mean(air_temperature P1M)", // This needs to come before snow, or else it will give an error
             "mean(snow_coverage_type P1M)",
             "mean(cloud_area_fraction P1M)"
         )
