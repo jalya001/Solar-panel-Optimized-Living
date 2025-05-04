@@ -3,13 +3,9 @@ package no.solcellepanelerApp.util
 import android.Manifest
 import android.annotation.SuppressLint
 import android.app.Activity
-import android.app.AlertDialog
 import android.content.Context
-import android.content.Intent
 import android.content.pm.PackageManager
 import android.location.Location
-import android.net.Uri
-import android.provider.Settings
 import android.util.Log
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
@@ -191,23 +187,23 @@ fun RememberLocationWithPermission(
         }
     }
 
-    // Show alert dialog if permission is denied permanently
-    if (permissionDeniedPermanently) {
-        LaunchedEffect(Unit) {
-            AlertDialog.Builder(context)
-                .setTitle("Location Permission Needed")
-                .setMessage("Please enable location permission in settings to use this feature.")
-                .setPositiveButton("Go to Settings") { _, _ ->
-                    val intent = Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS).apply {
-                        data = Uri.fromParts("package", context.packageName, null)
-                        addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
-                    }
-                    context.startActivity(intent)
-                }
-                .setNegativeButton("Cancel", null)
-                .show()
-        }
-    }
+//    // Show alert dialog if permission is denied permanently
+//    if (permissionDeniedPermanently) {
+//        LaunchedEffect(Unit) {
+//            AlertDialog.Builder(context)
+//                .setTitle("Location Permission Needed")
+//                .setMessage("Please enable location permission in settings to use this feature.")
+//                .setPositiveButton("Go to Settings") { _, _ ->
+//                    val intent = Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS).apply {
+//                        data = Uri.fromParts("package", context.packageName, null)
+//                        addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+//                    }
+//                    context.startActivity(intent)
+//                }
+//                .setNegativeButton("Cancel", null)
+//                .show()
+//        }
+//    }
 
     return Pair(currentLocation, locationPermissionGranted)
 }

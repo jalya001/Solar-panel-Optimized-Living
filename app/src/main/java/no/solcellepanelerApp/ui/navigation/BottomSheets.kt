@@ -192,13 +192,7 @@ fun HelpBottomSheet(
                             iconRes = R.drawable.school_24px
                         )
                     }
-                    item {
-                        ExpandInfoSection(
-                            title = stringResource(id = R.string.help_draw),
-                            content = stringResource(id = R.string.how_to_draw),
-                            initiallyExpanded = expandSection == "draw"
-                        )
-                    }
+
                     item {
                         ExpandInfoSection(
 //                            title = stringResource(id = R.string.tech_problems_title),

@@ -96,9 +96,16 @@ fun PriceScreen(
 
                 val priceUiState by viewModel.priceUiState.collectAsStateWithLifecycle()
 
+                //De her fyller ikke hele boksen av en eller annen grunn
                 when (priceUiState) {
-                    is PriceUiState.Loading -> LoadingScreen()
-                    is PriceUiState.Error -> ErrorScreen()
+                    is PriceUiState.Loading ->
+                        LoadingScreen()
+
+
+                    is PriceUiState.Error ->
+                        ErrorScreen()
+
+
                     is PriceUiState.Success -> {
                         val prices = (priceUiState as PriceUiState.Success).prices
                         ElectricityPriceChart(prices = prices)

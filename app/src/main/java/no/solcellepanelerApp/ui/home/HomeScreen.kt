@@ -1,6 +1,8 @@
 package no.solcellepanelerApp.ui.home
 
+import android.Manifest
 import android.annotation.SuppressLint
+import android.content.pm.PackageManager
 import android.location.Location
 import android.util.Log
 import androidx.compose.foundation.Image
@@ -40,6 +42,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import androidx.core.content.ContextCompat
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
@@ -67,8 +70,8 @@ import no.solcellepanelerApp.ui.reusables.MyDisplayCard
 import no.solcellepanelerApp.ui.reusables.MyNavCard
 import no.solcellepanelerApp.ui.theme.ThemeMode
 import no.solcellepanelerApp.ui.theme.ThemeState
-import no.solcellepanelerApp.util.RequestLocationPermission
 import no.solcellepanelerApp.util.fetchCoordinates
+import no.solcellepanelerApp.util.mapLocationToRegion
 import java.time.LocalTime
 import java.time.ZonedDateTime
 
@@ -122,20 +125,36 @@ fun HomeScreen(
         return
     }
 
-    //Request location permission and fetch region
-    RequestLocationPermission { region ->
-        selectedRegion = region
-        locationPermissionGranted = true
+//    //Request location permission and fetch region
+//    RequestLocationPermission { region ->
+//        selectedRegion = region
+//        locationPermissionGranted = true
+//
+//    }
+//
+//    LaunchedEffect(locationPermissionGranted) {
+//        if (locationPermissionGranted && activity != null) {
+//            val location = fetchCoordinates(context, activity)
+//            currentLocation = location
+//
+//        }
+//    }
 
-    }
+    LaunchedEffect(Unit) {
+        val permissionGranted = ContextCompat.checkSelfPermission(
+            context,
+            Manifest.permission.ACCESS_FINE_LOCATION
+        ) == PackageManager.PERMISSION_GRANTED
 
-    LaunchedEffect(locationPermissionGranted) {
-        if (locationPermissionGranted && activity != null) {
+        if (permissionGranted && activity != null) {
             val location = fetchCoordinates(context, activity)
             currentLocation = location
-
+            selectedRegion = location?.let { mapLocationToRegion(it) } ?: Region.OSLO
+        } else {
+            selectedRegion = Region.OSLO
         }
     }
+
 
     Log.d("HomeScreen", "currentLocation: $currentLocation")
     if (currentLocation != null && !dataFetched) {
@@ -256,7 +275,6 @@ fun HomeScreen(
                                             it
                                         ) + " kW/m²"
                                     } ?: "No data",
-                                    // Optional fallback for null
                                     style = MaterialTheme.typography.headlineSmall,
                                     fontWeight = FontWeight.ExtraLight,
                                     color = MaterialTheme.colorScheme.primary

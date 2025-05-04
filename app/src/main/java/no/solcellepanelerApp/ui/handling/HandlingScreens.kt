@@ -38,7 +38,11 @@ fun LoadingScreen() {
         ) {
             CircularProgressIndicator(color = MaterialTheme.colorScheme.tertiary)
             Spacer(modifier = Modifier.height(8.dp))
-            Text("Laster inn data, vennligst vent...")
+            Text(
+                "Laster inn data, vennligst vent...",
+                textAlign = TextAlign.Center,
+                style = MaterialTheme.typography.bodyLarge,
+            )
         }
     }
 }
