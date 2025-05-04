@@ -40,9 +40,9 @@ import no.solcellepanelerApp.ui.infoscreen.InfoScreen
 import no.solcellepanelerApp.ui.map.MapScreen
 import no.solcellepanelerApp.ui.map.MapScreenViewModel
 import no.solcellepanelerApp.ui.onboarding.OnboardingScreen
+import no.solcellepanelerApp.ui.result.EnergySavingsScreen
 import no.solcellepanelerApp.ui.result.ResultScreen
-import no.solcellepanelerApp.ui.result.ShowMonthlySavings
-import no.solcellepanelerApp.ui.result.ShowYearlySavings
+
 import no.solcellepanelerApp.ui.result.WeatherViewModel
 
 @Composable
@@ -87,15 +87,17 @@ fun Nav(navController: NavHostController, fontScaleViewModel: FontScaleViewModel
             val energyPrice =
                 backStackEntry.arguments?.getString("energyPrice")?.toDoubleOrNull() ?: 0.0
 
-            ShowMonthlySavings(
-                month,
-                energyProduced,
-                energyPrice,
-                navController,
-                fontScaleViewModel,
-                WviewModel
+            EnergySavingsScreen(
+                isMonthly = true,
+                month = month,
+                energyProduced = energyProduced,
+                energyPrice = energyPrice,
+                navController = navController,
+                fontScaleViewModel = fontScaleViewModel,
+                weatherViewModel = WviewModel
             )
         }
+
         composable(
             "yearly_savings/{energyProduced}/{energyPrice}",
             arguments = listOf(
@@ -108,7 +110,14 @@ fun Nav(navController: NavHostController, fontScaleViewModel: FontScaleViewModel
             val energyPrice =
                 backStackEntry.arguments?.getString("energyPrice")?.toDoubleOrNull() ?: 0.0
 
-            ShowYearlySavings(energyProduced, energyPrice, navController, fontScaleViewModel,WviewModel)
+            EnergySavingsScreen(
+                isMonthly = false,
+                energyProduced = energyProduced,
+                energyPrice = energyPrice,
+                navController = navController,
+                fontScaleViewModel = fontScaleViewModel,
+                weatherViewModel = WviewModel
+            )
         }
     }
 }

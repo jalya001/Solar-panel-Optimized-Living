@@ -1,11 +1,17 @@
 package no.solcellepanelerApp.ui.result
 
+import androidx.compose.runtime.Composable
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
+import no.solcellepanelerApp.data.weatherdata.ApiException
 import no.solcellepanelerApp.data.weatherdata.WeatherRepository
+import no.solcellepanelerApp.ui.handling.NoDataErrorScreen
+import no.solcellepanelerApp.ui.handling.PartialDataErrorScreen
+import no.solcellepanelerApp.ui.handling.UnexpectedErrorScreen
+import no.solcellepanelerApp.ui.handling.UnknownErrorScreen
 
 enum class UiState {
     LOADING, SUCCESS, ERROR
@@ -24,13 +30,14 @@ class WeatherViewModel(
     val weatherData: StateFlow<Map<String, Array<Double>>> = _weatherData
     private val _uiState = MutableStateFlow(UiState.LOADING)
     val uiState: StateFlow<UiState> = _uiState
-    private val _errorMessage = MutableStateFlow("")
-    val errorMessage: StateFlow<String> = _errorMessage
+    private val _errorScreen = MutableStateFlow<@Composable () -> Unit> { UnknownErrorScreen() }
+    val errorScreen: StateFlow<@Composable () -> Unit> = _errorScreen
 
     private val _frostDataRim = MutableStateFlow<Array<Double>>(emptyArray())
     val frostDataRim: StateFlow<Array<Double>> = _frostDataRim
 
     private val _calculationResults = MutableStateFlow<MonthlyCalculationResult?>(null)
+
     val calculationResults: StateFlow<MonthlyCalculationResult?> = _calculationResults
 
     // Default temperature coefficient for solar panels
@@ -51,10 +58,10 @@ class WeatherViewModel(
             if (result.isSuccess) {
                 _weatherData.value = result.getOrNull()?: emptyMap()
                 if (_weatherData.value.isEmpty()) {
-                    _errorMessage.value = result.exceptionOrNull()?.toString()?: "There is no data on this region. We are sorry."
+                    _errorScreen.value = (result.exceptionOrNull() as? ApiException)?.getErrorScreen()?: { NoDataErrorScreen() }
                     _uiState.value = UiState.ERROR
                 } else if (_weatherData.value.size != 4) {
-                    _errorMessage.value = result.exceptionOrNull()?.toString()?: "Some data missing on this region, and we cannot provide you an estimate. We are sorry."
+                    _errorScreen.value = (result.exceptionOrNull() as? ApiException)?.getErrorScreen()?: { PartialDataErrorScreen() }
                     _uiState.value = UiState.ERROR
                 } else {
                     _uiState.value = UiState.SUCCESS
@@ -62,7 +69,7 @@ class WeatherViewModel(
             } else {
                 _uiState.value = UiState.ERROR
                 println(result.exceptionOrNull())
-                _errorMessage.value = result.exceptionOrNull()?.toString()?: "Unexpected behavior. Please report to developers."
+                _errorScreen.value = (result.exceptionOrNull() as? ApiException)?.getErrorScreen()?: { UnexpectedErrorScreen() }
             }
         }
     }
@@ -78,7 +85,7 @@ class WeatherViewModel(
     fun calculateSolarPanelOutput(panelArea: Double, efficiency: Double) {
         viewModelScope.launch {
             if (_weatherData.value.size != 4) {
-                _errorMessage.value = "Insufficient weather data for calculations"
+                _errorScreen.value = { PartialDataErrorScreen() }
                 _uiState.value = UiState.ERROR
                 return@launch
             }
