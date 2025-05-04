@@ -125,7 +125,7 @@
     <string name="results"> Resultater </string>
     <string name="angle"> Vinkel: </string>
     <string name="direction"> Retning: </string>
-    <string name="effectivity"> Effektivitet: </string>
+    <string name="efficiency"> Effektivitet: </string>
     <string name="data_not_added"> Data ikke lagt til</string>
     <string name="get_data">Hent data </string>
     <string name="loading"> Laster inn data, vennligst vent… </string>

@@ -5,6 +5,10 @@ import android.content.Intent
 import android.content.pm.PackageManager
 import android.net.Uri
 import android.provider.Settings
+import androidx.compose.animation.core.animateFloatAsState
+import androidx.compose.animation.core.tween
+import androidx.compose.foundation.border
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -17,17 +21,21 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Create
 import androidx.compose.material.icons.filled.Info
+import androidx.compose.material.icons.filled.OpenInNew
 import androidx.compose.material3.Button
+import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Checkbox
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.ModalBottomSheet
+import androidx.compose.material3.OutlinedCard
 import androidx.compose.material3.Slider
 import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
@@ -43,10 +51,12 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.platform.LocalFocusManager
+import androidx.compose.ui.platform.LocalUriHandler
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.Density
@@ -435,6 +445,14 @@ fun AdditionalInputBottomSheet(
     val context = LocalContext.current
     val activity = context as? Activity
 
+    data class SolarPanelType(val name: String, val efficiency: Float, val description: String)
+
+    val panelTypes = listOf(
+        SolarPanelType("Monokrystallinsk", 20f, "Høy effektivitet, dyrere"),
+        SolarPanelType("Polykristallinsk", 15f, "Middels effektivitet, rimeligere"),
+        SolarPanelType("Tynnfilm", 10f, "Lav effektivitet, fleksibel")
+    )
+
     LaunchedEffect(area) {
         areaState = area
     }
@@ -545,18 +563,93 @@ fun AdditionalInputBottomSheet(
                         style = MaterialTheme.typography.titleMedium
                     )
 
-                    Slider(
-                        value = efficiency,
-                        onValueChange = {
-                            efficiency = it
-                            focusManager.clearFocus()
-                        },
-                        valueRange = 0f..100f,
-                        modifier = Modifier.fillMaxWidth()
-                    )
+//                    Slider(
+//                        value = efficiency,
+//                        onValueChange = {
+//                            efficiency = it
+//                            focusManager.clearFocus()
+//                        },
+//                        valueRange = 0f..100f,
+//                        modifier = Modifier.fillMaxWidth()
+//                    )
+
+
+
+                    panelTypes.forEach { panelType ->
+                        val selected = efficiency == panelType.efficiency
+                        val glowAlpha by animateFloatAsState(
+                            targetValue = if (selected) 1f else 0f,
+                            animationSpec = tween(durationMillis = 500)
+                        )
+
+                        OutlinedCard(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .height(50.dp)
+                                .border(
+                                    width = if (selected) 3.dp else 1.dp,
+                                    color = MaterialTheme.colorScheme.primary.copy(alpha = glowAlpha),
+                                    shape = RoundedCornerShape(12.dp)
+                                )
+                                .shadow(
+                                    elevation = if (selected) 8.dp else 12.dp,
+                                    shape = RoundedCornerShape(12.dp),
+                                    ambientColor = MaterialTheme.colorScheme.primary.copy(alpha = glowAlpha)
+                                )
+                                .clickable {
+                                    efficiency = panelType.efficiency
+                                    viewModel.efficiencyInput = panelType.efficiency.toString()
+                                    focusManager.clearFocus()
+                                },
+                            colors = CardDefaults.cardColors(
+                                contentColor = if (selected)
+                                    MaterialTheme.colorScheme.surface
+                                else
+                                    MaterialTheme.colorScheme.surfaceVariant
+                            )
+                        ) {
+                            Column(
+                                modifier = Modifier.fillMaxWidth(),
+                                horizontalAlignment = Alignment.CenterHorizontally
+                            ) {
+                                Text(
+                                    text = "${panelType.name} (${panelType.efficiency.toInt()}%)",
+                                    color = MaterialTheme.colorScheme.onSurfaceVariant,
+                                    fontWeight = if (selected) FontWeight.Bold else FontWeight.Normal
+                                )
+                                Text(
+                                    text = panelType.description,
+                                    style = MaterialTheme.typography.bodySmall,
+                                    color = MaterialTheme.colorScheme.onSurfaceVariant,
+                                    fontWeight = if (selected) FontWeight.Bold else FontWeight.Normal
+                                )
+                            }
+                        }
+                        Spacer(modifier = Modifier.height(12.dp))
+                    }
+
+                    val uriHandler = LocalUriHandler.current
+                    Row(
+                        modifier = Modifier
+                            .clickable { uriHandler.openUri("https://blogg.fusen.no/alle/ulike-typer-solcelleteknologi") }
+                            .padding(bottom = 16.dp),
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        Text(
+                            text = "Les mer om solcellepaneler",
+                            style = MaterialTheme.typography.bodyMedium,
+                            modifier = Modifier.clickable { uriHandler.openUri("https://blogg.fusen.no/alle/ulike-typer-solcelleteknologi") }
+                        )
+                        Spacer(modifier = Modifier.width(2.dp))
+                        Icon(
+                            imageVector = Icons.Default.OpenInNew,
+                            contentDescription = "Les mer",
+                            tint = MaterialTheme.colorScheme.primary
+                        )
+                    }
 
                     InfoHelpButton(
-                        label = stringResource(id = R.string.effectivity) + " ${efficiency.toInt()}%",
+                        label = stringResource(id = R.string.efficiency) + " ${efficiency.toInt()}%",
                         helpText = stringResource(id = R.string.panelEfficencyHelp)
                     )
 
