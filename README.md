@@ -16,6 +16,10 @@ SOL Solar panel Optimized Living er en Android-applikasjon som er utviklet for �
 Ved å bruke ekstern API-integrasjon, som Frost API for værdata og andre relevante kilder for strømpriser og støtteordninger, kan brukeren få et godt grunnlag for å vurdere lønnsomheten ved solcelleinstallasjon på sin eiendom. Appen gir brukeren muligheten til å hente kartkoordinater for en spesifisert adresse, og deretter beregne forventet solenergiutnyttelse basert på takflatenes vinkel, areal, og den gjennomsnittlige solinnstrålingen i området.
 
 Appen kan være spesielt nyttig for boligeiere, hytteeiere og profesjonelle solcelleinstallatører som ønsker å få oversikt over den potensielle strømproduksjonen og besparelsene ved å investere i solenergi. Med funksjoner som kartvisualisering, beregning av energiproduksjon og besparelser på strømregningen, samt muligheten for å tegne takflater på kartet, gir Solcellepaneller App et praktisk og brukervennlig verktøy for å optimalisere bruken av solenergi.
+<div style="display: flex; gap: 10px; align-items: center;">
+  <img src="https://github.uio.no/IN2000-V25/team-37/assets/11510/3b6830b5-0c26-4932-80de-82c784f265e5" alt="house" width="200"/>
+  
+</div>
 ## 2. Funksjonalieter
 
     Kartvisning: Brukeren kan legge inn en adresse som konverteres til GPS-koordinater, og plassere en markør på kartet.
