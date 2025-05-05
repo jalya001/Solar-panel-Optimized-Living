@@ -3,7 +3,7 @@
   <img src="https://raw.github.uio.no/IN2000-V25/team-37/77b25b5ad94318869be2c39fbd6193981ba85a6b/app/src/main/res/drawable/circular%20logo%20dark.png?token=GHSAT0AAAAAAAAAK6TORDGIJ6DBZJDPOYY22AY4TEQ" alt="Logo Dark" width="150"/>
 </div>
 
-# Project Title
+# “SOL – Solar panel Optimized Living”
 
 A brief description of what this project does and who it's for
 
