@@ -686,26 +686,13 @@ fun AdditionalInputBottomSheet(
 
                     Spacer(modifier = Modifier.height(16.dp))
 
-
-//                    RequestLocationPermission { newRegion ->
-//                        selectedRegion = newRegion
-//                    }
-////
-//                    var selectedRegion by remember { mutableStateOf(Region.OSLO) }
-//                    RegionDropdown(
-//                        selectedRegion = viewModel.selectedRegion,
-//                        onRegionSelected = { newRegion ->
-//                            viewModel.selectedRegion = newRegion
-//                        }
-//                    )
-
                     selectedRegion?.let {
                         RegionDropdown(it) { newRegion ->
                             onRegionSelected(newRegion)
                         }
                     }
 
-                    Spacer(modifier = Modifier.height(32.dp))
+//                    Spacer(modifier = Modifier.height(32.dp))
 
                     if (areaState.isNotEmpty() && coordinates != null) {
                         Button(
