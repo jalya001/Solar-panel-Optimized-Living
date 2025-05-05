@@ -19,10 +19,10 @@
 
     <string name='intro_title'>Introduction</string>
     <string name="intro_content">
-    Installing solar panels can be a smart investment both financially and environmentally
-    – but it depends on where you live, how much sun you get, and what the electricity prices are where you live.
-    This app helps you assess whether switching to solar energy is worth it, based on weather data, electricity prices, and location.
-    Here we explain the most important things you should know before making a decision.\n\n
+        Installing solar panels can be a smart investment - both financially and environmentally.\n
+        How profitable it is depends on where you live, how much sunlight you get, and the electricity prices in your area.
+        This app helps you assess whether switching to solar energy is worth it, based on weather data, electricity prices, and your location.
+        Here, we explain the most important things you should know before making a decision.
     </string>
 
 
@@ -101,8 +101,9 @@
 
     <string name="support_title">Support Schemes</string>
     <string name="support_content">
-        You may be eligible for financial support from Enova, a Norwegian government agency that provides funding for energy-efficient solutions such as solar panels.
-        Through their homeowner program, you can get up to 32,500 NOK in support for installing solar power systems, depending on system size and efficiency.
+        You may be eligible for financial support from Enova, a Norwegian government agency that funds energy-efficient solutions like solar panels.
+        As a homeowner, you can receive up to NOK 32,500 in support depending on your system\'s size and efficiency.
+        You get a base amount of NOK 7,500, plus NOK 2,000 per installed kW, up to an additional 25,000.
         For more information and to apply, visit:
     </string>
 

@@ -20,9 +20,10 @@
     <!--Info Screen-->
     <string name='intro_title'>Introduksjon</string>
     <string name="intro_content">
-    Å installere solcellepaneler kan være en smart investering – både økonomisk og miljømessig.
-    Men hvor lønnsomt det er, avhenger av hvor du bor, hvor mye sol du får, og hva strømprisene er i ditt område.
-    Denne appen hjelper deg med å vurdere om solenergi er verdt det for deg, basert på værdata, strømpriser og din lokasjon.\n\n
+        Å installere solcellepaneler kan være en smart investering – både økonomisk og miljømessig.
+        Lønnsomheten avhenger av hvor du bor, hvor mye sol du får, og strømprisene i ditt område.
+        Denne appen hjelper deg med å vurdere om solenergi er verdt det for deg, basert på værdata, strømpriser og din lokasjon.
+        Her forklarer vi det viktigste du bør vite før du tar en beslutning.
     </string>
 
     <string name='price_title'>Strømpriser</string>
@@ -100,9 +101,10 @@
 
     <string name="support_title">Støtteordninger</string>
     <string name="support_content">
-        Du kan være kvalifisert for økonomisk støtte fra Enova, en statlig aktør som gir tilskudd til energieffektive tiltak – inkludert solcelleanlegg.
-        Gjennom sitt program for boligeiere kan du få inntil 32 500 kr i støtte totalt, avhengig av anleggets størrelse og effektivitet.
-        For mer informasjon og søknad, gå til:
+        Du kan være kvalifisert for økonomisk støtte fra Enova, en statlig aktør som støtter energieffektive tiltak som solcelleanlegg.
+        Som boligeier kan du få inntil 32 500 kr i støtte, avhengig av hvor stort og effektivt anlegget ditt er.
+        Du får 7 500 kr i grunnstøtte for et solcelleanlegg, pluss 2 000 kr per kW installert effekt, opptil 25 000 kr ekstra.
+        For mer informasjon og for å søke, gå til:
     </string>
 
 
