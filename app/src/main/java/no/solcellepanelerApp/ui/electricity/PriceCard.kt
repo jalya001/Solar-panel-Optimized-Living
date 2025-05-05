@@ -62,9 +62,17 @@ fun PriceCard(
     val lowestPrice = prices.minByOrNull { it.NOK_per_kWh }
 
     val label = when {
-        ZonedDateTime.parse(currentDisplayedPrice?.time_start).hour == currentHour -> "Pris nå"
-        hourIndex > currentHour -> "Pris om ${hourIndex - currentHour} time${if (hourIndex - currentHour > 1) "r" else ""}"
-        else -> "Pris for ${currentHour - hourIndex} time${if (currentHour - hourIndex > 1) "r" else ""} siden"
+        ZonedDateTime.parse(currentDisplayedPrice?.time_start).hour == currentHour -> stringResource(R.string.price_now_card)
+        hourIndex > currentHour ->
+            stringResource(R.string.future_price_prefix) +
+                " ${hourIndex - currentHour} " +
+                    stringResource(R.string.price_suffix_part1) +
+                    (if (hourIndex - currentHour > 1) stringResource(R.string.price_suffix_part2) else "")
+        else ->
+            stringResource(R.string.past_price_prefix) +
+                " ${currentHour - hourIndex} " +
+                    stringResource(R.string.price_suffix_part1) +
+                    (if (currentHour - hourIndex > 1) stringResource(R.string.price_suffix_part2) else "") + stringResource(R.string.past_price_suffix)
     }
 
 
@@ -136,7 +144,7 @@ fun PriceCard(
             highestPrice?.let {
                 PriceRow(
                     icon = Icons.Default.ArrowUpward,
-                    label = "Høyeste pris",
+                    label = stringResource(R.string.highest_price),
                     price = it.NOK_per_kWh,
                     time = it.getTimeRange()
                 )
@@ -145,7 +153,7 @@ fun PriceCard(
             lowestPrice?.let {
                 PriceRow(
                     icon = Icons.Default.ArrowDownward,
-                    label = "Laveste pris",
+                    label = stringResource(R.string.lowest_price),
                     price = it.NOK_per_kWh,
                     time = it.getTimeRange()
                 )
@@ -231,7 +239,7 @@ fun HomePriceCard(
             verticalArrangement = Arrangement.Top,
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            val label = "Nåværende strømpris i region: ${selectedRegion?.name}"
+            val label = stringResource(R.string.price_now) + " ${selectedRegion?.name}"
             Spacer(modifier = Modifier.height(8.dp))
             Row(
                 modifier = Modifier.fillMaxWidth(),

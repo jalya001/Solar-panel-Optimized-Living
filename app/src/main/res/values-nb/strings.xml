@@ -302,6 +302,15 @@
     <string name="y_axis_name">Strømpris (kr/kWh)</string>
     <string name="change_time_arrows">Bruk pilene for å bytte time</string>
     <string name="time">Tid:</string>
+    <string name="price_now">Nåværende strømpris i region:</string>
+    <string name="highest_price">Høyeste pris</string>
+    <string name="lowest_price">Laveste pris</string>
+    <string name="price_now_card">Pris nå</string>
+    <string name="future_price_prefix">Pris om</string>
+    <string name="price_suffix_part1">time</string>
+    <string name="price_suffix_part2">r</string>
+    <string name="past_price_prefix">Pris for</string>
+    <string name="past_price_suffix">siden</string>
 
     <!-- Tutorial Overlays -->
     <string name="overlay_message">Trykk hvor som helst for å fortsette</string>
