@@ -1,6 +1,7 @@
-![Logo Light](https://raw.github.uio.no/IN2000-V25/team-37/77b25b5ad94318869be2c39fbd6193981ba85a6b/app/src/main/res/drawable/circular%20logo%20light.png?token=GHSAT0AAAAAAAAAK6TPAEPQYL4Z7YQGEYTI2AY4S3Q)
-![Logo Dark](https://raw.github.uio.no/IN2000-V25/team-37/77b25b5ad94318869be2c39fbd6193981ba85a6b/app/src/main/res/drawable/circular%20logo%20dark.png?token=GHSAT0AAAAAAAAAK6TORDGIJ6DBZJDPOYY22AY4TEQ)
-
+<div style="display: flex; gap: 10px; align-items: center;">
+  <img src="https://raw.github.uio.no/IN2000-V25/team-37/77b25b5ad94318869be2c39fbd6193981ba85a6b/app/src/main/res/drawable/circular%20logo%20light.png?token=GHSAT0AAAAAAAAAK6TPAEPQYL4Z7YQGEYTI2AY4S3Q" alt="Logo Light" width="150"/>
+  <img src="https://raw.github.uio.no/IN2000-V25/team-37/77b25b5ad94318869be2c39fbd6193981ba85a6b/app/src/main/res/drawable/circular%20logo%20dark.png?token=GHSAT0AAAAAAAAAK6TORDGIJ6DBZJDPOYY22AY4TEQ" alt="Logo Dark" width="150"/>
+</div>
 
 # Project Title
 
