@@ -618,7 +618,7 @@ fun AdditionalInputBottomSheet(
 
 
                                 Text(
-                                    text = "${panelType.name} (${panelEff} %)",
+                                    text = "${panelType.name} (${panelEff}%)",
                                     color = MaterialTheme.colorScheme.onSurfaceVariant,
                                     fontWeight = if (selected) FontWeight.Bold else FontWeight.Normal
                                 )
