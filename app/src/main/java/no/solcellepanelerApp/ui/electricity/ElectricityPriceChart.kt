@@ -24,6 +24,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import co.yml.charts.axis.AxisData
@@ -42,6 +43,7 @@ import co.yml.charts.ui.linechart.model.LineStyle
 import co.yml.charts.ui.linechart.model.SelectionHighlightPoint
 import co.yml.charts.ui.linechart.model.SelectionHighlightPopUp
 import co.yml.charts.ui.linechart.model.ShadowUnderLine
+import no.solcellepanelerApp.R
 import no.solcellepanelerApp.model.electricity.ElectricityPrice
 import no.solcellepanelerApp.ui.theme.ThemeMode
 import no.solcellepanelerApp.ui.theme.ThemeState
@@ -105,7 +107,7 @@ fun ElectricityPriceChart(prices: List<ElectricityPrice>) {
         },
         modifier = Modifier.padding(8.dp)
     ) {
-        Text(text = if (chartType == ChartType.LINE) "Vis søylediagram" else "Vis linjediagram")
+        Text(text = if (chartType == ChartType.LINE) stringResource(R.string.bar_chart) else stringResource(R.string.line_chart))
     }
 
     Card(
@@ -235,7 +237,7 @@ fun ElectricityPriceChart(prices: List<ElectricityPrice>) {
 
             // X-axis name
             Text(
-                text = "Tid (timer)",
+                text = stringResource(R.string.x_axis_name),
                 style = MaterialTheme.typography.bodySmall,
                 modifier = Modifier
                     .align(Alignment.BottomCenter)
@@ -245,7 +247,7 @@ fun ElectricityPriceChart(prices: List<ElectricityPrice>) {
 
             // Y-axis name
             Text(
-                text = "Strømpris (kr/kWh)",
+                text = stringResource(R.string.y_axis_name),
                 style = MaterialTheme.typography.bodySmall,
                 modifier = Modifier
                     .align(Alignment.CenterStart)

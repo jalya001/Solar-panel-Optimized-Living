@@ -213,8 +213,8 @@ fun OnboardingGraphUI(OnBoardModel: OnBoardModel) {
             if (showDialog) {
                 androidx.compose.material3.AlertDialog(
                     onDismissRequest = { showDialog = false },
-                    title = { Text("Location Permission Already Granted") },
-                    text = { Text("If you want to change location permissions, go to settings.") },
+                    title = { Text(stringResource(R.string.location_perm_title)) },
+                    text = { Text(stringResource(R.string.location_perm_content)) },
                     confirmButton = {
                         Button(onClick = {
                             val intent =
@@ -225,12 +225,12 @@ fun OnboardingGraphUI(OnBoardModel: OnBoardModel) {
                             context.startActivity(intent)
                             showDialog = false
                         }) {
-                            Text("Go to Settings")
+                            Text(stringResource(R.string.settings))
                         }
                     },
                     dismissButton = {
                         Button(onClick = { showDialog = false }) {
-                            Text("Cancel")
+                            Text(stringResource(R.string.close))
                         }
                     }
                 )
@@ -243,7 +243,7 @@ fun OnboardingGraphUI(OnBoardModel: OnBoardModel) {
                     triggerLocationFetch = true
                 }
             }) {
-                Text(if (locationGranted) "Change Location Settings" else "Grant Location Access")
+                Text(if (locationGranted) stringResource(R.string.change_location_settings) else stringResource(R.string.grant_location_access))
             }
         }
 

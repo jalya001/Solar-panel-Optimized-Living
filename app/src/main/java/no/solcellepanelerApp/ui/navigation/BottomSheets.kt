@@ -143,8 +143,8 @@ fun HelpBottomSheet(
                         if (showDialog) {
                             androidx.compose.material3.AlertDialog(
                                 onDismissRequest = { showDialog = false },
-                                title = { Text("Location Permission Already Granted") },
-                                text = { Text("If you want to change location permissions, go to settings.") },
+                                title = { Text(stringResource(R.string.location_perm_title)) },
+                                text = { Text(stringResource(R.string.location_perm_content)) },
                                 confirmButton = {
                                     Button(onClick = {
                                         val intent =
@@ -159,18 +159,18 @@ fun HelpBottomSheet(
                                         context.startActivity(intent)
                                         showDialog = false
                                     }) {
-                                        Text("Go to Settings")
+                                        Text(stringResource(R.string.settings))
                                     }
                                 },
                                 dismissButton = {
                                     Button(onClick = { showDialog = false }) {
-                                        Text("Cancel")
+                                        Text(stringResource(R.string.close))
                                     }
                                 }
                             )
                         }
                         MySection(
-                            title = if (locationGranted) "Change Location Settings" else "Grant Location Access",
+                            title = if (locationGranted) stringResource(R.string.change_location_settings) else stringResource(R.string.grant_location_access),
                             onClick = {
 //                                if (locationGranted) {
 //                                    val intent =
@@ -340,7 +340,7 @@ fun AppearanceBottomSheet(
                         Button(onClick = {
                             fontScaleViewModel.resetFontScale()
                         }) {
-                            Text("Reset", style = MaterialTheme.typography.bodySmall)
+                            Text(stringResource(R.string.reset), style = MaterialTheme.typography.bodySmall)
                         }
 
                         Button(onClick = {
@@ -641,7 +641,7 @@ fun AdditionalInputBottomSheet(
                         verticalAlignment = Alignment.CenterVertically
                     ) {
                         Text(
-                            text = "Les mer om solcellepaneler",
+                            text = stringResource(R.string.more_info_solar_panels),
                             style = MaterialTheme.typography.bodyMedium,
                             modifier = Modifier.clickable { uriHandler.openUri("https://blogg.fusen.no/alle/ulike-typer-solcelleteknologi") }
                         )
@@ -716,7 +716,7 @@ fun AdditionalInputBottomSheet(
                             },
                             modifier = Modifier.align(Alignment.CenterHorizontally)
                         ) {
-                            Text("Gå til resultater")
+                            Text(stringResource(R.string.navigate_results))
                         }
                     }
 

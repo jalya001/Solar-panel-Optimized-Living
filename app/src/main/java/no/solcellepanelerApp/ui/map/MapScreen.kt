@@ -128,24 +128,25 @@ fun MapScreen(
     var showMapOverlay by remember { mutableStateOf(true) }
     var showDrawOverlay by remember { mutableStateOf(false) }
 
+    val message = stringResource(R.string.address_not_found)
 
     LaunchedEffect(trigger) {
         if (trigger > lastShownTrigger) {
-            snackbarHostState.showSnackbar("Address not found, try again")
+            snackbarHostState.showSnackbar(message)
             lastShownTrigger = trigger
         }
     }
     if (showMapOverlay) {
         SimpleTutorialOverlay(
             onDismiss = { showMapOverlay = false },
-            message = "Søk etter adressen din, bruk enhetsposisjon, eller trykk på kartet for å velge lokasjon"
+            message = stringResource(R.string.map_overlay)
         )
     }
 
     if (showDrawOverlay) {
         SimpleTutorialOverlay(
             onDismiss = { showDrawOverlay = false },
-            message = "Trykk på kartet for å starte tegningen av ønsket område"
+            message = stringResource(R.string.map_draw_overlay)
         )
     }
     Scaffold(

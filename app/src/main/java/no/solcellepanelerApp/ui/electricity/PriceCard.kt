@@ -26,9 +26,11 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import no.solcellepanelerApp.R
 import no.solcellepanelerApp.model.electricity.ElectricityPrice
 import no.solcellepanelerApp.model.electricity.Region
 import no.solcellepanelerApp.ui.handling.LoadingScreen
@@ -93,7 +95,7 @@ fun PriceCard(
                         horizontalAlignment = Alignment.CenterHorizontally
                     ) {
                         Text(
-                            text = "Bruk pilene for å bytte time",
+                            text = stringResource(R.string.change_time_arrows),
                             style = MaterialTheme.typography.bodySmall,
                             color = MaterialTheme.colorScheme.onSurfaceVariant
                         )
@@ -189,7 +191,7 @@ fun PriceRow(
                 style = MaterialTheme.typography.bodyMedium
             )
             Text(
-                text = "Tid: $time",
+                text = stringResource(R.string.time) + " $time",
                 style = MaterialTheme.typography.bodySmall
             )
         }

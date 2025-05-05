@@ -307,7 +307,7 @@ fun HomeScreen(
                                 horizontalAlignment = Alignment.CenterHorizontally,
                             ) {
                                 Text(
-                                    text = "Se strømprisene!",
+                                    text = stringResource(R.string.live_prices),
                                     style = MaterialTheme.typography.titleLarge,
                                     color = MaterialTheme.colorScheme.secondary
 //                                color = MaterialTheme.colorScheme.tertiary Oransje fargen. bare å fjerne kommentaren her hvis dere vil bruke oransj d

@@ -16,6 +16,13 @@
     <string name="go_back"> Tilbake </string>
     <string name="close"> Lukk</string>
     <string name="prod">Produksjon</string>
+    <string name="live_prices">Se strømprisene!</string>
+    <string name="reset">Tilbakestill</string>
+    <string name="location_perm_title">Lokasjonstillatelse er allerede aktivert</string>
+    <string name="location_perm_content">For å endre posisjonstilgang, åpne innstillinger</string>
+    <string name="settings">Gå til Innstillinger</string>
+    <string name="change_location_settings">Endre posisjonsinnstillinger</string>
+    <string name="grant_location_access">Gi tilgang til plassering</string>
 
     <!--Info Screen-->
     <string name='intro_title'>Introduksjon</string>
@@ -153,6 +160,7 @@
     <string name="roofAngleHelp"> Også kjent som helning. Dette er hvor bratt taket er. Paneler fungerer best når de er vinklet mot solen.</string>
     <string name="panelEfficencyHelp"> Hvor godt panelene omdanner sollys til strøm. Vanligvis mellom 16–20 % </string>
     <string name="panelDirectionHelp">Også kalt azimuth. Sørvendt gir som regel best effekt i Norge, men appen beregner dette ut fra din lokasjon.</string>
+    <string name="more_info_solar_panels">Les mer om solcellepaneler</string>
 
     <!--Result Screen-->
     <string name="results"> Resultater </string>
@@ -161,9 +169,9 @@
     <string name="efficiency"> Effektivitet: </string>
     <string name="data_not_added"> Data ikke lagt til</string>
     <string name="get_data">Hent data </string>
-    <string name="loading"> Laster inn data, vennligst vent… </string>
+    <string name="loading">Laster inn data, vennligst vent… </string>
 
-    <string name="address_not_found">Adresse ikke funnet, prøv igjen</string>
+    <string name="address_not_found">Fant ikke adressen, prøv igjen</string>
     <string name="follow_system">Følg systemtema</string>
     <string name="navigate_results">Gå til resultater</string>
 
@@ -219,7 +227,7 @@
     <string name="monthly_savings_suffix_part1"> i </string>
     <string name="monthly_savings_suffix_part2"> på strøm fra solcellepaneler</string>
 
-    <string name="yearly_savings_prefix">Du vil spare </string>
+    <string name="yearly_savings_prefix">Du vil spare</string>
     <string name="yearly_savings_suffix">i året på strøm fra solcellepaneler</string>
 
 
@@ -232,10 +240,20 @@
     <string name="cloud_full_info">Dette er hvor mye skydekke din nåværende posisjon har i gjennomsnitt per måned:</string>
     <string name="temp_full_info">Dette er den gjennomsnittlige temperaturen per måned for din nåværende posisjon:</string>
     <string name="difference_info">Denne grafen viser gjennomsnittlig global stråling for hver måned for din nåværende posisjon og strålingen justert med snødekke og skydekke-data:</string>
+    <string name="energy_deficit">Energiunderskudd!</string>
 
+    <string name="fridge">Kjøleskap</string>
+    <string name="el_car">Elbil</string>
+    <string name="heater">Varmeovn</string>
+    <string name="microwave">Mikrobølgeovn</string>
+    <string name="air_conditioner">Air Conditioner</string>
+    <string name="laptop">Laptop</string>
+    <string name="tv">TV</string>
+    <string name="washing_machine">Vaskemaskin</string>
+    <string name="vacuum_cleaner">Støvsuger</string>
+    <string name="dishwasher">Oppvaskmaskin</string>
 
     <!-- Onboarding -->
-
     <string name="onboard_title_1">Velkommen til SOL</string>
     <string name="onboard_desc_1">Din digitale rådgiver for optimal plassering og bruk av solcellepaneler.</string>
 
@@ -275,4 +293,24 @@
     <string name="nodata_error">Vi fant ingen data for dette området. Unnskyld!</string>
     <string name="partialdata_error">Det mangler data for dette området, og vi kan ikke gi et estimat. Unnskyld!</string>
     <string name="unexpected_error">Uforventet oppførsel. Kontakt utviklerne.</string>
+
+    <!-- Price Screen -->
+    <string name="region">Velg distrikt</string>
+    <string name="bar_chart">Vis søylediagram</string>
+    <string name="line_chart">Vis linjediagram</string>
+    <string name="x_axis_name">Tid (timer)</string>
+    <string name="y_axis_name">Strømpris (kr/kWh)</string>
+    <string name="change_time_arrows">Bruk pilene for å bytte time</string>
+    <string name="time">Tid:</string>
+
+    <!-- Tutorial Overlays -->
+    <string name="overlay_message">Trykk hvor som helst for å fortsette</string>
+    <string name="overlay_bottom_message">Klikk hvor som helst for å fortsette</string>
+    <string name="saving_overlay">
+        Se hvor mye du sparer\n\n
+        Trykk på de ulike enhetene for å se hvor mye de bidrar til besparelsen av energi\n\n
+        Scroll opp for mer informasjon!
+    </string>
+    <string name="map_overlay">Søk etter adressen din, bruk enhetsposisjon, eller trykk på kartet for å velge en lokasjon</string>
+    <string name="map_draw_overlay">Trykk på kartet for å begynne å tegne ønsket område</string>
 </resources>

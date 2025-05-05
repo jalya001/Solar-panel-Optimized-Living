@@ -15,7 +15,13 @@
     <string name="font_size"> Change font size</string>
     <string name="go_back"> Back </string>
     <string name="close"> Close</string>
-
+    <string name="live_prices">Check electricity prices</string>
+    <string name="reset">Reset</string>
+    <string name="location_perm_title">Location Permission Already Granted</string>
+    <string name="location_perm_content">If you want to change location permissions, go to settings.</string>
+    <string name="settings">Go to Settings</string>
+    <string name="change_location_settings">Change Location Settings</string>
+    <string name="grant_location_access">Grant Location Access</string>
 
     <string name='intro_title'>Introduction</string>
     <string name="intro_content">
@@ -152,7 +158,7 @@
     <string name="roofAngleHelp">Also known as the slope. This is how steep the roof is. Panels perform best when angled toward the sun.</string>
     <string name="panelEfficencyHelp">How efficiently the panels convert sunlight into electricity. Usually between 16–20%.</string>
     <string name="panelDirectionHelp">Also called azimuth. South-facing usually gives the best performance in Norway, but the app calculates this based on your location.</string>
-
+    <string name="more_info_solar_panels">Learn more about solar panels</string>
 
     <!--Result Screen-->
     <string name="results"> Results </string>
@@ -222,16 +228,26 @@
     <string name="cloud_full_info">This is how much cloud cover per month your current position has on average:</string>
     <string name="temp_full_info">This is the average temperature for each month your current position has on average:</string>
     <string name="difference_info">This chart shows the average global radiation for each month for your current position and the radiation adjusted with the snow cover, cloud cover data:</string>
-    <string name="monthly_savings_prefix">You will save </string>
+    <string name="monthly_savings_prefix">You will save</string>
 
-    <string name="monthly_savings_suffix_part1"> in </string>
-    <string name="monthly_savings_suffix_part2"> from solar panel electricity</string>
-    <string name="yearly_savings_prefix">You will save </string>
+    <string name="monthly_savings_suffix_part1">in</string>
+    <string name="monthly_savings_suffix_part2">from solar panel electricity</string>
+    <string name="yearly_savings_prefix">You will save</string>
     <string name="yearly_savings_suffix">per year on electricity from solar panels</string>
-
+    <string name="energy_deficit">Energy deficit!</string>
+    
+    <string name="fridge">Fridge</string>
+    <string name="el_car">El-Car</string>
+    <string name="heater">Heater</string>
+    <string name="microwave">Microwave</string>
+    <string name="air_conditioner">Air Conditioner</string>
+    <string name="laptop">Laptop</string>
+    <string name="tv">TV</string>
+    <string name="washing_machine">Washing Machine</string>
+    <string name="vacuum_cleaner">Vacuum Cleaner</string>
+    <string name="dishwasher">Dishwasher</string>
 
     <!-- Onboarding -->
-
     <string name="onboard_title_1">Welcome to SOL</string>
     <string name="onboard_desc_1">Your digital advisor for optimal solar panel placement and usage.</string>
 
@@ -271,4 +287,24 @@
     <string name="nodata_error">There is no data on this region. We are sorry.</string>
     <string name="partialdata_error">Some data missing on this region, and we cannot provide you an estimate. We are sorry.</string>
     <string name="unexpected_error">Unexpected behavior. Please report to developers.</string>
+
+    <!-- Price Screen -->
+    <string name="region">Select region</string>
+    <string name="bar_chart">Show bar chart</string>
+    <string name="line_chart">Show line chart</string>
+    <string name="x_axis_name">Time (hours)</string>
+    <string name="y_axis_name">Electricity price (NOK/kWh)</string>
+    <string name="change_time_arrows">Use the arrows to change the time</string>
+    <string name="time">Time:</string>
+
+    <!-- Tutorial Overlays -->
+    <string name="overlay_message">Tap anywhere to continue</string>
+    <string name="overlay_bottom_message">Click anywhere to continue</string>
+    <string name="saving_overlay">
+        See how much you\'re saving\n\n
+        Tap on each device to see how much it contributes to your energy savings\n\n
+        Scroll up for more information!
+    </string>
+    <string name="map_overlay">Search for your address, use your device location, or tap the map to choose a location</string>
+    <string name="map_draw_overlay">Tap the map to start drawing your desired area</string>
 </resources>
