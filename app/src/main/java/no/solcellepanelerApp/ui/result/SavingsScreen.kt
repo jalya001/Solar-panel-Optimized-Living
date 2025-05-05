@@ -131,7 +131,11 @@ fun EnergySavingsScreen(
     val preConnected = listOf(
         stringResource(R.string.fridge),
         stringResource(R.string.tv),
-        stringResource(R.string.laptop)
+        stringResource(R.string.laptop),
+        stringResource(R.string.microwave),
+        stringResource(R.string.dishwasher),
+        stringResource(R.string.washing_machine),
+        stringResource(R.string.vacuum_cleaner)
     )
 
     var connectedDevices by remember {
