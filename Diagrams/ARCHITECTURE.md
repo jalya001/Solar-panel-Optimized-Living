@@ -1,10 +1,10 @@
-# **APP NAVN** ######
+# “SOL – Solar panel Optimized Living”
 
 ### **Team 37 | IN2000-V25**
-Sist oppdatert: 09.04.2025
+Sist oppdatert: 05.05.2025
 ## 1. Introduksjon
 
-Dette dokumentet beskriver arkitekturen for '''''' som  bruker Frost API and PVGIS API for å beregner, energiprodukjson gjennom hele året, lønnsomheten til solcellepaneler, og viser hvilke elektriske apparater som kan brukes med kun energien som produseres av panelene. Appen følger MVVM (Model-View-ViewModel) og bruker moderne Android Jetpack-komponenter som Compose.
+Dette dokumentet beskriver arkitekturen for “SOL – Solar panel Optimized Living” som  bruker Frost, HvakosterStrømmen API og PVGIS API for å beregne energiprodukjson gjennom hele året, lønnsomheten til solcellepaneler, og viser hvilke elektriske apparater som kan brukes med kun energien som produseres av panelene. Appen følger MVVM (Model-View-ViewModel) og bruker moderne Android Jetpack-komponenter som Compose.
 ### Nøkkelteknologier
 
     Minimum API-nivå: 26 – Balanserer kompatibilitet og moderne funksjonalitet, de fleste mobiltelefoner kan kjøre appen.
@@ -22,17 +22,53 @@ Dette dokumentet beskriver arkitekturen for '''''' som  bruker Frost API and PVG
         Maps (visnig av kart)
 
 ## 2. Arkitekturdiagram
-   Må fikses
+  Dette diagrammet viser hvordan hovedskjermene til appen din bruker MVVM-arkitektur, og observerer og kaller de lavere nivåene for å vise dataene i brukergrensesnittet.
 ```mermaid
 
 graph TD
-  A[UI-lag] -->|Observerer| B[ViewModels]
-  B -->|Henter fra| C[Repositories]
-  C -->|Bruker| D[API-er]
-  D --> E[FROST API]
-  D --> F[PVGIS API]
-  D --> G[Geocoder API]
-  D --> H[Strømpris-API]
+    A[HomeScreen] 
+    B[PriceScreen]
+    C[MapScreen]
+    D[ResultScreen]
+    E[SavingScreen]
+
+    F[WeatherViewModel]
+    G[MapViewModel]
+    H[PriceViewModel]
+
+    J[WeatherRepository]
+    K[MapRespository]
+    L[PriceRepository]
+    
+   
+    M[FrostDataSource]
+    N[PvgisDataSource]
+    O[AdressDataSource]
+    P[PriceDataSource]
+
+
+    A --> |Observerer | F
+    A --> |Observerer | H
+    B --> |Observerer | H
+    C --> |Observerer | G
+    D --> |Observerer | F
+    D --> |Observerer | G
+    E --> |Observerer | F
+
+
+
+    F --> |Observerer | J
+    G --> |Observerer | K
+    H --> |Observerer | L
+
+    J --> |Observerer | M
+    J --> |Observerer | N
+    K --> |Observerer | O
+    L --> |Observerer | P
+    
+    
+    
+
 ```
 ## 3. Lagdeling
 ### 3.1 UI-lag (Views)
@@ -51,9 +87,7 @@ graph TD
 
         ResultScreen: Viser beregnet energi produkjson per måned eller hele året og man kan velge å gå til skjerm som viser besparelse .
 
-        SavingScreen: Viser besparelse.
-
-        /////SLETTE//// SavedLocationsScreen: Lagrede brukerlokasjoner.
+        SavingScreen: Viser besparelse og data for året med grafer.
 
         Navigasjon: BottomNavBar med NavController for å navigere.
 
@@ -71,7 +105,6 @@ graph TD
 
     PriceScreenViewModel: Henter strømpriser per region.
 
-    SavedLocationsViewModel: Håndterer lagring av lokasjoner.
 
 #### Viktige mønstre:
 
