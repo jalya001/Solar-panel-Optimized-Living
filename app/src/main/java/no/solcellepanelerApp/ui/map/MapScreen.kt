@@ -536,7 +536,9 @@ fun DisplayScreen(
             area = viewModel.areaInput,
             navController = navController,
             viewModel = viewModel,
-            weatherViewModel = weatherViewModel
+            weatherViewModel = weatherViewModel,
+            selectedRegion = selectedRegion,
+            onRegionSelected = { selectedRegion = it },
         )
     }
 }

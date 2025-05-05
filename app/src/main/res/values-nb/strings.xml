@@ -25,7 +25,7 @@
     Denne appen hjelper deg med å vurdere om solenergi er verdt det for deg, basert på værdata, strømpriser og din lokasjon.\n\n
     </string>
 
-    <string name='price_title'>Strøm priser</string>
+    <string name='price_title'>Strømpriser</string>
     <string name='price_content'>
         Strømprisene i Norge varierer avhengig av region, tid på året og det totale energibehovet.
         Disse prisene kan i stor grad påvirke hvor raskt investeringen din i solcellepanel betaler seg.
@@ -199,7 +199,6 @@
     <string name="cloud_full_info">Dette er hvor mye skydekke din nåværende posisjon har i gjennomsnitt per måned:</string>
     <string name="temp_full_info">Dette er den gjennomsnittlige temperaturen per måned for din nåværende posisjon:</string>
     <string name="difference_info">Denne grafen viser gjennomsnittlig global stråling for hver måned for din nåværende posisjon og strålingen justert med snødekke og skydekke-data:</string>
-
 
 
     <!-- Onboarding -->

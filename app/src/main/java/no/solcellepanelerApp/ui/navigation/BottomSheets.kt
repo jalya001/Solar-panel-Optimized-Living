@@ -430,6 +430,8 @@ fun AdditionalInputBottomSheet(
     navController: NavController,
     viewModel: MapScreenViewModel,
     weatherViewModel: WeatherViewModel,
+    selectedRegion: Region?,
+    onRegionSelected: (Region) -> Unit,
 ) {
     var angle by remember { mutableStateOf(0f) }
     var areaState by remember { mutableStateOf(area) }
@@ -585,7 +587,7 @@ fun AdditionalInputBottomSheet(
                                     shape = RoundedCornerShape(12.dp)
                                 )
                                 .shadow(
-                                    elevation = if (selected) 8.dp else 12.dp,
+                                    elevation = if (selected) 6.dp else 3.dp,
                                     shape = RoundedCornerShape(12.dp),
                                     ambientColor = MaterialTheme.colorScheme.primary.copy(alpha = glowAlpha)
                                 )
@@ -612,8 +614,6 @@ fun AdditionalInputBottomSheet(
                                 } else {
                                     "10-17"
                                 }
-
-
 
 
 
@@ -654,7 +654,7 @@ fun AdditionalInputBottomSheet(
                     }
 
                     InfoHelpButton(
-                        label = stringResource(id = R.string.efficiency) + " ~${efficiency.toInt()}%",
+                        label = stringResource(id = R.string.efficiency) + " ~ ${efficiency.toInt()}%",
                         helpText = stringResource(id = R.string.panelEfficencyHelp)
                     )
 
@@ -686,13 +686,24 @@ fun AdditionalInputBottomSheet(
 
                     Spacer(modifier = Modifier.height(16.dp))
 
-                    var selectedRegion by remember { mutableStateOf(Region.OSLO) }
-                    RegionDropdown(
-                        selectedRegion = viewModel.selectedRegion,
-                        onRegionSelected = { newRegion ->
-                            viewModel.selectedRegion = newRegion
+
+//                    RequestLocationPermission { newRegion ->
+//                        selectedRegion = newRegion
+//                    }
+////
+//                    var selectedRegion by remember { mutableStateOf(Region.OSLO) }
+//                    RegionDropdown(
+//                        selectedRegion = viewModel.selectedRegion,
+//                        onRegionSelected = { newRegion ->
+//                            viewModel.selectedRegion = newRegion
+//                        }
+//                    )
+
+                    selectedRegion?.let {
+                        RegionDropdown(it) { newRegion ->
+                            onRegionSelected(newRegion)
                         }
-                    )
+                    }
 
                     Spacer(modifier = Modifier.height(32.dp))
 
