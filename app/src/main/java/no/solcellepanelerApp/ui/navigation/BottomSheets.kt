@@ -448,8 +448,8 @@ fun AdditionalInputBottomSheet(
     data class SolarPanelType(val name: String, val efficiency: Float, val description: String)
 
     val panelTypes = listOf(
-        SolarPanelType("Monokrystallinsk", 20f, "Høy effektivitet, dyrere"),
-        SolarPanelType("Polykristallinsk", 15f, "Middels effektivitet, rimeligere"),
+        SolarPanelType("Monokrystallinsk", 20f, "Høy effektivitet, dyrere, Standard"),
+        SolarPanelType("Polykrystallinsk", 15f, "Middels effektivitet, rimeligere"),
         SolarPanelType("Tynnfilm", 10f, "Lav effektivitet, fleksibel")
     )
 
@@ -538,7 +538,7 @@ fun AdditionalInputBottomSheet(
 
                     Text(
                         text = stringResource(id = R.string.slope_label),
-                        style = MaterialTheme.typography.titleMedium
+                        style = MaterialTheme.typography.titleLarge
                     )
 
                     Slider(
@@ -560,7 +560,7 @@ fun AdditionalInputBottomSheet(
 
                     Text(
                         stringResource(id = R.string.efficiency_label),
-                        style = MaterialTheme.typography.titleMedium
+                        style = MaterialTheme.typography.titleLarge
                     )
 
 //                    Slider(
@@ -572,7 +572,6 @@ fun AdditionalInputBottomSheet(
 //                        valueRange = 0f..100f,
 //                        modifier = Modifier.fillMaxWidth()
 //                    )
-
 
 
                     panelTypes.forEach { panelType ->
@@ -612,8 +611,20 @@ fun AdditionalInputBottomSheet(
                                 modifier = Modifier.fillMaxWidth(),
                                 horizontalAlignment = Alignment.CenterHorizontally
                             ) {
+                                var panelEff = if (panelType.name == "Monokrystallinsk") {
+                                    "18-23"
+                                } else if (panelType.name == "Polykrystallinsk") {
+                                    "15-17"
+                                } else {
+                                    "10-17"
+                                }
+
+
+
+
+
                                 Text(
-                                    text = "${panelType.name} (${panelType.efficiency.toInt()}%)",
+                                    text = "${panelType.name} (${panelEff} %)",
                                     color = MaterialTheme.colorScheme.onSurfaceVariant,
                                     fontWeight = if (selected) FontWeight.Bold else FontWeight.Normal
                                 )
@@ -649,7 +660,7 @@ fun AdditionalInputBottomSheet(
                     }
 
                     InfoHelpButton(
-                        label = stringResource(id = R.string.efficiency) + " ${efficiency.toInt()}%",
+                        label = stringResource(id = R.string.efficiency) + " ~${efficiency.toInt()}%",
                         helpText = stringResource(id = R.string.panelEfficencyHelp)
                     )
 
@@ -657,7 +668,7 @@ fun AdditionalInputBottomSheet(
 
                     Text(
                         text = stringResource(id = R.string.direction_label),
-                        style = MaterialTheme.typography.titleMedium
+                        style = MaterialTheme.typography.titleLarge
                     )
 
                     Slider(
