@@ -38,32 +38,65 @@
     <string name='pros_and_cons_title'>Pros and Cons</string>
     <string name='pros_and_cons_content'>
         Solar panels have become a popular option for many people who want to produce their own electricity, save money and contribute to more sustainable energy consumption. But as with all investments, there are both advantages and disadvantages that you should be aware of.\n
-        \n
-        Pros:\n
-        • Environmentally friendly: Solar panels produce clean, renewable energy and help reduce greenhouse gas emissions.\n
-        • Reduced electricity bills: You can save money over time by producing your own electricity.\n
-        • Support schemes: In Norway, there are public support schemes that can cover part of the installation cost.\n
-        • Low maintenance: Once the system is installed, it requires little maintenance.\n
-        • Increased home value: A solar system can make the home more attractive when reselling.\n
-        \n
-        Cons:\n
-        • High initial costs: The investment in solar panels is still relatively high.\n
-        • Low production in winter: Dark winters and snow can significantly reduce efficiency.\n
-        •Location-dependent: How much electricity you produce depends on your location and sun exposure.\n
-        • Long payback period: It can take many years before the investment is repaid.\n
-        •Technical limitations: Not all buildings are equally suitable for the installation of panels.\n
+    </string>
+    <string name="pros">
+        Pros:
+    </string>
+    <string name="solar_pro_1">
+        Environmentally friendly: Solar panels produce clean, renewable energy and help reduce greenhouse gas emissions.\n
+    </string>
+    <string name="solar_pro_2">
+    Reduced electricity bills: You can save money over time by producing your own electricity.\n
+    </string>
+    <string name="solar_pro_3">
+        Support schemes: In Norway, there are public support schemes that can cover part of the installation cost.\n
+    </string>
+    <string name="solar_pro_4">
+        Low maintenance: Once the system is installed, it requires little maintenance.\n
+    </string>
+    <string name="solar_pro_5">
+        Increased home value: A solar system can make the home more attractive when reselling.\n
+    </string>
+    <string name="cons">
+        Cons:
+    </string>
+    <string name="solar_con_1">
+        High initial costs: The investment in solar panels is still relatively high.\n
+    </string>
+    <string name="solar_con_2">
+        Low production in winter: Dark winters and snow can significantly reduce efficiency.\n
+    </string>
+    <string name="solar_con_3">
+        Location-dependent: How much electricity you produce depends on your location and sun exposure.\n
+    </string>
+    <string name="solar_con_4">
+        Long payback period: It can take many years before the investment is repaid.\n
+    </string>
+    <string name="solar_con_5">
+        Technical limitations: Not all buildings are equally suitable for the installation of panels.\n
     </string>
 
     <string name="money_saved_title">Money saved</string>
     <string name="money_saved_content">
-        The app calculates how much money you could potentially save by installing solar panels, based on weather conditions, where you live and historical electricity prices. By comparing how much electricity you can produce with solar panels with how much electricity costs today, you get an estimate of annual savings. The more sun you get and the higher the electricity prices, the more you can save. The calculation gives you a better basis for assessing whether the investment in solar panels is profitable for you.
+        The app estimates how much money you could save by installing solar panels, based on your local weather and past electricity prices.
+        By comparing how much power you can produce with how much electricity costs today, you get an idea of your yearly savings.
+        More sun and higher prices mean more savings. This helps you decide whether investing in solar panels is the right choice for you.
     </string>
 
     <string name="cabin_title"> Off-grid cabins</string>
     <string name="cabin_content">
-        For off-grid cabins, solar panels can be an efficient and sustainable solution to meet basic power needs.
-        Based on location and local solar conditions, solar power can provide enough capacity for lighting, transporting electronic devices, cooling boxes, or small water pumps, among other things.
-        This app helps you assess how much solar power you can potentially produce and whether it is sufficient for your needs.
+        For cabins that are off-grif, solar panels can be an efficient and sustainable solution to cover basic electricity needs.
+        Depending on the cabin\'s location and how much sunlight it gets, solar power can be enough for things like lighting, charging
+        phones and tablets, running a cooler, or powering small water pumps. This app helps you easily estimate how much solar energy
+        your cabin can produce and what kind of equipment it could support.
+    </string>
+
+    <string name="solar_panels_title">Solar panels</string>
+    <string name="solar_panels_content">
+        Solar panels come in various types, each with distinct advantages and characteristics. Monocrystalline panels offer high efficiency and longevity, making them ideal for limited roof spaces.
+        Polycrystalline panels are more affordable and suitable for larger installations. Thin-film panels are flexible and lightweight, making them suitable for specialized applications like curved surfaces.
+        The choice of panel type depends on factors such as budget, available space, and desired efficiency.
+        For more detailed information about the different solar cell technologies, you can visit the FUSen blog:
     </string>
 
     <string name="support_title">Support Schemes</string>
