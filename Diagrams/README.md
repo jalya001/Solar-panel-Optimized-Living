@@ -1,21 +1,31 @@
-# /////Solcellepaneller App 
+# SOL Solar panel Optimized Living
+
+<div style="display: flex; gap: 10px; align-items: center;">
+  <img src="https://raw.github.uio.no/IN2000-V25/team-37/77b25b5ad94318869be2c39fbd6193981ba85a6b/app/src/main/res/drawable/circular%20logo%20light.png?token=GHSAT0AAAAAAAAAK6TPAEPQYL4Z7YQGEYTI2AY4S3Q" alt="Logo Light" width="150"/>
+  <img src="https://raw.github.uio.no/IN2000-V25/team-37/77b25b5ad94318869be2c39fbd6193981ba85a6b/app/src/main/res/drawable/circular%20logo%20dark.png?token=GHSAT0AAAAAAAAAK6TORDGIJ6DBZJDPOYY22AY4TEQ" alt="Logo Dark" width="150"/>
+</div>
+
 ### MEDLEMMER AV TEAM 37
 
-#### [aazann,saleemti,mikass,anisai,jacobhl,amwarsam]
+[aazann,saleemti,mikass,anisai,jacobhl,amwarsam]
+ 
 ## 1. Introduksjon
 
-///Solcellepaneller App/// er en Android-applikasjon som er utviklet for å hjelpe brukere med å estimere effektiviteten og økonomiske besparelser ved installasjon av solcellepaneler. Appen kombinerer klimadata, takspesifikasjoner og solenergi-beregninger for å gi brukeren en nøyaktig vurdering av solcelleanleggets potensial.
+SOL Solar panel Optimized Living er en Android-applikasjon som er utviklet for å hjelpe brukere med å estimere effektiviteten og økonomiske besparelser ved installasjon av solcellepaneler. Appen kombinerer klimadata, takspesifikasjoner og solenergi-beregninger for å gi brukeren en nøyaktig vurdering av solcelleanleggets potensial.
 
 Ved å bruke ekstern API-integrasjon, som Frost API for værdata og andre relevante kilder for strømpriser og støtteordninger, kan brukeren få et godt grunnlag for å vurdere lønnsomheten ved solcelleinstallasjon på sin eiendom. Appen gir brukeren muligheten til å hente kartkoordinater for en spesifisert adresse, og deretter beregne forventet solenergiutnyttelse basert på takflatenes vinkel, areal, og den gjennomsnittlige solinnstrålingen i området.
 
 Appen kan være spesielt nyttig for boligeiere, hytteeiere og profesjonelle solcelleinstallatører som ønsker å få oversikt over den potensielle strømproduksjonen og besparelsene ved å investere i solenergi. Med funksjoner som kartvisualisering, beregning av energiproduksjon og besparelser på strømregningen, samt muligheten for å tegne takflater på kartet, gir Solcellepaneller App et praktisk og brukervennlig verktøy for å optimalisere bruken av solenergi.
-## 2. Funksjoner
+## 2. Funksjonalieter
 
     Kartvisning: Brukeren kan legge inn en adresse som konverteres til GPS-koordinater, og plassere en markør på kartet.
 
     Kalkulering av solenergi: Basert på takdetaljer (vinkel, effektivitet) og klimadata, beregner appen forventet solenergi i kWh.
 
     API-integrasjon: Appen bruker eksterne API-er som Frost API for værdata og PVGIS API for solenergiestimat.
+
+    Resultatvisning: Appen viser resulater av kalkulering med grafer
+    
 
 ###  Krav for å kjøre appen
 
@@ -30,6 +40,8 @@ Appen kan være spesielt nyttig for boligeiere, hytteeiere og profesjonelle solc
 
     Internettilgang for API-forespørsler.
 
+    Enhetsposisjon brukes i appen, men ikke nødvendig.
+
 ## 3. API:
 
 Appen bruker flere eksterne API-er som krever API-nøkler for tilgang:
@@ -38,7 +50,7 @@ Appen bruker flere eksterne API-er som krever API-nøkler for tilgang:
 
     Geocoder API for koordinater.
 
-    HvakosterStrømmenAPi for strømpris.
+    HvakosterStrømmenAPI for strømpris.
 
     Frost API for værdata.
 
