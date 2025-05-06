@@ -42,7 +42,7 @@ class PVGISApi {
         println(url)
 
         val result: Result<PVGISResponse?> = client.httpRequest(url)
-        val radiationData = Array<Double>(12) {0.0}
+        val radiationData = Array(12) {0.0}
         result.onSuccess { body ->
             println("PVGIS: $body")
             if (body == null) return Result.failure(ApiException(ApiError.UNKNOWN_ERROR))

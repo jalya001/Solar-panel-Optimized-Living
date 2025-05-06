@@ -5,7 +5,6 @@ import io.ktor.client.call.*
 import io.ktor.client.engine.cio.*
 import io.ktor.client.request.*
 import io.ktor.client.plugins.contentnegotiation.*
-import kotlinx.serialization.*
 import io.ktor.serialization.kotlinx.json.*
 
 class ElevationApi {

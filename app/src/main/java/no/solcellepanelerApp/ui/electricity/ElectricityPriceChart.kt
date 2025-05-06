@@ -42,6 +42,7 @@ import co.yml.charts.ui.linechart.model.LineStyle
 import co.yml.charts.ui.linechart.model.SelectionHighlightPoint
 import co.yml.charts.ui.linechart.model.SelectionHighlightPopUp
 import co.yml.charts.ui.linechart.model.ShadowUnderLine
+import no.solcellepanelerApp.model.electricity.ChartType
 import no.solcellepanelerApp.model.electricity.ElectricityPrice
 import no.solcellepanelerApp.ui.theme.ThemeMode
 import no.solcellepanelerApp.ui.theme.ThemeState
@@ -185,7 +186,7 @@ fun ElectricityPriceChart(prices: List<ElectricityPrice>) {
                                             )
                                         )
                                     ),
-                                    selectionHighlightPopUp = SelectionHighlightPopUp { offset, point ->
+                                    selectionHighlightPopUp = SelectionHighlightPopUp { _, point ->
                                         selectedPoint.value = point
                                     }
                                 )
@@ -239,7 +240,7 @@ fun ElectricityPriceChart(prices: List<ElectricityPrice>) {
                 style = MaterialTheme.typography.bodySmall,
                 modifier = Modifier
                     .align(Alignment.BottomCenter)
-                    .offset(y = -5.dp),
+                    .offset(y = (-5).dp),
                 color = MaterialTheme.colorScheme.tertiary
             )
 
@@ -249,7 +250,7 @@ fun ElectricityPriceChart(prices: List<ElectricityPrice>) {
                 style = MaterialTheme.typography.bodySmall,
                 modifier = Modifier
                     .align(Alignment.CenterStart)
-                    .offset(x = (-28).dp, y = -5.dp)
+                    .offset(x = (-28).dp, y = (-5).dp)
                     .rotate(-90f),
                 color = MaterialTheme.colorScheme.tertiary
             )

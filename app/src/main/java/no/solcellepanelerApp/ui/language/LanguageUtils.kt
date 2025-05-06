@@ -37,7 +37,7 @@ object LanguageUtils {
         saveLanguage(context, languageCode)
     }
 
-    fun saveLanguage(context: Context, languageCode: String) {
+    private fun saveLanguage(context: Context, languageCode: String) {
         val sharedPreferences = context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
         sharedPreferences.edit().putString(LANGUAGE_KEY, languageCode).apply()
     }
@@ -49,7 +49,7 @@ object LanguageUtils {
 }
 
 @Composable
-fun langSwitch() {
+fun LangSwitch() {
     val context = LocalContext.current
     ElevatedCard(
         elevation = CardDefaults.cardElevation(

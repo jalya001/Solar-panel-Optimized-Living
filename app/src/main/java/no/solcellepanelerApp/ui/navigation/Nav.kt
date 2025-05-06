@@ -1,6 +1,7 @@
 package no.solcellepanelerApp.ui.navigation
 
 
+import android.annotation.SuppressLint
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -32,8 +33,9 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
 import no.solcellepanelerApp.R
-import no.solcellepanelerApp.data.homedata.ElectricityPriceRepository
+
 import no.solcellepanelerApp.ui.electricity.PriceScreen
+import no.solcellepanelerApp.ui.electricity.PriceScreenViewModel
 import no.solcellepanelerApp.ui.font.FontScaleViewModel
 import no.solcellepanelerApp.ui.home.HomeScreen
 import no.solcellepanelerApp.ui.infoscreen.InfoScreen
@@ -48,28 +50,32 @@ import no.solcellepanelerApp.ui.result.WeatherViewModel
 @Composable
 fun Nav(navController: NavHostController, fontScaleViewModel: FontScaleViewModel) {
     val viewModel: MapScreenViewModel = viewModel()
-    val WviewModel: WeatherViewModel = viewModel()
-    val priceRepository = ElectricityPriceRepository("NO1")
+    val weatherViewModel: WeatherViewModel = viewModel()
+    val priceScreenViewModel : PriceScreenViewModel = viewModel()
 
     NavHost(navController, startDestination = "home") {
         composable("onboarding") { OnboardingScreen(onFinished = { navController.popBackStack() }) }
 
 
-        composable("home") { HomeScreen(navController, fontScaleViewModel) }
+        composable("home") { HomeScreen(
+            navController, fontScaleViewModel, weatherViewModel,
+            priceScreenViewModel = priceScreenViewModel
+        ) }
         composable("map") {
-            MapScreen(viewModel, navController, fontScaleViewModel, WviewModel)
+            MapScreen(viewModel, navController, fontScaleViewModel, weatherViewModel)
         }
         composable("result") {
             ResultScreen(
-                navController, viewModel, WviewModel, fontScaleViewModel,
-                priceScreenViewModel = priceRepository
+                navController, viewModel, weatherViewModel, fontScaleViewModel,
+                priceScreenViewModel = priceScreenViewModel
             )
         }
         composable("prices") {
-            val repository = ElectricityPriceRepository("NO1")
+
             PriceScreen(
-                repository = repository,
-                navController = navController, fontScaleViewModel
+                navController = navController,
+                viewModel = priceScreenViewModel,
+                fontScaleViewModel = fontScaleViewModel
             )
         }
         composable("info_screen") { InfoScreen(navController, fontScaleViewModel) }
@@ -94,7 +100,7 @@ fun Nav(navController: NavHostController, fontScaleViewModel: FontScaleViewModel
                 energyPrice = energyPrice,
                 navController = navController,
                 fontScaleViewModel = fontScaleViewModel,
-                weatherViewModel = WviewModel
+                weatherViewModel = weatherViewModel
             )
         }
 
@@ -116,7 +122,7 @@ fun Nav(navController: NavHostController, fontScaleViewModel: FontScaleViewModel
                 energyPrice = energyPrice,
                 navController = navController,
                 fontScaleViewModel = fontScaleViewModel,
-                weatherViewModel = WviewModel
+                weatherViewModel = weatherViewModel
             )
         }
     }
@@ -128,8 +134,7 @@ fun BottomBar(
     onAppearanceClicked: () -> Unit,
     navController: NavController,
 ) {
-    NavigationBar(
-    ) {
+    NavigationBar {
         NavigationBarItem(
             icon = { Icon(painterResource(R.drawable.help_24px), contentDescription = "Help") },
             label = { Text(stringResource(id = R.string.help)) },
@@ -194,7 +199,7 @@ fun TopBar(
     text: String,
     onBackClick: (() -> Unit)? = null,
     backClick: Boolean = true,
-    modifier: Modifier = Modifier,
+    @SuppressLint("ModifierParameter") modifier: Modifier = Modifier,
     showHomeButton: Boolean = false,
 ) {
     var backClicked by remember { mutableStateOf(false) }
