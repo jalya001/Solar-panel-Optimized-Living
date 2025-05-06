@@ -37,8 +37,6 @@ class MainActivity : ComponentActivity() {
                 } else {
                     ShowOnboardingScreen()
                 }
-
-
             }
         }
     }
