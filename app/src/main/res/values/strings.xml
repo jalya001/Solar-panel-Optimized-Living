@@ -22,6 +22,7 @@
     <string name="settings">Go to Settings</string>
     <string name="change_location_settings">Change Location Settings</string>
     <string name="grant_location_access">Grant Location Access</string>
+    <string name="tutorial">Open Tutorial</string>
 
     <string name='intro_title'>Introduction</string>
     <string name="intro_content">
@@ -159,6 +160,15 @@
     <string name="panelEfficencyHelp">How efficiently the panels convert sunlight into electricity. Usually between 16–20%.</string>
     <string name="panelDirectionHelp">Also called azimuth. South-facing usually gives the best performance in Norway, but the app calculates this based on your location.</string>
     <string name="more_info_solar_panels">Learn more about solar panels</string>
+    <string name="monocrystalline">Monocrystalline</string>
+    <string name="monocrystalline_efficiency">(18–23%)</string>
+    <string name="monocrystalline_content">High efficiency, more expensive, standard</string>
+    <string name="polycrystalline">Polycrystalline</string>
+    <string name="polycrystalline_efficiency">(15–17%)</string>
+    <string name="polycrystalline_content">Medium efficiency, more affordable</string>
+    <string name="thinfilm">Thin–film</string>
+    <string name="thinfilm_efficiency">(10–17%)</string>
+    <string name="thinfilm_content">Low efficiency, flexible</string>
 
     <!--Result Screen-->
     <string name="results"> Results </string>

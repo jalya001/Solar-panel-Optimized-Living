@@ -23,6 +23,7 @@
     <string name="settings">Gå til Innstillinger</string>
     <string name="change_location_settings">Endre posisjonsinnstillinger</string>
     <string name="grant_location_access">Gi tilgang til plassering</string>
+    <string name="tutorial">Start Introduksjon</string>
 
     <!--Info Screen-->
     <string name='intro_title'>Introduksjon</string>
@@ -161,6 +162,15 @@
     <string name="panelEfficencyHelp"> Hvor godt panelene omdanner sollys til strøm. Vanligvis mellom 16–20 % </string>
     <string name="panelDirectionHelp">Også kalt azimuth. Sørvendt gir som regel best effekt i Norge, men appen beregner dette ut fra din lokasjon.</string>
     <string name="more_info_solar_panels">Les mer om solcellepaneler</string>
+    <string name="monocrystalline">Monokrystallinsk</string>
+    <string name="monocrystalline_efficiency">(18–23%)</string>
+    <string name="monocrystalline_content">Høy effektivitet, dyrere, standard</string>
+    <string name="polycrystalline">Polykrystallinsk</string>
+    <string name="polycrystalline_efficiency">(15–17%)</string>
+    <string name="polycrystalline_content">Middels effektivitet, rimeligere</string>
+    <string name="thinfilm">Tynnfilm</string>
+    <string name="thinfilm_efficiency">(10–17%)</string>
+    <string name="thinfilm_content">Lav effektivitet, fleksibel</string>
 
     <!--Result Screen-->
     <string name="results"> Resultater </string>

@@ -195,7 +195,7 @@ fun HelpBottomSheet(
 
                     item {
                         MySection(
-                            title = "Open Tutorial",
+                            title = stringResource(R.string.tutorial),
                             onClick = {
                                 navController.navigate("onboarding")
                             },
@@ -444,9 +444,9 @@ fun AdditionalInputBottomSheet(
     data class SolarPanelType(val name: String, val efficiency: Float, val description: String)
 
     val panelTypes = listOf(
-        SolarPanelType("Monokrystallinsk", 20f, "Høy effektivitet, dyrere, Standard"),
-        SolarPanelType("Polykrystallinsk", 15f, "Middels effektivitet, rimeligere"),
-        SolarPanelType("Tynnfilm", 10f, "Lav effektivitet, fleksibel")
+        SolarPanelType(stringResource(R.string.monocrystalline), 20f, stringResource(R.string.monocrystalline_content)),
+        SolarPanelType(stringResource(R.string.polycrystalline), 15f, stringResource(R.string.polycrystalline_content)),
+        SolarPanelType(stringResource(R.string.thinfilm), 10f, stringResource(R.string.thinfilm_content))
     )
 
     LaunchedEffect(area) {
@@ -607,18 +607,22 @@ fun AdditionalInputBottomSheet(
                                 modifier = Modifier.fillMaxWidth(),
                                 horizontalAlignment = Alignment.CenterHorizontally
                             ) {
-                                var panelEff = if (panelType.name == "Monokrystallinsk") {
-                                    "18-23"
-                                } else if (panelType.name == "Polykrystallinsk") {
-                                    "15-17"
-                                } else {
-                                    "10-17"
+                                val panelEff = when (panelType.name) {
+                                    stringResource(R.string.monocrystalline) -> {
+                                        stringResource(R.string.monocrystalline_efficiency)
+                                    }
+                                    stringResource(R.string.polycrystalline) -> {
+                                        stringResource(R.string.polycrystalline_efficiency)
+                                    }
+                                    else -> {
+                                        stringResource(R.string.thinfilm_efficiency)
+                                    }
                                 }
 
 
 
                                 Text(
-                                    text = "${panelType.name} (${panelEff}%)",
+                                    text = "${panelType.name} $panelEff",
                                     color = MaterialTheme.colorScheme.onSurfaceVariant,
                                     fontWeight = if (selected) FontWeight.Bold else FontWeight.Normal
                                 )
