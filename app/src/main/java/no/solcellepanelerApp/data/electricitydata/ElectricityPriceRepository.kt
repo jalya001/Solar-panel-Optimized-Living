@@ -26,4 +26,10 @@ class ElectricityPriceRepository {
             )
         }
     }
+
+    object ElectricityPriceRepositoryProvider {
+        val instance: ElectricityPriceRepository by lazy {
+            ElectricityPriceRepository()
+        }
+    }
 }

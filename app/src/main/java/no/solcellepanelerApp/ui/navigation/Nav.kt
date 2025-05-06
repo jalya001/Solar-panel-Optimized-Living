@@ -3,6 +3,7 @@ package no.solcellepanelerApp.ui.navigation
 
 import android.annotation.SuppressLint
 import androidx.compose.foundation.BorderStroke
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
@@ -17,6 +18,7 @@ import androidx.compose.material3.NavigationBarItemDefaults
 import androidx.compose.material3.OutlinedIconButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -38,6 +40,7 @@ import no.solcellepanelerApp.ui.electricity.PriceScreen
 import no.solcellepanelerApp.ui.electricity.PriceScreenViewModel
 import no.solcellepanelerApp.ui.font.FontScaleViewModel
 import no.solcellepanelerApp.ui.home.HomeScreen
+import no.solcellepanelerApp.ui.home.HomeTopBar
 import no.solcellepanelerApp.ui.infoscreen.InfoScreen
 import no.solcellepanelerApp.ui.map.MapScreen
 import no.solcellepanelerApp.ui.map.MapScreenViewModel
@@ -46,39 +49,90 @@ import no.solcellepanelerApp.ui.result.EnergySavingsScreen
 import no.solcellepanelerApp.ui.result.ResultScreen
 
 import no.solcellepanelerApp.ui.result.WeatherViewModel
+import no.solcellepanelerApp.ui.reusables.AppScaffoldController
+import no.solcellepanelerApp.ui.theme.isDarkThemeEnabled
 
 @Composable
-fun Nav(navController: NavHostController, fontScaleViewModel: FontScaleViewModel) {
-    val viewModel: MapScreenViewModel = viewModel()
+fun Nav(
+    navController: NavHostController,
+    fontScaleViewModel: FontScaleViewModel,
+    appScaffoldController: AppScaffoldController,
+    contentPadding: PaddingValues
+) {
+    val mapScreenViewModel: MapScreenViewModel = viewModel()
     val weatherViewModel: WeatherViewModel = viewModel()
     val priceScreenViewModel : PriceScreenViewModel = viewModel()
+
+    val title = stringResource(id = R.string.price_title) // fix this later
+    val title2 = stringResource(id = R.string.map_title)
+    val title3 = stringResource(R.string.info_title)
+
+    LaunchedEffect(navController) { // No idea if this is a good way of doing it
+        navController.currentBackStackEntryFlow.collect { backStackEntry ->
+            when (backStackEntry.destination.route) {
+                "home" -> {
+                    appScaffoldController.setCustomTopBar({ HomeTopBar(isDarkTheme = isDarkThemeEnabled()) })
+                    appScaffoldController.reinstateBottomBar()
+                }
+                "prices" -> {
+                    appScaffoldController.setTopBar(title)
+                    appScaffoldController.reinstateBottomBar()
+                }
+                "map" -> {
+                    appScaffoldController.setTopBar(title2)
+                    appScaffoldController.reinstateBottomBar()
+                }
+                "onboarding" -> {
+                    appScaffoldController.clearTopBar()
+                    appScaffoldController.clearBottomBar()
+                }
+                "info_screen" -> {
+                    appScaffoldController.setTopBar(title3)
+                    appScaffoldController.reinstateBottomBar()
+                }
+                else -> {
+                    appScaffoldController.clearTopBar()
+                    appScaffoldController.clearBottomBar()
+                }
+            }
+        }
+    }
 
     NavHost(navController, startDestination = "home") {
         composable("onboarding") { OnboardingScreen(onFinished = { navController.popBackStack() }) }
 
-
         composable("home") { HomeScreen(
-            navController, fontScaleViewModel, weatherViewModel,
-            priceScreenViewModel = priceScreenViewModel
+            navController,
+            priceScreenViewModel = priceScreenViewModel,
+            contentPadding = contentPadding
         ) }
         composable("map") {
-            MapScreen(viewModel, navController, fontScaleViewModel, weatherViewModel)
+            MapScreen(
+                mapScreenViewModel,
+                navController,
+                weatherViewModel,
+                appScaffoldController,
+                contentPadding = contentPadding
+            )
         }
         composable("result") {
             ResultScreen(
-                navController, viewModel, weatherViewModel, fontScaleViewModel,
-                priceScreenViewModel = priceScreenViewModel
+                navController, mapScreenViewModel, weatherViewModel, fontScaleViewModel,
+                priceScreenViewModel = priceScreenViewModel,
+                //contentPadding = contentPadding
             )
         }
         composable("prices") {
-
             PriceScreen(
-                navController = navController,
                 viewModel = priceScreenViewModel,
-                fontScaleViewModel = fontScaleViewModel
+                contentPadding = contentPadding
             )
         }
-        composable("info_screen") { InfoScreen(navController, fontScaleViewModel) }
+        composable("info_screen") {
+            InfoScreen(
+                contentPadding = contentPadding
+            )
+        }
         composable(
             "monthly_savings/{month}/{energyProduced}/{energyPrice}",
             arguments = listOf(

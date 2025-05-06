@@ -13,19 +13,20 @@ import no.solcellepanelerApp.ui.handling.PartialDataErrorScreen
 import no.solcellepanelerApp.ui.handling.UnexpectedErrorScreen
 import no.solcellepanelerApp.ui.handling.UnknownErrorScreen
 
-enum class UiState {
-    LOADING, SUCCESS, ERROR
-}
-data class MonthlyCalculationResult(
-    val adjustedRadiation: List<Double>,
-    val monthlyEnergyOutput: List<Double>,
-    val monthlyPowerOutput: List<Double>,
-    val yearlyEnergyOutput: Double
-)
-
 class WeatherViewModel(
     private val repository: WeatherRepository = WeatherRepository(),
 ) : ViewModel() {
+    enum class UiState {
+        LOADING, SUCCESS, ERROR
+    }
+
+    data class MonthlyCalculationResult(
+        val adjustedRadiation: List<Double>,
+        val monthlyEnergyOutput: List<Double>,
+        val monthlyPowerOutput: List<Double>,
+        val yearlyEnergyOutput: Double
+    )
+
     private val _weatherData = MutableStateFlow<Map<String, Array<Double>>>(emptyMap())
     val weatherData: StateFlow<Map<String, Array<Double>>> = _weatherData
     private val _uiState = MutableStateFlow(UiState.LOADING)
@@ -33,8 +34,8 @@ class WeatherViewModel(
     private val _errorScreen = MutableStateFlow<@Composable () -> Unit> { UnknownErrorScreen() }
     val errorScreen: StateFlow<@Composable () -> Unit> = _errorScreen
 
-    private val _frostDataRim = MutableStateFlow<Array<Double>>(emptyArray())
-    val frostDataRim: StateFlow<Array<Double>> = _frostDataRim
+    //private val _frostDataRim = MutableStateFlow<Array<Double>>(emptyArray())
+    //val frostDataRim: StateFlow<Array<Double>> = _frostDataRim
 
     private val _calculationResults = MutableStateFlow<MonthlyCalculationResult?>(null)
 
@@ -74,6 +75,7 @@ class WeatherViewModel(
         }
     }
 
+    /*
     fun fetchRimData(lat: Double, lon: Double, elements: String) {
         viewModelScope.launch {
             _uiState.value = UiState.LOADING
@@ -81,6 +83,7 @@ class WeatherViewModel(
             _uiState.value = UiState.SUCCESS
         }
     }
+    */
 
     fun calculateSolarPanelOutput(panelArea: Double, efficiency: Double) {
         viewModelScope.launch {

@@ -11,6 +11,7 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -102,6 +103,7 @@ import no.solcellepanelerApp.ui.navigation.BottomBar
 import no.solcellepanelerApp.ui.navigation.HelpBottomSheet
 import no.solcellepanelerApp.ui.navigation.TopBar
 import no.solcellepanelerApp.ui.result.WeatherViewModel
+import no.solcellepanelerApp.ui.reusables.AppScaffoldController
 import no.solcellepanelerApp.ui.reusables.SimpleTutorialOverlay
 import no.solcellepanelerApp.ui.theme.darkGrey
 import no.solcellepanelerApp.ui.theme.lightBlue
@@ -115,25 +117,23 @@ import no.solcellepanelerApp.util.fetchCoordinates
 fun MapScreen(
     viewModel: MapScreenViewModel,
     navController: NavController,
-    fontScaleViewModel: FontScaleViewModel,
     weatherViewModel: WeatherViewModel,
+    appScaffoldController: AppScaffoldController,
+    contentPadding: PaddingValues
 ) {
-    val snackbarHostState = remember { SnackbarHostState() }
-    val trigger by viewModel.snackbarMessageTrigger
-    var lastShownTrigger by remember { mutableIntStateOf(0) }
-    var showHelp by remember { mutableStateOf(false) }
-    var showAppearance by remember { mutableStateOf(false) }
+    //val snackbarHostState = remember { SnackbarHostState() }
+    //val trigger by viewModel.snackbarMessageTrigger
+    //var lastShownTrigger by remember { mutableIntStateOf(0) }
 
     var showMapOverlay by remember { mutableStateOf(true) }
     var showDrawOverlay by remember { mutableStateOf(false) }
 
-
-    LaunchedEffect(trigger) {
-        if (trigger > lastShownTrigger) {
-            snackbarHostState.showSnackbar("Address not found, try again")
-            lastShownTrigger = trigger
+    LaunchedEffect(Unit) {
+        viewModel.snackbarMessages.collect { message ->
+            appScaffoldController.showSnackbar(message)
         }
     }
+
     if (showMapOverlay) {
         SimpleTutorialOverlay(
             onDismiss = { showMapOverlay = false },
@@ -147,47 +147,20 @@ fun MapScreen(
             message = "Trykk på kartet for å starte tegningen av ønsket område"
         )
     }
-    Scaffold(
-        snackbarHost = { SnackbarHost(hostState = snackbarHostState) },
-        topBar = {
-            TopBar(
-                navController = navController,
-                text = stringResource(id = R.string.map_title)
-            )
-        },
-        bottomBar = {
-            BottomBar(
-                onHelpClicked = { showHelp = true },
-                onAppearanceClicked = { showAppearance = true },
-                navController = navController
-            )
-        }
-    ) { contentPadding ->
-        Column(
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(contentPadding),
-            horizontalAlignment = Alignment.CenterHorizontally,
-            verticalArrangement = Arrangement.Center
-        ) {
-            DisplayScreen(
-                viewModel = viewModel,
-                navController = navController,
-                weatherViewModel = weatherViewModel,
-                setShowDrawOverlay = { showDrawOverlay = it }
-            )
-        }
+    Column(
+        modifier = Modifier
+            .fillMaxSize()
+            .padding(contentPadding),
+        horizontalAlignment = Alignment.CenterHorizontally,
+        verticalArrangement = Arrangement.Center
+    ) {
+        DisplayScreen(
+            viewModel = viewModel,
+            navController = navController,
+            weatherViewModel = weatherViewModel,
+            setShowDrawOverlay = { showDrawOverlay = it }
+        )
     }
-    HelpBottomSheet(
-        navController = navController,
-        visible = showHelp,
-        onDismiss = { showHelp = false },
-    )
-    AppearanceBottomSheet(
-        visible = showAppearance,
-        onDismiss = { showAppearance = false },
-        fontScaleViewModel = fontScaleViewModel
-    )
 }
 
 
@@ -207,7 +180,7 @@ fun DisplayScreen(
     var address by remember { mutableStateOf("") }
     val coordinates by viewModel.coordinates.observeAsState()
     val height by viewModel.height.collectAsState()
-    val polygonPoints = viewModel.polygondata
+    val polygonPoints = viewModel.polygonData
     var isPolygonvisible by remember { mutableStateOf(false) }
     var drawingEnabled by remember { mutableStateOf(false) }
     var index by remember { mutableIntStateOf(0) }
@@ -360,7 +333,6 @@ fun DisplayScreen(
                     value = address,
                     onValueChange = {
                         address = it
-                        viewModel.addressFetchError.value = false
                     },
                     address = address,
                     viewModel = viewModel,

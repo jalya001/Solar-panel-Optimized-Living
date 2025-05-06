@@ -16,7 +16,6 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.MaterialTheme
@@ -44,12 +43,9 @@ import com.airbnb.lottie.compose.LottieConstants
 import com.airbnb.lottie.compose.animateLottieCompositionAsState
 import com.airbnb.lottie.compose.rememberLottieComposition
 import no.solcellepanelerApp.R
-import no.solcellepanelerApp.data.homedata.ElectricityPriceRepository
 import no.solcellepanelerApp.model.electricity.Region
 import no.solcellepanelerApp.ui.electricity.HomePriceCard
 import no.solcellepanelerApp.ui.electricity.PriceScreenViewModel
-import no.solcellepanelerApp.ui.electricity.PriceUiState
-import no.solcellepanelerApp.ui.electricity.PriceViewModelFactory
 import no.solcellepanelerApp.ui.font.FontScaleViewModel
 import no.solcellepanelerApp.ui.handling.ErrorScreen
 import no.solcellepanelerApp.ui.handling.LoadingScreen
@@ -60,20 +56,15 @@ import no.solcellepanelerApp.ui.reusables.MyDisplayCard
 import no.solcellepanelerApp.ui.reusables.MyNavCard
 import no.solcellepanelerApp.ui.theme.ThemeMode
 import no.solcellepanelerApp.ui.theme.ThemeState
+import no.solcellepanelerApp.ui.theme.isDarkThemeEnabled
 import java.time.ZonedDateTime
-
-@Composable
-private fun isDarkThemeEnabled(): Boolean = when (ThemeState.themeMode) {
-    ThemeMode.DARK -> true
-    ThemeMode.LIGHT -> false
-    ThemeMode.SYSTEM -> isSystemInDarkTheme()
-}
 
 @Composable
 fun HomeScreen(
     navController: NavController,
-    fontScaleViewModel: FontScaleViewModel,
-    homeScreenViewModel: HomeScreenViewModel = viewModel()
+    homeScreenViewModel: HomeScreenViewModel = viewModel(),
+    priceScreenViewModel: PriceScreenViewModel,
+    contentPadding: PaddingValues
 ) {
     val context = LocalContext.current
 
@@ -85,8 +76,9 @@ fun HomeScreen(
     val currentRadiationValue by homeScreenViewModel.currentRadiationValue.collectAsState()
     val selectedRegion by homeScreenViewModel.selectedRegion.collectAsState()
     val currentTime by homeScreenViewModel.currentTime.collectAsState()
-    val showHelp by homeScreenViewModel.showHelp.collectAsState()
-    val showAppearance by homeScreenViewModel.showAppearance.collectAsState()
+
+    val priceUiState by priceScreenViewModel.priceUiState.collectAsState()
+    //val prices = (priceUiState as PriceUiState.Success).prices
 
     if (isLoading) {
         LoadingScreen()
@@ -94,52 +86,11 @@ fun HomeScreen(
     }
     val isDarkTheme = isDarkThemeEnabled()
 
-
-    Scaffold(
-        topBar = { TopBar(isDarkTheme = isDarkTheme) },
-        bottomBar = {
-            BottomBar(
-                onHelpClicked = { homeScreenViewModel.setShowHelp(true) },
-                onAppearanceClicked = { homeScreenViewModel.setShowAppearance(true) },
-                navController = navController,
-            )
-        },
-    ) { contentPadding ->
-        MainContent(
-            contentPadding = contentPadding,
-            navController = navController,
-            currentRadiationValue = currentRadiationValue,
-            selectedRegion = selectedRegion,
-            currentTime = currentTime,
-        )
-
-        HelpBottomSheet(
-            navController = navController,
-            visible = showHelp,
-            onDismiss = { homeScreenViewModel.setShowHelp(false) },
-        )
-
-        AppearanceBottomSheet(
-            visible = showAppearance,
-            onDismiss = { homeScreenViewModel.setShowAppearance(false) },
-            fontScaleViewModel = fontScaleViewModel,
-        )
-    }
-}
-
-@Composable
-fun MainContent(
-    contentPadding: PaddingValues,
-    navController: NavController,
-    currentRadiationValue: Double?,
-    selectedRegion: Region?,
-    currentTime: ZonedDateTime,
-) {
     Column(
         modifier = Modifier
             .fillMaxSize()
             .padding(contentPadding),
-            //.background(Color.Blue),
+        //.background(Color.Blue),
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center,
     ) {
@@ -155,7 +106,7 @@ fun MainContent(
 }
 
 @Composable
-fun TopBar(isDarkTheme: Boolean) {
+fun HomeTopBar(isDarkTheme: Boolean) {
     Surface(
         modifier = Modifier.padding(top = 35.dp),
     ) {
@@ -246,7 +197,7 @@ fun CurrentRadiationCard(
 fun ElectricityPriceCard(
     selectedRegion: Region?,
     navController: NavController,
-    modifier: Modifier = Modifier,
+    modifier: Modifier = Modifier
 ) {
     MyNavCard(
         route = "prices",
@@ -269,44 +220,25 @@ fun ElectricityPriceCard(
 //                      color = MaterialTheme.colorScheme.tertiary Oransje fargen. bare å fjerne kommentaren her hvis dere vil bruke oransj d
                     )
                     Spacer(modifier = Modifier.height(10.dp))
-                    if (selectedRegion == null) {
+                    /*if (selectedRegion == null) {
                         LoadingScreen()
                     } else {
-                        PriceInfo(selectedRegion = selectedRegion)
-                    }
+                        when (priceUiState) {
+                            is PriceUiState.Loading -> LoadingScreen()
+                            is PriceUiState.Error -> ErrorScreen()
+                            is PriceUiState.Success -> {
+                                Column {
+                                    HomePriceCard(prices, selectedRegion)
+                                }
+                            }
+                        }
+                    }*/
                 }
             }
         },
         color = MaterialTheme.colorScheme.primary,
     )
 }
-
-@Composable
-fun PriceInfo(selectedRegion: Region) {
-    /* MOVE THIS TO VIEWMODEL */
-    val repository = ElectricityPriceRepository(priceArea = selectedRegion.regionCode)
-    val viewModel: PriceScreenViewModel = viewModel(
-        factory = PriceViewModelFactory(
-            repository,
-            selectedRegion.regionCode,
-        ),
-        key = selectedRegion.regionCode,
-    )
-
-    val priceUiState by viewModel.priceUiState.collectAsStateWithLifecycle()
-
-    when (priceUiState) {
-        is PriceUiState.Loading -> LoadingScreen()
-        is PriceUiState.Error -> ErrorScreen()
-        is PriceUiState.Success -> {
-            val prices = (priceUiState as PriceUiState.Success).prices
-            Column {
-                HomePriceCard(prices, selectedRegion)
-            }
-        }
-    }
-}
-
 
 @Composable
 fun IndefiniteAnimationBox(
@@ -332,7 +264,7 @@ fun IndefiniteAnimationBox(
         )
     }
 }
-
+/*
 @Composable
 fun PanelAnimation() {
     IndefiniteAnimationBox(
@@ -344,7 +276,7 @@ fun PanelAnimation() {
             .aspectRatio(400.dp / 1000.dp)
     )
 }
-
+*/
 @Composable
 fun ElectricityTowers() {
     val animationFile =
@@ -357,7 +289,7 @@ fun ElectricityTowers() {
         contentAlignment = Alignment.Center
     )
 }
-
+/*
 @Composable
 fun LightningAnimation() {
     IndefiniteAnimationBox(
@@ -368,7 +300,7 @@ fun LightningAnimation() {
             .size(150.dp)
     )
 }
-
+*/
 @Composable
 fun SunAnimation(radiationValue: Double) {
     val animationFile = when {

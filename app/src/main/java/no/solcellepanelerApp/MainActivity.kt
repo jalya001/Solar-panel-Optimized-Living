@@ -5,7 +5,11 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.platform.LocalDensity
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.lifecycle.viewmodel.compose.viewModel
@@ -16,6 +20,8 @@ import no.solcellepanelerApp.ui.language.LanguageUtils
 import no.solcellepanelerApp.ui.navigation.Nav
 import no.solcellepanelerApp.ui.onboarding.OnboardingScreen
 import no.solcellepanelerApp.ui.onboarding.OnboardingUtils
+import no.solcellepanelerApp.ui.reusables.AppScaffold
+import no.solcellepanelerApp.ui.reusables.AppScaffoldController
 import no.solcellepanelerApp.ui.theme.SolcellepanelerAppTheme
 
 
@@ -49,13 +55,32 @@ class MainActivity : ComponentActivity() {
         val navController = rememberNavController()
         val fontScaleViewModel: FontScaleViewModel = viewModel()
 
+        val appScaffoldController = remember { AppScaffoldController() }
+        var showHelp by remember { mutableStateOf(false) }
+        var showAppearance by remember { mutableStateOf(false) }
+
         val systemFontScale = LocalDensity.current.fontScale
         val effectiveFontScale = systemFontScale * fontScaleViewModel.fontScale.floatValue
 
         SolcellepanelerAppTheme(
             fontScale = effectiveFontScale
         ) {
-            Nav(navController = navController, fontScaleViewModel = fontScaleViewModel)
+            AppScaffold(
+                navController = navController,
+                appScaffoldController = appScaffoldController,
+                fontScaleViewModel = fontScaleViewModel,
+                showHelp = showHelp,
+                onHelpChange = { showHelp = it },
+                showAppearance = showAppearance,
+                onAppearanceChange = { showAppearance = it }
+            ) { padding ->
+                Nav(
+                    navController = navController,
+                    fontScaleViewModel = fontScaleViewModel,
+                    appScaffoldController = appScaffoldController,
+                    contentPadding = padding
+                )
+            }
         }
     }
 

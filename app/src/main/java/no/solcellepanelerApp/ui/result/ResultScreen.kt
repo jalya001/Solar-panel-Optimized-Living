@@ -38,7 +38,6 @@ import com.airbnb.lottie.compose.animateLottieCompositionAsState
 import com.airbnb.lottie.compose.rememberLottieComposition
 import no.solcellepanelerApp.R
 import no.solcellepanelerApp.ui.electricity.PriceScreenViewModel
-import no.solcellepanelerApp.ui.electricity.PriceUiState
 import no.solcellepanelerApp.ui.font.FontScaleViewModel
 import no.solcellepanelerApp.ui.handling.LoadingScreen
 import no.solcellepanelerApp.ui.map.MapScreenViewModel
@@ -84,8 +83,8 @@ fun ResultScreen(
 //    val selectedRegion = viewModel.selectedRegion
 
 
-    val priceUiState by priceScreenViewModel.priceUiState.collectAsStateWithLifecycle()
-
+    //val priceUiState by priceScreenViewModel.priceUiState.collectAsStateWithLifecycle()
+/*
     val energyPrice = when (priceUiState) {
         is PriceUiState.Success -> {
             val prices = (priceUiState as PriceUiState.Success).prices
@@ -95,7 +94,7 @@ fun ResultScreen(
         }
 
         else -> 0.0
-    }
+    }*/
 
     var showHelp by remember { mutableStateOf(false) }
     var showAppearance by remember { mutableStateOf(false) }
@@ -124,11 +123,11 @@ fun ResultScreen(
             verticalArrangement = Arrangement.Top
         ) {
             when (uiState) {
-                UiState.LOADING -> {
+                WeatherViewModel.UiState.LOADING -> {
                     LoadingScreen()
                 }
 
-                UiState.ERROR -> {
+                WeatherViewModel.UiState.ERROR -> {
                     errorScreen()
                 }
 
@@ -143,7 +142,7 @@ fun ResultScreen(
 
                     weatherViewModel.calculateSolarPanelOutput(panelArea, efficiency)
 
-
+                    val energyPrice = 1.0
 
                     Row(
                         modifier = Modifier

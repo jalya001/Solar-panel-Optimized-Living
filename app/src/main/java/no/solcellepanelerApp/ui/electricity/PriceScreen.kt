@@ -1,6 +1,7 @@
 package no.solcellepanelerApp.ui.electricity
 
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -19,6 +20,7 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
@@ -41,21 +43,19 @@ import no.solcellepanelerApp.ui.navigation.AppearanceBottomSheet
 import no.solcellepanelerApp.ui.navigation.BottomBar
 import no.solcellepanelerApp.ui.navigation.HelpBottomSheet
 import no.solcellepanelerApp.ui.navigation.TopBar
+import no.solcellepanelerApp.ui.reusables.AppScaffoldController
 import no.solcellepanelerApp.util.RequestLocationPermission
 import java.time.ZoneId
 import java.time.ZonedDateTime
 
-
-
 @Composable
 fun PriceScreen(
     viewModel: PriceScreenViewModel,
-    navController: NavController,
-    fontScaleViewModel: FontScaleViewModel,
+    contentPadding: PaddingValues
 ) {
     val scrollState = rememberScrollState()
-
     var selectedRegion by remember { mutableStateOf<Region?>(null) }
+    val prices by viewModel.prices.collectAsState()
 
     // Request location and set region once on permission
     RequestLocationPermission { newRegion ->
@@ -67,64 +67,39 @@ fun PriceScreen(
         selectedRegion?.let { viewModel.setRegion(it) }
     }
 
-    var showHelp by remember { mutableStateOf(false) }
-    var showAppearance by remember { mutableStateOf(false) }
-
-    Scaffold(
-        topBar = { TopBar(navController, stringResource(id = R.string.price_title)) },
-        bottomBar = {
-            BottomBar(
-                onHelpClicked = { showHelp = true },
-                onAppearanceClicked = { showAppearance = true },
-                navController = navController
-            )
+    Column(
+        modifier = Modifier
+            .fillMaxSize()
+            .verticalScroll(scrollState)
+            .padding(contentPadding),
+        horizontalAlignment = Alignment.CenterHorizontally
+    ) {
+        selectedRegion?.let {
+            RegionDropdown(it) { newRegion ->
+                selectedRegion = newRegion
+            }
         }
-    ) { padding ->
-        Column(
-            modifier = Modifier
-                .fillMaxSize()
-                .verticalScroll(scrollState)
-                .padding(padding),
-            horizontalAlignment = Alignment.CenterHorizontally
-        ) {
-            selectedRegion?.let {
-                RegionDropdown(it) { newRegion ->
-                    selectedRegion = newRegion
-                }
+
+        Spacer(modifier = Modifier.height(8.dp))
+
+        val priceUiState by viewModel.priceUiState.collectAsStateWithLifecycle()
+
+        when (priceUiState) {
+            PriceScreenViewModel.UiState.LOADING -> LoadingScreen()
+            PriceScreenViewModel.UiState.ERROR -> ErrorScreen()
+            PriceScreenViewModel.UiState.SUCCESS -> {
+                ElectricityPriceChart(prices = prices!!)
+                Spacer(modifier = Modifier.height(16.dp))
+                val currentHour = ZonedDateTime.now(ZoneId.of("Europe/Oslo")).hour
+                val initialIndex =
+                    prices!!.indexOfFirst { ZonedDateTime.parse(it.time_start).hour == currentHour }
+                var hourIndex by remember { mutableIntStateOf(initialIndex.coerceAtLeast(0)) }
+                PriceCard(
+                    prices = prices!!,
+                    hourIndex = hourIndex,
+                    onHourChange = { newIndex -> hourIndex = newIndex }
+                )
             }
-
-            Spacer(modifier = Modifier.height(8.dp))
-
-            val priceUiState by viewModel.priceUiState.collectAsStateWithLifecycle()
-
-            when (priceUiState) {
-                is PriceUiState.Loading -> LoadingScreen()
-                is PriceUiState.Error -> ErrorScreen()
-                is PriceUiState.Success -> {
-                    val prices = (priceUiState as PriceUiState.Success).prices
-                    ElectricityPriceChart(prices = prices)
-                    Spacer(modifier = Modifier.height(16.dp))
-                    val currentHour = ZonedDateTime.now(ZoneId.of("Europe/Oslo")).hour
-                    val initialIndex =
-                        prices.indexOfFirst { ZonedDateTime.parse(it.time_start).hour == currentHour }
-                    var hourIndex by remember { mutableIntStateOf(initialIndex.coerceAtLeast(0)) }
-                    PriceCard(
-                        prices = prices,
-                        hourIndex = hourIndex,
-                        onHourChange = { newIndex -> hourIndex = newIndex }
-                    )
-                }
-            }
-
-            HelpBottomSheet(
-                navController = navController,
-                visible = showHelp,
-                onDismiss = { showHelp = false })
-            AppearanceBottomSheet(
-                visible = showAppearance,
-                onDismiss = { showAppearance = false },
-                fontScaleViewModel = fontScaleViewModel
-            )
         }
     }
 }
