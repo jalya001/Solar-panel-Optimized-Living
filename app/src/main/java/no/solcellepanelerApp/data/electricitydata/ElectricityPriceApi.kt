@@ -1,5 +1,7 @@
-package no.solcellepanelerApp.data.homedata
+package no.solcellepanelerApp.data.electricitydata
 
+import android.annotation.SuppressLint
+import android.util.Log
 import io.ktor.client.HttpClient
 import io.ktor.client.call.body
 import io.ktor.client.plugins.contentnegotiation.ContentNegotiation
@@ -20,6 +22,7 @@ class ElectricityPriceApi {
     }
 
     //Fetches electricity prices for a specific date and price area
+    @SuppressLint("DefaultLocale")
     suspend fun fetchPrices(date: LocalDate, priceArea: String): List<ElectricityPrice> {
         //Format the date properly to match the API's expected URL structure (e.g., 2025/04-04_NO1.json)
         val formattedMonth = String.format("%02d", date.monthValue)
@@ -27,7 +30,7 @@ class ElectricityPriceApi {
 
         val url =
             "https://www.hvakosterstrommen.no/api/v1/prices/${date.year}/${formattedMonth}-${formattedDay}_$priceArea.json"
-
+        Log.d("ElectricityPriceApi", "Fetching data from URL: $url")
         //Try to fetch data from the API, return it as a list of ElectricityPrice objects
         return try {
             client.get(url).body()

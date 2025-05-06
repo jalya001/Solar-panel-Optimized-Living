@@ -23,10 +23,10 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.Undo
 import androidx.compose.material.icons.filled.CheckCircle
 import androidx.compose.material.icons.filled.DeleteForever
 import androidx.compose.material.icons.filled.Search
-import androidx.compose.material.icons.filled.Undo
 import androidx.compose.material.icons.filled.Visibility
 import androidx.compose.material.icons.filled.VisibilityOff
 import androidx.compose.material3.AlertDialog
@@ -34,7 +34,6 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonColors
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardColors
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
@@ -175,9 +174,6 @@ fun MapScreen(
                 viewModel = viewModel,
                 navController = navController,
                 weatherViewModel = weatherViewModel,
-                snackbarHostState = snackbarHostState,
-                modifier = Modifier.padding(contentPadding),
-                showDrawOverlay = showDrawOverlay,
                 setShowDrawOverlay = { showDrawOverlay = it }
             )
         }
@@ -194,16 +190,15 @@ fun MapScreen(
     )
 }
 
-@OptIn(ExperimentalMaterial3Api::class)
+
 @Composable
 fun DisplayScreen(
     viewModel: MapScreenViewModel,
     navController: NavController,
     weatherViewModel: WeatherViewModel,
-    showDrawOverlay: Boolean,
     setShowDrawOverlay: (Boolean) -> Unit,
-    snackbarHostState: SnackbarHostState,
-    modifier: Modifier = Modifier,
+
+
 ) {
     val context = LocalContext.current
     var selectedCoordinates by remember { mutableStateOf<LatLng?>(null) }
@@ -217,9 +212,8 @@ fun DisplayScreen(
     var drawingEnabled by remember { mutableStateOf(false) }
     var index by remember { mutableIntStateOf(0) }
     var showBottomSheet by remember { mutableStateOf(false) }
-    var arealatlong by remember { mutableStateOf<LatLng?>(null) }
     var showMissingLocationDialog by remember { mutableStateOf(false) }
-    var area by remember { mutableStateOf("") }
+
 
     val activity = (context as? MainActivity)
     var selectedRegion by rememberSaveable { mutableStateOf<Region?>(null) }
@@ -234,13 +228,13 @@ fun DisplayScreen(
 
     LaunchedEffect(locationPermissionGranted) {
         if (locationPermissionGranted && activity != null) {
-            val location = fetchCoordinates(context, activity)
+            val location = fetchCoordinates( activity)
             currentLocation = location
         }
     }
 
     //Camera and map state
-    var cameraPositionState = rememberCameraPositionState {
+    val cameraPositionState = rememberCameraPositionState {
         position = CameraPosition.fromLatLngZoom(LatLng(59.9436145, 10.7182883), 18f)
     }
 
@@ -304,17 +298,17 @@ fun DisplayScreen(
                 }
             } else {
                 polygonPoints.forEachIndexed { index, point ->
-                    val markerState = rememberMarkerState(position = point)
+                    val pointMarkerState = rememberMarkerState(position = point)
 
-                    LaunchedEffect(markerState) {
-                        snapshotFlow { markerState.position }
+                    LaunchedEffect(pointMarkerState) {
+                        snapshotFlow { pointMarkerState.position }
                             .collect { newPosition ->
                                 viewModel.updatePoint(index, newPosition)
                             }
                     }
 
                     MapMarker(
-                        state = markerState,
+                        state = pointMarkerState,
                         title = "${stringResource(id = R.string.point)} ${index + 1}",
                         context = LocalContext.current,
                         draggable = true
@@ -414,7 +408,7 @@ fun DisplayScreen(
                 .zIndex(1f),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            val coroutineScope = rememberCoroutineScope()
+            val rememberedScope = rememberCoroutineScope()
 
             Spacer(
                 modifier = Modifier.height(80.dp)
@@ -431,7 +425,7 @@ fun DisplayScreen(
                             selectedCoordinates = null
                             viewModel.removePoints()
                             index = 0
-                            coroutineScope.launch {
+                            rememberedScope.launch {
                                 cameraPositionState.animate(
                                     CameraUpdateFactory.newCameraPosition(
                                         CameraPosition(
@@ -451,9 +445,9 @@ fun DisplayScreen(
             }
 
             if (isPolygonvisible) {
-                var area = viewModel.calculateAreaOfPolygon(polygonPoints).toString()
+                val calculatedArea = viewModel.calculateAreaOfPolygon(polygonPoints).toString()
                 Text(
-                    text = stringResource(R.string.area_drawn) + " $area m²",
+                    text = stringResource(R.string.area_drawn) + " $calculatedArea m²",
                     style = MaterialTheme.typography.bodyLarge,
                     color = MaterialTheme.colorScheme.tertiary,
                     modifier = Modifier
@@ -485,7 +479,7 @@ fun DisplayScreen(
                                     currentLocation,
                                     locationPermissionGranted,
                                     cameraPositionState,
-                                    coroutineScope
+                                    rememberedScope
                                 )
                             },
                             colors = ButtonColors(
@@ -575,13 +569,13 @@ fun LocationNotSelectedDialog(
     coordinates: Pair<Double, Double>?,
     onDismiss: () -> Unit,
 ) {
-    var showDialog by remember { mutableStateOf(coordinates == null) }
+    val showDialog by remember { mutableStateOf(coordinates == null) }
 
     if (showDialog && coordinates == null) {
         val currentDensity = LocalDensity.current
         val customDensity = Density(
             density = currentDensity.density,
-            fontScale = FontSizeState.fontScale.value
+            fontScale = FontSizeState.fontScale.floatValue
         )
 
         CompositionLocalProvider(LocalDensity provides customDensity) {
@@ -754,12 +748,12 @@ private fun DrawingControls(
                     }
                 }
 
-                if (polygonPoints.size >= 1) {
+                if (polygonPoints.isNotEmpty()) {
                     Card(
                         modifier = Modifier
                             .clickable {
                                 viewModel.removeLastPoint()
-                                onToggleVisibility
+//                                onToggleVisibility
                             }
                             .width(130.dp)
                             .align(Alignment.BottomStart),
@@ -772,7 +766,7 @@ private fun DrawingControls(
                     ) {
                         Column(horizontalAlignment = Alignment.CenterHorizontally) {
                             Icon(
-                                Icons.Filled.Undo,
+                                Icons.AutoMirrored.Filled.Undo,
                                 contentDescription = "remove last point",
                                 modifier = Modifier.padding(top = 6.dp),
                             )

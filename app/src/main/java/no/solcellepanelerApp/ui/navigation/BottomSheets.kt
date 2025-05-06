@@ -1,6 +1,5 @@
 package no.solcellepanelerApp.ui.navigation
 
-import android.app.Activity
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.net.Uri
@@ -24,9 +23,9 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.OpenInNew
 import androidx.compose.material.icons.filled.Create
 import androidx.compose.material.icons.filled.Info
-import androidx.compose.material.icons.filled.OpenInNew
 import androidx.compose.material3.Button
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Checkbox
@@ -45,6 +44,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableFloatStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
@@ -70,7 +70,7 @@ import no.solcellepanelerApp.model.electricity.Region
 import no.solcellepanelerApp.ui.electricity.RegionDropdown
 import no.solcellepanelerApp.ui.font.FontScaleViewModel
 import no.solcellepanelerApp.ui.font.FontSizeState
-import no.solcellepanelerApp.ui.language.langSwitch
+import no.solcellepanelerApp.ui.language.LangSwitch
 import no.solcellepanelerApp.ui.map.MapScreenViewModel
 import no.solcellepanelerApp.ui.result.WeatherViewModel
 import no.solcellepanelerApp.ui.reusables.DecimalFormatter
@@ -80,7 +80,7 @@ import no.solcellepanelerApp.ui.reusables.ModeCard
 import no.solcellepanelerApp.ui.reusables.MySection
 import no.solcellepanelerApp.ui.theme.ThemeMode
 import no.solcellepanelerApp.ui.theme.ThemeState
-import no.solcellepanelerApp.util.RememberLocationWithPermission
+
 
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -88,21 +88,19 @@ import no.solcellepanelerApp.util.RememberLocationWithPermission
 fun HelpBottomSheet(
     visible: Boolean,
     onDismiss: () -> Unit,
-    expandSection: String = "",
     navController: NavController,
 ) {
 
     var triggerLocationFetch by remember { mutableStateOf(false) }
 
-    var region: Region? by remember { mutableStateOf(null) }
-    val (currentLocation, locationGranted) = if (triggerLocationFetch) {
-        RememberLocationWithPermission(
-            triggerRequest = true,
-            onRegionDetermined = { region = it }
-        )
-    } else {
-        Pair(null, false)
-    }
+//    var region: Region? by remember { mutableStateOf(null) }
+//   val (currentLocation, locationGranted) = if (triggerLocationFetch) {
+//        RememberLocationWithPermission(
+//            triggerRequest = true,
+//          onRegionDetermined = { region = it }
+//       ) } else {
+//       Pair(null, false)
+//    }
 
 
     val sheetState = rememberModalBottomSheetState(
@@ -238,7 +236,7 @@ fun AppearanceBottomSheet(
         val currentDensity = LocalDensity.current
         val customDensity = Density(
             density = currentDensity.density,
-            fontScale = FontSizeState.fontScale.value
+            fontScale = FontSizeState.fontScale.floatValue
         )
 
         val sheetState = rememberModalBottomSheetState(
@@ -308,7 +306,7 @@ fun AppearanceBottomSheet(
 
                     Spacer(modifier = Modifier.height(10.dp))
 
-                    langSwitch()
+                    LangSwitch()
 
                     Spacer(modifier = Modifier.height(10.dp))
 
@@ -433,13 +431,13 @@ fun AdditionalInputBottomSheet(
     selectedRegion: Region?,
     onRegionSelected: (Region) -> Unit,
 ) {
-    var angle by remember { mutableStateOf(0f) }
+    var angle by remember { mutableFloatStateOf(0f) }
     var areaState by remember { mutableStateOf(area) }
-    var azimuthPosition by remember { mutableStateOf(0f) }
-    var efficiency by remember { mutableStateOf(0f) }
+    var azimuthPosition by remember { mutableFloatStateOf(0f) }
+    var efficiency by remember { mutableFloatStateOf(0f) }
 
-    val context = LocalContext.current
-    val activity = context as? Activity
+//    val context = LocalContext.current
+//    val activity = context as? Activity
 
     data class SolarPanelType(val name: String, val efficiency: Float, val description: String)
 
@@ -457,7 +455,7 @@ fun AdditionalInputBottomSheet(
         val currentDensity = LocalDensity.current
         val customDensity = Density(
             density = currentDensity.density,
-            fontScale = FontSizeState.fontScale.value
+            fontScale = FontSizeState.fontScale.floatValue
         )
 
         val sheetState = rememberModalBottomSheetState(
@@ -607,7 +605,7 @@ fun AdditionalInputBottomSheet(
                                 modifier = Modifier.fillMaxWidth(),
                                 horizontalAlignment = Alignment.CenterHorizontally
                             ) {
-                                var panelEff = if (panelType.name == "Monokrystallinsk") {
+                                val panelEff = if (panelType.name == "Monokrystallinsk") {
                                     "18-23"
                                 } else if (panelType.name == "Polykrystallinsk") {
                                     "15-17"
@@ -647,7 +645,7 @@ fun AdditionalInputBottomSheet(
                         )
                         Spacer(modifier = Modifier.width(2.dp))
                         Icon(
-                            imageVector = Icons.Default.OpenInNew,
+                            imageVector = Icons.AutoMirrored.Filled.OpenInNew,
                             contentDescription = "Les mer",
                             tint = MaterialTheme.colorScheme.primary
                         )

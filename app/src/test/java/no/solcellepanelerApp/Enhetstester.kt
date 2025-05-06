@@ -121,7 +121,7 @@ class EnergyDisplayTest {
 }
 
 
-class EnergyCalculationTest {
+//class EnergyCalculationTest {
 
 //    @Test
 //    fun `calculateMonthlyEnergyOutput should return correct values`() {
@@ -165,7 +165,7 @@ class EnergyCalculationTest {
 //        // Then
 //        assertEquals(emptyList<Double>(), result)
 //    }
-}
+//}
 
 
 

@@ -6,13 +6,13 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.HelpOutline
+import androidx.compose.material.icons.automirrored.filled.Send
+import androidx.compose.material.icons.automirrored.filled.TrendingUp
 import androidx.compose.material.icons.filled.AccessTime
 import androidx.compose.material.icons.filled.CloudOff
 import androidx.compose.material.icons.filled.ErrorOutline
-import androidx.compose.material.icons.filled.HelpOutline
 import androidx.compose.material.icons.filled.Lock
-import androidx.compose.material.icons.filled.Send
-import androidx.compose.material.icons.filled.TrendingUp
 import androidx.compose.material.icons.filled.Waves
 import androidx.compose.material.icons.filled.WifiOff
 import androidx.compose.material3.CircularProgressIndicator
@@ -88,16 +88,16 @@ fun ErrorScreenTemplate(
     ErrorScreenTemplate(Icons.Default.CloudOff, stringResource(R.string.server_error))
 
 @Composable fun OverloadErrorScreen() =
-    ErrorScreenTemplate(Icons.Default.TrendingUp, stringResource(R.string.overload_error))
+    ErrorScreenTemplate(Icons.AutoMirrored.Filled.TrendingUp, stringResource(R.string.overload_error))
 
 @Composable fun NetworkErrorScreen() =
     ErrorScreenTemplate(Icons.Default.WifiOff, stringResource(R.string.network_error))
 
 @Composable fun UnknownErrorScreen() =
-    ErrorScreenTemplate(Icons.Default.HelpOutline, stringResource(R.string.unknown_error))
+    ErrorScreenTemplate(Icons.AutoMirrored.Filled.HelpOutline, stringResource(R.string.unknown_error))
 
 @Composable fun RequestErrorScreen() =
-    ErrorScreenTemplate(Icons.Default.Send, stringResource(R.string.request_error))
+    ErrorScreenTemplate(Icons.AutoMirrored.Filled.Send, stringResource(R.string.request_error))
 
 @Composable fun SeaErrorScreen() =
     ErrorScreenTemplate(Icons.Default.Waves, stringResource(R.string.sea_error))

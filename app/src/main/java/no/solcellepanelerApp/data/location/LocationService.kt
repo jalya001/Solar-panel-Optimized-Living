@@ -12,8 +12,8 @@ import com.google.android.gms.location.LocationServices
 import kotlinx.coroutines.tasks.await
 
 class LocationService(private val activity: Activity) {
-    private val fusedLocationClient: FusedLocationProviderClient? =
-        activity?.let { LocationServices.getFusedLocationProviderClient(it) }
+    private val fusedLocationClient: FusedLocationProviderClient =
+        activity.let { LocationServices.getFusedLocationProviderClient(it) }
 
     @SuppressLint("MissingPermission")
     suspend fun getCurrentLocation(): Location? {
@@ -25,7 +25,7 @@ class LocationService(private val activity: Activity) {
 
         return if (hasPermission) {
             try {
-                fusedLocationClient?.lastLocation?.await()
+                fusedLocationClient.lastLocation.await()
             } catch (e: Exception) {
                 Log.e("LocationService", "Error getting location", e)
                 null
