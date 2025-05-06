@@ -63,4 +63,10 @@ class WeatherRepository(
         }
         return emptyArray()
     }
+
+    object WeatherRepositoryProvider {
+        val instance: WeatherRepository by lazy {
+            WeatherRepository()
+        }
+    }
 }

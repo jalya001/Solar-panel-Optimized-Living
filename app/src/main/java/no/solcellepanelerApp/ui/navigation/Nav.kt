@@ -55,7 +55,7 @@ fun Nav(navController: NavHostController, fontScaleViewModel: FontScaleViewModel
         composable("onboarding") { OnboardingScreen(onFinished = { navController.popBackStack() }) }
 
 
-        composable("home") { HomeScreen(navController, fontScaleViewModel, WviewModel) }
+        composable("home") { HomeScreen(navController, fontScaleViewModel) }
         composable("map") {
             MapScreen(viewModel, navController, fontScaleViewModel, WviewModel)
         }

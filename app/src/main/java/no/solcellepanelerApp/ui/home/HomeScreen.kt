@@ -1,9 +1,6 @@
 package no.solcellepanelerApp.ui.home
 
-import android.Manifest
 import android.annotation.SuppressLint
-import android.content.pm.PackageManager
-import android.location.Location
 import android.util.Log
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.border
@@ -11,6 +8,7 @@ import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.aspectRatio
@@ -18,9 +16,9 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
@@ -29,11 +27,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableIntStateOf
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.saveable.rememberSaveable
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.graphicsLayer
@@ -42,7 +35,6 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
-import androidx.core.content.ContextCompat
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
@@ -51,7 +43,6 @@ import com.airbnb.lottie.compose.LottieCompositionSpec
 import com.airbnb.lottie.compose.LottieConstants
 import com.airbnb.lottie.compose.animateLottieCompositionAsState
 import com.airbnb.lottie.compose.rememberLottieComposition
-import no.solcellepanelerApp.MainActivity
 import no.solcellepanelerApp.R
 import no.solcellepanelerApp.data.homedata.ElectricityPriceRepository
 import no.solcellepanelerApp.model.electricity.Region
@@ -65,407 +56,334 @@ import no.solcellepanelerApp.ui.handling.LoadingScreen
 import no.solcellepanelerApp.ui.navigation.AppearanceBottomSheet
 import no.solcellepanelerApp.ui.navigation.BottomBar
 import no.solcellepanelerApp.ui.navigation.HelpBottomSheet
-import no.solcellepanelerApp.ui.result.WeatherViewModel
 import no.solcellepanelerApp.ui.reusables.MyDisplayCard
 import no.solcellepanelerApp.ui.reusables.MyNavCard
 import no.solcellepanelerApp.ui.theme.ThemeMode
 import no.solcellepanelerApp.ui.theme.ThemeState
-import no.solcellepanelerApp.util.fetchCoordinates
-import no.solcellepanelerApp.util.mapLocationToRegion
-import java.time.LocalTime
 import java.time.ZonedDateTime
 
+@Composable
+private fun isDarkThemeEnabled(): Boolean = when (ThemeState.themeMode) {
+    ThemeMode.DARK -> true
+    ThemeMode.LIGHT -> false
+    ThemeMode.SYSTEM -> isSystemInDarkTheme()
+}
 
-@SuppressLint("DefaultLocale")
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun HomeScreen(
     navController: NavController,
     fontScaleViewModel: FontScaleViewModel,
-    weatherViewModel: WeatherViewModel,
+    homeScreenViewModel: HomeScreenViewModel = viewModel()
 ) {
-    var context = LocalContext.current
-    val activity = (context as? MainActivity)
-    val radiationArray by weatherViewModel.frostDataRim.collectAsState()
+    val context = LocalContext.current
 
-    var showHelp by remember { mutableStateOf(false) }
-    var showAppearance by remember { mutableStateOf(false) }
-    var isLoading by remember { mutableStateOf(false) }
-
-    var selectedRegion by rememberSaveable { mutableStateOf<Region?>(null) }
-    var currentLocation by remember { mutableStateOf<Location?>(null) }
-    var locationPermissionGranted by remember { mutableStateOf(false) }
-    Log.d("HomeScreen", "currentLocation: $currentLocation")
-    var dataFetched by remember { mutableStateOf(false) }
-
-    val currentHour by remember { mutableIntStateOf(ZonedDateTime.now().minusHours(2).hour) }
-    //var currentHourValue by remember { mutableStateOf(radiationArray[currentHour]) }
-    // The value for the current hour
-    Log.e("HomeScreen", "currentHour: $currentHour")
-    Log.e("HomeScreen", "radiationArray: ${radiationArray.joinToString(", ")}")
-    var currentHourValueny by remember { mutableStateOf<Double?>(null) }
-    Log.e("HomeScreen", "currentHourValueny: $currentHourValueny")
-    LaunchedEffect(currentHour, radiationArray) {
-        radiationArray.let {
-            if (it.isNotEmpty()) {
-                it[currentHour]?.let { currentHourValue ->
-                    Log.e("HomeScreen", "currentHourValue: $currentHourValue")
-                    currentHourValueny = currentHourValue / 1000.0
-                } ?: run {
-                    Log.e("HomeScreen", "currentHourValue is null.")
-                }
-            } else {
-                Log.e("HomeScreen", "radiationArray is empty.")
-            }
-        }
+    LaunchedEffect(Unit) {
+        homeScreenViewModel.initialize(context)
     }
+
+    val isLoading by homeScreenViewModel.isLoading.collectAsState()
+    val currentRadiationValue by homeScreenViewModel.currentRadiationValue.collectAsState()
+    val selectedRegion by homeScreenViewModel.selectedRegion.collectAsState()
+    val currentTime by homeScreenViewModel.currentTime.collectAsState()
+    val showHelp by homeScreenViewModel.showHelp.collectAsState()
+    val showAppearance by homeScreenViewModel.showAppearance.collectAsState()
 
     if (isLoading) {
         LoadingScreen()
         return
     }
-
-//    //Request location permission and fetch region
-//    RequestLocationPermission { region ->
-//        selectedRegion = region
-//        locationPermissionGranted = true
-//
-//    }
-//
-//    LaunchedEffect(locationPermissionGranted) {
-//        if (locationPermissionGranted && activity != null) {
-//            val location = fetchCoordinates(context, activity)
-//            currentLocation = location
-//
-//        }
-//    }
-
-    LaunchedEffect(Unit) {
-        val permissionGranted = ContextCompat.checkSelfPermission(
-            context,
-            Manifest.permission.ACCESS_FINE_LOCATION
-        ) == PackageManager.PERMISSION_GRANTED
-
-        if (permissionGranted && activity != null) {
-            val location = fetchCoordinates(context, activity)
-            currentLocation = location
-            selectedRegion = location?.let { mapLocationToRegion(it) } ?: Region.OSLO
-        } else {
-            selectedRegion = Region.OSLO
-        }
-    }
-
-
-    Log.d("HomeScreen", "currentLocation: $currentLocation")
-    if (currentLocation != null && !dataFetched) {
-        Log.e(
-            "HomeScreen",
-            "currentLocation is now not null and is: ${currentLocation!!.latitude}, ${currentLocation!!.longitude}"
-        )
-        weatherViewModel.fetchRimData(
-            currentLocation!!.latitude,
-            currentLocation!!.longitude,
-            "mean(surface_downwelling_shortwave_flux_in_air PT1H)"
-        )
-        dataFetched = true
-        Log.d("HomeScreen", "radiationArray: $radiationArray")
-    }
-
-    val isDark = when (ThemeState.themeMode) {
-        ThemeMode.DARK -> true
-        ThemeMode.LIGHT -> false
-        ThemeMode.SYSTEM -> isSystemInDarkTheme()
-    }
+    val isDarkTheme = isDarkThemeEnabled()
 
 
     Scaffold(
-        topBar = {
-            Surface(
+        topBar = { TopBar(isDarkTheme = isDarkTheme) },
+        bottomBar = {
+            BottomBar(
+                onHelpClicked = { homeScreenViewModel.setShowHelp(true) },
+                onAppearanceClicked = { homeScreenViewModel.setShowAppearance(true) },
+                navController = navController,
+            )
+        },
+    ) { contentPadding ->
+        MainContent(
+            contentPadding = contentPadding,
+            navController = navController,
+            currentRadiationValue = currentRadiationValue,
+            selectedRegion = selectedRegion,
+            currentTime = currentTime,
+        )
+
+        HelpBottomSheet(
+            navController = navController,
+            visible = showHelp,
+            onDismiss = { homeScreenViewModel.setShowHelp(false) },
+        )
+
+        AppearanceBottomSheet(
+            visible = showAppearance,
+            onDismiss = { homeScreenViewModel.setShowAppearance(false) },
+            fontScaleViewModel = fontScaleViewModel,
+        )
+    }
+}
+
+@Composable
+fun MainContent(
+    contentPadding: PaddingValues,
+    navController: NavController,
+    currentRadiationValue: Double?,
+    selectedRegion: Region?,
+    currentTime: ZonedDateTime,
+) {
+    Column(
+        modifier = Modifier
+            .fillMaxSize()
+            .padding(contentPadding),
+            //.background(Color.Blue),
+        horizontalAlignment = Alignment.CenterHorizontally,
+        verticalArrangement = Arrangement.Center,
+    ) {
+        SolarPanelInstallationCard(navController)
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            horizontalArrangement = Arrangement.spacedBy(1.dp),
+        ) {
+            CurrentRadiationCard(currentRadiationValue, Modifier.weight(1f), currentTime)
+            ElectricityPriceCard(selectedRegion, navController, Modifier.weight(1f))
+        }
+    }
+}
+
+@Composable
+fun TopBar(isDarkTheme: Boolean) {
+    Surface(
+        modifier = Modifier.padding(top = 35.dp),
+    ) {
+        Box(
+            modifier = Modifier.fillMaxWidth()
+//              .background(Color.Red)
+            ,
+            contentAlignment = Alignment.Center
+        ) {
+            Image(
+                painter = painterResource(
+                    id = if (isDarkTheme) R.drawable.logo_topbar_dark else R.drawable.logo_topbar_light
+                ),
+                contentDescription = "",
                 modifier = Modifier
-                    .padding(top = 35.dp),
+                    .height(100.dp)
+            )
+        }
+    }
+}
+
+@Composable
+fun SolarPanelInstallationCard(navController: NavController) {
+    MyNavCard(
+        text = stringResource(id = R.string.install_panels_title),
+        desc = stringResource(id = R.string.install_panels_desc),
+        route = "map",
+        navController = navController,
+        modifier = Modifier
+            .fillMaxWidth()
+            .height(250.dp),
+        style = MaterialTheme.typography.displaySmall,
+//      content = { PanelAnimation() },
+        color = MaterialTheme.colorScheme.tertiary
+//      color = MaterialTheme.colorScheme.primary
+//      color = MaterialTheme.colorScheme.secondary
+    )
+}
+
+@SuppressLint("DefaultLocale")
+@Composable
+fun CurrentRadiationCard(
+    currentRadiationValue: Double?,
+    modifier: Modifier = Modifier,
+    currentTime: ZonedDateTime
+) {
+    MyDisplayCard(
+        modifier = modifier.height(400.dp),
+        style = MaterialTheme.typography.displaySmall,
+        content = {
+            Column(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .border(3.dp, MaterialTheme.colorScheme.primary, RoundedCornerShape(15.dp))
+                    .padding(start = 10.dp, end = 10.dp, top = 20.dp),
+                horizontalAlignment = Alignment.CenterHorizontally,
             ) {
-                Box(
-                    modifier = Modifier.fillMaxWidth()
-//                        .background(Color.Red)
-                    ,
-                    contentAlignment = Alignment.Center
-                ) {
-                    Image(
-                        painter = painterResource(
-                            id = if (isDark) R.drawable.logo_topbar_dark else R.drawable.logo_topbar_light
-                        ),
-                        contentDescription = "",
-                        modifier = Modifier
-                            .height(100.dp)
+                Text(
+                    "LIVE ENERGY ${currentTime.hour}:00 ",
+                    style = MaterialTheme.typography.titleLarge,
+                    color = MaterialTheme.colorScheme.secondary
+//                  color = MaterialTheme.colorScheme.tertiary Oransje fargen. bare å fjerne kommentaren her hvis dere vil bruke oransj d
+                )
+                Spacer(modifier = Modifier.height(10.dp))
+                if (currentRadiationValue != null) {
+                    Text(
+                        text = currentRadiationValue?.let {
+                            String.format(
+                                "%.4f",
+                                it
+                            ) + " kW/m²"
+                        } ?: "No data", // Why do we have this if it can't be null to begin with?
+                        style = MaterialTheme.typography.headlineSmall,
+                        fontWeight = FontWeight.ExtraLight,
+                        color = MaterialTheme.colorScheme.primary,
                     )
+                    SunAnimation(currentRadiationValue ?: 0.0) // But it can't be null?
+                } else {
+                    LoadingScreen()
                 }
             }
         },
-        bottomBar = {
-            BottomBar(
-                onHelpClicked = { showHelp = true },
-                onAppearanceClicked = { showAppearance = true },
-                navController = navController
-            )
-        }
-    ) { contentPadding ->
-        Column(
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(contentPadding)
-//                .background(Color.Blue)
-            ,
-            horizontalAlignment = Alignment.CenterHorizontally,
-            verticalArrangement = Arrangement.Center
-        ) {
+        color = MaterialTheme.colorScheme.primary,
+    )
+}
 
-            MyNavCard(
-                text = stringResource(id = R.string.install_panels_title),
-                desc = stringResource(id = R.string.install_panels_desc),
-                route = "map",
-                navController = navController,
+@Composable
+fun ElectricityPriceCard(
+    selectedRegion: Region?,
+    navController: NavController,
+    modifier: Modifier = Modifier,
+) {
+    MyNavCard(
+        route = "prices",
+        navController = navController,
+        modifier = modifier.height(400.dp),
+        style = MaterialTheme.typography.headlineSmall,
+        content = {
+            Column(
                 modifier = Modifier
-                    .fillMaxWidth()
-                    .height(250.dp),
-                style = MaterialTheme.typography.displaySmall,
-//                content = { PanelAnimation() },
-                color = MaterialTheme.colorScheme.tertiary
-//                color = MaterialTheme.colorScheme.primary
-//                color = MaterialTheme.colorScheme.secondary
-            )
-
-            Row(
-                modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.spacedBy(1.dp)
+                    .fillMaxSize()
+                    .padding(start = 10.dp, end = 10.dp, top = 20.dp),
             ) {
-
-                MyDisplayCard(
-                    modifier = Modifier
-                        .weight(1f)
-                        .height(400.dp),
-                    style = MaterialTheme.typography.displaySmall,
-                    content = {
-                        Column(
-                            modifier = Modifier
-                                .fillMaxSize()
-                                .border(
-                                    3.dp,
-                                    MaterialTheme.colorScheme.primary,
-                                    RoundedCornerShape(15.dp)
-                                )
-//                                .background(MaterialTheme.colorScheme.surfaceVariant)
-                                .padding(start = 10.dp, end = 10.dp, top = 20.dp),
-
-                            horizontalAlignment = Alignment.CenterHorizontally // Center text horizontally
-                        ) {
-                            val timenow = LocalTime.now().hour
-                            Text(
-                                "LIVE ENERGY $timenow:00 ",
-                                style = MaterialTheme.typography.titleLarge,
-                                color = MaterialTheme.colorScheme.secondary
-//                                color = MaterialTheme.colorScheme.tertiary Oransje fargen. bare å fjerne kommentaren her hvis dere vil bruke oransj d
-                            )
-                            Spacer(modifier = Modifier.height(10.dp))
-
-                            if (currentHourValueny != null) {
-                                Text(
-                                    text = currentHourValueny?.let {
-                                        String.format(
-                                            "%.4f",
-                                            it
-                                        ) + " kW/m²"
-                                    } ?: "No data",
-                                    style = MaterialTheme.typography.headlineSmall,
-                                    fontWeight = FontWeight.ExtraLight,
-                                    color = MaterialTheme.colorScheme.primary
-                                )
-
-                                SunAnimation(currentHourValueny ?: 0.0)
-                            } else {
-                                LoadingScreen()
-                            }
-
-                        }
-                    },
-                    color = MaterialTheme.colorScheme.primary
-                )
-
-                MyNavCard(
-                    route = "prices",
-                    navController = navController,
-                    modifier = Modifier
-                        .weight(1f)
-                        .height(400.dp),
-                    style = MaterialTheme.typography.headlineSmall,
-                    content = {
-                        Column(
-                            modifier = Modifier
-                                .fillMaxSize()
-                                .padding(start = 10.dp, end = 10.dp, top = 20.dp),
-                        ) {
-                            Column(
-                                horizontalAlignment = Alignment.CenterHorizontally,
-                            ) {
-                                Text(
-                                    text = "Se strømprisene!",
-                                    style = MaterialTheme.typography.titleLarge,
-                                    color = MaterialTheme.colorScheme.secondary
-//                                color = MaterialTheme.colorScheme.tertiary Oransje fargen. bare å fjerne kommentaren her hvis dere vil bruke oransj d
-                                )
-                                Spacer(modifier = Modifier.height(10.dp))
-
-
-                                // Show loading screen until the region is selected
-                                if (selectedRegion == null) {
-                                    LoadingScreen()
-                                } else {
-                                    val repository =
-                                        ElectricityPriceRepository(priceArea = selectedRegion!!.regionCode)
-
-                                    val viewModel: PriceScreenViewModel = viewModel(
-                                        factory = PriceViewModelFactory(
-                                            repository,
-                                            selectedRegion!!.regionCode
-                                        ),
-                                        key = selectedRegion!!.regionCode
-                                    )
-
-                                    val priceUiState by viewModel.priceUiState.collectAsStateWithLifecycle()
-
-                                    when (priceUiState) {
-                                        is PriceUiState.Loading -> LoadingScreen()
-                                        is PriceUiState.Error -> ErrorScreen()
-                                        is PriceUiState.Success -> {
-                                            val prices =
-                                                (priceUiState as PriceUiState.Success).prices
-                                            Column {
-                                                HomePriceCard(prices, selectedRegion)
-                                            }
-                                        }
-                                    }
-                                }
-                            }
-                        }
-                    },
-                    color = MaterialTheme.colorScheme.primary
-                )
-
+                Column(
+                    horizontalAlignment = Alignment.CenterHorizontally,
+                ) {
+                    Text(
+                        text = "Se strømprisene!",
+                        style = MaterialTheme.typography.titleLarge,
+                        color = MaterialTheme.colorScheme.secondary
+//                      color = MaterialTheme.colorScheme.tertiary Oransje fargen. bare å fjerne kommentaren her hvis dere vil bruke oransj d
+                    )
+                    Spacer(modifier = Modifier.height(10.dp))
+                    if (selectedRegion == null) {
+                        LoadingScreen()
+                    } else {
+                        PriceInfo(selectedRegion = selectedRegion)
+                    }
+                }
             }
+        },
+        color = MaterialTheme.colorScheme.primary,
+    )
+}
 
-            HelpBottomSheet(
-                navController = navController,
-                visible = showHelp,
-                onDismiss = { showHelp = false },
-            )
-            AppearanceBottomSheet(
-                visible = showAppearance,
-                onDismiss = { showAppearance = false },
-                fontScaleViewModel = fontScaleViewModel
-            )
+@Composable
+fun PriceInfo(selectedRegion: Region) {
+    /* MOVE THIS TO VIEWMODEL */
+    val repository = ElectricityPriceRepository(priceArea = selectedRegion.regionCode)
+    val viewModel: PriceScreenViewModel = viewModel(
+        factory = PriceViewModelFactory(
+            repository,
+            selectedRegion.regionCode,
+        ),
+        key = selectedRegion.regionCode,
+    )
 
+    val priceUiState by viewModel.priceUiState.collectAsStateWithLifecycle()
+
+    when (priceUiState) {
+        is PriceUiState.Loading -> LoadingScreen()
+        is PriceUiState.Error -> ErrorScreen()
+        is PriceUiState.Success -> {
+            val prices = (priceUiState as PriceUiState.Success).prices
+            Column {
+                HomePriceCard(prices, selectedRegion)
+            }
         }
+    }
+}
+
+
+@Composable
+fun IndefiniteAnimationBox(
+    animationFile: String,
+    modifier: Modifier = Modifier,
+    innerModifier: Modifier = Modifier,
+    contentAlignment: Alignment = Alignment.TopStart,
+) {
+    val composition by rememberLottieComposition(LottieCompositionSpec.Asset(animationFile))
+    val progress by animateLottieCompositionAsState(
+        composition = composition,
+        iterations = LottieConstants.IterateForever,
+    )
+
+    Box(
+        modifier = modifier,
+        contentAlignment = contentAlignment
+    ) {
+        LottieAnimation(
+            composition = composition,
+            progress = { progress },
+            modifier = innerModifier
+        )
     }
 }
 
 @Composable
 fun PanelAnimation() {
-    val animationFile = "solarPanel_anim.json"
-
-    val composition by rememberLottieComposition(
-        LottieCompositionSpec.Asset(animationFile)
-    )
-
-    val progress by animateLottieCompositionAsState(
-        composition = composition,
-        iterations = LottieConstants.IterateForever,
-    )
-
-    Box(
+    IndefiniteAnimationBox(
+        animationFile = "solarPanel_anim.json",
         modifier = Modifier
-            .height(100.dp)
-    ) {
-        LottieAnimation(
-            composition = composition,
-            progress = { progress },
-            modifier = Modifier
-                .width(130.dp)
-                .aspectRatio(400.dp / 1000.dp),
-        )
-    }
+            .height(100.dp),
+        innerModifier = Modifier
+            .width(130.dp)
+            .aspectRatio(400.dp / 1000.dp)
+    )
 }
 
 @Composable
 fun ElectricityTowers() {
-
-    val isDark = when (ThemeState.themeMode) {
-        ThemeMode.DARK -> true
-        ThemeMode.LIGHT -> false
-        ThemeMode.SYSTEM -> isSystemInDarkTheme()
-    }
-
-
     val animationFile =
-        if (isDark) "electricity_tower_dark.json" else "electricity_tower_light.json"
-
-    val composition by rememberLottieComposition(
-        LottieCompositionSpec.Asset(animationFile)
-    )
-
-    val progress by animateLottieCompositionAsState(
-        composition = composition,
-        iterations = LottieConstants.IterateForever,
-    )
-
-    Box(
-        modifier = Modifier
-//            .background(Color.Blue)
-        ,
+        if (isDarkThemeEnabled()) "electricity_tower_dark.json" else "electricity_tower_light.json"
+    IndefiniteAnimationBox(
+        animationFile = animationFile,
+        innerModifier = Modifier
+            .width(150.dp)
+            .aspectRatio(400.dp / 400.dp),
         contentAlignment = Alignment.Center
-    ) {
-        LottieAnimation(
-            composition = composition,
-            progress = { progress },
-            modifier = Modifier
-                .width(150.dp)
-                .aspectRatio(400.dp / 400.dp),
-//                .background(Color.Red)
-        )
-    }
+    )
 }
 
 @Composable
-fun SunAnimation(value: Double) {
-    val animationFile = when {
-        value < 0.03 -> "solar_verylow.json"
-        value in 0.03..0.1 -> "solar_low.json"
-        value in 0.1..0.3 -> "solar_half.json"
-        value > 0.3 -> "solar_full.json"
-        else -> "solar_verylow.json" // Default animation
-    }
-
-    // Force new composition when value changes
-    val composition by rememberLottieComposition(
-        spec = LottieCompositionSpec.Asset(animationFile),
-    )
-
-    // Reset animation state when value changes
-    val progress by animateLottieCompositionAsState(
-        composition = composition,
-        iterations = LottieConstants.IterateForever,
-        // Add a key to restart animation when value changes
-    )
-
-    LottieAnimation(
-        composition = composition,
-        progress = { progress },
+fun LightningAnimation() {
+    IndefiniteAnimationBox(
+        animationFile = "lightningBolt_anim.json",
         modifier = Modifier
-            .height(450.dp)
-            .fillMaxWidth()
-            .graphicsLayer(
-                scaleX = 1.8f,
-                scaleY = 1.8f
-            )
+            .height(500.dp),
+        innerModifier = Modifier
+            .size(150.dp)
     )
-    Log.d("SunAnimation", "Animating with value: $value")
 }
 
+@Composable
+fun SunAnimation(radiationValue: Double) {
+    val animationFile = when {
+        radiationValue < 0.03 -> "solar_verylow.json"
+        radiationValue in 0.03..0.1 -> "solar_low.json"
+        radiationValue in 0.1..0.3 -> "solar_half.json"
+        radiationValue > 0.3 -> "solar_full.json"
+        else -> "solar_verylow.json" // Default animation
+    }
+    IndefiniteAnimationBox(
+        animationFile = animationFile,
+        innerModifier = Modifier
+            .height(450.dp)
+            .fillMaxWidth()
+            .graphicsLayer(scaleX = 1.8f, scaleY = 1.8f)
+    )
+    Log.d("SunAnimation", "Animating with value: $radiationValue")
+}
