@@ -7,6 +7,7 @@
     <string name="install_panels_desc">Legg inn adresse og detaljer — se estimert strøm og besparelse med solcellepaneler.</string>
     <string name="last_location">Siste posisjon (trenger bedre navn)</string>
     <string name="prices"> Strømpriser </string>
+    <string name="live_energy"> Direkte energi %1$d:00</string>
     <string name="help"> Hjelp</string>
     <string name="appearance"> Utseende</string>
     <string name="dark_mode">Mørkmodus </string>

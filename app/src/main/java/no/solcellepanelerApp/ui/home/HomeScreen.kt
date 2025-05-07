@@ -256,7 +256,7 @@ fun HomeScreen(
                         ) {
                             val timenow = LocalTime.now().hour
                             Text(
-                                "LIVE ENERGY $timenow:00 ",
+                                text = stringResource(R.string.live_energy, timenow),
                                 style = MaterialTheme.typography.titleLarge,
                                 color = MaterialTheme.colorScheme.secondary
 //                                color = MaterialTheme.colorScheme.tertiary Oransje fargen. bare å fjerne kommentaren her hvis dere vil bruke oransj d
