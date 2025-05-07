@@ -101,19 +101,10 @@ fun HelpBottomSheet(
     visible: Boolean,
     onDismiss: () -> Unit,
     navController: NavController,
+    expandSection: String = "",
 ) {
 
     var triggerLocationFetch by remember { mutableStateOf(false) }
-
-//    var region: Region? by remember { mutableStateOf(null) }
-//   val (currentLocation, locationGranted) = if (triggerLocationFetch) {
-//        RememberLocationWithPermission(
-//            triggerRequest = true,
-//          onRegionDetermined = { region = it }
-//       ) } else {
-//       Pair(null, false)
-//    }
-
 
     val sheetState = rememberModalBottomSheetState(
         skipPartiallyExpanded = true
@@ -233,9 +224,9 @@ fun HelpBottomSheet(
 
                     item {
                         ExpandInfoSection(
-//                            title = stringResource(id = R.string.tech_problems_title),
-                            title = "*Noe noe*",
-                            content = stringResource(id = R.string.tech_problems_content)
+                            title = stringResource(id = R.string.how_to_draw),
+                            content = stringResource(id = R.string.how_to_draw_content),
+                            initiallyExpanded = expandSection == "draw"
                         )
                     }
                 }

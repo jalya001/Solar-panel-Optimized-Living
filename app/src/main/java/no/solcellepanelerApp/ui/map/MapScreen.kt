@@ -230,6 +230,7 @@ fun DisplayScreen(
     var index by remember { mutableIntStateOf(0) }
     var showBottomSheet by remember { mutableStateOf(false) }
     var showMissingLocationDialog by remember { mutableStateOf(false) }
+    var showDrawHelp by remember { mutableStateOf(false) }
 
 
     val activity = (context as? MainActivity)
@@ -521,12 +522,48 @@ fun DisplayScreen(
                 }
             }
             if (drawingEnabled) {
-                DrawingControls(
-                    polygonPoints = polygonPoints,
-                    viewModel = viewModel,
-                    toggleBottomSheet = { showBottomSheet = true },
-                    onToggleVisibility = { isPolygonvisible = !isPolygonvisible }
-                )
+                Box(
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .padding(16.dp)
+                ) {
+                    Column(
+                        modifier = Modifier
+                            .align(Alignment.TopEnd)
+                    ) {
+                        HelpDrawingDialog(
+                            navController = navController,
+                            showHelp = showDrawHelp,
+                            onDismiss = { showDrawHelp = false }
+                        )
+                        Button(
+                            onClick = {
+                                showDrawHelp = true
+                            },
+                            colors = ButtonColors(
+                                containerColor = MaterialTheme.colorScheme.background,
+                                contentColor = MaterialTheme.colorScheme.primary,
+                                disabledContainerColor = darkGrey,
+                                disabledContentColor = lightGrey,
+                            )
+                        ) {
+                            Icon(
+                                painter = painterResource(id = R.drawable.help_24px),
+                                contentDescription = null,
+                                modifier = Modifier.size(30.dp),
+                                tint = MaterialTheme.colorScheme.primary
+                            )
+                        }
+                    }
+                    DrawingControls(
+                        polygonPoints = polygonPoints,
+                        viewModel = viewModel,
+                        toggleBottomSheet = { showBottomSheet = true },
+                        onToggleVisibility = { isPolygonvisible = !isPolygonvisible }
+                    )
+                }
+
+
             }
 
             if (showMissingLocationDialog) {
@@ -639,6 +676,23 @@ fun LocationNotSelectedDialog(
         }
     }
 }
+
+@Composable
+fun HelpDrawingDialog(
+    navController: NavController,
+    showHelp: Boolean,
+    onDismiss: () -> Unit,
+) {
+    if (showHelp) {
+        HelpBottomSheet(
+            navController = navController,
+            visible = true,
+            onDismiss = onDismiss,
+            expandSection = "draw"
+        )
+    }
+}
+
 
 @Composable
 private fun DrawingControls(

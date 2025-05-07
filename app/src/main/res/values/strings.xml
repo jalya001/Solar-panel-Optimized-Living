@@ -148,6 +148,18 @@
     <string name="tech_problems_title">Problems</string>
     <string name="tech_problems_content">Problems with app</string>
     <string name="how_to_draw">How to draw in the map</string>
+    <string name="how_to_draw_content">
+How to draw:\n
+        Tap on the map to place numbered markers. Place at least 3 points in a rectangle or polygon shape.\n\n
+        How to move a point:\n
+        Hold your finger on a marker for at least 3 seconds to drag and reposition it.\n
+        Alternatively, you can remove points and draw them again.\n\n
+        How to see your drawing:\n
+        Tap "Show area" to preview your selection.\n
+        When you are satisfied, tap "Confirm Drawing" to continue.
+</string>
+
+
     <string name="north">N</string>
     <string name="northeast">NE</string>
     <string name="east">E</string>

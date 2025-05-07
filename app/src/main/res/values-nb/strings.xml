@@ -147,6 +147,21 @@
     <string name="need_help">Trenger hjelp?</string>
     <string name="tech_problems_content">Problemer med appen</string>
     <string name="how_to_draw">Hvordan tegne i kartet</string>
+
+    <string name="how_to_draw_content">
+Slik tegner du:\n
+Trykk på kartet for å plassere nummererte punkter. Plasser minst 3 punkter i en rektangulær eller polygonform.\n\n
+
+Slik flytter du et punkt:\n
+Hold inne på et punkt i minst 3 sekunder for å dra og flytte det.\n
+Du kan også fjerne punkter og plassere dem på nytt.\n\n
+
+Slik ser du tegningen din:\n
+Trykk på "Vis areal" for å forhåndsvise markeringen.\n
+Når du er fornøyd, trykk på "Bekreft tegning" for å fortsette.
+</string>
+
+
     <string name="need_help_drawing">Trenger du hjelp med å tegne?</string>
     <string name="tech_problems_title">Problemer</string>
     <string name="help_draw">Draw on the map</string>
@@ -341,7 +356,7 @@
     </string>
     <string name="home_overlay">
         Velkommen til hjemskjermen din!\n\n
-        Trykk på "Finn ditt socellepotensiale" for å se hvor mye du sparer på solcellepaneler!\n\n
+        <!--        Trykk på  &quot;Finn ditt socellepotensiale&quot; for å se hvor mye du sparer på solcellepaneler!\n\n-->
         Trykk på strømprisene nede til høyre for å få mer detaljer om strømprisene\n\n
     </string>
     <string name="map_overlay">Søk etter adressen din, bruk enhetsposisjon, eller trykk på kartet for å velge en lokasjon</string>
