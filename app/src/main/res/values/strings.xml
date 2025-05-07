@@ -7,6 +7,7 @@
     <string name="install_panels_desc">Enter your address and details — see your estimated power and savings from solar panels.</string>
     <string name="last_location"> Last location (trenger bedre navn)</string>
     <string name="prices"> Electricity prices </string>
+    <string name="live_energy"> Live energy %1$d:00</string>
     <string name="help">Help</string>
     <string name="appearance"> Appearance</string>
     <string name="dark_mode"> Dark mode  </string>
@@ -15,7 +16,7 @@
     <string name="font_size"> Change font size</string>
     <string name="go_back"> Back </string>
     <string name="close"> Close</string>
-    <string name="live_prices">Check electricity prices</string>
+    <string name="live_prices">Check electricity prices!</string>
     <string name="reset">Reset</string>
     <string name="location_perm_title">Location Permission Already Granted</string>
     <string name="location_perm_content">If you want to change location permissions, go to settings.</string>
@@ -247,7 +248,7 @@
     <string name="yearly_savings_prefix">You will save</string>
     <string name="yearly_savings_suffix">per year on electricity from solar panels</string>
     <string name="energy_deficit">Energy deficit!</string>
-    
+
     <string name="fridge">Fridge</string>
     <string name="el_car">El-Car</string>
     <string name="heater">Heater</string>
@@ -285,6 +286,10 @@
 
     <string name="onboard_title_4">Location access</string>
     <string name="onboard_desc_4">Grant location access to find your nearest address and optimize the experience.</string>
+    <string name="onboard_title_5">Change appearance</string>
+    <string name="onboard_desc_5">Ps. Click on the appearance button in the bottom right to change language, theme and font size.</string>
+
+
     <string name="hide_area">Hide\nArea</string>
 
     <string name="generic_error">Something went wrong! Try again later.</string>

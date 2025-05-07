@@ -7,6 +7,7 @@
     <string name="install_panels_desc">Legg inn adresse og detaljer — se estimert strøm og besparelse med solcellepaneler.</string>
     <string name="last_location">Siste posisjon (trenger bedre navn)</string>
     <string name="prices"> Strømpriser </string>
+    <string name="live_energy"> Direkte energi %1$d:00</string>
     <string name="help"> Hjelp</string>
     <string name="appearance"> Utseende</string>
     <string name="dark_mode">Mørkmodus </string>
@@ -292,6 +293,10 @@
 
     <string name="onboard_title_4">Lokasjonstilgang</string>
     <string name="onboard_desc_4">Gi tilgang til enhetslokasjon for å finne nærmeste adresse og få en bedre opplevelse.</string>
+    <string name="onboard_title_5">Endre utseende</string>
+    <string name="onboard_desc_5">Ps. Trykk på utseende knappen i nederste høyre hjørnet for å bytte språk, tema og skriftstørrelse</string>
+
+
     <string name="hide_area">Skjul\nområde</string>
 
     <string name="generic_error">Noe gikk galt! Prøv igjen senere.</string>

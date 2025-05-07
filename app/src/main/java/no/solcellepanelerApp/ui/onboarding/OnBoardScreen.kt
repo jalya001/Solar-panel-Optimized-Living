@@ -34,7 +34,8 @@ fun OnboardingScreen(onFinished: () -> Unit) {
         OnBoardModel.FirstPage,
         OnBoardModel.SecondPage,
         OnBoardModel.ThirdPage,
-        OnBoardModel.FourthPage
+        OnBoardModel.FourthPage,
+        OnBoardModel.FifthPage
     )
 
     val pagerState = rememberPagerState(initialPage = 0) {
@@ -50,7 +51,8 @@ fun OnboardingScreen(onFinished: () -> Unit) {
                 0 -> listOf("", nextButton)
                 1 -> listOf(backButton, nextButton)
                 2 -> listOf(backButton, nextButton)
-                3 -> listOf(backButton, "Start")
+                3 -> listOf(backButton, nextButton)
+                4 -> listOf(backButton, "Start")
                 else -> listOf("", "")
             }
         }
@@ -62,7 +64,7 @@ fun OnboardingScreen(onFinished: () -> Unit) {
         Row(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(10.dp, 10.dp,10.dp,60.dp),
+                .padding(10.dp, 10.dp, 10.dp, 60.dp),
             horizontalArrangement = Arrangement.SpaceBetween,
             verticalAlignment = Alignment.CenterVertically
         ) {
