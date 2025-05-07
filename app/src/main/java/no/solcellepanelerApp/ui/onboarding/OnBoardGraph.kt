@@ -55,7 +55,7 @@ fun OnboardingGraphUI(OnBoardModel: OnBoardModel) {
 
     val imageRes = when (OnBoardModel) {
         is OnBoardModel.FirstPage -> if (isDark) R.drawable.onboard_logo_dark else R.drawable.onboard_logo_light
-        is OnBoardModel.SecondPage -> R.drawable.home_24px
+        is OnBoardModel.SecondPage -> R.drawable.baseline_lightbulb_circle_24
         is OnBoardModel.ThirdPage -> R.drawable.school_24px
         is OnBoardModel.FourthPage -> R.drawable.baseline_my_location_24
     }
@@ -244,11 +244,13 @@ fun OnboardingGraphUI(OnBoardModel: OnBoardModel) {
                     triggerLocationFetch = true
                 }
             }) {
-                Text(if (locationGranted) stringResource(R.string.change_location_settings) else stringResource(R.string.grant_location_access))
+                Text(
+                    if (locationGranted) stringResource(R.string.change_location_settings) else stringResource(
+                        R.string.grant_location_access
+                    )
+                )
             }
         }
-
-
 
         Spacer(
             modifier = Modifier

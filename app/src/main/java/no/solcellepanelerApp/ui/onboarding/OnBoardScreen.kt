@@ -1,6 +1,5 @@
 package no.solcellepanelerApp.ui.onboarding
 
-import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -26,6 +25,7 @@ import no.solcellepanelerApp.R
 import no.solcellepanelerApp.model.onboarding.OnBoardModel
 import no.solcellepanelerApp.ui.theme.SolcellepanelerAppTheme
 
+//hentet fra https://medium.com/@samadtalukder/implement-an-intro-onboarding-screen-in-android-jetpack-compose-9f464de08b43
 
 @Composable
 fun OnboardingScreen(onFinished: () -> Unit) {
