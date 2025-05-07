@@ -62,7 +62,7 @@ fun OnboardingScreen(onFinished: () -> Unit) {
         Row(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(10.dp, 10.dp),
+                .padding(10.dp, 10.dp,10.dp,60.dp),
             horizontalArrangement = Arrangement.SpaceBetween,
             verticalAlignment = Alignment.CenterVertically
         ) {
