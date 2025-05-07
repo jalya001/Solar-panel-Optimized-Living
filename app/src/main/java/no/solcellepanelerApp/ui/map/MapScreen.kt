@@ -76,11 +76,8 @@ import androidx.compose.ui.unit.Density
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.zIndex
 import androidx.core.content.ContextCompat
-import androidx.core.graphics.createBitmap
-import androidx.core.graphics.scale
 import androidx.navigation.NavController
 import com.google.android.gms.maps.CameraUpdateFactory
-import com.google.android.gms.maps.model.BitmapDescriptor
 import com.google.android.gms.maps.model.BitmapDescriptorFactory
 import com.google.android.gms.maps.model.CameraPosition
 import com.google.android.gms.maps.model.LatLng
@@ -913,30 +910,6 @@ fun createLabelledMarkerBitmap(
 
         return bitmap
     }
-}
-
-
-fun bitmapDescriptor(
-    context: Context,
-    vectorResId: Int,
-    width: Int = 100,
-    height: Int = 100,
-    tint: Int? = null,
-): BitmapDescriptor? {
-    val drawable = ContextCompat.getDrawable(context, vectorResId) ?: return null
-
-    if (tint != null) {
-        drawable.setTint(tint)
-    }
-
-    val originalBitmap = createBitmap(drawable.intrinsicWidth, drawable.intrinsicHeight)
-
-    val canvas = Canvas(originalBitmap)
-    drawable.setBounds(0, 0, canvas.width, canvas.height)
-    drawable.draw(canvas)
-
-    val scaledBitmap = originalBitmap.scale(width, height, false)
-    return BitmapDescriptorFactory.fromBitmap(scaledBitmap)
 }
 
 fun mapUseLocation(
