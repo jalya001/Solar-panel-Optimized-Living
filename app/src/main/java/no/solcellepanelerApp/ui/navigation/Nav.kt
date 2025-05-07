@@ -93,9 +93,24 @@ fun Nav(navController: NavHostController, fontScaleViewModel: FontScaleViewModel
             val energyPrice =
                 backStackEntry.arguments?.getString("energyPrice")?.toDoubleOrNull() ?: 0.0
 
+            val translatedMonth = when (month.lowercase()) {
+                "january" -> stringResource(R.string.month_january)
+                "february" -> stringResource(R.string.month_february)
+                "march" -> stringResource(R.string.month_march)
+                "april" -> stringResource(R.string.month_april)
+                "may" -> stringResource(R.string.month_may)
+                "june" -> stringResource(R.string.month_june)
+                "july" -> stringResource(R.string.month_july)
+                "august" -> stringResource(R.string.month_august)
+                "september" -> stringResource(R.string.month_september)
+                "october" -> stringResource(R.string.month_october)
+                "november" -> stringResource(R.string.month_november)
+                "december" -> stringResource(R.string.month_december)
+                else -> month
+            }
             EnergySavingsScreen(
                 isMonthly = true,
-                month = month,
+                month = translatedMonth,
                 energyProduced = energyProduced,
                 energyPrice = energyPrice,
                 navController = navController,

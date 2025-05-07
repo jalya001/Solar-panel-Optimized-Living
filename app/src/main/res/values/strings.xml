@@ -4,7 +4,7 @@
     <!--Home Screen-->
     <string name="home"> Home</string>
     <string name="install_panels_title">Find Your \n Solar Potential!</string>
-    <string name="install_panels_desc">Enter your address and details — see your estimated power and savings from solar panels.  *må jobbes med* </string>
+    <string name="install_panels_desc">Enter your address and details — see your estimated power and savings from solar panels.</string>
     <string name="last_location"> Last location (trenger bedre navn)</string>
     <string name="prices"> Electricity prices </string>
     <string name="help">Help</string>
@@ -15,14 +15,21 @@
     <string name="font_size"> Change font size</string>
     <string name="go_back"> Back </string>
     <string name="close"> Close</string>
-
+    <string name="live_prices">Check electricity prices</string>
+    <string name="reset">Reset</string>
+    <string name="location_perm_title">Location Permission Already Granted</string>
+    <string name="location_perm_content">If you want to change location permissions, go to settings.</string>
+    <string name="settings">Go to Settings</string>
+    <string name="change_location_settings">Change Location Settings</string>
+    <string name="grant_location_access">Grant Location Access</string>
+    <string name="tutorial">Open Tutorial</string>
 
     <string name='intro_title'>Introduction</string>
     <string name="intro_content">
-    Installing solar panels can be a smart investment both financially and environmentally
-    – but it depends on where you live, how much sun you get, and what the electricity prices are where you live.
-    This app helps you assess whether switching to solar energy is worth it, based on weather data, electricity prices, and location.
-    Here we explain the most important things you should know before making a decision.\n\n
+        Installing solar panels can be a smart investment - both financially and environmentally.\n
+        How profitable it is depends on where you live, how much sunlight you get, and the electricity prices in your area.
+        This app helps you assess whether switching to solar energy is worth it, based on weather data, electricity prices, and your location.
+        Here, we explain the most important things you should know before making a decision.
     </string>
 
 
@@ -38,38 +45,72 @@
     <string name='pros_and_cons_title'>Pros and Cons</string>
     <string name='pros_and_cons_content'>
         Solar panels have become a popular option for many people who want to produce their own electricity, save money and contribute to more sustainable energy consumption. But as with all investments, there are both advantages and disadvantages that you should be aware of.\n
-        \n
-        Pros:\n
-        • Environmentally friendly: Solar panels produce clean, renewable energy and help reduce greenhouse gas emissions.\n
-        • Reduced electricity bills: You can save money over time by producing your own electricity.\n
-        • Support schemes: In Norway, there are public support schemes that can cover part of the installation cost.\n
-        • Low maintenance: Once the system is installed, it requires little maintenance.\n
-        • Increased home value: A solar system can make the home more attractive when reselling.\n
-        \n
-        Cons:\n
-        • High initial costs: The investment in solar panels is still relatively high.\n
-        • Low production in winter: Dark winters and snow can significantly reduce efficiency.\n
-        •Location-dependent: How much electricity you produce depends on your location and sun exposure.\n
-        • Long payback period: It can take many years before the investment is repaid.\n
-        •Technical limitations: Not all buildings are equally suitable for the installation of panels.\n
+    </string>
+    <string name="pros">
+        Pros:
+    </string>
+    <string name="solar_pro_1">
+        Environmentally friendly: Solar panels produce clean, renewable energy and help reduce greenhouse gas emissions.\n
+    </string>
+    <string name="solar_pro_2">
+    Reduced electricity bills: You can save money over time by producing your own electricity.\n
+    </string>
+    <string name="solar_pro_3">
+        Support schemes: In Norway, there are public support schemes that can cover part of the installation cost.\n
+    </string>
+    <string name="solar_pro_4">
+        Low maintenance: Once the system is installed, it requires little maintenance.\n
+    </string>
+    <string name="solar_pro_5">
+        Increased home value: A solar system can make the home more attractive when reselling.\n
+    </string>
+    <string name="cons">
+        Cons:
+    </string>
+    <string name="solar_con_1">
+        High initial costs: The investment in solar panels is still relatively high.\n
+    </string>
+    <string name="solar_con_2">
+        Low production in winter: Dark winters and snow can significantly reduce efficiency.\n
+    </string>
+    <string name="solar_con_3">
+        Location-dependent: How much electricity you produce depends on your location and sun exposure.\n
+    </string>
+    <string name="solar_con_4">
+        Long payback period: It can take many years before the investment is repaid.\n
+    </string>
+    <string name="solar_con_5">
+        Technical limitations: Not all buildings are equally suitable for the installation of panels.\n
     </string>
 
     <string name="money_saved_title">Money saved</string>
     <string name="money_saved_content">
-        The app calculates how much money you could potentially save by installing solar panels, based on weather conditions, where you live and historical electricity prices. By comparing how much electricity you can produce with solar panels with how much electricity costs today, you get an estimate of annual savings. The more sun you get and the higher the electricity prices, the more you can save. The calculation gives you a better basis for assessing whether the investment in solar panels is profitable for you.
+        The app estimates how much money you could save by installing solar panels, based on your local weather and past electricity prices.
+        By comparing how much power you can produce with how much electricity costs today, you get an idea of your yearly savings.
+        More sun and higher prices mean more savings. This helps you decide whether investing in solar panels is the right choice for you.
     </string>
 
     <string name="cabin_title"> Off-grid cabins</string>
     <string name="cabin_content">
-        For off-grid cabins, solar panels can be an efficient and sustainable solution to meet basic power needs.
-        Based on location and local solar conditions, solar power can provide enough capacity for lighting, transporting electronic devices, cooling boxes, or small water pumps, among other things.
-        This app helps you assess how much solar power you can potentially produce and whether it is sufficient for your needs.
+        For cabins that are off-grif, solar panels can be an efficient and sustainable solution to cover basic electricity needs.
+        Depending on the cabin\'s location and how much sunlight it gets, solar power can be enough for things like lighting, charging
+        phones and tablets, running a cooler, or powering small water pumps. This app helps you easily estimate how much solar energy
+        your cabin can produce and what kind of equipment it could support.
+    </string>
+
+    <string name="solar_panels_title">Solar panels</string>
+    <string name="solar_panels_content">
+        Solar panels come in various types, each with distinct advantages and characteristics. Monocrystalline panels offer high efficiency and longevity, making them ideal for limited roof spaces.
+        Polycrystalline panels are more affordable and suitable for larger installations. Thin-film panels are flexible and lightweight, making them suitable for specialized applications like curved surfaces.
+        The choice of panel type depends on factors such as budget, available space, and desired efficiency.
+        For more detailed information about the different solar cell technologies, you can visit the FUSen blog:
     </string>
 
     <string name="support_title">Support Schemes</string>
     <string name="support_content">
-        You may be eligible for financial support from Enova, a Norwegian government agency that provides funding for energy-efficient solutions such as solar panels.
-        Through their homeowner program, you can get up to 32,500 NOK in support for installing solar power systems, depending on system size and efficiency.
+        You may be eligible for financial support from Enova, a Norwegian government agency that funds energy-efficient solutions like solar panels.
+        As a homeowner, you can receive up to NOK 32,500 in support depending on your system\'s size and efficiency.
+        You get a base amount of NOK 7,500, plus NOK 2,000 per installed kW, up to an additional 25,000.
         For more information and to apply, visit:
     </string>
 
@@ -118,7 +159,16 @@
     <string name="roofAngleHelp">Also known as the slope. This is how steep the roof is. Panels perform best when angled toward the sun.</string>
     <string name="panelEfficencyHelp">How efficiently the panels convert sunlight into electricity. Usually between 16–20%.</string>
     <string name="panelDirectionHelp">Also called azimuth. South-facing usually gives the best performance in Norway, but the app calculates this based on your location.</string>
-
+    <string name="more_info_solar_panels">Learn more about solar panels</string>
+    <string name="monocrystalline">Monocrystalline</string>
+    <string name="monocrystalline_efficiency">(18–23%)</string>
+    <string name="monocrystalline_content">High efficiency, more expensive, standard</string>
+    <string name="polycrystalline">Polycrystalline</string>
+    <string name="polycrystalline_efficiency">(15–17%)</string>
+    <string name="polycrystalline_content">Medium efficiency, more affordable</string>
+    <string name="thinfilm">Thin–film</string>
+    <string name="thinfilm_efficiency">(10–17%)</string>
+    <string name="thinfilm_content">Low efficiency, flexible</string>
 
     <!--Result Screen-->
     <string name="results"> Results </string>
@@ -127,7 +177,7 @@
     <string name="efficiency">Efficiency:  </string>
     <string name="data_not_added"> Data not added: </string>
     <string name="get_data">Get data </string>
-    <string name="loading"> Loading Data, please wait…</string>
+    <string name="loading"> Loading data, please wait…</string>
 
     <string name="address_not_found">Address not found, try again</string>
     <string name="follow_system">Follow system theme</string>
@@ -190,16 +240,26 @@
     <string name="cloud_full_info">This is how much cloud cover per month your current position has on average:</string>
     <string name="temp_full_info">This is the average temperature for each month your current position has on average:</string>
     <string name="difference_info">This chart shows the average global radiation for each month for your current position and the radiation adjusted with the snow cover, cloud cover data:</string>
-    <string name="monthly_savings_prefix">You will save </string>
+    <string name="monthly_savings_prefix">You will save</string>
 
-    <string name="monthly_savings_suffix_part1"> in </string>
-    <string name="monthly_savings_suffix_part2"> from solar panel electricity</string>
-    <string name="yearly_savings_prefix">You will save </string>
+    <string name="monthly_savings_suffix_part1">in</string>
+    <string name="monthly_savings_suffix_part2">from solar panel electricity</string>
+    <string name="yearly_savings_prefix">You will save</string>
     <string name="yearly_savings_suffix">per year on electricity from solar panels</string>
-
+    <string name="energy_deficit">Energy deficit!</string>
+    
+    <string name="fridge">Fridge</string>
+    <string name="el_car">El-Car</string>
+    <string name="heater">Heater</string>
+    <string name="microwave">Microwave</string>
+    <string name="air_conditioner">Air Conditioner</string>
+    <string name="laptop">Laptop</string>
+    <string name="tv">TV</string>
+    <string name="washing_machine">Washing Machine</string>
+    <string name="vacuum_cleaner">Vacuum Cleaner</string>
+    <string name="dishwasher">Dishwasher</string>
 
     <!-- Onboarding -->
-
     <string name="onboard_title_1">Welcome to SOL</string>
     <string name="onboard_desc_1">Your digital advisor for optimal solar panel placement and usage.</string>
 
@@ -239,4 +299,35 @@
     <string name="nodata_error">There is no data on this region. We are sorry.</string>
     <string name="partialdata_error">Some data missing on this region, and we cannot provide you an estimate. We are sorry.</string>
     <string name="unexpected_error">Unexpected behavior. Please report to developers.</string>
+    <string name="next">Next</string>
+    <string name="back">Back</string>
+
+    <!-- Price Screen -->
+    <string name="region">Select region</string>
+    <string name="bar_chart">Show bar chart</string>
+    <string name="line_chart">Show line chart</string>
+    <string name="x_axis_name">Time (hours)</string>
+    <string name="y_axis_name">Electricity price (NOK/kWh)</string>
+    <string name="change_time_arrows">Use the arrows to change the time</string>
+    <string name="time">Time:</string>
+    <string name="price_now">Current electricity price in the region:</string>
+    <string name="highest_price">Highest price</string>
+    <string name="lowest_price">Lowest price</string>
+    <string name="price_now_card">Price now</string>
+    <string name="future_price_prefix">Price in</string>
+    <string name="price_suffix_part1">hour</string>
+    <string name="price_suffix_part2">s</string>
+    <string name="past_price_prefix">Price for</string>
+    <string name="past_price_suffix">ago</string>
+
+    <!-- Tutorial Overlays -->
+    <string name="overlay_message">Tap anywhere to continue</string>
+    <string name="overlay_bottom_message">Click anywhere to continue</string>
+    <string name="saving_overlay">
+        See how much you\'re saving\n\n
+        Tap on each device to see how much it contributes to your energy savings\n\n
+        Scroll up for more information!
+    </string>
+    <string name="map_overlay">Search for your address, use your device location, or tap the map to choose a location</string>
+    <string name="map_draw_overlay">Tap the map to start drawing your desired area</string>
 </resources>

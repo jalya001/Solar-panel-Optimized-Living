@@ -144,7 +144,7 @@ fun RegionDropdown(
             value = selectedRegion.displayName,
             onValueChange = {},
             readOnly = true,
-            label = { Text("Velg distrikt", color = MaterialTheme.colorScheme.tertiary) },
+            label = { Text(stringResource(R.string.region), color = MaterialTheme.colorScheme.tertiary) },
             trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(expanded) },
             textStyle = TextStyle(color = MaterialTheme.colorScheme.tertiary, fontSize = 18.sp),
             modifier = Modifier

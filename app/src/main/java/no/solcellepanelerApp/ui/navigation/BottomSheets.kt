@@ -141,8 +141,8 @@ fun HelpBottomSheet(
                         if (showDialog) {
                             androidx.compose.material3.AlertDialog(
                                 onDismissRequest = { showDialog = false },
-                                title = { Text("Location Permission Already Granted") },
-                                text = { Text("If you want to change location permissions, go to settings.") },
+                                title = { Text(stringResource(R.string.location_perm_title)) },
+                                text = { Text(stringResource(R.string.location_perm_content)) },
                                 confirmButton = {
                                     Button(onClick = {
                                         val intent =
@@ -157,18 +157,18 @@ fun HelpBottomSheet(
                                         context.startActivity(intent)
                                         showDialog = false
                                     }) {
-                                        Text("Go to Settings")
+                                        Text(stringResource(R.string.settings))
                                     }
                                 },
                                 dismissButton = {
                                     Button(onClick = { showDialog = false }) {
-                                        Text("Cancel")
+                                        Text(stringResource(R.string.close))
                                     }
                                 }
                             )
                         }
                         MySection(
-                            title = if (locationGranted) "Change Location Settings" else "Grant Location Access",
+                            title = if (locationGranted) stringResource(R.string.change_location_settings) else stringResource(R.string.grant_location_access),
                             onClick = {
 //                                if (locationGranted) {
 //                                    val intent =
@@ -193,7 +193,7 @@ fun HelpBottomSheet(
 
                     item {
                         MySection(
-                            title = "Open Tutorial",
+                            title = stringResource(R.string.tutorial),
                             onClick = {
                                 navController.navigate("onboarding")
                             },
@@ -338,7 +338,7 @@ fun AppearanceBottomSheet(
                         Button(onClick = {
                             fontScaleViewModel.resetFontScale()
                         }) {
-                            Text("Reset", style = MaterialTheme.typography.bodySmall)
+                            Text(stringResource(R.string.reset), style = MaterialTheme.typography.bodySmall)
                         }
 
                         Button(onClick = {
@@ -442,9 +442,9 @@ fun AdditionalInputBottomSheet(
     data class SolarPanelType(val name: String, val efficiency: Float, val description: String)
 
     val panelTypes = listOf(
-        SolarPanelType("Monokrystallinsk", 20f, "Høy effektivitet, dyrere, Standard"),
-        SolarPanelType("Polykrystallinsk", 15f, "Middels effektivitet, rimeligere"),
-        SolarPanelType("Tynnfilm", 10f, "Lav effektivitet, fleksibel")
+        SolarPanelType(stringResource(R.string.monocrystalline), 20f, stringResource(R.string.monocrystalline_content)),
+        SolarPanelType(stringResource(R.string.polycrystalline), 15f, stringResource(R.string.polycrystalline_content)),
+        SolarPanelType(stringResource(R.string.thinfilm), 10f, stringResource(R.string.thinfilm_content))
     )
 
     LaunchedEffect(area) {
@@ -605,18 +605,22 @@ fun AdditionalInputBottomSheet(
                                 modifier = Modifier.fillMaxWidth(),
                                 horizontalAlignment = Alignment.CenterHorizontally
                             ) {
-                                val panelEff = if (panelType.name == "Monokrystallinsk") {
-                                    "18-23"
-                                } else if (panelType.name == "Polykrystallinsk") {
-                                    "15-17"
-                                } else {
-                                    "10-17"
+                                val panelEff = when (panelType.name) {
+                                    stringResource(R.string.monocrystalline) -> {
+                                        stringResource(R.string.monocrystalline_efficiency)
+                                    }
+                                    stringResource(R.string.polycrystalline) -> {
+                                        stringResource(R.string.polycrystalline_efficiency)
+                                    }
+                                    else -> {
+                                        stringResource(R.string.thinfilm_efficiency)
+                                    }
                                 }
 
 
 
                                 Text(
-                                    text = "${panelType.name} (${panelEff} %)",
+                                    text = "${panelType.name} $panelEff",
                                     color = MaterialTheme.colorScheme.onSurfaceVariant,
                                     fontWeight = if (selected) FontWeight.Bold else FontWeight.Normal
                                 )
@@ -639,7 +643,7 @@ fun AdditionalInputBottomSheet(
                         verticalAlignment = Alignment.CenterVertically
                     ) {
                         Text(
-                            text = "Les mer om solcellepaneler",
+                            text = stringResource(R.string.more_info_solar_panels),
                             style = MaterialTheme.typography.bodyMedium,
                             modifier = Modifier.clickable { uriHandler.openUri("https://blogg.fusen.no/alle/ulike-typer-solcelleteknologi") }
                         )
@@ -714,7 +718,7 @@ fun AdditionalInputBottomSheet(
                             },
                             modifier = Modifier.align(Alignment.CenterHorizontally)
                         ) {
-                            Text("Gå til resultater")
+                            Text(stringResource(R.string.navigate_results))
                         }
                     }
 

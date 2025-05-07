@@ -10,11 +10,9 @@ import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
-
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.BoxWithConstraints
 import androidx.compose.foundation.layout.Column
-
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxSize
@@ -27,7 +25,6 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
-
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedCard
 import androidx.compose.material3.Scaffold
@@ -106,32 +103,40 @@ fun EnergySavingsScreen(
 
     // Device data
     val devices = listOf(
-        "El-Car" to 100.0,
-        "Fridge" to 30.0,
-        "Heater" to 60.0,
-        "Laptop" to 10.0,
-        "Washing Machine" to 20.0,
-        "TV" to 15.0,
-        "Air Conditioner" to 50.0,
-        "Microwave" to 25.0,
-        "Dishwasher" to 35.0,
-        "Vacuum Cleaner" to 8.0
+        stringResource(R.string.el_car) to 100.0,
+        stringResource(R.string.fridge) to 30.0,
+        stringResource(R.string.heater) to 60.0,
+        stringResource(R.string.laptop) to 10.0,
+        stringResource(R.string.washing_machine) to 20.0,
+        stringResource(R.string.tv) to 15.0,
+        stringResource(R.string.air_conditioner) to 50.0,
+        stringResource(R.string.microwave) to 25.0,
+        stringResource(R.string.dishwasher) to 35.0,
+        stringResource(R.string.vacuum_cleaner) to 8.0
     )
 
     val deviceIcons = mapOf(
-        "Fridge" to R.drawable.kitchen_24px,
-        "Washing Machine" to R.drawable.local_laundry_service_24px,
-        "TV" to R.drawable.tv_24px,
-        "Laptop" to R.drawable.laptop_windows_24px,
-        "Air Conditioner" to R.drawable.mode_fan_24px,
-        "Heater" to R.drawable.fireplace_24px,
-        "Microwave" to R.drawable.microwave_24px,
-        "Dishwasher" to R.drawable.dishwasher_24px,
-        "El-Car" to R.drawable.directions_car_24px,
-        "Vacuum Cleaner" to R.drawable.vacuum_24px,
+        stringResource(R.string.fridge) to R.drawable.kitchen_24px,
+        stringResource(R.string.washing_machine) to R.drawable.local_laundry_service_24px,
+        stringResource(R.string.tv) to R.drawable.tv_24px,
+        stringResource(R.string.laptop) to R.drawable.laptop_windows_24px,
+        stringResource(R.string.air_conditioner) to R.drawable.mode_fan_24px,
+        stringResource(R.string.heater) to R.drawable.fireplace_24px,
+        stringResource(R.string.microwave) to R.drawable.microwave_24px,
+        stringResource(R.string.dishwasher) to R.drawable.dishwasher_24px,
+        stringResource(R.string.el_car) to R.drawable.directions_car_24px,
+        stringResource(R.string.vacuum_cleaner) to R.drawable.vacuum_24px,
     )
 
-    val preConnected = listOf("Fridge", "TV", "Laptop")
+    val preConnected = listOf(
+        stringResource(R.string.fridge),
+        stringResource(R.string.tv),
+        stringResource(R.string.laptop),
+        stringResource(R.string.microwave),
+        stringResource(R.string.dishwasher),
+        stringResource(R.string.washing_machine),
+        stringResource(R.string.vacuum_cleaner)
+    )
 
     var connectedDevices by remember {
         mutableStateOf(
@@ -187,7 +192,7 @@ fun EnergySavingsScreen(
         if (showOverlay) {
             SimpleTutorialOverlay(
                 onDismiss = { showOverlay = false },
-                "Se hvor mye du sparer \n\n Trykk på de ulike enhetene for å se *trenger en god fromulering* \n\nScroll opp for mer informasjon!"
+                stringResource(R.string.saving_overlay)
             )
         }
         Box(
@@ -218,7 +223,7 @@ fun EnergySavingsScreen(
                                     }
                                     append(
                                         AnnotatedString(
-                                            String.format(" %.2f kroner ", savings),
+                                            String.format(" %.2f NOK ", savings),
                                             MaterialTheme.typography.headlineSmall.toSpanStyle()
                                         )
                                     )
@@ -226,9 +231,9 @@ fun EnergySavingsScreen(
                                         style = MaterialTheme.typography.headlineSmall.toSpanStyle()
                                             .copy(fontWeight = FontWeight.ExtraLight)
                                     ) {
-                                        append(stringResource(R.string.monthly_savings_suffix_part1))
-                                        append(month)
-                                        append(stringResource(R.string.monthly_savings_suffix_part2))
+                                        append(" " + stringResource(R.string.monthly_savings_suffix_part1))
+                                        append(" " + month)
+                                        append(" " + stringResource(R.string.monthly_savings_suffix_part2))
                                     }
                                 },
                                 textAlign = TextAlign.Center
@@ -244,7 +249,7 @@ fun EnergySavingsScreen(
                                     }
                                     append(
                                         AnnotatedString(
-                                            String.format(" %.2f kroner ", savings),
+                                            String.format(" %.2f NOK ", savings),
                                             MaterialTheme.typography.headlineSmall.toSpanStyle()
                                         )
                                     )
@@ -252,7 +257,7 @@ fun EnergySavingsScreen(
                                         style = MaterialTheme.typography.headlineSmall.toSpanStyle()
                                             .copy(fontWeight = FontWeight.ExtraLight)
                                     ) {
-                                        append(stringResource(R.string.yearly_savings_suffix))
+                                        append(" " + stringResource(R.string.yearly_savings_suffix))
                                     }
                                 },
                                 textAlign = TextAlign.Center
@@ -263,7 +268,7 @@ fun EnergySavingsScreen(
                         if (currentEnergy < 0) {
                             IconTextRow(
                                 iconRes = R.drawable.baseline_battery_charging_full_24,
-                                text = "Energy deficit! %.2f kWh".format(animatedEnergy),
+                                text = stringResource(R.string.energy_deficit) + " %.2f kWh".format(animatedEnergy),
                                 textStyle = MaterialTheme.typography.titleLarge,
                                 modifier = Modifier.padding(16.dp),
                                 textColor = MaterialTheme.colorScheme.error,
@@ -592,7 +597,7 @@ fun Chart(data: Array<Double>, measure: String = "cm") {
                 val month = monthLabels.getOrNull(monthIndx) ?: "?"
                 val depth = it.y
                 Text(
-                    text = "Måned $month: %.1f %s".format(depth, measure),
+                    text = stringResource(R.string.month) + " $month: %.1f %s".format(depth, measure),
                     style = MaterialTheme.typography.bodyMedium,
                     color = MaterialTheme.colorScheme.primary,
                     fontWeight = FontWeight.Bold
