@@ -46,7 +46,6 @@ import java.time.ZoneId
 import java.time.ZonedDateTime
 
 
-
 @Composable
 fun PriceScreen(
     viewModel: PriceScreenViewModel,
@@ -144,12 +143,20 @@ fun RegionDropdown(
             value = selectedRegion.displayName,
             onValueChange = {},
             readOnly = true,
-            label = { Text(stringResource(R.string.region), color = MaterialTheme.colorScheme.tertiary) },
+            label = {
+                Text(
+                    stringResource(R.string.region),
+                    color = MaterialTheme.colorScheme.tertiary
+                )
+            },
             trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(expanded) },
             textStyle = TextStyle(color = MaterialTheme.colorScheme.tertiary, fontSize = 18.sp),
             modifier = Modifier
                 .fillMaxWidth()
-                .menuAnchor(MenuAnchorType.PrimaryNotEditable, true), // Updated to use non-deprecated version
+                .menuAnchor(
+                    MenuAnchorType.PrimaryNotEditable,
+                    true
+                ), // Updated to use non-deprecated version
         )
         ExposedDropdownMenu(
             expanded = expanded,
@@ -157,7 +164,13 @@ fun RegionDropdown(
         ) {
             Region.entries.forEach { region ->
                 DropdownMenuItem(
-                    text = { Text(region.displayName, color = MaterialTheme.colorScheme.tertiary) },
+                    text = {
+                        Text(
+                            region.displayName,
+                            color = MaterialTheme.colorScheme.tertiary,
+                            style = MaterialTheme.typography.bodyLarge
+                        )
+                    },
                     onClick = {
                         onRegionSelected(region)
                         expanded = false

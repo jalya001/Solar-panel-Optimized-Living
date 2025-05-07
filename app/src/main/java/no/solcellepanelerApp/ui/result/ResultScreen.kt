@@ -255,7 +255,7 @@ fun MonthDataDisplay(
             ) {
                 months.forEachIndexed { index, month ->
                     DropdownMenuItem(
-                        text = { Text(month) },
+                        text = { Text(month, style = MaterialTheme.typography.bodyLarge) },
                         onClick = {
                             selectedMonthIndex = index
                             expanded = false

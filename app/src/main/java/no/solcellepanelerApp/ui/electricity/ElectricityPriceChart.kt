@@ -108,7 +108,11 @@ fun ElectricityPriceChart(prices: List<ElectricityPrice>) {
         },
         modifier = Modifier.padding(8.dp)
     ) {
-        Text(text = if (chartType == ChartType.LINE) stringResource(R.string.bar_chart) else stringResource(R.string.line_chart))
+        Text(
+            text = if (chartType == ChartType.LINE) stringResource(R.string.bar_chart) else stringResource(
+                R.string.line_chart
+            ), style = MaterialTheme.typography.bodyLarge
+        )
     }
 
     Card(
@@ -153,7 +157,7 @@ fun ElectricityPriceChart(prices: List<ElectricityPrice>) {
         BoxWithConstraints(
             modifier = Modifier
                 .height(320.dp)
-                //.padding(start = 4.dp, end = 4.dp)
+            //.padding(start = 4.dp, end = 4.dp)
         ) {
             when (chartType) {
                 ChartType.LINE -> {
@@ -165,20 +169,20 @@ fun ElectricityPriceChart(prices: List<ElectricityPrice>) {
                                     LineStyle(color = if (ThemeState.themeMode == ThemeMode.DARK) MaterialTheme.colorScheme.tertiary else MaterialTheme.colorScheme.primary),
                                     IntersectionPoint(color = if (ThemeState.themeMode == ThemeMode.DARK) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.tertiary),
                                     SelectionHighlightPoint(
-                                         color = if (ThemeState.themeMode == ThemeMode.DARK) MaterialTheme.colorScheme.tertiary else MaterialTheme.colorScheme.primary,
-                                         draw = { offset ->
-                                             drawCircle(
-                                                 color = if (ThemeState.themeMode == ThemeMode.DARK) {
+                                        color = if (ThemeState.themeMode == ThemeMode.DARK) MaterialTheme.colorScheme.tertiary else MaterialTheme.colorScheme.primary,
+                                        draw = { offset ->
+                                            drawCircle(
+                                                color = if (ThemeState.themeMode == ThemeMode.DARK) {
                                                     Color(0xFFF3BD6E)
                                                 } else {
                                                     Color(0xFF00696D)
                                                 },
-                                             radius = 6.dp.toPx(),
-                                             center = offset
-                                             )
-                                         },
-                                         isHighlightLineRequired = true
-                                     ),
+                                                radius = 6.dp.toPx(),
+                                                center = offset
+                                            )
+                                        },
+                                        isHighlightLineRequired = true
+                                    ),
                                     ShadowUnderLine(
                                         alpha = 0.5f,
                                         brush = Brush.verticalGradient(
@@ -232,8 +236,6 @@ fun ElectricityPriceChart(prices: List<ElectricityPrice>) {
                     )
                 }
             }
-
-
 
 
             // X-axis name

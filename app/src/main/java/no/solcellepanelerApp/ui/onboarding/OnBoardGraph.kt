@@ -226,8 +226,8 @@ fun OnboardingGraphUI(OnBoardModel: OnBoardModel) {
             if (showDialog) {
                 androidx.compose.material3.AlertDialog(
                     onDismissRequest = { showDialog = false },
-                    title = { Text(stringResource(R.string.location_perm_title)) },
-                    text = { Text(stringResource(R.string.location_perm_content)) },
+                    title = { Text(stringResource(R.string.location_perm_title), style = MaterialTheme.typography.bodyLarge) },
+                    text = { Text(stringResource(R.string.location_perm_content), style = MaterialTheme.typography.bodyLarge) },
                     confirmButton = {
                         Button(onClick = {
                             val intent =
@@ -238,12 +238,12 @@ fun OnboardingGraphUI(OnBoardModel: OnBoardModel) {
                             context.startActivity(intent)
                             showDialog = false
                         }) {
-                            Text(stringResource(R.string.settings))
+                            Text(stringResource(R.string.settings), style = MaterialTheme.typography.bodyLarge))
                         }
                     },
                     dismissButton = {
                         Button(onClick = { showDialog = false }) {
-                            Text(stringResource(R.string.close))
+                            Text(stringResource(R.string.close), style = MaterialTheme.typography.bodyLarge)
                         }
                     }
                 )
@@ -259,7 +259,7 @@ fun OnboardingGraphUI(OnBoardModel: OnBoardModel) {
                 Text(
                     if (locationGranted) stringResource(R.string.change_location_settings) else stringResource(
                         R.string.grant_location_access
-                    )
+                    ), style = MaterialTheme.typography.bodyLarge
                 )
             }
         }
@@ -303,7 +303,10 @@ fun OnboardingGraphUI(OnBoardModel: OnBoardModel) {
                         else ThemeMode.LIGHT
                     }
                 )
-                Text(stringResource(id = R.string.follow_system))
+                Text(
+                    stringResource(id = R.string.follow_system),
+                    style = MaterialTheme.typography.bodyLarge
+                )
             }
 
             Spacer(modifier = Modifier.height(10.dp))

@@ -82,7 +82,6 @@ import no.solcellepanelerApp.ui.theme.ThemeMode
 import no.solcellepanelerApp.ui.theme.ThemeState
 
 
-
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun HelpBottomSheet(
@@ -141,8 +140,18 @@ fun HelpBottomSheet(
                         if (showDialog) {
                             androidx.compose.material3.AlertDialog(
                                 onDismissRequest = { showDialog = false },
-                                title = { Text(stringResource(R.string.location_perm_title)) },
-                                text = { Text(stringResource(R.string.location_perm_content)) },
+                                title = {
+                                    Text(
+                                        stringResource(R.string.location_perm_title),
+                                        style = MaterialTheme.typography.bodyLarge
+                                    )
+                                },
+                                text = {
+                                    Text(
+                                        stringResource(R.string.location_perm_content),
+                                        style = MaterialTheme.typography.bodyLarge
+                                    )
+                                },
                                 confirmButton = {
                                     Button(onClick = {
                                         val intent =
@@ -157,18 +166,26 @@ fun HelpBottomSheet(
                                         context.startActivity(intent)
                                         showDialog = false
                                     }) {
-                                        Text(stringResource(R.string.settings))
+                                        Text(
+                                            stringResource(R.string.settings),
+                                            style = MaterialTheme.typography.bodyLarge
+                                        )
                                     }
                                 },
                                 dismissButton = {
                                     Button(onClick = { showDialog = false }) {
-                                        Text(stringResource(R.string.close))
+                                        Text(
+                                            stringResource(R.string.close),
+                                            style = MaterialTheme.typography.bodyLarge
+                                        )
                                     }
                                 }
                             )
                         }
                         MySection(
-                            title = if (locationGranted) stringResource(R.string.change_location_settings) else stringResource(R.string.grant_location_access),
+                            title = if (locationGranted) stringResource(R.string.change_location_settings) else stringResource(
+                                R.string.grant_location_access
+                            ),
                             onClick = {
 //                                if (locationGranted) {
 //                                    val intent =
@@ -301,7 +318,11 @@ fun AppearanceBottomSheet(
                                 else ThemeMode.LIGHT
                             }
                         )
-                        Text(stringResource(id = R.string.follow_system))
+                        Text(
+                            stringResource(id = R.string.follow_system),
+                            style = MaterialTheme.typography.bodyLarge
+                        )
+
                     }
 
                     Spacer(modifier = Modifier.height(10.dp))
@@ -332,13 +353,16 @@ fun AppearanceBottomSheet(
                             }
 
                         }) {
-                            Text("- A", style = MaterialTheme.typography.bodySmall)
+                            Text("- A", style = MaterialTheme.typography.bodyMedium)
                         }
 
                         Button(onClick = {
                             fontScaleViewModel.resetFontScale()
                         }) {
-                            Text(stringResource(R.string.reset), style = MaterialTheme.typography.bodySmall)
+                            Text(
+                                stringResource(R.string.reset),
+                                style = MaterialTheme.typography.bodyMedium
+                            )
                         }
 
                         Button(onClick = {
@@ -351,7 +375,7 @@ fun AppearanceBottomSheet(
                             }
 
                         }) {
-                            Text("+ A", style = MaterialTheme.typography.bodySmall)
+                            Text("+ A", style = MaterialTheme.typography.bodyMedium)
                         }
                     }
 
@@ -395,7 +419,7 @@ fun InfoHelpButton(
 
     Column(modifier = Modifier.fillMaxWidth()) {
         Row(verticalAlignment = Alignment.CenterVertically) {
-            Text(label, fontWeight = FontWeight.Bold)
+            Text(label, fontWeight = FontWeight.Bold, style = MaterialTheme.typography.bodyLarge)
             Spacer(modifier = Modifier.width(4.dp))
             IconButton(
                 onClick = { isVisible = !isVisible },
@@ -442,9 +466,21 @@ fun AdditionalInputBottomSheet(
     data class SolarPanelType(val name: String, val efficiency: Float, val description: String)
 
     val panelTypes = listOf(
-        SolarPanelType(stringResource(R.string.monocrystalline), 20f, stringResource(R.string.monocrystalline_content)),
-        SolarPanelType(stringResource(R.string.polycrystalline), 15f, stringResource(R.string.polycrystalline_content)),
-        SolarPanelType(stringResource(R.string.thinfilm), 10f, stringResource(R.string.thinfilm_content))
+        SolarPanelType(
+            stringResource(R.string.monocrystalline),
+            20f,
+            stringResource(R.string.monocrystalline_content)
+        ),
+        SolarPanelType(
+            stringResource(R.string.polycrystalline),
+            15f,
+            stringResource(R.string.polycrystalline_content)
+        ),
+        SolarPanelType(
+            stringResource(R.string.thinfilm),
+            10f,
+            stringResource(R.string.thinfilm_content)
+        )
     )
 
     LaunchedEffect(area) {
@@ -609,9 +645,11 @@ fun AdditionalInputBottomSheet(
                                     stringResource(R.string.monocrystalline) -> {
                                         stringResource(R.string.monocrystalline_efficiency)
                                     }
+
                                     stringResource(R.string.polycrystalline) -> {
                                         stringResource(R.string.polycrystalline_efficiency)
                                     }
+
                                     else -> {
                                         stringResource(R.string.thinfilm_efficiency)
                                     }

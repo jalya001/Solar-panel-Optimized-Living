@@ -51,16 +51,18 @@ import no.solcellepanelerApp.ui.result.WeatherViewModel
 fun Nav(navController: NavHostController, fontScaleViewModel: FontScaleViewModel) {
     val viewModel: MapScreenViewModel = viewModel()
     val weatherViewModel: WeatherViewModel = viewModel()
-    val priceScreenViewModel : PriceScreenViewModel = viewModel()
+    val priceScreenViewModel: PriceScreenViewModel = viewModel()
 
     NavHost(navController, startDestination = "home") {
         composable("onboarding") { OnboardingScreen(onFinished = { navController.popBackStack() }) }
 
 
-        composable("home") { HomeScreen(
-            navController, fontScaleViewModel, weatherViewModel,
-            priceScreenViewModel = priceScreenViewModel
-        ) }
+        composable("home") {
+            HomeScreen(
+                navController, fontScaleViewModel, weatherViewModel,
+                priceScreenViewModel = priceScreenViewModel
+            )
+        }
         composable("map") {
             MapScreen(viewModel, navController, fontScaleViewModel, weatherViewModel)
         }
@@ -151,8 +153,19 @@ fun BottomBar(
 ) {
     NavigationBar {
         NavigationBarItem(
-            icon = { Icon(painterResource(R.drawable.help_24px), contentDescription = "Help") },
-            label = { Text(stringResource(id = R.string.help)) },
+            icon = {
+                Icon(
+                    painterResource(R.drawable.help_24px),
+                    style = MaterialTheme.typography.bodyMedium,
+                    contentDescription = "Help"
+                )
+            },
+            label = {
+                Text(
+                    stringResource(id = R.string.help),
+                    style = MaterialTheme.typography.bodyMedium
+                )
+            },
             selected = false,
             onClick = onHelpClicked,
             colors = NavigationBarItemDefaults.colors(
@@ -167,7 +180,7 @@ fun BottomBar(
                     contentDescription = "Information"
                 )
             },
-            label = { Text("Info") },
+            label = { Text("Info", style = MaterialTheme.typography.bodyLarge) },
             selected = false,
             onClick = {
                 if (navController.currentDestination?.route != "info_screen") {
@@ -181,7 +194,12 @@ fun BottomBar(
         )
         NavigationBarItem(//taktisk plassering innit, høyre tommel
             icon = { Icon(painterResource(R.drawable.home_24px), contentDescription = "Home") },
-            label = { Text(stringResource(id = R.string.home_bottom_bar)) },
+            label = {
+                Text(
+                    stringResource(id = R.string.home_bottom_bar),
+                    style = MaterialTheme.typography.bodyLarge
+                )
+            },
             selected = false,
             onClick = { navController.navigate("home") },
             colors = NavigationBarItemDefaults.colors(
@@ -196,7 +214,12 @@ fun BottomBar(
                     contentDescription = "Appearance"
                 )
             },
-            label = { Text(stringResource(id = R.string.appearance)) },
+            label = {
+                Text(
+                    stringResource(id = R.string.appearance),
+                    style = MaterialTheme.typography.bodyLarge
+                )
+            },
             selected = false,
             onClick = onAppearanceClicked,
             colors = NavigationBarItemDefaults.colors(

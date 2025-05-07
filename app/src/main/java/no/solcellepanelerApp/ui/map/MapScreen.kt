@@ -103,6 +103,7 @@ import no.solcellepanelerApp.ui.navigation.AppearanceBottomSheet
 import no.solcellepanelerApp.ui.navigation.BottomBar
 import no.solcellepanelerApp.ui.navigation.HelpBottomSheet
 import no.solcellepanelerApp.ui.navigation.TopBar
+import no.solcellepanelerApp.ui.onboarding.OnboardingUtils
 import no.solcellepanelerApp.ui.result.WeatherViewModel
 import no.solcellepanelerApp.ui.reusables.SimpleTutorialOverlay
 import no.solcellepanelerApp.ui.theme.darkGrey
@@ -127,7 +128,19 @@ fun MapScreen(
     var showHelp by remember { mutableStateOf(false) }
     var showAppearance by remember { mutableStateOf(false) }
 
-    var showMapOverlay by remember { mutableStateOf(true) }
+//    var showMapOverlay by remember { mutableStateOf(true) }
+
+    val context = LocalContext.current
+    val onboardingUtils = remember { OnboardingUtils(context) }
+
+    var showMapOverlay by remember { mutableStateOf(false) }
+
+    LaunchedEffect(Unit) {
+        if (!onboardingUtils.isMapOverlayShown()) {
+            showMapOverlay = true
+            onboardingUtils.setMapOverlayShown()
+        }
+    }
     var showDrawOverlay by remember { mutableStateOf(false) }
 
     val message = stringResource(R.string.address_not_found)
@@ -422,7 +435,10 @@ fun DisplayScreen(
             if (selectedCoordinates != null) {
                 Button(
                     content = {
-                        Text(stringResource(id = R.string.confirm_location))
+                        Text(
+                            stringResource(id = R.string.confirm_location),
+                            style = MaterialTheme.typography.bodyLarge
+                        )
                     },
                     onClick = {
                         if (coordinates != null) {
@@ -556,7 +572,7 @@ fun AddressInputField(
         value = value,
         textStyle = TextStyle(fontFamily = FontFamily.Default),
         onValueChange = onValueChange,
-        label = { Text(label) },
+        label = { Text(label, style = MaterialTheme.typography.bodyMedium) },
         colors = colors,
         singleLine = true,
         modifier = Modifier
@@ -588,10 +604,16 @@ fun LocationNotSelectedDialog(
             AlertDialog(
                 onDismissRequest = onDismiss,
                 title = {
-                    Text(stringResource(id = R.string.no_location_title))
+                    Text(
+                        stringResource(id = R.string.no_location_title),
+                        style = MaterialTheme.typography.bodyLarge
+                    )
                 },
                 text = {
-                    Text(stringResource(id = R.string.no_location_message))
+                    Text(
+                        stringResource(id = R.string.no_location_message),
+                        style = MaterialTheme.typography.bodyLarge
+                    )
                 },
                 confirmButton = {
 
@@ -600,7 +622,10 @@ fun LocationNotSelectedDialog(
                     Button(
                         onClick = onDismiss
                     ) {
-                        Text(stringResource(id = R.string.dismiss))
+                        Text(
+                            stringResource(id = R.string.dismiss),
+                            style = MaterialTheme.typography.bodyLarge
+                        )
                     }
                 }
             )
@@ -667,7 +692,8 @@ private fun DrawingControls(
                                     )
                                     .width(130.dp),
                                 textAlign = TextAlign.Center,
-                                color = MaterialTheme.colorScheme.background
+                                color = MaterialTheme.colorScheme.background,
+                                style = MaterialTheme.typography.bodyLarge
                             )
                         }
                     }
@@ -706,8 +732,10 @@ private fun DrawingControls(
                                         bottom = 10.dp
                                     )
                                     .width(130.dp),
+                                style = MaterialTheme.typography.bodyLarge,
                                 textAlign = TextAlign.Center,
-                                color = MaterialTheme.colorScheme.background
+                                color = MaterialTheme.colorScheme.background,
+                                style = MaterialTheme.typography.bodyLarge
                             )
                         }
                     }
@@ -747,7 +775,8 @@ private fun DrawingControls(
                                     )
                                     .width(130.dp),
                                 textAlign = TextAlign.Center,
-                                color = MaterialTheme.colorScheme.onPrimaryContainer
+                                color = MaterialTheme.colorScheme.onPrimaryContainer,
+                                style = MaterialTheme.typography.bodyLarge
                             )
                         }
 

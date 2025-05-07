@@ -268,7 +268,9 @@ fun EnergySavingsScreen(
                         if (currentEnergy < 0) {
                             IconTextRow(
                                 iconRes = R.drawable.baseline_battery_charging_full_24,
-                                text = stringResource(R.string.energy_deficit) + " %.2f kWh".format(animatedEnergy),
+                                text = stringResource(R.string.energy_deficit) + " %.2f kWh".format(
+                                    animatedEnergy
+                                ),
                                 textStyle = MaterialTheme.typography.titleLarge,
                                 modifier = Modifier.padding(16.dp),
                                 textColor = MaterialTheme.colorScheme.error,
@@ -373,7 +375,8 @@ fun EnergySavingsScreen(
                                             Text(
                                                 text = "%.2f kWh".format(value),
                                                 fontWeight = if (connected) FontWeight.Bold else FontWeight.Normal,
-                                                textAlign = TextAlign.Center
+                                                textAlign = TextAlign.Center,
+                                                style = MaterialTheme.typography.bodyLarge
                                             )
                                         }
                                     }
@@ -597,7 +600,10 @@ fun Chart(data: Array<Double>, measure: String = "cm") {
                 val month = monthLabels.getOrNull(monthIndx) ?: "?"
                 val depth = it.y
                 Text(
-                    text = stringResource(R.string.month) + " $month: %.1f %s".format(depth, measure),
+                    text = stringResource(R.string.month) + " $month: %.1f %s".format(
+                        depth,
+                        measure
+                    ),
                     style = MaterialTheme.typography.bodyMedium,
                     color = MaterialTheme.colorScheme.primary,
                     fontWeight = FontWeight.Bold
@@ -659,7 +665,7 @@ fun Chart(data: Array<Double>, measure: String = "cm") {
 fun MonthlyChartSection(
     title: String,
     data: Array<Double>,
-    unit: String
+    unit: String,
 ) {
     Column(modifier = Modifier.padding(vertical = 12.dp)) {
         Text(
@@ -673,10 +679,11 @@ fun MonthlyChartSection(
         Chart(data = data, measure = unit)
     }
 }
+
 @Composable
 fun MultiLineChart(
     datasets: List<Pair<String, Array<Double>>>,
-    measure: String = "W/m²"
+    measure: String = "W/m²",
 ) {
     val monthLabels = listOf(
         "Jan", "Feb", "Mar", "Apr", "May", "Jun",

@@ -16,4 +16,15 @@ class OnboardingUtils(private val context: Context) {
             .apply()
     }
 
+    fun isMapOverlayShown(): Boolean {
+        return context.getSharedPreferences("onboarding", Context.MODE_PRIVATE)
+            .getBoolean("map_overlay_shown", false)
+    }
+
+    fun setMapOverlayShown() {
+        context.getSharedPreferences("onboarding", Context.MODE_PRIVATE)
+            .edit()
+            .putBoolean("map_overlay_shown", true)
+            .apply()
+    }
 }
