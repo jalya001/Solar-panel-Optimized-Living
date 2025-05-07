@@ -346,6 +346,11 @@ Når du er fornøyd, trykk på "Bekreft tegning" for å fortsette.
     <string name="price_suffix_part2">r</string>
     <string name="past_price_prefix">Pris for</string>
     <string name="past_price_suffix">siden</string>
+    <string name="oslo">Oslo/Øst-Norge</string>
+    <string name="kristiansand">Kristiansand/Sør-Norge</string>
+    <string name="trondheim">Trondheim/Midt-Norge</string>
+    <string name="tromso">Tromsø/Nord-Norge</string>
+    <string name="bergen">Bergen/Vest-Norge</string>
 
     <!-- Tutorial Overlays -->
     <string name="overlay_bottom_message">Klikk hvor som helst for å fortsette</string>

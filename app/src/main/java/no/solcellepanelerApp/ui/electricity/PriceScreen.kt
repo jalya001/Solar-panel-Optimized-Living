@@ -34,6 +34,7 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
 import no.solcellepanelerApp.R
 import no.solcellepanelerApp.model.electricity.Region
+import no.solcellepanelerApp.model.electricity.getRegionName
 import no.solcellepanelerApp.ui.font.FontScaleViewModel
 import no.solcellepanelerApp.ui.handling.ErrorScreen
 import no.solcellepanelerApp.ui.handling.LoadingScreen
@@ -101,6 +102,7 @@ fun PriceScreen(
                 is PriceUiState.Error -> ErrorScreen()
                 is PriceUiState.Success -> {
                     val prices = (priceUiState as PriceUiState.Success).prices
+                    Spacer(modifier = Modifier.height(24.dp))
                     ElectricityPriceChart(prices = prices)
                     Spacer(modifier = Modifier.height(16.dp))
                     val currentHour = ZonedDateTime.now(ZoneId.of("Europe/Oslo")).hour
@@ -132,7 +134,7 @@ fun PriceScreen(
 @Composable
 fun RegionDropdown(
     selectedRegion: Region,
-    onRegionSelected: (Region) -> Unit,
+    onRegionSelected: (Region) -> Unit
 ) {
     var expanded by remember { mutableStateOf(false) }
     ExposedDropdownMenuBox(
@@ -140,7 +142,7 @@ fun RegionDropdown(
         onExpandedChange = { expanded = it }
     ) {
         TextField(
-            value = selectedRegion.displayName,
+            value = getRegionName(selectedRegion),
             onValueChange = {},
             readOnly = true,
             label = {
@@ -166,7 +168,7 @@ fun RegionDropdown(
                 DropdownMenuItem(
                     text = {
                         Text(
-                            region.displayName,
+                            getRegionName(region),
                             color = MaterialTheme.colorScheme.tertiary,
                             style = MaterialTheme.typography.bodyLarge
                         )
