@@ -1,10 +1,22 @@
 package no.solcellepanelerApp.data.weatherdata
 
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
+import java.time.ZonedDateTime
+
 class WeatherRepository(
     private val pvgisDataSource: PVGISApi = PVGISApi(),
     private val frostDataSource: FrostApi = FrostApi(),
     private val client: CustomHttpClient = CustomHttpClient(),
 ) {
+    data class TimedData<T>(
+        val data: T,
+        val timestamp: ZonedDateTime = ZonedDateTime.now()
+    )
+
+    private val _rimData = MutableStateFlow<TimedData<Array<Double>>?>(null)
+    val rimData: StateFlow<TimedData<Array<Double>>?> = _rimData
+
     private suspend fun getRadiationData(
         lat: Double,
         long: Double,
@@ -48,20 +60,17 @@ class WeatherRepository(
         return Result.success(dataMap)
     }
 
-    suspend fun getRimData(
+    suspend fun fetchRimData(
         lat: Double,
         lon: Double,
         elements: String
-    ): Array<Double> {
-
-
+    ) {
         val result = frostDataSource.fetchRimData(client, lat, lon, elements)
         result.onSuccess { body ->
-            return body
+            _rimData.value = TimedData(body)
         }.onFailure {
-            return emptyArray() // TBD: Implement actual error-handling
+            _rimData.value = TimedData(emptyArray())
         }
-        return emptyArray()
     }
 
     object WeatherRepositoryProvider {

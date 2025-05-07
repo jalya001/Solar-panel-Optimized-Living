@@ -33,8 +33,6 @@ class HomeScreenViewModel : ViewModel() {
     //val locationPermissionGranted: StateFlow<Boolean> = _locationPermissionGranted
     private val _currentRadiationValue = MutableStateFlow<Double?>(null)
     val currentRadiationValue: StateFlow<Double?> = _currentRadiationValue
-    private val _radiationArray = MutableStateFlow<Array<Double>>(emptyArray())
-    //val radiationArray: StateFlow<Array<Double>> = _radiationArray
 
     private val _currentTime = MutableStateFlow(ZonedDateTime.now())
     val currentTime: StateFlow<ZonedDateTime> = _currentTime
@@ -43,8 +41,7 @@ class HomeScreenViewModel : ViewModel() {
         viewModelScope.launch {
             while (true) {
                 _currentTime.value = ZonedDateTime.now()
-                updateCurrentRadiation()
-                fetchRadiationData()
+                updateCurrentRadiation(_currentTime.value)
                 delay(6_000_000L) // update every now and then
             }
         }
@@ -67,34 +64,24 @@ class HomeScreenViewModel : ViewModel() {
                 _selectedRegion.value = Region.OSLO
             }
 
-            fetchRadiationData()
+            updateCurrentRadiation(_currentTime.value)
         }
     }
 
-    private suspend fun fetchRadiationData() {
+    private suspend fun updateCurrentRadiation(time: ZonedDateTime) {
         val location = _currentLocation.value ?: return
-        val data = weatherRepository.getRimData(
-            location.latitude, location.longitude,"mean(surface_downwelling_shortwave_flux_in_air PT1H)"
-        )
-        _radiationArray.value = data
-        updateCurrentRadiation()
-    }
+        val radiationTimedArray = weatherRepository.rimData.value
+        if (radiationTimedArray == null || radiationTimedArray.timestamp < time.minusHours(1)) {
+            weatherRepository.fetchRimData(
+                location.latitude, location.longitude,"mean(surface_downwelling_shortwave_flux_in_air PT1H)"
+            )
+        }
+        if (weatherRepository.rimData.value == null || weatherRepository.rimData.value!!.data.isEmpty()) {
+            _currentRadiationValue.value = null // Error
+        } else {
+            val hour = _currentTime.value.minusHours(2).hour
+            _currentRadiationValue.value = weatherRepository.rimData.value!!.data.getOrNull(hour)?.div(1000.0)
 
-    private fun updateCurrentRadiation() {
-        val hour = _currentTime.value.minusHours(2).hour
-        val radiation = _radiationArray.value.getOrNull(hour)?.div(1000.0)
-        _currentRadiationValue.value = radiation
-    }
-
-    // Needs to be separated out
-    private val _showHelp = MutableStateFlow(false)
-    val showHelp: StateFlow<Boolean> = _showHelp
-    private val _showAppearance = MutableStateFlow(false)
-    val showAppearance: StateFlow<Boolean> = _showAppearance
-    fun setShowHelp(value: Boolean) {
-        _showHelp.value = value
-    }
-    fun setShowAppearance(value: Boolean) {
-        _showAppearance.value = value
+        }
     }
 }
