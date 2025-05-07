@@ -106,12 +106,10 @@ import no.solcellepanelerApp.ui.navigation.TopBar
 import no.solcellepanelerApp.ui.onboarding.OnboardingUtils
 import no.solcellepanelerApp.ui.result.WeatherViewModel
 import no.solcellepanelerApp.ui.reusables.SimpleTutorialOverlay
-
 import no.solcellepanelerApp.ui.theme.darkGrey
 import no.solcellepanelerApp.ui.theme.lightBlue
 import no.solcellepanelerApp.ui.theme.lightGrey
 import no.solcellepanelerApp.ui.theme.orange
-import no.solcellepanelerApp.util.RequestLocationPermission
 import no.solcellepanelerApp.util.fetchCoordinates
 import kotlin.math.max
 
@@ -238,11 +236,11 @@ fun DisplayScreen(
     var currentLocation by remember { mutableStateOf<Location?>(null) }
     var locationPermissionGranted by remember { mutableStateOf(false) }
 
-    RequestLocationPermission { region ->
-        selectedRegion = region
-        locationPermissionGranted = true
-
-    }
+//    RequestLocationPermission { region ->
+//        selectedRegion = region
+//        locationPermissionGranted = true
+//
+//    }
 
     LaunchedEffect(locationPermissionGranted) {
         if (locationPermissionGranted && activity != null) {
