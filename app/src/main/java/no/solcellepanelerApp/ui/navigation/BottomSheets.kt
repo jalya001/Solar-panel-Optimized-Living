@@ -6,20 +6,28 @@ import android.net.Uri
 import android.provider.Settings
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.core.tween
+import androidx.compose.foundation.Canvas
+import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
+
 import androidx.compose.foundation.layout.Column
+
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
@@ -52,11 +60,14 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.shadow
+import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.platform.LocalUriHandler
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.Density
@@ -65,6 +76,7 @@ import androidx.core.content.ContextCompat
 import androidx.navigation.NavController
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
+
 import no.solcellepanelerApp.R
 import no.solcellepanelerApp.model.electricity.Region
 import no.solcellepanelerApp.ui.electricity.RegionDropdown
@@ -80,7 +92,8 @@ import no.solcellepanelerApp.ui.reusables.ModeCard
 import no.solcellepanelerApp.ui.reusables.MySection
 import no.solcellepanelerApp.ui.theme.ThemeMode
 import no.solcellepanelerApp.ui.theme.ThemeState
-
+import kotlin.math.cos
+import kotlin.math.sin
 
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -274,7 +287,7 @@ fun AppearanceBottomSheet(
                         ModeCard(
                             label = stringResource(id = R.string.light_mode),
                             iconRes = R.drawable.light_mode_24px,
-                            selected = ThemeState.themeMode == ThemeMode.LIGHT && !followSystem,
+//                            selected = ThemeState.themeMode == ThemeMode.LIGHT && !followSystem,
                             onClick = {
                                 followSystem = false
                                 ThemeState.themeMode = ThemeMode.LIGHT
@@ -284,7 +297,7 @@ fun AppearanceBottomSheet(
                         ModeCard(
                             label = stringResource(id = R.string.dark_mode),
                             iconRes = R.drawable.dark_mode_24px,
-                            selected = ThemeState.themeMode == ThemeMode.DARK && !followSystem,
+//                            selected = ThemeState.themeMode == ThemeMode.DARK && !followSystem,
                             onClick = {
                                 followSystem = false
                                 ThemeState.themeMode = ThemeMode.DARK
@@ -552,6 +565,7 @@ fun AdditionalInputBottomSheet(
 
                     Spacer(modifier = Modifier.height(16.dp))
 
+
                     Text(
                         stringResource(id = R.string.efficiency_label),
                         style = MaterialTheme.typography.titleLarge
@@ -673,7 +687,7 @@ fun AdditionalInputBottomSheet(
                             azimuthPosition = it
                             focusManager.clearFocus()
                         },
-                        valueRange = 0f..315f,
+                        valueRange = 0f..360f,
                         modifier = Modifier.fillMaxWidth()
                     )
 
@@ -686,8 +700,8 @@ fun AdditionalInputBottomSheet(
                         helpText = stringResource(id = R.string.panelDirectionHelp)
                     )
 
-                    Spacer(modifier = Modifier.height(16.dp))
-
+                    Spacer(modifier = Modifier.height(30.dp))
+                    SunAngleAnimation(angle = azimuthPosition)
                     selectedRegion?.let {
                         RegionDropdown(it) { newRegion ->
                             onRegionSelected(newRegion)
@@ -722,6 +736,86 @@ fun AdditionalInputBottomSheet(
                         }
                     }
 
+                }
+            }
+        }
+    }
+}
+
+@Composable
+fun SunAngleAnimation(angle: Float) {
+    // Calculate sun position based on roof angle (circular motion)
+    val angleRadians = ((angle - 90) * Math.PI / 180).toFloat()
+    val radius = 80f  // Radius for sun's circular motion around house
+
+    Box(
+        modifier = Modifier
+            .height(180.dp)
+            .fillMaxWidth()
+            .padding(vertical = 8.dp)
+    ) {
+        // GROUND
+        Box(
+            modifier = Modifier
+                .fillMaxSize()
+                .background(
+                    color = Color.Transparent,
+                    shape = RoundedCornerShape(bottomStart = 8.dp, bottomEnd = 8.dp)
+                )
+        )
+
+        // House with roof
+        Image(
+            painter = painterResource(id = R.drawable.house),
+            contentDescription = "House",
+            modifier = Modifier
+                .width(200.dp)
+                .height(300.dp)
+                .align(Alignment.Center)
+//                .offset(y = (-10).dp),
+            ,contentScale = ContentScale.Fit
+        )
+
+        // Calculate sun position on a circle around the center of the box
+        val centerX = 0f
+        val centerY = 0f
+        val sunX = centerX + radius * cos(angleRadians)
+        val sunY = centerY + radius * sin(angleRadians)
+
+        // Sun with animation
+        Box(
+            modifier = Modifier
+                .size(40.dp)
+                .align(Alignment.Center)  // Align to the center of the parent box
+                .offset(
+                    x = sunX.dp,
+                    y = sunY.dp
+                )
+                .background(
+                    Color(0xFFFFD700),  // Gold color
+                    shape = CircleShape
+                )
+                .border(2.dp, Color(0xFFFF8C00), CircleShape)
+        ) {
+            // Sun rays
+            Canvas(modifier = Modifier.fillMaxSize()) {
+                val x = size.width / 2
+                val y = size.height / 2
+                val rayLength = 15f
+
+                for (i in 0 until 8) {
+                    val directionAngle = (i * 45f) * (Math.PI / 180f)
+                    val startX = x + (10f * cos(directionAngle)).toFloat()
+                    val startY = y + (10f * sin(directionAngle)).toFloat()
+                    val endX = x + ((10f + rayLength) * cos(directionAngle)).toFloat()
+                    val endY = y + ((10f + rayLength) * sin(directionAngle)).toFloat()
+
+                    drawLine(
+                        color = Color(0xFFFF8C00),  // Dark orange
+                        start = Offset(startX, startY),
+                        end = Offset(endX, endY),
+                        strokeWidth = 2f
+                    )
                 }
             }
         }

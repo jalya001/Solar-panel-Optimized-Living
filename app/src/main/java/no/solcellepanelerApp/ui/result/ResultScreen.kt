@@ -134,11 +134,11 @@ fun ResultScreen(
 
                 else -> {
 
-                    val snowCoverData = weatherData["mean(snow_coverage_type P1M)"] ?: emptyArray()
+//                    val snowCoverData = weatherData["mean(snow_coverage_type P1M)"] ?: emptyArray()
                     val airTempData = weatherData["mean(air_temperature P1M)"] ?: emptyArray()
-                    val cloudCoverData =
-                        weatherData["mean(cloud_area_fraction P1M)"] ?: emptyArray()
-                    val radiationData = weatherData["mean(PVGIS_radiation P1M)"] ?: emptyArray()
+//                    val cloudCoverData =
+//                        weatherData["mean(cloud_area_fraction P1M)"] ?: emptyArray()
+//                    val radiationData = weatherData["mean(PVGIS_radiation P1M)"] ?: emptyArray()
 
 
                     weatherViewModel.calculateSolarPanelOutput(panelArea, efficiency)
@@ -171,10 +171,10 @@ fun ResultScreen(
 
                     calc?.let {
                         MonthDataDisplay(
-                            cloudCoverData = cloudCoverData,
-                            snowCoverData = snowCoverData,
+//                            cloudCoverData = cloudCoverData,
+//                            snowCoverData = snowCoverData,
                             airTempData = airTempData,
-                            radiationData = radiationData,
+//                            radiationData = radiationData,
                             adjustedRadiation = it.adjustedRadiation,
                             monthlyEnergyOutput = it.monthlyEnergyOutput,
                             monthlyPowerOutput = it.monthlyPowerOutput,
@@ -222,10 +222,10 @@ fun calculateMonthlyEnergyOutput(
 
 @Composable
 fun MonthDataDisplay(
-    cloudCoverData: Array<Double>,
-    snowCoverData: Array<Double>,
+//    cloudCoverData: Array<Double>,
+//    snowCoverData: Array<Double>,
     airTempData: Array<Double>,
-    radiationData: Array<Double>,
+//    radiationData: Array<Double>,
     adjustedRadiation: List<Double>,
     monthlyEnergyOutput: List<Double>,
     monthlyPowerOutput: List<Double>,
@@ -265,9 +265,9 @@ fun MonthDataDisplay(
             }
             DataCard(
                 month = months[selectedMonthIndex],
-                radiation = radiationData[selectedMonthIndex],
-                cloud = cloudCoverData[selectedMonthIndex],
-                snow = snowCoverData[selectedMonthIndex],
+//                radiation = radiationData[selectedMonthIndex],
+//                cloud = cloudCoverData[selectedMonthIndex],
+//                snow = snowCoverData[selectedMonthIndex],
                 temp = airTempData[selectedMonthIndex],
                 adjusted = adjustedRadiation[selectedMonthIndex],
                 energy = monthlyEnergyOutput[selectedMonthIndex],
@@ -301,9 +301,9 @@ fun MonthDataDisplay(
                 items(months.size) { month ->
                     DataCard(
                         month = months[month],
-                        radiation = radiationData[month],
-                        cloud = cloudCoverData[month],
-                        snow = snowCoverData[month],
+//                        radiation = radiationData[month],
+//                        cloud = cloudCoverData[month],
+//                        snow = snowCoverData[month],
                         temp = airTempData[month],
                         adjusted = adjustedRadiation[month],
                         energy = monthlyEnergyOutput[month],

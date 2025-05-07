@@ -24,13 +24,12 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.SpanStyle
+
 import androidx.compose.ui.text.TextStyle
-import androidx.compose.ui.text.buildAnnotatedString
-import androidx.compose.ui.text.font.FontStyle
+
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.text.withStyle
+
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.DpSize
 import androidx.compose.ui.unit.dp
@@ -195,13 +194,13 @@ fun DataCard(
     navController: NavController,
     energyPrice: Double,
     allMonths: Boolean,
-    snow: Double,
-    cloud: Double,
-    radiation: Double,
+//    snow: Double,
+//    cloud: Double,
+//    radiation: Double,
 ) {
     val cardModifier = modifier
         .fillMaxWidth()
-
+    val tempEffect= 1 + (-0.44) * (temp - 25)
     MyCard(
 //        modifier = cardModifier,
 //        elevation = 4.dp,
@@ -276,22 +275,22 @@ fun DataCard(
                 //Aazan legg til temperatur
                 IconTextRow(
                     iconRes = R.drawable.baseline_device_thermostat_24,
-                    text = stringResource(R.string.temp_factor, 1 + (-0.44) * (temp - 25))
+                    text = stringResource(R.string.temp_factor, tempEffect)
                 )
                 Text(
-                    "This is the amount of solar radiation your panels receive, adjust with snow,cloud, and temperature data for your location.",
+                    text = stringResource(R.string.temp_factor_explanation),
                     style = MaterialTheme.typography.bodyMedium
                 )
 
-                Text(
-                    buildAnnotatedString {
-                        withStyle(style = SpanStyle(fontStyle = FontStyle.Italic)) {
-                            append(
-                                stringResource(R.string.show_monthly_savings, month)
-                            )
-                        }
-                    }
-                )
+//                Text(
+//                    buildAnnotatedString {
+//                        withStyle(style = SpanStyle(fontStyle = FontStyle.Italic)) {
+//                            append(
+//                                stringResource(R.string.show_monthly_savings, month)
+//                            )
+//                        }
+//                    }
+//                )
 
 
 //            Button(
@@ -316,7 +315,7 @@ fun ModeCard(
     label: String,
     iconRes: Int,
     onClick: () -> Unit,
-    selected: Boolean,
+//    selected: Boolean,
 ) {
 //    val border = if (selected) BorderStroke(2.dp, MaterialTheme.colorScheme.primary) else null
 
