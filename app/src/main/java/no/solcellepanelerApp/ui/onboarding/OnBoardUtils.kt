@@ -16,6 +16,7 @@ class OnboardingUtils(private val context: Context) {
             .apply()
     }
 
+    //110% mulig å gjøre alle disse overlaygreiene til en variabel og en funskjon men tidsklemme
     fun isMapOverlayShown(): Boolean {
         return context.getSharedPreferences("onboarding", Context.MODE_PRIVATE)
             .getBoolean("map_overlay_shown", false)
@@ -39,4 +40,17 @@ class OnboardingUtils(private val context: Context) {
             .putBoolean("draw_overlay_shown", true)
             .apply()
     }
+
+    fun isSavingsOverlayShown(): Boolean {
+        return context.getSharedPreferences("onboarding", Context.MODE_PRIVATE)
+            .getBoolean("savings_overlay_shown", false)
+    }
+
+    fun setSavingsOverlayShown() {
+        context.getSharedPreferences("onboarding", Context.MODE_PRIVATE)
+            .edit()
+            .putBoolean("savings_overlay_shown", true)
+            .apply()
+    }
+
 }

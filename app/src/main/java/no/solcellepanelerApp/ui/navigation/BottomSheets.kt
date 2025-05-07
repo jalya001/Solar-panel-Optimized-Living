@@ -618,8 +618,9 @@ fun AdditionalInputBottomSheet(
 //                    )
 
 
+                    var selected: Boolean by remember { mutableStateOf(false) }
                     panelTypes.forEach { panelType ->
-                        val selected = efficiency == panelType.efficiency
+                        selected = efficiency == panelType.efficiency
                         val glowAlpha by animateFloatAsState(
                             targetValue = if (selected) 1f else 0f,
                             animationSpec = tween(durationMillis = 500)
@@ -746,9 +747,9 @@ fun AdditionalInputBottomSheet(
                         }
                     }
 
-//                    Spacer(modifier = Modifier.height(32.dp))
+                    Spacer(modifier = Modifier.height(32.dp))
 
-                    if (areaState.isNotEmpty() && coordinates != null) {
+                    if (areaState.isNotEmpty() && coordinates != null && selected) {
                         Button(
                             onClick = {
                                 viewModel.areaInput = areaState
@@ -811,7 +812,7 @@ fun SunAngleAnimation(angle: Float) {
                 .height(300.dp)
                 .align(Alignment.Center)
 //                .offset(y = (-10).dp),
-            ,contentScale = ContentScale.Fit
+            , contentScale = ContentScale.Fit
         )
 
         // Calculate sun position on a circle around the center of the box

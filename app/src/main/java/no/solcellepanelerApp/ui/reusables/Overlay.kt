@@ -19,6 +19,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.zIndex
 import no.solcellepanelerApp.R
 
+// burde egt ikke være så vanskelig å implementere "vis kun flrste gang" funksjonaliteten her men man er i en tidsklemme
 @Composable
 fun SimpleTutorialOverlay(
     onDismiss: () -> Unit,

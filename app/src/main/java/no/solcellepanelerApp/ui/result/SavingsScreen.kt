@@ -30,6 +30,7 @@ import androidx.compose.material3.OutlinedCard
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
@@ -43,6 +44,7 @@ import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.graphicsLayer
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.text.buildAnnotatedString
@@ -76,6 +78,7 @@ import no.solcellepanelerApp.ui.navigation.AppearanceBottomSheet
 import no.solcellepanelerApp.ui.navigation.BottomBar
 import no.solcellepanelerApp.ui.navigation.HelpBottomSheet
 import no.solcellepanelerApp.ui.navigation.TopBar
+import no.solcellepanelerApp.ui.onboarding.OnboardingUtils
 import no.solcellepanelerApp.ui.reusables.IconTextRow
 import no.solcellepanelerApp.ui.reusables.SimpleTutorialOverlay
 import no.solcellepanelerApp.ui.theme.ThemeMode
@@ -98,7 +101,17 @@ fun EnergySavingsScreen(
     val calculationResult by weatherViewModel.calculationResults.collectAsState()
     var showHelp by remember { mutableStateOf(false) }
     var showAppearance by remember { mutableStateOf(false) }
-    var showOverlay by remember { mutableStateOf(true) }
+    val context = LocalContext.current
+    val onboardingUtils = remember { OnboardingUtils(context) }
+
+    var showOverlay by remember { mutableStateOf(false) }
+
+    LaunchedEffect(Unit) {
+        if (!onboardingUtils.isSavingsOverlayShown()) {
+            showOverlay = true
+            onboardingUtils.setSavingsOverlayShown()
+        }
+    }
     var currentEnergy by remember { mutableDoubleStateOf(energyProduced) }
 
     // Device data
