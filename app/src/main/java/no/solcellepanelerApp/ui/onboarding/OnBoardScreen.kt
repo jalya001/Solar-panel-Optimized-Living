@@ -117,7 +117,7 @@ fun OnboardingScreen(onFinished: () -> Unit) {
     }, content = {
         Column(Modifier.padding(it)) {
             HorizontalPager(state = pagerState) { index ->
-                OnboardingGraphUI(OnBoardModel = pages[index])
+                OnboardingGraphUI(onBoardModel = pages[index])
             }
         }
     })

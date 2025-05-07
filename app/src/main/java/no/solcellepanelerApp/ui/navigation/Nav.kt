@@ -156,7 +156,6 @@ fun BottomBar(
             icon = {
                 Icon(
                     painterResource(R.drawable.help_24px),
-                    style = MaterialTheme.typography.bodyMedium,
                     contentDescription = "Help"
                 )
             },

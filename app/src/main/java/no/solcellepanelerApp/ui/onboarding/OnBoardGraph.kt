@@ -226,8 +226,18 @@ fun OnboardingGraphUI(onBoardModel: OnBoardModel) {
             if (showDialog) {
                 androidx.compose.material3.AlertDialog(
                     onDismissRequest = { showDialog = false },
-                    title = { Text(stringResource(R.string.location_perm_title), style = MaterialTheme.typography.bodyLarge) },
-                    text = { Text(stringResource(R.string.location_perm_content), style = MaterialTheme.typography.bodyLarge) },
+                    title = {
+                        Text(
+                            stringResource(R.string.location_perm_title),
+                            style = MaterialTheme.typography.bodyLarge
+                        )
+                    },
+                    text = {
+                        Text(
+                            stringResource(R.string.location_perm_content),
+                            style = MaterialTheme.typography.bodyLarge
+                        )
+                    },
                     confirmButton = {
                         Button(onClick = {
                             val intent =
@@ -238,12 +248,18 @@ fun OnboardingGraphUI(onBoardModel: OnBoardModel) {
                             context.startActivity(intent)
                             showDialog = false
                         }) {
-                            Text(stringResource(R.string.settings), style = MaterialTheme.typography.bodyLarge))
+                            Text(
+                                stringResource(R.string.settings),
+                                style = MaterialTheme.typography.bodyLarge
+                            )
                         }
                     },
                     dismissButton = {
                         Button(onClick = { showDialog = false }) {
-                            Text(stringResource(R.string.close), style = MaterialTheme.typography.bodyLarge)
+                            Text(
+                                stringResource(R.string.close),
+                                style = MaterialTheme.typography.bodyLarge
+                            )
                         }
                     }
                 )

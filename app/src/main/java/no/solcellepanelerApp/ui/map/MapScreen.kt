@@ -733,7 +733,6 @@ private fun DrawingControls(
                                         bottom = 10.dp
                                     )
                                     .width(130.dp),
-                                style = MaterialTheme.typography.bodyLarge,
                                 textAlign = TextAlign.Center,
                                 color = MaterialTheme.colorScheme.background,
                                 style = MaterialTheme.typography.bodyLarge
