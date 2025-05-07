@@ -53,4 +53,16 @@ class OnboardingUtils(private val context: Context) {
             .apply()
     }
 
+    fun isHomeOverlayShown(): Boolean {
+        return context.getSharedPreferences("onboarding", Context.MODE_PRIVATE)
+            .getBoolean("home_overlay_shown", false)
+    }
+
+    fun setHomeOverlayShown() {
+        context.getSharedPreferences("onboarding", Context.MODE_PRIVATE)
+            .edit()
+            .putBoolean("home_overlay_shown", true)
+            .apply()
+    }
+
 }
