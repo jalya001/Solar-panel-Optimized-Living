@@ -355,5 +355,10 @@ How to draw:\n
     Tap the electricity prices in the bottom right corner to get more details about energy costs\n\n
 </string>
     <string name="map_overlay">Search for your address, use your device location, or tap the map to choose a location</string>
-    <string name="map_draw_overlay">Tap the map to start drawing your desired area</string>
+    <string name="map_draw_overlay">Tap the map to start drawing your desired area\n\n
+        Tap the map to place markers.\n
+Place at least 3 markers in a rectangle-like shape and in correct order.\n
+Hold a marker for 3 seconds to move it.\n
+Tap "Show area" to preview your drawing.
+    </string>
 </resources>

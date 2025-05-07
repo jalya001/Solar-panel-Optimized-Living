@@ -65,4 +65,16 @@ class OnboardingUtils(private val context: Context) {
             .apply()
     }
 
+    fun resetAllOnboardingStates() { //for testing
+        context.getSharedPreferences("onboarding", Context.MODE_PRIVATE)
+            .edit()
+            .putBoolean("completed", false)
+            .putBoolean("map_overlay_shown", false)
+            .putBoolean("draw_overlay_shown", false)
+            .putBoolean("savings_overlay_shown", false)
+            .putBoolean("home_overlay_shown", false)
+            .apply()
+    }
+
+
 }

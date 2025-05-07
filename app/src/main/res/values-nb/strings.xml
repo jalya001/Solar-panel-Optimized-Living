@@ -365,5 +365,5 @@ Når du er fornøyd, trykk på "Bekreft tegning" for å fortsette.
         Trykk på strømprisene nede til høyre for å få mer detaljer om strømprisene\n\n
     </string>
     <string name="map_overlay">Søk etter adressen din, bruk enhetsposisjon, eller trykk på kartet for å velge en lokasjon</string>
-    <string name="map_draw_overlay">Trykk på kartet for å begynne å tegne ønsket område</string>
+    <string name="map_draw_overlay">" Trykk på kartet for å starte å tegne ønsket område\n\n Trykk på kartet for å plassere markører.\n\n Plasser minst 3 markører i rektangelform og i riktig rekkefølge.\n\n Hold inne en markør i 3 sekunder for å flytte den.\n\n Trykk på "Vis område" for å forhåndsvise tegningen."</string>
 </resources>
