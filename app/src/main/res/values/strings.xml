@@ -326,13 +326,17 @@
     <string name="past_price_suffix">ago</string>
 
     <!-- Tutorial Overlays -->
-    <string name="overlay_message">Tap anywhere to continue</string>
     <string name="overlay_bottom_message">Click anywhere to continue</string>
     <string name="saving_overlay">
         See how much you\'re saving\n\n
         Tap on each device to see how much it contributes to your energy savings\n\n
         Scroll up for more information!
     </string>
+    <string name="home_overlay">
+    Welcome to your home screen!\n\n
+    Tap "Find your solar potential" to see how much you can save with solar panels!\n\n
+    Tap the electricity prices in the bottom right corner to get more details about energy costs\n\n
+</string>
     <string name="map_overlay">Search for your address, use your device location, or tap the map to choose a location</string>
     <string name="map_draw_overlay">Tap the map to start drawing your desired area</string>
 </resources>

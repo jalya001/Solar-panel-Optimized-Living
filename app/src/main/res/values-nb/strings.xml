@@ -333,12 +333,16 @@
     <string name="past_price_suffix">siden</string>
 
     <!-- Tutorial Overlays -->
-    <string name="overlay_message">Trykk hvor som helst for å fortsette</string>
     <string name="overlay_bottom_message">Klikk hvor som helst for å fortsette</string>
     <string name="saving_overlay">
         Se hvor mye du sparer\n\n
         Trykk på de ulike enhetene for å se hvor mye de bidrar til besparelsen av energi\n\n
         Scroll opp for mer informasjon!
+    </string>
+    <string name="home_overlay">
+        Velkommen til hjemskjermen din!\n\n
+        Trykk på "Finn ditt socellepotensiale" for å se hvor mye du sparer på solcellepaneler!\n\n
+        Trykk på strømprisene nede til høyre for å få mer detaljer om strømprisene\n\n
     </string>
     <string name="map_overlay">Søk etter adressen din, bruk enhetsposisjon, eller trykk på kartet for å velge en lokasjon</string>
     <string name="map_draw_overlay">Trykk på kartet for å begynne å tegne ønsket område</string>

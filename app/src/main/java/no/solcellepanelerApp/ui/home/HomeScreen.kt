@@ -62,9 +62,11 @@ import no.solcellepanelerApp.ui.handling.LoadingScreen
 import no.solcellepanelerApp.ui.navigation.AppearanceBottomSheet
 import no.solcellepanelerApp.ui.navigation.BottomBar
 import no.solcellepanelerApp.ui.navigation.HelpBottomSheet
+import no.solcellepanelerApp.ui.onboarding.OnboardingUtils
 import no.solcellepanelerApp.ui.result.WeatherViewModel
 import no.solcellepanelerApp.ui.reusables.MyDisplayCard
 import no.solcellepanelerApp.ui.reusables.MyNavCard
+import no.solcellepanelerApp.ui.reusables.SimpleTutorialOverlay
 import no.solcellepanelerApp.ui.theme.ThemeMode
 import no.solcellepanelerApp.ui.theme.ThemeState
 import no.solcellepanelerApp.util.fetchCoordinates
@@ -93,6 +95,17 @@ fun HomeScreen(
     var currentLocation by remember { mutableStateOf<Location?>(null) }
     Log.d("HomeScreen", "currentLocation: $currentLocation")
     var dataFetched by remember { mutableStateOf(false) }
+
+    val onboardingUtils = remember { OnboardingUtils(context) }
+
+    var showOverlay by remember { mutableStateOf(false) }
+
+    LaunchedEffect(Unit) {
+        if (!onboardingUtils.isHomeOverlayShown()) {
+            showOverlay = true
+            onboardingUtils.setHomeOverlayShown()
+        }
+    }
 
     val currentHour by remember { mutableIntStateOf(ZonedDateTime.now().minusHours(2).hour) }
     //var currentHourValue by remember { mutableStateOf(radiationArray[currentHour]) }
@@ -215,6 +228,12 @@ fun HomeScreen(
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.Center
         ) {
+            if (showOverlay) {
+                SimpleTutorialOverlay(
+                    onDismiss = { showOverlay = false },
+                    stringResource(R.string.home_overlay)
+                )
+            }
 
             MyNavCard(
                 text = stringResource(id = R.string.install_panels_title),

@@ -23,7 +23,7 @@ import no.solcellepanelerApp.R
 @Composable
 fun SimpleTutorialOverlay(
     onDismiss: () -> Unit,
-    message: String = stringResource(R.string.overlay_message),
+    message: String,
     bottomMessage: String = stringResource(R.string.overlay_bottom_message),
 ) {
     Box(
