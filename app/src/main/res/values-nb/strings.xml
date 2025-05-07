@@ -133,9 +133,9 @@
     <!--Additional Input-->
     <string name="area_label">Takareal (m²)</string>
     <string name="draw_area">Tegn areal</string>
-    <string name="slope_label">Vinkel på taket fra 0 - 90°</string>
+    <string name="slope_label">Vinkel på taket fra 0 – 90°</string>
     <string name="direction_label">Retningen panelet vender mot</string>
-    <string name="efficiency_label">Effektiviteten til panelene, vanligvis mellom 16-20 %</string>
+    <string name="efficiency_label">Effektiviteten til panelene, vanligvis mellom 16–20 %</string>
     <string name="coordinates_label">Koordinater (fra kart):</string>
     <string name="coordinates_unavailable">Ingen koordinater tilgjengelig</string>
     <string name="closest_weather_station">Nærmeste værstasjon:</string>
