@@ -40,16 +40,16 @@ fun OnboardingScreen(onFinished: () -> Unit) {
         pages.size
     }
 
-    val next = stringResource(R.string.next)
-    val back = stringResource(R.string.back)
+    val nextButton = stringResource(R.string.next)
+    val backButton = stringResource(R.string.back)
 
     val buttonState = remember {
         derivedStateOf {
             when (pagerState.currentPage) {
-                0 -> listOf("", next)
-                1 -> listOf(back, next)
-                2 -> listOf(back, next)
-                3 -> listOf(back, "Start")
+                0 -> listOf("", nextButton)
+                1 -> listOf(backButton, nextButton)
+                2 -> listOf(backButton, nextButton)
+                3 -> listOf(backButton, "Start")
                 else -> listOf("", "")
             }
         }
