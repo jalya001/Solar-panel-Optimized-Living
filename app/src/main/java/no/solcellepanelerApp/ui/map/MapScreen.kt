@@ -129,7 +129,6 @@ fun MapScreen(
     var showHelp by remember { mutableStateOf(false) }
     var showAppearance by remember { mutableStateOf(false) }
 
-//    var showMapOverlay by remember { mutableStateOf(true) }
 
     val context = LocalContext.current
     val onboardingUtils = remember { OnboardingUtils(context) }
@@ -537,15 +536,22 @@ fun DisplayScreen(
                 )
             }
         }
+        val context = LocalContext.current
+        val onboardingUtils = remember { OnboardingUtils(context) }
+
         AdditionalInputBottomSheet(
             visible = showBottomSheet,
             onDismiss = { showBottomSheet = false },
             onStartDrawing = {
                 drawingEnabled = true
-                setShowDrawOverlay(true)
                 selectedCoordinates = null
                 viewModel.removePoints()
                 index = 0
+
+                if (!onboardingUtils.isDrawOverlayShown()) {
+                    onboardingUtils.setDrawOverlayShown()
+                    setShowDrawOverlay(true)
+                }
             },
             coordinates = coordinates,
             height = height,
@@ -747,6 +753,7 @@ private fun DrawingControls(
                         modifier = Modifier
                             .clickable {
                                 viewModel.removePoints()
+                                areaShown = false
                                 onToggleVisibility()
                             }
                             .width(130.dp)

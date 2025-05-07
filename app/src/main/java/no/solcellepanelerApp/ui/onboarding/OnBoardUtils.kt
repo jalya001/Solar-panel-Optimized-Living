@@ -27,4 +27,16 @@ class OnboardingUtils(private val context: Context) {
             .putBoolean("map_overlay_shown", true)
             .apply()
     }
+
+    fun isDrawOverlayShown(): Boolean {
+        return context.getSharedPreferences("onboarding", Context.MODE_PRIVATE)
+            .getBoolean("draw_overlay_shown", false)
+    }
+
+    fun setDrawOverlayShown() {
+        context.getSharedPreferences("onboarding", Context.MODE_PRIVATE)
+            .edit()
+            .putBoolean("draw_overlay_shown", true)
+            .apply()
+    }
 }
