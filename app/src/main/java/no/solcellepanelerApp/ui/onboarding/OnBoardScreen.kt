@@ -1,6 +1,5 @@
 package no.solcellepanelerApp.ui.onboarding
 
-import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -21,9 +20,10 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import kotlinx.coroutines.launch
+import no.solcellepanelerApp.model.onboarding.OnBoardModel
 import no.solcellepanelerApp.ui.theme.SolcellepanelerAppTheme
 
-@OptIn(ExperimentalFoundationApi::class)
+
 @Composable
 fun OnboardingScreen(onFinished: () -> Unit) {
 

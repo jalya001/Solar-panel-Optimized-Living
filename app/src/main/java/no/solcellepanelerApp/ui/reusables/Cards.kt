@@ -1,5 +1,6 @@
 package no.solcellepanelerApp.ui.reusables
 
+import android.annotation.SuppressLint
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -39,7 +40,7 @@ import no.solcellepanelerApp.R
 @Composable
 fun MyCard(
     text: String = "",
-    modifier: Modifier = Modifier,
+    @SuppressLint("ModifierParameter") modifier: Modifier = Modifier,
     width: Dp = 240.dp,
     style: TextStyle,
     elevation: Dp = 3.dp,
@@ -55,8 +56,6 @@ fun MyCard(
         onClick = {
             if (route != "") {
                 navController.navigate(route)
-            } else {
-
             }
         },
     ) {
@@ -84,7 +83,7 @@ fun MyNavCard(
     desc: String = "",
     route: String,
     navController: NavController,
-    modifier: Modifier = Modifier,
+    @SuppressLint("ModifierParameter") modifier: Modifier = Modifier,
     size: DpSize = DpSize(width = 240.dp, height = 100.dp),
     style: TextStyle,
     content: (@Composable () -> Unit)? = null,
@@ -98,8 +97,6 @@ fun MyNavCard(
         onClick = {
             if (route != "") {
                 navController.navigate(route)
-            } else {
-
             }
         },
 
@@ -147,7 +144,7 @@ fun MyNavCard(
 @Composable
 fun MyDisplayCard(
     text: String = "",
-    modifier: Modifier = Modifier,
+    @SuppressLint("ModifierParameter") modifier: Modifier = Modifier,
     size: DpSize = DpSize(width = 240.dp, height = 100.dp),
     style: TextStyle,
     content: (@Composable () -> Unit)? = null,
@@ -190,9 +187,6 @@ fun MyDisplayCard(
 @Composable
 fun DataCard(
     month: String,
-    radiation: Double,
-    cloud: Double,
-    snow: Double,
     temp: Double,
     adjusted: Double,
     energy: Double,
@@ -201,6 +195,9 @@ fun DataCard(
     navController: NavController,
     energyPrice: Double,
     allMonths: Boolean,
+    snow: Double,
+    cloud: Double,
+    radiation: Double,
 ) {
     val cardModifier = modifier
         .fillMaxWidth()
@@ -313,8 +310,8 @@ fun DataCard(
 fun ModeCard(
     label: String,
     iconRes: Int,
-    selected: Boolean,
     onClick: () -> Unit,
+    selected: Boolean,
 ) {
 //    val border = if (selected) BorderStroke(2.dp, MaterialTheme.colorScheme.primary) else null
 

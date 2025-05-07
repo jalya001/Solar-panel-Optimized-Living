@@ -29,9 +29,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
-
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import com.airbnb.lottie.compose.LottieAnimation
 import com.airbnb.lottie.compose.LottieCompositionSpec
@@ -39,10 +37,8 @@ import com.airbnb.lottie.compose.LottieConstants
 import com.airbnb.lottie.compose.animateLottieCompositionAsState
 import com.airbnb.lottie.compose.rememberLottieComposition
 import no.solcellepanelerApp.R
-import no.solcellepanelerApp.data.homedata.ElectricityPriceRepository
 import no.solcellepanelerApp.ui.electricity.PriceScreenViewModel
 import no.solcellepanelerApp.ui.electricity.PriceUiState
-import no.solcellepanelerApp.ui.electricity.PriceViewModelFactory
 import no.solcellepanelerApp.ui.font.FontScaleViewModel
 import no.solcellepanelerApp.ui.handling.LoadingScreen
 import no.solcellepanelerApp.ui.map.MapScreenViewModel
@@ -59,7 +55,7 @@ import java.time.ZonedDateTime
 @Composable
 fun ResultScreen(
     navController: NavController, viewModel: MapScreenViewModel, weatherViewModel: WeatherViewModel,
-    fontScaleViewModel: FontScaleViewModel, priceScreenViewModel: ElectricityPriceRepository,
+    fontScaleViewModel: FontScaleViewModel, priceScreenViewModel: PriceScreenViewModel,
 ) {
     val weatherData by weatherViewModel.weatherData.collectAsState()
     val errorScreen by weatherViewModel.errorScreen.collectAsState()
@@ -85,16 +81,10 @@ fun ResultScreen(
     )
 
 
-    val selectedRegion = viewModel.selectedRegion
+//    val selectedRegion = viewModel.selectedRegion
 
 
-
-    val priceViewModel: PriceScreenViewModel = viewModel(
-        factory = PriceViewModelFactory(priceScreenViewModel, selectedRegion.regionCode),
-        key = selectedRegion.regionCode
-    )
-
-    val priceUiState by priceViewModel.priceUiState.collectAsStateWithLifecycle()
+    val priceUiState by priceScreenViewModel.priceUiState.collectAsStateWithLifecycle()
 
     val energyPrice = when (priceUiState) {
         is PriceUiState.Success -> {
@@ -137,14 +127,17 @@ fun ResultScreen(
                 UiState.LOADING -> {
                     LoadingScreen()
                 }
+
                 UiState.ERROR -> {
                     errorScreen()
                 }
+
                 else -> {
 
                     val snowCoverData = weatherData["mean(snow_coverage_type P1M)"] ?: emptyArray()
                     val airTempData = weatherData["mean(air_temperature P1M)"] ?: emptyArray()
-                    val cloudCoverData = weatherData["mean(cloud_area_fraction P1M)"] ?: emptyArray()
+                    val cloudCoverData =
+                        weatherData["mean(cloud_area_fraction P1M)"] ?: emptyArray()
                     val radiationData = weatherData["mean(PVGIS_radiation P1M)"] ?: emptyArray()
 
 
@@ -193,21 +186,21 @@ fun ResultScreen(
                     }
                 }
             }
-            }
-
-            HelpBottomSheet(
-                navController = navController,
-                visible = showHelp,
-                onDismiss = { showHelp = false },
-            )
-            AppearanceBottomSheet(
-                visible = showAppearance,
-                onDismiss = { showAppearance = false },
-                fontScaleViewModel = fontScaleViewModel
-            )
         }
 
+        HelpBottomSheet(
+            navController = navController,
+            visible = showHelp,
+            onDismiss = { showHelp = false },
+        )
+        AppearanceBottomSheet(
+            visible = showAppearance,
+            onDismiss = { showAppearance = false },
+            fontScaleViewModel = fontScaleViewModel
+        )
     }
+
+}
 
 
 fun calculateMonthlyEnergyOutput(

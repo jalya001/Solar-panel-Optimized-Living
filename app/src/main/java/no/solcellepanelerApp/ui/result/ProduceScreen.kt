@@ -63,7 +63,7 @@ package no.solcellepanelerApp.ui.result
 //import com.airbnb.lottie.compose.rememberLottieComposition
 //import com.google.accompanist.flowlayout.FlowRow
 //import no.solcellepanelerApp.R
-//import no.solcellepanelerApp.ui.electricity.ChartType
+//import no.solcellepanelerApp.model.electricity.ChartType
 //import no.solcellepanelerApp.ui.font.FontScaleViewModel
 //import no.solcellepanelerApp.ui.reusables.IconTextRow
 //import no.solcellepanelerApp.ui.theme.ThemeMode

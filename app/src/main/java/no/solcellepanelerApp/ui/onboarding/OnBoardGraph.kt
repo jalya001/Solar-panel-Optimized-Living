@@ -35,7 +35,8 @@ import androidx.compose.ui.unit.dp
 import androidx.core.content.ContextCompat
 import no.solcellepanelerApp.R
 import no.solcellepanelerApp.model.electricity.Region
-import no.solcellepanelerApp.util.RememberLocationWithPermission
+import no.solcellepanelerApp.model.onboarding.OnBoardModel
+import no.solcellepanelerApp.util.rememberLocationWithPermission
 
 @Composable
 fun OnboardingGraphUI(OnBoardModel: OnBoardModel) {
@@ -44,7 +45,7 @@ fun OnboardingGraphUI(OnBoardModel: OnBoardModel) {
 
     var region: Region? by remember { mutableStateOf(null) }
     val (currentLocation, locationGranted) = if (triggerLocationFetch) {
-        RememberLocationWithPermission(
+        rememberLocationWithPermission(
             triggerRequest = true,
             onRegionDetermined = { region = it }
         )
