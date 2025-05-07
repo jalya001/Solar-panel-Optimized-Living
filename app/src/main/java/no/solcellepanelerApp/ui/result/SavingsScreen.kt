@@ -14,6 +14,7 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.BoxWithConstraints
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.aspectRatio
@@ -33,6 +34,7 @@ import androidx.compose.material3.OutlinedCard
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
@@ -75,14 +77,17 @@ import com.google.accompanist.flowlayout.FlowRow
 import no.solcellepanelerApp.R
 import no.solcellepanelerApp.model.electricity.ChartType
 import no.solcellepanelerApp.ui.font.FontScaleViewModel
+import no.solcellepanelerApp.ui.home.HomeTopBar
 import no.solcellepanelerApp.ui.navigation.AppearanceBottomSheet
 import no.solcellepanelerApp.ui.navigation.BottomBar
 import no.solcellepanelerApp.ui.navigation.HelpBottomSheet
 import no.solcellepanelerApp.ui.navigation.TopBar
+import no.solcellepanelerApp.ui.reusables.AppScaffoldController
 import no.solcellepanelerApp.ui.reusables.IconTextRow
 import no.solcellepanelerApp.ui.reusables.SimpleTutorialOverlay
 import no.solcellepanelerApp.ui.theme.ThemeMode
 import no.solcellepanelerApp.ui.theme.ThemeState
+import no.solcellepanelerApp.ui.theme.isDarkThemeEnabled
 
 @SuppressLint("MutableCollectionMutableState", "DefaultLocale")
 
@@ -95,12 +100,12 @@ fun EnergySavingsScreen(
     navController: NavController,
     fontScaleViewModel: FontScaleViewModel,
     weatherViewModel: WeatherViewModel,
+    appScaffoldController: AppScaffoldController,
+    contentPadding: PaddingValues
 ) {
     val savings: Double = energyProduced * energyPrice
     val weather by weatherViewModel.weatherData.collectAsState()
     val calculationResult by weatherViewModel.calculationResults.collectAsState()
-    var showHelp by remember { mutableStateOf(false) }
-    var showAppearance by remember { mutableStateOf(false) }
     var showOverlay by remember { mutableStateOf(true) }
     var currentEnergy by remember { mutableDoubleStateOf(energyProduced) }
 
@@ -164,280 +169,258 @@ fun EnergySavingsScreen(
         }
     }
 
-    val screenTitle = if (isMonthly)
-        stringResource(R.string.monthly_savings, month)
-    else
-        stringResource(R.string.yearly_savings)
+    val monthlyTitle = stringResource(R.string.monthly_savings, month)
+    val yearlyTitle = stringResource(R.string.yearly_savings)
+    LaunchedEffect(Unit) {
+        val screenTitle = if (isMonthly)
+            monthlyTitle
+        else
+            yearlyTitle
+        appScaffoldController.setTopBar(screenTitle)
+    }
 
-    Scaffold(
-        topBar = {
-            TopBar(
-                navController,
-                text = screenTitle
-            )
-        },
-        bottomBar = {
-            BottomBar(
-                onHelpClicked = { showHelp = true },
-                onAppearanceClicked = { showAppearance = true },
-                navController = navController
-            )
-        }
-    ) { paddingValues ->
-        if (showOverlay) {
-            SimpleTutorialOverlay(
-                onDismiss = { showOverlay = false },
-                "Se hvor mye du sparer \n\n Trykk på de ulike enhetene for å se *trenger en god fromulering* \n\nScroll opp for mer informasjon!"
-            )
-        }
-        Box(
+
+
+    if (showOverlay) {
+        SimpleTutorialOverlay(
+            onDismiss = { showOverlay = false },
+            "Se hvor mye du sparer \n\n Trykk på de ulike enhetene for å se *trenger en god fromulering* \n\nScroll opp for mer informasjon!"
+        )
+    }
+    Box(
+        modifier = Modifier
+            .padding(contentPadding)
+            .fillMaxSize()
+    ) {
+        Column(
             modifier = Modifier
-                .padding(paddingValues)
                 .fillMaxSize()
+                .padding(10.dp)
         ) {
-            Column(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .padding(10.dp)
+            AnimatedVisibility(
+                visible = showHeaderText,
+                enter = fadeIn(),
+                exit = fadeOut()
             ) {
-                AnimatedVisibility(
-                    visible = showHeaderText,
-                    enter = fadeIn(),
-                    exit = fadeOut()
-                ) {
-                    Column(horizontalAlignment = Alignment.CenterHorizontally) {
-                        // Savings text
-                        if (isMonthly) {
-                            Text(
-                                text = buildAnnotatedString {
-                                    withStyle(
-                                        style = MaterialTheme.typography.headlineSmall.toSpanStyle()
-                                            .copy(fontWeight = FontWeight.ExtraLight)
-                                    ) {
-                                        append(stringResource(R.string.monthly_savings_prefix))
-                                    }
-                                    append(
-                                        AnnotatedString(
-                                            String.format(" %.2f kroner ", savings),
-                                            MaterialTheme.typography.headlineSmall.toSpanStyle()
-                                        )
+                Column(horizontalAlignment = Alignment.CenterHorizontally) {
+                    // Savings text
+                    if (isMonthly) {
+                        Text(
+                            text = buildAnnotatedString {
+                                withStyle(
+                                    style = MaterialTheme.typography.headlineSmall.toSpanStyle()
+                                        .copy(fontWeight = FontWeight.ExtraLight)
+                                ) {
+                                    append(stringResource(R.string.monthly_savings_prefix))
+                                }
+                                append(
+                                    AnnotatedString(
+                                        String.format(" %.2f kroner ", savings),
+                                        MaterialTheme.typography.headlineSmall.toSpanStyle()
                                     )
-                                    withStyle(
-                                        style = MaterialTheme.typography.headlineSmall.toSpanStyle()
-                                            .copy(fontWeight = FontWeight.ExtraLight)
-                                    ) {
-                                        append(stringResource(R.string.monthly_savings_suffix_part1))
-                                        append(month)
-                                        append(stringResource(R.string.monthly_savings_suffix_part2))
-                                    }
-                                },
-                                textAlign = TextAlign.Center
-                            )
-                        } else {
-                            Text(
-                                text = buildAnnotatedString {
-                                    withStyle(
-                                        style = MaterialTheme.typography.headlineSmall.toSpanStyle()
-                                            .copy(fontWeight = FontWeight.ExtraLight)
-                                    ) {
-                                        append(stringResource(R.string.yearly_savings_prefix))
-                                    }
-                                    append(
-                                        AnnotatedString(
-                                            String.format(" %.2f kroner ", savings),
-                                            MaterialTheme.typography.headlineSmall.toSpanStyle()
-                                        )
+                                )
+                                withStyle(
+                                    style = MaterialTheme.typography.headlineSmall.toSpanStyle()
+                                        .copy(fontWeight = FontWeight.ExtraLight)
+                                ) {
+                                    append(stringResource(R.string.monthly_savings_suffix_part1))
+                                    append(month)
+                                    append(stringResource(R.string.monthly_savings_suffix_part2))
+                                }
+                            },
+                            textAlign = TextAlign.Center
+                        )
+                    } else {
+                        Text(
+                            text = buildAnnotatedString {
+                                withStyle(
+                                    style = MaterialTheme.typography.headlineSmall.toSpanStyle()
+                                        .copy(fontWeight = FontWeight.ExtraLight)
+                                ) {
+                                    append(stringResource(R.string.yearly_savings_prefix))
+                                }
+                                append(
+                                    AnnotatedString(
+                                        String.format(" %.2f kroner ", savings),
+                                        MaterialTheme.typography.headlineSmall.toSpanStyle()
                                     )
-                                    withStyle(
-                                        style = MaterialTheme.typography.headlineSmall.toSpanStyle()
-                                            .copy(fontWeight = FontWeight.ExtraLight)
-                                    ) {
-                                        append(stringResource(R.string.yearly_savings_suffix))
-                                    }
-                                },
-                                textAlign = TextAlign.Center
-                            )
-                        }
+                                )
+                                withStyle(
+                                    style = MaterialTheme.typography.headlineSmall.toSpanStyle()
+                                        .copy(fontWeight = FontWeight.ExtraLight)
+                                ) {
+                                    append(stringResource(R.string.yearly_savings_suffix))
+                                }
+                            },
+                            textAlign = TextAlign.Center
+                        )
+                    }
 
-                        // Energy display below the savings text
-                        if (currentEnergy < 0) {
-                            IconTextRow(
-                                iconRes = R.drawable.baseline_battery_charging_full_24,
-                                text = "Energy deficit! %.2f kWh".format(animatedEnergy),
-                                textStyle = MaterialTheme.typography.titleLarge,
-                                modifier = Modifier.padding(16.dp),
-                                textColor = MaterialTheme.colorScheme.error,
-                                iconColor = MaterialTheme.colorScheme.error,
-                            )
-                        } else {
-                            IconTextRow(
-                                iconRes = R.drawable.baseline_battery_charging_full_24,
-                                text = "%.2f kWh".format(animatedEnergy),
-                                textStyle = MaterialTheme.typography.titleLarge,
-                                modifier = Modifier.padding(16.dp),
-                                textColor = energyColor,
-                                iconColor = energyColor
-                            )
-                            EnergyFlowAnimationDown()
-                        }
+                    // Energy display below the savings text
+                    if (currentEnergy < 0) {
+                        IconTextRow(
+                            iconRes = R.drawable.baseline_battery_charging_full_24,
+                            text = "Energy deficit! %.2f kWh".format(animatedEnergy),
+                            textStyle = MaterialTheme.typography.titleLarge,
+                            modifier = Modifier.padding(16.dp),
+                            textColor = MaterialTheme.colorScheme.error,
+                            iconColor = MaterialTheme.colorScheme.error,
+                        )
+                    } else {
+                        IconTextRow(
+                            iconRes = R.drawable.baseline_battery_charging_full_24,
+                            text = "%.2f kWh".format(animatedEnergy),
+                            textStyle = MaterialTheme.typography.titleLarge,
+                            modifier = Modifier.padding(16.dp),
+                            textColor = energyColor,
+                            iconColor = energyColor
+                        )
+                        EnergyFlowAnimationDown()
                     }
                 }
+            }
+            Column(
+                modifier = Modifier
+                    .weight(1f) // Take remaining height
+                    .verticalScroll(scrollState), // Use our observable scroll state
+                horizontalAlignment = Alignment.CenterHorizontally
+            ) {
+
+                // Energy production visualization
                 Column(
-                    modifier = Modifier
-                        .weight(1f) // Take remaining height
-                        .verticalScroll(scrollState), // Use our observable scroll state
-                    horizontalAlignment = Alignment.CenterHorizontally
+                    horizontalAlignment = Alignment.CenterHorizontally,
                 ) {
 
-                    // Energy production visualization
+
+                    // House and devices visualization
                     Column(
-                        horizontalAlignment = Alignment.CenterHorizontally,
+                        modifier = Modifier.fillMaxSize(),
+                        horizontalAlignment = Alignment.CenterHorizontally
                     ) {
+                        HouseAnimation()
+                        EnergyFlowDown()
 
-
-                        // House and devices visualization
-                        Column(
-                            modifier = Modifier.fillMaxSize(),
-                            horizontalAlignment = Alignment.CenterHorizontally
+                        // Device grid using FlowRow
+                        FlowRow(
+                            mainAxisSpacing = 12.dp,
+                            crossAxisSpacing = 12.dp,
                         ) {
-                            HouseAnimation()
-                            EnergyFlowDown()
+                            devices.forEach { (name, value) ->
+                                val connected = connectedDevices.containsKey(name)
+                                val glowAlpha by animateFloatAsState(
+                                    targetValue = if (connected) 1f else 0f,
+                                    animationSpec = tween(durationMillis = 500)
+                                )
 
-                            // Device grid using FlowRow
-                            FlowRow(
-                                mainAxisSpacing = 12.dp,
-                                crossAxisSpacing = 12.dp,
-                            ) {
-                                devices.forEach { (name, value) ->
-                                    val connected = connectedDevices.containsKey(name)
-                                    val glowAlpha by animateFloatAsState(
-                                        targetValue = if (connected) 1f else 0f,
-                                        animationSpec = tween(durationMillis = 500)
-                                    )
-
-                                    OutlinedCard(
-                                        modifier = Modifier
-                                            .width(180.dp)
-                                            .border(
-                                                width = if (connected) 3.dp else 1.dp,
-                                                color = MaterialTheme.colorScheme.primary.copy(
-                                                    alpha = glowAlpha
-                                                ),
-                                                shape = RoundedCornerShape(12.dp)
-                                            )
-                                            .shadow(
-                                                elevation = if (connected) 8.dp else 2.dp,
-                                                shape = RoundedCornerShape(12.dp),
-                                                ambientColor = MaterialTheme.colorScheme.primary.copy(
-                                                    alpha = glowAlpha
-                                                )
-                                            )
-                                            .clickable {
-                                                if (connected) {
-                                                    connectedDevices =
-                                                        connectedDevices.toMutableMap()
-                                                            .apply { remove(name) }
-                                                    currentEnergy += value
-                                                } else {
-                                                    connectedDevices =
-                                                        connectedDevices.toMutableMap()
-                                                            .apply { put(name, value) }
-                                                    currentEnergy -= value
-                                                }
-                                            },
-                                        colors = CardDefaults.cardColors(
-                                            containerColor = if (connected) MaterialTheme.colorScheme.surface else MaterialTheme.colorScheme.surfaceVariant
+                                OutlinedCard(
+                                    modifier = Modifier
+                                        .width(180.dp)
+                                        .border(
+                                            width = if (connected) 3.dp else 1.dp,
+                                            color = MaterialTheme.colorScheme.primary.copy(
+                                                alpha = glowAlpha
+                                            ),
+                                            shape = RoundedCornerShape(12.dp)
                                         )
+                                        .shadow(
+                                            elevation = if (connected) 8.dp else 2.dp,
+                                            shape = RoundedCornerShape(12.dp),
+                                            ambientColor = MaterialTheme.colorScheme.primary.copy(
+                                                alpha = glowAlpha
+                                            )
+                                        )
+                                        .clickable {
+                                            if (connected) {
+                                                connectedDevices =
+                                                    connectedDevices.toMutableMap()
+                                                        .apply { remove(name) }
+                                                currentEnergy += value
+                                            } else {
+                                                connectedDevices =
+                                                    connectedDevices.toMutableMap()
+                                                        .apply { put(name, value) }
+                                                currentEnergy -= value
+                                            }
+                                        },
+                                    colors = CardDefaults.cardColors(
+                                        containerColor = if (connected) MaterialTheme.colorScheme.surface else MaterialTheme.colorScheme.surfaceVariant
+                                    )
+                                ) {
+                                    Column(
+                                        modifier = Modifier
+                                            .padding(12.dp)
+                                            .fillMaxWidth(),
+                                        horizontalAlignment = Alignment.CenterHorizontally
                                     ) {
-                                        Column(
-                                            modifier = Modifier
-                                                .padding(12.dp)
-                                                .fillMaxWidth(),
-                                            horizontalAlignment = Alignment.CenterHorizontally
-                                        ) {
-                                            val iconRes = deviceIcons[name]
-                                                ?: R.drawable.baseline_battery_6_bar_24
+                                        val iconRes = deviceIcons[name]
+                                            ?: R.drawable.baseline_battery_6_bar_24
 
-                                            IconTextRow(
-                                                iconRes = iconRes,
-                                                text = name,
-                                                textStyle = MaterialTheme.typography.bodyMedium,
-                                            )
+                                        IconTextRow(
+                                            iconRes = iconRes,
+                                            text = name,
+                                            textStyle = MaterialTheme.typography.bodyMedium,
+                                        )
 
-                                            Spacer(modifier = Modifier.height(4.dp))
-                                            Text(
-                                                text = "%.2f kWh".format(value),
-                                                fontWeight = if (connected) FontWeight.Bold else FontWeight.Normal,
-                                                textAlign = TextAlign.Center
-                                            )
-                                        }
+                                        Spacer(modifier = Modifier.height(4.dp))
+                                        Text(
+                                            text = "%.2f kWh".format(value),
+                                            fontWeight = if (connected) FontWeight.Bold else FontWeight.Normal,
+                                            textAlign = TextAlign.Center
+                                        )
                                     }
                                 }
                             }
                         }
                     }
-
-                    if (isMonthly) {
-                        Spacer(modifier = Modifier.height(32.dp))
-
-                        Column(
-                            modifier = Modifier
-                                .fillMaxSize()
-                                .padding(horizontal = 16.dp, vertical = 8.dp)
-                        ) {
-                            MonthlyChartSection(
-                                title = stringResource(R.string.snow_full_info),
-                                data = weather["mean(snow_coverage_type P1M)"] ?: emptyArray(),
-                                unit = "%"
-                            )
-
-                            MonthlyChartSection(
-                                title = stringResource(R.string.cloud_full_info),
-                                data = weather["mean(cloud_area_fraction P1M)"] ?: emptyArray(),
-                                unit = "%"
-                            )
-
-                            MonthlyChartSection(
-                                title = stringResource(R.string.temp_full_info),
-                                data = weather["mean(air_temperature P1M)"] ?: emptyArray(),
-                                unit = "°C"
-                            )
-
-
-                            val global = weather["mean(PVGIS_radiation P1M)"] ?: emptyArray()
-                            val adjusted =
-                                calculationResult?.adjustedRadiation?.toTypedArray() ?: emptyArray()
-                            val diff = if (global.size == adjusted.size) {
-                                Array(global.size) { i -> global[i] - adjusted[i] }
-                            } else emptyArray()
-
-                            MultiLineChart(
-                                datasets = listOf(
-                                    "Global Radiation" to global,
-                                    "Adjusted Radiation" to adjusted,
-                                    "Difference" to diff
-                                ),
-                                measure = "W/m²"
-                            )
-
-                        }
-                    }
-
-
                 }
 
-                // Bottom sheets
-                HelpBottomSheet(
-                    navController = navController,
-                    visible = showHelp,
-                    onDismiss = { showHelp = false }
-                )
+                if (isMonthly) {
+                    Spacer(modifier = Modifier.height(32.dp))
 
-                AppearanceBottomSheet(
-                    visible = showAppearance,
-                    onDismiss = { showAppearance = false },
-                    fontScaleViewModel = fontScaleViewModel
-                )
+                    Column(
+                        modifier = Modifier
+                            .fillMaxSize()
+                            .padding(horizontal = 16.dp, vertical = 8.dp)
+                    ) {
+                        MonthlyChartSection(
+                            title = stringResource(R.string.snow_full_info),
+                            data = weather["mean(snow_coverage_type P1M)"] ?: emptyArray(),
+                            unit = "%"
+                        )
+
+                        MonthlyChartSection(
+                            title = stringResource(R.string.cloud_full_info),
+                            data = weather["mean(cloud_area_fraction P1M)"] ?: emptyArray(),
+                            unit = "%"
+                        )
+
+                        MonthlyChartSection(
+                            title = stringResource(R.string.temp_full_info),
+                            data = weather["mean(air_temperature P1M)"] ?: emptyArray(),
+                            unit = "°C"
+                        )
+
+
+                        val global = weather["mean(PVGIS_radiation P1M)"] ?: emptyArray()
+                        val adjusted =
+                            calculationResult?.adjustedRadiation?.toTypedArray() ?: emptyArray()
+                        val diff = if (global.size == adjusted.size) {
+                            Array(global.size) { i -> global[i] - adjusted[i] }
+                        } else emptyArray()
+
+                        MultiLineChart(
+                            datasets = listOf(
+                                "Global Radiation" to global,
+                                "Adjusted Radiation" to adjusted,
+                                "Difference" to diff
+                            ),
+                            measure = "W/m²"
+                        )
+
+                    }
+                }
+
+
             }
         }
     }

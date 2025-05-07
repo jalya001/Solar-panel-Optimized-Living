@@ -71,6 +71,8 @@ class HomeScreenViewModel : ViewModel() {
     private suspend fun updateCurrentRadiation(time: ZonedDateTime) {
         val location = _currentLocation.value ?: return
         val radiationTimedArray = weatherRepository.rimData.value
+
+        // There probably is a more elegant way of doing this
         if (radiationTimedArray == null || radiationTimedArray.timestamp < time.minusHours(1)) {
             weatherRepository.fetchRimData(
                 location.latitude, location.longitude,"mean(surface_downwelling_shortwave_flux_in_air PT1H)"

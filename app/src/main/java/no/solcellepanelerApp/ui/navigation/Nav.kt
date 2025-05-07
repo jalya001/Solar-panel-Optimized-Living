@@ -2,6 +2,7 @@ package no.solcellepanelerApp.ui.navigation
 
 
 import android.annotation.SuppressLint
+import android.util.Log
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -20,6 +21,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
@@ -29,11 +31,13 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
+import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavHostController
 import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
+import kotlinx.coroutines.delay
 import no.solcellepanelerApp.R
 
 import no.solcellepanelerApp.ui.electricity.PriceScreen
@@ -63,36 +67,31 @@ fun Nav(
     val weatherViewModel: WeatherViewModel = viewModel()
     val priceScreenViewModel : PriceScreenViewModel = viewModel()
 
-    val title = stringResource(id = R.string.price_title) // fix this later
-    val title2 = stringResource(id = R.string.map_title)
-    val title3 = stringResource(R.string.info_title)
+    val titles = mapOf(
+        "prices" to stringResource(R.string.price_title),
+        "map" to stringResource(R.string.map_title),
+        "info_screen" to stringResource(R.string.info_title),
+        "result" to stringResource(R.string.results)
+    )
 
-    LaunchedEffect(navController) { // No idea if this is a good way of doing it
+    LaunchedEffect(navController) {
         navController.currentBackStackEntryFlow.collect { backStackEntry ->
-            when (backStackEntry.destination.route) {
+            when (val route = backStackEntry.destination.route) {
                 "home" -> {
-                    appScaffoldController.setCustomTopBar({ HomeTopBar(isDarkTheme = isDarkThemeEnabled()) })
-                    appScaffoldController.reinstateBottomBar()
-                }
-                "prices" -> {
-                    appScaffoldController.setTopBar(title)
-                    appScaffoldController.reinstateBottomBar()
-                }
-                "map" -> {
-                    appScaffoldController.setTopBar(title2)
+                    appScaffoldController.setCustomTopBar { HomeTopBar(isDarkTheme = isDarkThemeEnabled()) }
                     appScaffoldController.reinstateBottomBar()
                 }
                 "onboarding" -> {
                     appScaffoldController.clearTopBar()
                     appScaffoldController.clearBottomBar()
                 }
-                "info_screen" -> {
-                    appScaffoldController.setTopBar(title3)
+                in titles.keys -> {
+                    appScaffoldController.setTopBar(titles[route] ?: "")
                     appScaffoldController.reinstateBottomBar()
                 }
                 else -> {
-                    appScaffoldController.clearTopBar()
-                    appScaffoldController.clearBottomBar()
+                    appScaffoldController.setTopBar("")
+                    appScaffoldController.reinstateBottomBar()
                 }
             }
         }
@@ -117,9 +116,7 @@ fun Nav(
         }
         composable("result") {
             ResultScreen(
-                navController, mapScreenViewModel, weatherViewModel, fontScaleViewModel,
-                priceScreenViewModel = priceScreenViewModel,
-                //contentPadding = contentPadding
+                navController, mapScreenViewModel, weatherViewModel, contentPadding
             )
         }
         composable("prices") {
@@ -133,52 +130,24 @@ fun Nav(
                 contentPadding = contentPadding
             )
         }
-        composable(
-            "monthly_savings/{month}/{energyProduced}/{energyPrice}",
-            arguments = listOf(
-                navArgument("month") { type = NavType.StringType },
-                navArgument("energyProduced") { type = NavType.StringType },
-                navArgument("energyPrice") { type = NavType.StringType }
-            )
-        ) { backStackEntry ->
-            val month = backStackEntry.arguments?.getString("month") ?: ""
-            val energyProduced =
-                backStackEntry.arguments?.getString("energyProduced")?.toDoubleOrNull() ?: 0.0
-            val energyPrice =
-                backStackEntry.arguments?.getString("energyPrice")?.toDoubleOrNull() ?: 0.0
-
-            EnergySavingsScreen(
-                isMonthly = true,
-                month = month,
-                energyProduced = energyProduced,
-                energyPrice = energyPrice,
-                navController = navController,
-                fontScaleViewModel = fontScaleViewModel,
-                weatherViewModel = weatherViewModel
-            )
-        }
-
-        composable(
-            "yearly_savings/{energyProduced}/{energyPrice}",
-            arguments = listOf(
-                navArgument("energyProduced") { type = NavType.StringType },
-                navArgument("energyPrice") { type = NavType.StringType }
-            )
-        ) { backStackEntry ->
-            val energyProduced =
-                backStackEntry.arguments?.getString("energyProduced")?.toDoubleOrNull() ?: 0.0
-            val energyPrice =
-                backStackEntry.arguments?.getString("energyPrice")?.toDoubleOrNull() ?: 0.0
-
-            EnergySavingsScreen(
-                isMonthly = false,
-                energyProduced = energyProduced,
-                energyPrice = energyPrice,
-                navController = navController,
-                fontScaleViewModel = fontScaleViewModel,
-                weatherViewModel = weatherViewModel
-            )
-        }
+        savingsComposable(
+            route = "monthly_savings/{month}/{energyProduced}/{energyPrice}",
+            isMonthly = true,
+            navController = navController,
+            fontScaleViewModel = fontScaleViewModel,
+            weatherViewModel = weatherViewModel,
+            appScaffoldController = appScaffoldController,
+            contentPadding = contentPadding
+        )
+        savingsComposable(
+            route = "yearly_savings/{energyProduced}/{energyPrice}",
+            isMonthly = false,
+            navController = navController,
+            fontScaleViewModel = fontScaleViewModel,
+            weatherViewModel = weatherViewModel,
+            appScaffoldController = appScaffoldController,
+            contentPadding = contentPadding
+        )
     }
 }
 
@@ -251,12 +220,9 @@ fun BottomBar(
 fun TopBar(
     navController: NavController,
     text: String,
-    onBackClick: (() -> Unit)? = null,
-    backClick: Boolean = true,
     @SuppressLint("ModifierParameter") modifier: Modifier = Modifier,
     showHomeButton: Boolean = false,
 ) {
-    var backClicked by remember { mutableStateOf(false) }
 
     CenterAlignedTopAppBar(
         modifier = Modifier.fillMaxWidth(),
@@ -268,24 +234,17 @@ fun TopBar(
             )
         },
         navigationIcon = {
-            if (backClick) {
-                OutlinedIconButton(
-                    onClick = {
-                        if (!backClicked) {
-                            backClicked = true
-                            onBackClick?.invoke()
-                            navController.popBackStack()
-                        }
-                    },
-                    enabled = !backClicked,
-                    modifier = modifier.padding(top = 10.dp),
-                    border = BorderStroke(2.dp, MaterialTheme.colorScheme.tertiary)
-                ) {
-                    Icon(
-                        Icons.AutoMirrored.Filled.ArrowBack,
-                        contentDescription = "Go back"
-                    )
-                }
+            OutlinedIconButton(
+                onClick = {
+                    navController.popBackStack()
+                },
+                modifier = modifier.padding(top = 10.dp),
+                border = BorderStroke(2.dp, MaterialTheme.colorScheme.tertiary)
+            ) {
+                Icon(
+                    Icons.AutoMirrored.Filled.ArrowBack,
+                    contentDescription = "Go back"
+                )
             }
         },
         actions = {
@@ -303,4 +262,44 @@ fun TopBar(
             }
         }
     )
+}
+
+fun NavGraphBuilder.savingsComposable(
+    route: String,
+    isMonthly: Boolean,
+    navController: NavHostController,
+    fontScaleViewModel: FontScaleViewModel,
+    weatherViewModel: WeatherViewModel,
+    appScaffoldController: AppScaffoldController,
+    contentPadding: PaddingValues
+) {
+    val arguments = when (isMonthly) {
+        true -> listOf(
+            navArgument("month") { type = NavType.StringType },
+            navArgument("energyProduced") { type = NavType.StringType },
+            navArgument("energyPrice") { type = NavType.StringType }
+        )
+        false -> listOf(
+            navArgument("energyProduced") { type = NavType.StringType },
+            navArgument("energyPrice") { type = NavType.StringType }
+        )
+    }
+
+    composable(route, arguments = arguments) { backStackEntry ->
+        val month = backStackEntry.arguments?.getString("month") ?: ""
+        val energyProduced = backStackEntry.arguments?.getString("energyProduced")?.toDoubleOrNull() ?: 0.0
+        val energyPrice = backStackEntry.arguments?.getString("energyPrice")?.toDoubleOrNull() ?: 0.0
+
+        EnergySavingsScreen(
+            isMonthly = isMonthly,
+            month = if (isMonthly) month else "",
+            energyProduced = energyProduced,
+            energyPrice = energyPrice,
+            navController = navController,
+            fontScaleViewModel = fontScaleViewModel,
+            weatherViewModel = weatherViewModel,
+            appScaffoldController = appScaffoldController,
+            contentPadding = contentPadding
+        )
+    }
 }

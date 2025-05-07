@@ -3,6 +3,7 @@ package no.solcellepanelerApp.ui.result
 import android.util.Log
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -54,7 +55,7 @@ import java.time.ZonedDateTime
 @Composable
 fun ResultScreen(
     navController: NavController, viewModel: MapScreenViewModel, weatherViewModel: WeatherViewModel,
-    fontScaleViewModel: FontScaleViewModel, priceScreenViewModel: PriceScreenViewModel,
+    contentPadding: PaddingValues,
 ) {
     val weatherData by weatherViewModel.weatherData.collectAsState()
     val errorScreen by weatherViewModel.errorScreen.collectAsState()
@@ -96,109 +97,78 @@ fun ResultScreen(
         else -> 0.0
     }*/
 
-    var showHelp by remember { mutableStateOf(false) }
-    var showAppearance by remember { mutableStateOf(false) }
     var showAllMonths by remember { mutableStateOf(false) }
 
-    Scaffold(
-        topBar = {
-            TopBar(
-                navController,
-                text = stringResource(R.string.results),
-//                showHomeButton = true
-            )
-        },
-        bottomBar = {
-            BottomBar(
-                onHelpClicked = { showHelp = true },
-                onAppearanceClicked = { showAppearance = true },
-                navController = navController
-            )
-        }
-    ) { contentPadding ->
-        Column(
-            modifier = Modifier
-                .padding(contentPadding),
-            horizontalAlignment = Alignment.CenterHorizontally,
-            verticalArrangement = Arrangement.Top
-        ) {
-            when (uiState) {
-                WeatherViewModel.UiState.LOADING -> {
-                    LoadingScreen()
+    Column(
+        modifier = Modifier
+            .padding(contentPadding),
+        horizontalAlignment = Alignment.CenterHorizontally,
+        verticalArrangement = Arrangement.Top
+    ) {
+        when (uiState) {
+            WeatherViewModel.UiState.LOADING -> {
+                LoadingScreen()
+            }
+
+            WeatherViewModel.UiState.ERROR -> {
+                errorScreen()
+            }
+
+            else -> {
+
+                val snowCoverData = weatherData["mean(snow_coverage_type P1M)"] ?: emptyArray()
+                val airTempData = weatherData["mean(air_temperature P1M)"] ?: emptyArray()
+                val cloudCoverData =
+                    weatherData["mean(cloud_area_fraction P1M)"] ?: emptyArray()
+                val radiationData = weatherData["mean(PVGIS_radiation P1M)"] ?: emptyArray()
+
+
+                weatherViewModel.calculateSolarPanelOutput(panelArea, efficiency)
+
+                val energyPrice = 1.0
+
+                Row(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(vertical = 8.dp),
+                    horizontalArrangement = Arrangement.SpaceEvenly
+                ) {
+                    SavingsMonth_Card(
+                        label = stringResource(R.string.yearly_savings_label),
+                        iconRes = R.drawable.baseline_attach_money_24,
+                        onClick = {
+                            navController.navigate("yearly_savings/${calc?.yearlyEnergyOutput}/$energyPrice")
+                        }
+                    )
+
+                    SavingsMonth_Card(
+                        label = if (showAllMonths) stringResource(R.string.show_one_month)
+                        else stringResource(R.string.show_all_months),
+                        iconRes = R.drawable.baseline_calendar_month_24,
+                        onClick = {
+                            showAllMonths = !showAllMonths
+                        }
+                    )
                 }
 
-                WeatherViewModel.UiState.ERROR -> {
-                    errorScreen()
-                }
-
-                else -> {
-
-                    val snowCoverData = weatherData["mean(snow_coverage_type P1M)"] ?: emptyArray()
-                    val airTempData = weatherData["mean(air_temperature P1M)"] ?: emptyArray()
-                    val cloudCoverData =
-                        weatherData["mean(cloud_area_fraction P1M)"] ?: emptyArray()
-                    val radiationData = weatherData["mean(PVGIS_radiation P1M)"] ?: emptyArray()
-
-
-                    weatherViewModel.calculateSolarPanelOutput(panelArea, efficiency)
-
-                    val energyPrice = 1.0
-
-                    Row(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(vertical = 8.dp),
-                        horizontalArrangement = Arrangement.SpaceEvenly
-                    ) {
-                        SavingsMonth_Card(
-                            label = stringResource(R.string.yearly_savings_label),
-                            iconRes = R.drawable.baseline_attach_money_24,
-                            onClick = {
-                                navController.navigate("yearly_savings/${calc?.yearlyEnergyOutput}/$energyPrice")
-                            }
-                        )
-
-                        SavingsMonth_Card(
-                            label = if (showAllMonths) stringResource(R.string.show_one_month)
-                            else stringResource(R.string.show_all_months),
-                            iconRes = R.drawable.baseline_calendar_month_24,
-                            onClick = {
-                                showAllMonths = !showAllMonths
-                            }
-                        )
-                    }
-
-                    calc?.let {
-                        MonthDataDisplay(
-                            cloudCoverData = cloudCoverData,
-                            snowCoverData = snowCoverData,
-                            airTempData = airTempData,
-                            radiationData = radiationData,
-                            adjustedRadiation = it.adjustedRadiation,
-                            monthlyEnergyOutput = it.monthlyEnergyOutput,
-                            monthlyPowerOutput = it.monthlyPowerOutput,
-                            months = months,
-                            navController = navController,
-                            energyPrice = energyPrice,
-                            showAllMonths = showAllMonths
-                        )
-                    }
+                calc?.let {
+                    MonthDataDisplay(
+                        cloudCoverData = cloudCoverData,
+                        snowCoverData = snowCoverData,
+                        airTempData = airTempData,
+                        radiationData = radiationData,
+                        adjustedRadiation = it.adjustedRadiation,
+                        monthlyEnergyOutput = it.monthlyEnergyOutput,
+                        monthlyPowerOutput = it.monthlyPowerOutput,
+                        months = months,
+                        navController = navController,
+                        energyPrice = energyPrice,
+                        showAllMonths = showAllMonths
+                    )
                 }
             }
         }
-
-        HelpBottomSheet(
-            navController = navController,
-            visible = showHelp,
-            onDismiss = { showHelp = false },
-        )
-        AppearanceBottomSheet(
-            visible = showAppearance,
-            onDismiss = { showAppearance = false },
-            fontScaleViewModel = fontScaleViewModel
-        )
     }
-
 }
 
 
