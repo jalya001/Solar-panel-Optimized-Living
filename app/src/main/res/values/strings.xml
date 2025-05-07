@@ -324,6 +324,11 @@
     <string name="price_suffix_part2">s</string>
     <string name="past_price_prefix">Price for</string>
     <string name="past_price_suffix">ago</string>
+    <string name="oslo">Oslo/Eastern Norway</string>
+    <string name="kristiansand">Kristiansand/Southern Norway</string>
+    <string name="tromso">Tromsø/Northern Norway</string>
+    <string name="bergen">Bergen/Western Norway</string>
+    <string name="trondheim">Trondheim/Central Norway</string>
 
     <!-- Tutorial Overlays -->
     <string name="overlay_bottom_message">Click anywhere to continue</string>

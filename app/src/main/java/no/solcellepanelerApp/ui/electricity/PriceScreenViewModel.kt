@@ -25,7 +25,7 @@ class PriceScreenViewModel(
     private val _priceUiState = MutableStateFlow<PriceUiState>(PriceUiState.Loading)
     val priceUiState: StateFlow<PriceUiState> = _priceUiState.asStateFlow()
 
-    private val _region = MutableStateFlow<Region?>(Region.TROMSO)
+    private val _region = MutableStateFlow<Region?>(Region.OSLO)
     val region: StateFlow<Region?> = _region
 
 

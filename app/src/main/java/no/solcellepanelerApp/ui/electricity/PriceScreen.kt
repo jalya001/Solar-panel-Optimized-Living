@@ -34,6 +34,7 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
 import no.solcellepanelerApp.R
 import no.solcellepanelerApp.model.electricity.Region
+import no.solcellepanelerApp.model.electricity.getRegionName
 import no.solcellepanelerApp.ui.font.FontScaleViewModel
 import no.solcellepanelerApp.ui.handling.ErrorScreen
 import no.solcellepanelerApp.ui.handling.LoadingScreen
@@ -141,7 +142,7 @@ fun RegionDropdown(
         onExpandedChange = { expanded = it }
     ) {
         TextField(
-            value = selectedRegion.displayName,
+            value = getRegionName(selectedRegion),
             onValueChange = {},
             readOnly = true,
             label = {
@@ -167,7 +168,7 @@ fun RegionDropdown(
                 DropdownMenuItem(
                     text = {
                         Text(
-                            region.displayName,
+                            getRegionName(region),
                             color = MaterialTheme.colorScheme.tertiary,
                             style = MaterialTheme.typography.bodyLarge
                         )
