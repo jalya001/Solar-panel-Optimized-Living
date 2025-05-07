@@ -3,7 +3,10 @@ package no.solcellepanelerApp.ui.map
 import android.Manifest
 import android.content.Context
 import android.content.pm.PackageManager
+import android.graphics.Bitmap
 import android.graphics.Canvas
+import android.graphics.Paint
+import android.graphics.RectF
 import android.location.Location
 import android.util.Log
 import androidx.compose.foundation.background
@@ -111,6 +114,7 @@ import no.solcellepanelerApp.ui.theme.lightGrey
 import no.solcellepanelerApp.ui.theme.orange
 import no.solcellepanelerApp.util.RequestLocationPermission
 import no.solcellepanelerApp.util.fetchCoordinates
+import kotlin.math.max
 
 
 @Composable
@@ -314,7 +318,8 @@ fun DisplayScreen(
                         state = pointMarkerState,
                         title = "${stringResource(id = R.string.point)} ${index + 1}",
                         context = LocalContext.current,
-                        draggable = true
+                        draggable = true,
+                        displayLabel = true
                     )
                 }
 
@@ -808,15 +813,12 @@ fun MapMarker(
     snippet: String? = null,
     state: MarkerState,
     draggable: Boolean = true,
+    displayLabel: Boolean = false,
 ) {
-
-    val iconResourceId =
-        R.drawable.baseline_location_pin_24
-
-    val tintColor = orange.toArgb()
-
-    val icon =
-        bitmapDescriptor(context, iconResourceId, width = 120, height = 120, tint = tintColor)
+    val icon = remember(title) {
+        val iconBitmap = createLabelledMarkerBitmap(context, title, displayLabel)
+        BitmapDescriptorFactory.fromBitmap(iconBitmap)
+    }
 
     if (snippet != null) {
         Marker(
@@ -835,6 +837,84 @@ fun MapMarker(
         )
     }
 }
+
+fun createLabelledMarkerBitmap(
+    context: Context,
+    label: String,
+    displayLabel: Boolean = false,
+): Bitmap {
+    val iconSize = 120
+    val padding = 20
+
+    if (displayLabel) {
+        val textPaint = Paint().apply {
+            color = orange.toArgb() // <-- Your orange
+            textSize = 50f
+            isAntiAlias = true
+            textAlign = Paint.Align.CENTER
+        }
+
+        val bgPaint = Paint().apply {
+            color = Color.Black.copy(alpha = 0.6f).toArgb() // light orange background
+            isAntiAlias = true
+        }
+
+        val fontMetrics = textPaint.fontMetrics
+        val textHeight = (fontMetrics.descent - fontMetrics.ascent).toInt()
+        val baseline = -fontMetrics.ascent
+
+        val labelPadding = 16
+        val labelWidth = max(
+            textPaint.measureText(label).toInt() + labelPadding * 2,
+            iconSize
+        )
+        val height = textHeight + iconSize + padding + labelPadding
+
+        val bitmap = Bitmap.createBitmap(labelWidth, height, Bitmap.Config.ARGB_8888)
+        val canvas = Canvas(bitmap)
+
+        // Draw background behind label
+        val rect = RectF(
+            0f,
+            0f,
+            labelWidth.toFloat(),
+            textHeight + labelPadding.toFloat()
+        )
+        canvas.drawRoundRect(rect, 20f, 20f, bgPaint)
+
+        // Draw the label text
+        canvas.drawText(
+            label,
+            labelWidth / 2f,
+            baseline + labelPadding / 2f,
+            textPaint
+        )
+
+        // Draw the marker icon
+        val drawable = ContextCompat.getDrawable(context, R.drawable.baseline_location_pin_24)
+        drawable?.setTint(orange.toArgb()) // <-- Your orange again
+        drawable?.setBounds(
+            (labelWidth - iconSize) / 2,
+            textHeight + labelPadding + padding,
+            (labelWidth + iconSize) / 2,
+            textHeight + iconSize + labelPadding + padding
+        )
+        drawable?.draw(canvas)
+
+        return bitmap
+    } else {
+        val bitmap = Bitmap.createBitmap(iconSize, iconSize, Bitmap.Config.ARGB_8888)
+        val canvas = Canvas(bitmap)
+
+        val drawable = ContextCompat.getDrawable(context, R.drawable.baseline_location_pin_24)
+        drawable?.setTint(orange.toArgb())
+        drawable?.setBounds(0, 0, iconSize, iconSize)
+        drawable?.draw(canvas)
+
+        return bitmap
+    }
+}
+
 
 fun bitmapDescriptor(
     context: Context,
