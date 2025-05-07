@@ -195,7 +195,7 @@ fun PriceRow(
             Spacer(modifier = Modifier.height(8.dp))
 
             Text(
-                text = "${"%2f".format(price)} NOK/kWh",
+                text = "${"%.3f".format(price)} NOK/kWh",
                 style = MaterialTheme.typography.bodyMedium
             )
             Text(

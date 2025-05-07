@@ -101,6 +101,7 @@ fun PriceScreen(
                 is PriceUiState.Error -> ErrorScreen()
                 is PriceUiState.Success -> {
                     val prices = (priceUiState as PriceUiState.Success).prices
+                    Spacer(modifier = Modifier.height(24.dp))
                     ElectricityPriceChart(prices = prices)
                     Spacer(modifier = Modifier.height(16.dp))
                     val currentHour = ZonedDateTime.now(ZoneId.of("Europe/Oslo")).hour
@@ -132,7 +133,7 @@ fun PriceScreen(
 @Composable
 fun RegionDropdown(
     selectedRegion: Region,
-    onRegionSelected: (Region) -> Unit,
+    onRegionSelected: (Region) -> Unit
 ) {
     var expanded by remember { mutableStateOf(false) }
     ExposedDropdownMenuBox(
