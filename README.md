@@ -1,7 +1,9 @@
-![Logo](https://dev-to-uploads.s3.amazonaws.com/uploads/articles/th5xamgrr6se0x5ro4g6.png)
+<div style="display: flex; gap: 10px; align-items: center;">
+  <img src="https://raw.github.uio.no/IN2000-V25/team-37/77b25b5ad94318869be2c39fbd6193981ba85a6b/app/src/main/res/drawable/circular%20logo%20light.png?token=GHSAT0AAAAAAAAAK6TPAEPQYL4Z7YQGEYTI2AY4S3Q" alt="Logo Light" width="150"/>
+  <img src="https://raw.github.uio.no/IN2000-V25/team-37/77b25b5ad94318869be2c39fbd6193981ba85a6b/app/src/main/res/drawable/circular%20logo%20dark.png?token=GHSAT0AAAAAAAAAK6TORDGIJ6DBZJDPOYY22AY4TEQ" alt="Logo Dark" width="150"/>
+</div>
 
-
-# Project Title
+# “SOL – Solar panel Optimized Living”
 
 A brief description of what this project does and who it's for
 
@@ -19,9 +21,9 @@ A brief description of what this project does and who it's for
 ## Features
 
 - Light/dark mode toggle
-- Live previews
-- Fullscreen mode
-- Cross platform
+- xxxxx
+- xxxxx
+- xxxxx
 
 
 ## Screenshots
@@ -32,6 +34,7 @@ A brief description of what this project does and who it's for
 ## Lessons Learned
 
 What did you learn while building this project? What challenges did you face and how did you overcome them?
+- xxxxx
 
 
 ## Documentation

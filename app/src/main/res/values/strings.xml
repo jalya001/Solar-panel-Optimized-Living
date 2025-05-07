@@ -4,7 +4,7 @@
     <!--Home Screen-->
     <string name="home"> Home</string>
     <string name="install_panels_title">Find Your \n Solar Potential!</string>
-    <string name="install_panels_desc">Enter your address and details — see your estimated power and savings from solar panels.  *må jobbes med* </string>
+    <string name="install_panels_desc">Enter your address and details — see your estimated power and savings from solar panels.</string>
     <string name="last_location"> Last location (trenger bedre navn)</string>
     <string name="prices"> Electricity prices </string>
     <string name="help">Help</string>
