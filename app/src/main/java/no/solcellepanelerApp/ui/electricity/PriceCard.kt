@@ -12,10 +12,10 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.ArrowBack
+import androidx.compose.material.icons.automirrored.filled.ArrowForward
 import androidx.compose.material.icons.filled.AccessTime
-import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.ArrowDownward
-import androidx.compose.material.icons.filled.ArrowForward
 import androidx.compose.material.icons.filled.ArrowUpward
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
@@ -105,7 +105,7 @@ fun PriceCard(
                             verticalAlignment = Alignment.CenterVertically
                         ) {
                             Icon(
-                                imageVector = Icons.Default.ArrowBack,
+                                imageVector = Icons.AutoMirrored.Filled.ArrowBack,
                                 contentDescription = "Forrige time",
                                 modifier = Modifier
                                     .padding(2.dp)
@@ -115,7 +115,7 @@ fun PriceCard(
                                 tint = MaterialTheme.colorScheme.primary
                             )
                             Icon(
-                                imageVector = Icons.Default.ArrowForward,
+                                imageVector = Icons.AutoMirrored.Filled.ArrowForward,
                                 contentDescription = "Neste time",
                                 modifier = Modifier
                                     .padding(2.dp)
@@ -176,7 +176,7 @@ fun PriceRow(
             )
 
             Text(
-                text = "${"%2f".format(price)} NOK/kWh",
+                text = "${"%.3f".format(price)} NOK/kWh",
                 style = MaterialTheme.typography.bodyMedium
             )
             Text(

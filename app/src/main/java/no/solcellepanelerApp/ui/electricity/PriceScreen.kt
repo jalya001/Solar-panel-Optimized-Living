@@ -18,6 +18,7 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
@@ -101,11 +102,12 @@ fun PriceScreen(
                     is PriceUiState.Error -> ErrorScreen()
                     is PriceUiState.Success -> {
                         val prices = (priceUiState as PriceUiState.Success).prices
+                        Spacer(modifier = Modifier.height(24.dp))
                         ElectricityPriceChart(prices = prices)
                         Spacer(modifier = Modifier.height(16.dp))
                         val currentHour = ZonedDateTime.now(ZoneId.of("Europe/Oslo")).hour
                         val initialIndex = prices.indexOfFirst { ZonedDateTime.parse(it.time_start).hour == currentHour }
-                        var hourIndex by remember { mutableStateOf(initialIndex.coerceAtLeast(0)) }
+                        var hourIndex by remember { mutableIntStateOf(initialIndex.coerceAtLeast(0)) }
                         PriceCard(
                             prices = prices,
                             hourIndex = hourIndex,
@@ -147,14 +149,7 @@ fun RegionDropdown(
             textStyle = TextStyle(color = MaterialTheme.colorScheme.tertiary, fontSize = 18.sp),
             modifier = Modifier
                 .fillMaxWidth()
-                .menuAnchor(),
-//            colors = OutlinedTextFieldDefaults.colors(
-//                unfocusedContainerColor = MaterialTheme.colorScheme.secondary,
-//                focusedBorderColor = MaterialTheme.colorScheme.tertiary,
-//                focusedContainerColor = MaterialTheme.colorScheme.background,
-//                focusedLabelColor = MaterialTheme.colorScheme.tertiary,
-//                unfocusedTextColor = MaterialTheme.colorScheme.tertiary,
-//                unfocusedBorderColor = MaterialTheme.colorScheme.tertiary
+                .menuAnchor()
         )
         ExposedDropdownMenu(
             expanded = expanded,
@@ -166,15 +161,7 @@ fun RegionDropdown(
                     onClick = {
                         onRegionSelected(region)
                         expanded = false
-                    },
-//                    colors = MenuItemColors(
-//                        leadingIconColor = MaterialTheme.colorScheme.secondary,
-//                        trailingIconColor = MaterialTheme.colorScheme.tertiary,
-//                        textColor = MaterialTheme.colorScheme.tertiary,
-//                        disabledTextColor = MaterialTheme.colorScheme.tertiary,
-//                        disabledLeadingIconColor = MaterialTheme.colorScheme.primary,
-//                        disabledTrailingIconColor = MaterialTheme.colorScheme.tertiary
-//                    )
+                    }
                 )
             }
         }
