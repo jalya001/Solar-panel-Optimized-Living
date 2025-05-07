@@ -18,9 +18,11 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import kotlinx.coroutines.launch
+import no.solcellepanelerApp.R
 import no.solcellepanelerApp.ui.theme.SolcellepanelerAppTheme
 
 @OptIn(ExperimentalFoundationApi::class)
@@ -37,13 +39,17 @@ fun OnboardingScreen(onFinished: () -> Unit) {
     val pagerState = rememberPagerState(initialPage = 0) {
         pages.size
     }
+
+    val next = stringResource(R.string.next)
+    val back = stringResource(R.string.back)
+
     val buttonState = remember {
         derivedStateOf {
             when (pagerState.currentPage) {
-                0 -> listOf("", "Next")
-                1 -> listOf("Back", "Next")
-                2 -> listOf("Back", "Next")
-                3 -> listOf("Back", "Start")
+                0 -> listOf("", next)
+                1 -> listOf(back, next)
+                2 -> listOf(back, next)
+                3 -> listOf(back, "Start")
                 else -> listOf("", "")
             }
         }

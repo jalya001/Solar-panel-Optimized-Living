@@ -303,6 +303,8 @@
     <string name="nodata_error">Vi fant ingen data for dette området. Unnskyld!</string>
     <string name="partialdata_error">Det mangler data for dette området, og vi kan ikke gi et estimat. Unnskyld!</string>
     <string name="unexpected_error">Uforventet oppførsel. Kontakt utviklerne.</string>
+    <string name="next">Neste</string>
+    <string name="back">Tilbake</string>
 
     <!-- Price Screen -->
     <string name="region">Velg distrikt</string>
