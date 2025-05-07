@@ -41,7 +41,6 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
@@ -100,6 +99,7 @@ fun HomeScreen(
     val onboardingUtils = remember { OnboardingUtils(context) }
 
     var showOverlay by remember { mutableStateOf(false) }
+    showOverlay = true
 
     LaunchedEffect(Unit) {
         if (!onboardingUtils.isHomeOverlayShown()) {
@@ -132,21 +132,6 @@ fun HomeScreen(
         LoadingScreen()
         return
     }
-
-//    //Request location permission and fetch region
-//    RequestLocationPermission { region ->
-//        selectedRegion = region
-//        locationPermissionGranted = true
-//
-//    }
-//
-//    LaunchedEffect(locationPermissionGranted) {
-//        if (locationPermissionGranted && activity != null) {
-//            val location = fetchCoordinates(context, activity)
-//            currentLocation = location
-//
-//        }
-//    }
 
     LaunchedEffect(Unit) {
         val permissionGranted = ContextCompat.checkSelfPermission(
@@ -188,7 +173,12 @@ fun HomeScreen(
         ThemeMode.SYSTEM -> isSystemInDarkTheme()
     }
 
-
+    if (showOverlay) {
+        SimpleTutorialOverlay(
+            onDismiss = { showOverlay = false },
+            stringResource(R.string.home_overlay)
+        )
+    }
     Scaffold(
         topBar = {
             Surface(
@@ -229,12 +219,6 @@ fun HomeScreen(
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.Center
         ) {
-            if (showOverlay) {
-                SimpleTutorialOverlay(
-                    onDismiss = { showOverlay = false },
-                    stringResource(R.string.home_overlay)
-                )
-            }
 
             MyNavCard(
                 text = stringResource(id = R.string.install_panels_title),
@@ -476,15 +460,4 @@ fun SunAnimation(value: Double) {
             )
     )
     Log.d("SunAnimation", "Animating with value: $value")
-}
-
-@Preview(showBackground = true)
-@Composable
-fun HomeOverlayPreview() {
-    SimpleTutorialOverlay(
-        onDismiss = {},
-        message = "Welcome to your home screen!\n\n" +
-                "Tap \"Find your solar potential\" to see how much you can save with solar panels!\n\n" +
-                "Tap the electricity prices in the bottom right corner to get more details about energy costs.\n\n"
-    )
 }
