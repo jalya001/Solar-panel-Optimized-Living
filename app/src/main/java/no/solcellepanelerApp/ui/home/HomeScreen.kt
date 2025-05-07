@@ -99,7 +99,7 @@ fun HomeScreen(
     val onboardingUtils = remember { OnboardingUtils(context) }
 
     var showOverlay by remember { mutableStateOf(false) }
-    showOverlay = true
+//    showOverlay = true //testing
 
     LaunchedEffect(Unit) {
         if (!onboardingUtils.isHomeOverlayShown()) {
