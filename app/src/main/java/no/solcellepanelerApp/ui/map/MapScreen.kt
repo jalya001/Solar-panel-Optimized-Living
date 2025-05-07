@@ -106,6 +106,7 @@ import no.solcellepanelerApp.ui.navigation.TopBar
 import no.solcellepanelerApp.ui.onboarding.OnboardingUtils
 import no.solcellepanelerApp.ui.result.WeatherViewModel
 import no.solcellepanelerApp.ui.reusables.SimpleTutorialOverlay
+
 import no.solcellepanelerApp.ui.theme.darkGrey
 import no.solcellepanelerApp.ui.theme.lightBlue
 import no.solcellepanelerApp.ui.theme.lightGrey

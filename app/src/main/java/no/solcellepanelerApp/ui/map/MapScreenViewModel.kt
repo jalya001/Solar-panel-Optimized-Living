@@ -99,6 +99,7 @@ class MapScreenViewModel(
                 val result = repository.getCoordinates(address)
                 if (result.isNotEmpty()) {
                     val coordinate = result[0]
+                    Log.d("MyViewModel", "Fetched coordinates: $coordinate")
                     _height.value = repository.getHeight(Pair(coordinate.lat.toDouble(), coordinate.lon.toDouble()))
                     _coordinates.postValue(
                         Pair(

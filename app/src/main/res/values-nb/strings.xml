@@ -134,9 +134,9 @@
     <!--Additional Input-->
     <string name="area_label">Takareal (m²)</string>
     <string name="draw_area">Tegn areal</string>
-    <string name="slope_label">Vinkel på taket fra 0 - 90°</string>
+    <string name="slope_label">Vinkel på taket fra 0 – 90°</string>
     <string name="direction_label">Retningen panelet vender mot</string>
-    <string name="efficiency_label">Effektiviteten til panelene, vanligvis mellom 16-20 %</string>
+    <string name="efficiency_label">Effektiviteten til panelene, vanligvis mellom 16–20 %</string>
     <string name="coordinates_label">Koordinater (fra kart):</string>
     <string name="coordinates_unavailable">Ingen koordinater tilgjengelig</string>
     <string name="closest_weather_station">Nærmeste værstasjon:</string>
@@ -222,8 +222,9 @@
     <string name="global_radiation">Global stråling: %.2f kWh/m²</string>
     <string name="avg_cloud_cover"> Gjennomsnittlig skydekke: %.2f</string>
     <string name="avg_snow_cover">Gjennomsnittlig snødekke: %.2f</string>
-    <string name="temp_factor">Temperaturfaktor: %.2f %</string>
-    <string name="temp_factor_explanation">Aazan fikser forklaring</string>
+    <string name="temp_factor">Temperaturfaktor: %.2f%%</string>
+
+    <string name="temp_factor_explanation">Temperaturfaktor justerer estimert energiproduksjon basert på gjennomsnittlig månedstemperatur.</string>
     <string name="adj_radiation">Justert stråling: %.2f kWh/m²</string>
     <string name="adj_radiation_explanation">Dette er mengden solstråling panelene dine mottar, juster med snø-, sky- og temperaturdata for posisjonen din</string>
     <string name="estimated_energy_prod">Estimert produsert energi: \n%.2f kWh </string>

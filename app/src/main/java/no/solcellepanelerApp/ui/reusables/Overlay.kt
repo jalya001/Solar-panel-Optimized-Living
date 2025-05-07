@@ -1,5 +1,6 @@
 package no.solcellepanelerApp.ui.reusables
 
+
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
@@ -41,6 +42,7 @@ fun SimpleTutorialOverlay(
             fontWeight = FontWeight.ExtraLight
         )
 
+
         Text(
             text = bottomMessage,
             color = Color.White,
@@ -51,3 +53,47 @@ fun SimpleTutorialOverlay(
         )
     }
 }
+//@Composable
+//fun SimpleTutorialOverlayWithImage(
+//    onDismiss: () -> Unit,
+//    message: String = stringResource(R.string.overlay_message),
+//    bottomMessage: String = stringResource(R.string.overlay_bottom_message),
+//) {
+//    Box(
+//        modifier = Modifier
+//            .fillMaxSize()
+//            .background(Color.Black.copy(alpha = 0.8f))
+//            .clickable { onDismiss() }
+//            .zIndex(2f)
+//            .padding(20.dp)
+//    ) {
+//        Text(
+//            text = message,
+//            color = Color.White,
+//            style = MaterialTheme.typography.headlineSmall,
+//            modifier = Modifier.align(Alignment.Center),
+//            textAlign = TextAlign.Center,
+//            fontWeight = FontWeight.ExtraLight
+//        )
+//
+//        Image(
+//            painter = painterResource(id = R.drawable.house),
+//            contentDescription = "House",
+//            modifier = Modifier
+//                .width(200.dp)
+//                .height(300.dp)
+//                .align(Alignment.Center)
+////                .offset(y = (-10).dp),
+//            ,contentScale = ContentScale.Fit
+//        )
+//
+//        Text(
+//            text = bottomMessage,
+//            color = Color.White,
+//            style = MaterialTheme.typography.bodyMedium,
+//            modifier = Modifier
+//                .align(Alignment.BottomCenter),
+//            textAlign = TextAlign.Center
+//        )
+//    }
+//}

@@ -37,30 +37,30 @@ import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
 import androidx.core.content.ContextCompat
 import no.solcellepanelerApp.R
-import no.solcellepanelerApp.model.electricity.Region
+
 import no.solcellepanelerApp.model.onboarding.OnBoardModel
 import no.solcellepanelerApp.ui.language.LangSwitch
 import no.solcellepanelerApp.ui.reusables.ModeCard
 import no.solcellepanelerApp.ui.theme.ThemeMode
 import no.solcellepanelerApp.ui.theme.ThemeState
-import no.solcellepanelerApp.util.rememberLocationWithPermission
+
 
 @Composable
-fun OnboardingGraphUI(OnBoardModel: OnBoardModel) {
+fun OnboardingGraphUI(onBoardModel: OnBoardModel) {
     val isDark = isSystemInDarkTheme()
     var triggerLocationFetch by remember { mutableStateOf(false) }
 
-    var region: Region? by remember { mutableStateOf(null) }
-    val (currentLocation, locationGranted) = if (triggerLocationFetch) {
-        rememberLocationWithPermission(
-            triggerRequest = true,
-            onRegionDetermined = { region = it }
-        )
-    } else {
-        Pair(null, false)
-    }
+//    var region: Region? by remember { mutableStateOf(null) }
+//    val (currentLocation, locationGranted) = if (triggerLocationFetch) {
+//        rememberLocationWithPermission(
+//            triggerRequest = true,
+//            onRegionDetermined = { region = it }
+//        )
+//    } else {
+//        Pair(null, false)
+//    }
 
-    val imageRes = when (OnBoardModel) {
+    val imageRes = when (onBoardModel) {
         is OnBoardModel.FirstPage -> if (isDark) R.drawable.onboard_logo_dark else R.drawable.onboard_logo_light
         is OnBoardModel.SecondPage -> R.drawable.baseline_lightbulb_circle_24
         is OnBoardModel.ThirdPage -> R.drawable.school_24px
@@ -68,7 +68,7 @@ fun OnboardingGraphUI(OnBoardModel: OnBoardModel) {
         is OnBoardModel.FifthPage -> R.drawable.palette_24px
     }
 
-    val descriptionText: AnnotatedString = when (OnBoardModel) {
+    val descriptionText: AnnotatedString = when (onBoardModel) {
         is OnBoardModel.FirstPage -> buildAnnotatedString {
             withStyle(style = MaterialTheme.typography.bodyLarge.toSpanStyle()) {
                 append(stringResource(id = R.string.onboard_desc_1))
@@ -183,19 +183,19 @@ fun OnboardingGraphUI(OnBoardModel: OnBoardModel) {
             colorFilter = if (imageRes != logo) ColorFilter.tint(MaterialTheme.colorScheme.primary) else null
         )
 
-        if (OnBoardModel !is OnBoardModel.FifthPage) {
+        if (onBoardModel !is OnBoardModel.FifthPage) {
             Spacer(modifier = Modifier.size(50.dp))
         }
 
         Text(
-            text = stringResource(OnBoardModel.titleRes),
+            text = stringResource(onBoardModel.titleRes),
             modifier = Modifier.fillMaxWidth(),
             textAlign = TextAlign.Center,
             style = MaterialTheme.typography.headlineSmall,
             color = MaterialTheme.colorScheme.tertiary
         )
 
-        if (OnBoardModel !is OnBoardModel.FifthPage) {
+        if (onBoardModel !is OnBoardModel.FifthPage) {
             Spacer(modifier = Modifier.size(15.dp))
         }
 
@@ -214,7 +214,7 @@ fun OnboardingGraphUI(OnBoardModel: OnBoardModel) {
                 .size(10.dp)
         )
 
-        if (OnBoardModel is OnBoardModel.FourthPage) {
+        if (onBoardModel is OnBoardModel.FourthPage) {
             val context = LocalContext.current
             val locationGranted = ContextCompat.checkSelfPermission(
                 context,
@@ -264,7 +264,7 @@ fun OnboardingGraphUI(OnBoardModel: OnBoardModel) {
             }
         }
 
-        if (OnBoardModel is OnBoardModel.FifthPage) {
+        if (onBoardModel is OnBoardModel.FifthPage) {
             var followSystem by remember { mutableStateOf(ThemeState.themeMode == ThemeMode.SYSTEM) }
 
             Row(
@@ -276,7 +276,7 @@ fun OnboardingGraphUI(OnBoardModel: OnBoardModel) {
                 ModeCard(
                     label = stringResource(id = R.string.light_mode),
                     iconRes = R.drawable.light_mode_24px,
-                    selected = ThemeState.themeMode == ThemeMode.LIGHT && !followSystem,
+//                    selected = ThemeState.themeMode == ThemeMode.LIGHT && !followSystem,
                     onClick = {
                         followSystem = false
                         ThemeState.themeMode = ThemeMode.LIGHT
@@ -286,7 +286,7 @@ fun OnboardingGraphUI(OnBoardModel: OnBoardModel) {
                 ModeCard(
                     label = stringResource(id = R.string.dark_mode),
                     iconRes = R.drawable.dark_mode_24px,
-                    selected = ThemeState.themeMode == ThemeMode.DARK && !followSystem,
+//                    selected = ThemeState.themeMode == ThemeMode.DARK && !followSystem,
                     onClick = {
                         followSystem = false
                         ThemeState.themeMode = ThemeMode.DARK
