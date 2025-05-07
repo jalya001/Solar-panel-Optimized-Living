@@ -269,13 +269,18 @@ fun DataCard(
                     text = stringResource(R.string.adj_radiation, adjusted)
                 )
                 Text(
-                    "This is the amount of solar radiation your panels receive, adjust with snow,cloud, and temperature data for your location.",
+                    text = stringResource(R.string.adj_radiation_explanation),
                     style = MaterialTheme.typography.bodyMedium
                 )
 
+                //Aazan legg til temperatur
                 IconTextRow(
                     iconRes = R.drawable.baseline_device_thermostat_24,
                     text = stringResource(R.string.temp_factor, 1 + (-0.44) * (temp - 25))
+                )
+                Text(
+                    "This is the amount of solar radiation your panels receive, adjust with snow,cloud, and temperature data for your location.",
+                    style = MaterialTheme.typography.bodyMedium
                 )
 
                 Text(

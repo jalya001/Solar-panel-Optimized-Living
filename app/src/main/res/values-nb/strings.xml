@@ -170,8 +170,10 @@
     <string name="global_radiation">Global stråling: %.2f kWh/m²</string>
     <string name="avg_cloud_cover"> Gjennomsnittlig skydekke: %.2f</string>
     <string name="avg_snow_cover">Gjennomsnittlig snødekke: %.2f</string>
-    <string name="temp_factor">Temperaturfaktor: %.2f °C</string>
+    <string name="temp_factor">Temperaturfaktor: %.2f %</string>
+    <string name="temp_factor_explanation">Aazan fikser forklaring</string>
     <string name="adj_radiation">Justert stråling: %.2f kWh/m²</string>
+    <string name="adj_radiation_explanation">Dette er mengden solstråling panelene dine mottar, juster med snø-, sky- og temperaturdata for posisjonen din</string>
     <string name="estimated_energy_prod">Estimert produsert energi: \n%.2f kWh </string>
     <string name="estimated_powerpr_hour">Estimert kraft produsert per time:\n%.2f kWh</string>
     <string name="show_monthly_savings"><i>Vis Din Månedlige Sparing I %1$s</i></string>

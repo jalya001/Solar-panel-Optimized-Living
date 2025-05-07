@@ -168,8 +168,10 @@
     <string name="global_radiation">Global Radiation: %.2f kWh/m²</string>
     <string name="avg_cloud_cover"> Average Cloud Cover: %.2f</string>
     <string name="avg_snow_cover">Average Snow Cover: %.2f</string>
-    <string name="temp_factor">Temperature Factor: %.2f °C</string>
+    <string name="temp_factor">Temperature Factor: %.2f %</string>
+    <string name="temp_factor_explanation">Aazan fikser forklaring</string>
     <string name="adj_radiation">Adjusted Radiation: %.2f kWh/m²</string>
+    <string name="adj_radiation_explanation">This is the amount of solar radiation your panels receive, adjust with snow,cloud, and temperature data for your location</string>
     <string name="estimated_energy_prod">Estimated Energy Produced: \n%.2f kWh </string>
     <string name="estimated_powerpr_hour">Estimated Power Produced per Hour: \n%.2f kW</string>
     <string name="show_monthly_savings">Click to see Your Savings In %1$s</string>
