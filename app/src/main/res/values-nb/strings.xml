@@ -292,6 +292,10 @@
 
     <string name="onboard_title_4">Lokasjonstilgang</string>
     <string name="onboard_desc_4">Gi tilgang til enhetslokasjon for å finne nærmeste adresse og få en bedre opplevelse.</string>
+    <string name="onboard_title_5">Endre utseende</string>
+    <string name="onboard_desc_5">Ps. Trykk på utseende knappen i nederste høyre hjørnet for å bytte språk, tema og skriftstørrelse</string>
+
+
     <string name="hide_area">Skjul\nområde</string>
 
     <string name="generic_error">Noe gikk galt! Prøv igjen senere.</string>

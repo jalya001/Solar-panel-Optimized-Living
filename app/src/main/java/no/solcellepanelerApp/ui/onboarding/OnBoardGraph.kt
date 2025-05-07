@@ -8,12 +8,15 @@ import androidx.compose.foundation.Image
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.material3.Button
+import androidx.compose.material3.Checkbox
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -36,6 +39,10 @@ import androidx.core.content.ContextCompat
 import no.solcellepanelerApp.R
 import no.solcellepanelerApp.model.electricity.Region
 import no.solcellepanelerApp.model.onboarding.OnBoardModel
+import no.solcellepanelerApp.ui.language.LangSwitch
+import no.solcellepanelerApp.ui.reusables.ModeCard
+import no.solcellepanelerApp.ui.theme.ThemeMode
+import no.solcellepanelerApp.ui.theme.ThemeState
 import no.solcellepanelerApp.util.rememberLocationWithPermission
 
 @Composable
@@ -58,6 +65,7 @@ fun OnboardingGraphUI(OnBoardModel: OnBoardModel) {
         is OnBoardModel.SecondPage -> R.drawable.baseline_lightbulb_circle_24
         is OnBoardModel.ThirdPage -> R.drawable.school_24px
         is OnBoardModel.FourthPage -> R.drawable.baseline_my_location_24
+        is OnBoardModel.FifthPage -> R.drawable.palette_24px
     }
 
     val descriptionText: AnnotatedString = when (OnBoardModel) {
@@ -152,6 +160,10 @@ fun OnboardingGraphUI(OnBoardModel: OnBoardModel) {
                 append(stringResource(id = R.string.onboard_desc_4))
             }
         }
+
+        is OnBoardModel.FifthPage -> buildAnnotatedString {
+
+        }
     }
 
     Column(
@@ -171,7 +183,9 @@ fun OnboardingGraphUI(OnBoardModel: OnBoardModel) {
             colorFilter = if (imageRes != logo) ColorFilter.tint(MaterialTheme.colorScheme.primary) else null
         )
 
-        Spacer(modifier = Modifier.size(50.dp))
+        if (OnBoardModel !is OnBoardModel.FifthPage) {
+            Spacer(modifier = Modifier.size(50.dp))
+        }
 
         Text(
             text = stringResource(OnBoardModel.titleRes),
@@ -181,11 +195,9 @@ fun OnboardingGraphUI(OnBoardModel: OnBoardModel) {
             color = MaterialTheme.colorScheme.tertiary
         )
 
-        Spacer(
-            modifier = Modifier
-                .fillMaxWidth()
-                .size(15.dp)
-        )
+        if (OnBoardModel !is OnBoardModel.FifthPage) {
+            Spacer(modifier = Modifier.size(15.dp))
+        }
 
         Text(
             text = descriptionText,
@@ -250,6 +262,61 @@ fun OnboardingGraphUI(OnBoardModel: OnBoardModel) {
                     )
                 )
             }
+        }
+
+        if (OnBoardModel is OnBoardModel.FifthPage) {
+            var followSystem by remember { mutableStateOf(ThemeState.themeMode == ThemeMode.SYSTEM) }
+
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(vertical = 8.dp),
+                horizontalArrangement = Arrangement.SpaceEvenly
+            ) {
+                ModeCard(
+                    label = stringResource(id = R.string.light_mode),
+                    iconRes = R.drawable.light_mode_24px,
+                    selected = ThemeState.themeMode == ThemeMode.LIGHT && !followSystem,
+                    onClick = {
+                        followSystem = false
+                        ThemeState.themeMode = ThemeMode.LIGHT
+                    }
+                )
+
+                ModeCard(
+                    label = stringResource(id = R.string.dark_mode),
+                    iconRes = R.drawable.dark_mode_24px,
+                    selected = ThemeState.themeMode == ThemeMode.DARK && !followSystem,
+                    onClick = {
+                        followSystem = false
+                        ThemeState.themeMode = ThemeMode.DARK
+                    }
+                )
+            }
+
+            Row(verticalAlignment = Alignment.CenterVertically) {
+                Checkbox(
+                    checked = followSystem,
+                    onCheckedChange = { checked ->
+                        followSystem = checked
+                        ThemeState.themeMode = if (checked) ThemeMode.SYSTEM
+                        else ThemeMode.LIGHT
+                    }
+                )
+                Text(stringResource(id = R.string.follow_system))
+            }
+
+            Spacer(modifier = Modifier.height(10.dp))
+
+            LangSwitch()
+
+            Spacer(modifier = Modifier.height(20.dp))
+
+            Text(
+                stringResource(id = R.string.onboard_desc_5),
+                style = MaterialTheme.typography.bodyMedium,
+                textAlign = TextAlign.Center
+            )
         }
 
         Spacer(

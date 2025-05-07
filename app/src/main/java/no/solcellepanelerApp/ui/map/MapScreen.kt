@@ -65,6 +65,8 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.Density
@@ -200,7 +202,7 @@ fun DisplayScreen(
     setShowDrawOverlay: (Boolean) -> Unit,
 
 
-) {
+    ) {
     val context = LocalContext.current
     var selectedCoordinates by remember { mutableStateOf<LatLng?>(null) }
     val markerState = rememberMarkerState(position = selectedCoordinates ?: LatLng(0.0, 0.0))
@@ -229,7 +231,7 @@ fun DisplayScreen(
 
     LaunchedEffect(locationPermissionGranted) {
         if (locationPermissionGranted && activity != null) {
-            val location = fetchCoordinates( activity)
+            val location = fetchCoordinates(activity)
             currentLocation = location
         }
     }
@@ -550,6 +552,7 @@ fun AddressInputField(
 ) {
     OutlinedTextField(
         value = value,
+        textStyle = TextStyle(fontFamily = FontFamily.Default),
         onValueChange = onValueChange,
         label = { Text(label) },
         colors = colors,

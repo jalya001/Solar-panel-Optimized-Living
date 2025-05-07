@@ -248,7 +248,7 @@
     <string name="yearly_savings_prefix">You will save</string>
     <string name="yearly_savings_suffix">per year on electricity from solar panels</string>
     <string name="energy_deficit">Energy deficit!</string>
-    
+
     <string name="fridge">Fridge</string>
     <string name="el_car">El-Car</string>
     <string name="heater">Heater</string>
@@ -286,6 +286,10 @@
 
     <string name="onboard_title_4">Location access</string>
     <string name="onboard_desc_4">Grant location access to find your nearest address and optimize the experience.</string>
+    <string name="onboard_title_5">Change appearance</string>
+    <string name="onboard_desc_5">Ps. Click on the appearance button in the bottom right to change language, theme and font size.</string>
+
+
     <string name="hide_area">Hide\nArea</string>
 
     <string name="generic_error">Something went wrong! Try again later.</string>

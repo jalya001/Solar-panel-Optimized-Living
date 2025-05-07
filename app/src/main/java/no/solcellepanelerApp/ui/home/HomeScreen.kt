@@ -40,6 +40,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
@@ -78,7 +79,7 @@ fun HomeScreen(
     navController: NavController,
     fontScaleViewModel: FontScaleViewModel,
     weatherViewModel: WeatherViewModel,
-    priceScreenViewModel: PriceScreenViewModel
+    priceScreenViewModel: PriceScreenViewModel,
 ) {
     val context = LocalContext.current
     val activity = (context as? MainActivity)
@@ -305,6 +306,7 @@ fun HomeScreen(
                                 Text(
                                     text = stringResource(R.string.live_prices),
                                     style = MaterialTheme.typography.titleLarge,
+                                    textAlign = TextAlign.Center,
                                     color = MaterialTheme.colorScheme.secondary
 //                                color = MaterialTheme.colorScheme.tertiary Oransje fargen. bare å fjerne kommentaren her hvis dere vil bruke oransj d
                                 )
