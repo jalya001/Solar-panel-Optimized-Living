@@ -103,7 +103,7 @@ import no.solcellepanelerApp.ui.navigation.HelpBottomSheet
 import no.solcellepanelerApp.ui.navigation.TopBar
 import no.solcellepanelerApp.ui.result.WeatherViewModel
 import no.solcellepanelerApp.ui.reusables.SimpleTutorialOverlay
-import no.solcellepanelerApp.ui.reusables.SimpleTutorialOverlayWithImage
+
 import no.solcellepanelerApp.ui.theme.darkGrey
 import no.solcellepanelerApp.ui.theme.lightBlue
 import no.solcellepanelerApp.ui.theme.lightGrey
@@ -144,7 +144,7 @@ fun MapScreen(
     }
 
     if (showDrawOverlay) {
-        SimpleTutorialOverlayWithImage(
+        SimpleTutorialOverlay(
             onDismiss = { showDrawOverlay = false },
             message = stringResource(R.string.map_draw_overlay)
         )
