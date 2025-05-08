@@ -425,10 +425,6 @@ private fun DevicesGridSection(
         textAlign = TextAlign.Center,
         modifier = Modifier.padding(bottom = 8.dp)
     )
-    InfoHelpButton(
-        label = stringResource(id = R.string.energy_usage),
-        helpText = stringResource(id = R.string.energy_usage_info)
-    )
 
     FlowRow(
         mainAxisSpacing = 12.dp,

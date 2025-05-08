@@ -272,8 +272,6 @@ Når du er fornøyd, trykk på "Bekreft tegning" for å fortsette.
     <string name="energy_produced">Produsert energi fra panelene:</string>
     <string name="energy_deficit">Energiunderskudd!</string>
 
-    <string name="energy_usage">Sjekk hva du kan bruke strømmen din på!</string>
-    <string name="energy_usage_info">Knappverdiene representerer det gjennomsnittlige månedlige strømforbruket som disse apparatene bruker</string>
     <string name="fridge">Kjøleskap</string>
     <string name="el_car">Elbil</string>
     <string name="heater">Varmeovn</string>
