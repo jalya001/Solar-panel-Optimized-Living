@@ -77,6 +77,7 @@ import no.solcellepanelerApp.ui.font.FontScaleViewModel
 import no.solcellepanelerApp.ui.navigation.AppearanceBottomSheet
 import no.solcellepanelerApp.ui.navigation.BottomBar
 import no.solcellepanelerApp.ui.navigation.HelpBottomSheet
+import no.solcellepanelerApp.ui.navigation.InfoHelpButton
 import no.solcellepanelerApp.ui.navigation.TopBar
 import no.solcellepanelerApp.ui.onboarding.OnboardingUtils
 import no.solcellepanelerApp.ui.reusables.IconTextRow
@@ -292,7 +293,7 @@ fun EnergySavingsScreen(
                         } else {
                             IconTextRow(
                                 iconRes = R.drawable.baseline_battery_charging_full_24,
-                                text = "%.2f kWh".format(animatedEnergy),
+                                text = stringResource(R.string.energy_produced) + " %.2f kWh".format(animatedEnergy),
                                 textStyle = MaterialTheme.typography.titleLarge,
                                 modifier = Modifier.padding(16.dp),
                                 textColor = energyColor,
@@ -322,6 +323,11 @@ fun EnergySavingsScreen(
                         ) {
                             HouseAnimation()
                             EnergyFlowDown()
+
+                            InfoHelpButton(
+                                label = stringResource(id = R.string.energy_usage),
+                                helpText = stringResource(id = R.string.energy_usage_info)
+                            )
 
                             // Device grid using FlowRow
                             FlowRow(

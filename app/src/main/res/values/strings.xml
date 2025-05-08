@@ -259,8 +259,11 @@ How to draw:\n
     <string name="monthly_savings_suffix_part2">from solar panel electricity</string>
     <string name="yearly_savings_prefix">You will save</string>
     <string name="yearly_savings_suffix">per year on electricity from solar panels</string>
+    <string name="energy_produced">Energy produced from the panels:</string>
     <string name="energy_deficit">Energy deficit!</string>
 
+    <string name="energy_usage">Check what you can use your energy for!</string>
+    <string name="energy_usage_info">The button values represent the average monthly power consumption that these appliances use</string>
     <string name="fridge">Fridge</string>
     <string name="el_car">El-Car</string>
     <string name="heater">Heater</string>
