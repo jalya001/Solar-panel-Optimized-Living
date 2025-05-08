@@ -4,7 +4,6 @@ import android.annotation.SuppressLint
 import android.util.Log
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.border
-import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -19,7 +18,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -34,7 +32,6 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
-import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import com.airbnb.lottie.compose.LottieAnimation
@@ -43,19 +40,14 @@ import com.airbnb.lottie.compose.LottieConstants
 import com.airbnb.lottie.compose.animateLottieCompositionAsState
 import com.airbnb.lottie.compose.rememberLottieComposition
 import no.solcellepanelerApp.R
+import no.solcellepanelerApp.model.electricity.ElectricityPrice
 import no.solcellepanelerApp.model.electricity.Region
 import no.solcellepanelerApp.ui.electricity.HomePriceCard
 import no.solcellepanelerApp.ui.electricity.PriceScreenViewModel
-import no.solcellepanelerApp.ui.font.FontScaleViewModel
 import no.solcellepanelerApp.ui.handling.ErrorScreen
 import no.solcellepanelerApp.ui.handling.LoadingScreen
-import no.solcellepanelerApp.ui.navigation.AppearanceBottomSheet
-import no.solcellepanelerApp.ui.navigation.BottomBar
-import no.solcellepanelerApp.ui.navigation.HelpBottomSheet
 import no.solcellepanelerApp.ui.reusables.MyDisplayCard
 import no.solcellepanelerApp.ui.reusables.MyNavCard
-import no.solcellepanelerApp.ui.theme.ThemeMode
-import no.solcellepanelerApp.ui.theme.ThemeState
 import no.solcellepanelerApp.ui.theme.isDarkThemeEnabled
 import java.time.ZonedDateTime
 
@@ -78,13 +70,12 @@ fun HomeScreen(
     val currentTime by homeScreenViewModel.currentTime.collectAsState()
 
     val priceUiState by priceScreenViewModel.priceUiState.collectAsState()
-    //val prices = (priceUiState as PriceUiState.Success).prices
+    val prices = priceScreenViewModel.prices.collectAsState()
 
     if (isLoading) {
         LoadingScreen()
         return
     }
-    val isDarkTheme = isDarkThemeEnabled()
 
     Column(
         modifier = Modifier
@@ -100,7 +91,13 @@ fun HomeScreen(
             horizontalArrangement = Arrangement.spacedBy(1.dp),
         ) {
             CurrentRadiationCard(currentRadiationValue, Modifier.weight(1f), currentTime)
-            ElectricityPriceCard(selectedRegion, navController, Modifier.weight(1f))
+            ElectricityPriceCard(
+                selectedRegion,
+                navController,
+                Modifier.weight(1f),
+                priceUiState,
+                prices.value?: emptyList() // Makeshift
+            )
         }
     }
 }
@@ -173,17 +170,17 @@ fun CurrentRadiationCard(
                 Spacer(modifier = Modifier.height(10.dp))
                 if (currentRadiationValue != null) {
                     Text(
-                        text = currentRadiationValue?.let {
+                        text = currentRadiationValue.let {
                             String.format(
                                 "%.4f",
                                 it
                             ) + " kW/m²"
-                        } ?: "No data", // Why do we have this if it can't be null to begin with?
+                        },
                         style = MaterialTheme.typography.headlineSmall,
                         fontWeight = FontWeight.ExtraLight,
                         color = MaterialTheme.colorScheme.primary,
                     )
-                    SunAnimation(currentRadiationValue ?: 0.0) // But it can't be null?
+                    SunAnimation(currentRadiationValue)
                 } else {
                     LoadingScreen()
                 }
@@ -197,7 +194,9 @@ fun CurrentRadiationCard(
 fun ElectricityPriceCard(
     selectedRegion: Region?,
     navController: NavController,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    priceUiState: PriceScreenViewModel.UiState,
+    prices: List<ElectricityPrice>
 ) {
     MyNavCard(
         route = "prices",
@@ -220,19 +219,20 @@ fun ElectricityPriceCard(
 //                      color = MaterialTheme.colorScheme.tertiary Oransje fargen. bare å fjerne kommentaren her hvis dere vil bruke oransj d
                     )
                     Spacer(modifier = Modifier.height(10.dp))
-                    /*if (selectedRegion == null) {
+                    if (selectedRegion == null) {
                         LoadingScreen()
                     } else {
                         when (priceUiState) {
-                            is PriceUiState.Loading -> LoadingScreen()
-                            is PriceUiState.Error -> ErrorScreen()
-                            is PriceUiState.Success -> {
+                            PriceScreenViewModel.UiState.LOADING -> LoadingScreen()
+                            PriceScreenViewModel.UiState.ERROR -> ErrorScreen()
+                            PriceScreenViewModel.UiState.SUCCESS -> {
                                 Column {
                                     HomePriceCard(prices, selectedRegion)
                                 }
                             }
                         }
-                    }*/
+
+                    }
                 }
             }
         },

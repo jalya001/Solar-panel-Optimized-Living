@@ -1,20 +1,25 @@
 package no.solcellepanelerApp.data.electricitydata
 
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
 import no.solcellepanelerApp.model.electricity.ElectricityPrice
 import no.solcellepanelerApp.model.electricity.Region
+import no.solcellepanelerApp.model.reusables.TimedData
 import java.time.LocalDate
 
 class ElectricityPriceRepository {
     private val api = ElectricityPriceApi()
-    private var prices: List<ElectricityPrice> = emptyList()
-    private var selectedRegion: String = Region.TROMSO.regionCode
+    private var selectedRegion: String = Region.OSLO.regionCode
+
+    private val _prices = MutableStateFlow<TimedData<List<ElectricityPrice>>?>(null)
+    val prices: StateFlow<TimedData<List<ElectricityPrice>>?> = _prices
 
     fun updateRegion(region: Region) {
         selectedRegion = region.regionCode
     }
 
     suspend fun updatePrices(date: LocalDate) {
-        prices = api.fetchPrices(date, selectedRegion)
+        _prices.value = TimedData(api.fetchPrices(date, selectedRegion))
     }
 
     suspend fun getPrices(date: LocalDate): List<ElectricityPrice> {
