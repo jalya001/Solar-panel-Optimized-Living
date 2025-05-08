@@ -2,6 +2,7 @@ package no.solcellepanelerApp.ui.navigation
 
 import android.content.Intent
 import android.content.pm.PackageManager
+import android.location.Location
 import android.net.Uri
 import android.provider.Settings
 import androidx.compose.animation.core.animateFloatAsState
@@ -13,9 +14,7 @@ import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
-
 import androidx.compose.foundation.layout.Column
-
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -76,10 +75,7 @@ import androidx.core.content.ContextCompat
 import androidx.navigation.NavController
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
-
 import no.solcellepanelerApp.R
-import no.solcellepanelerApp.model.electricity.Region
-import no.solcellepanelerApp.ui.electricity.RegionDropdown
 import no.solcellepanelerApp.ui.font.FontScaleViewModel
 import no.solcellepanelerApp.ui.font.FontSizeState
 import no.solcellepanelerApp.ui.language.LangSwitch
@@ -191,16 +187,6 @@ fun HelpBottomSheet(
                                 R.string.grant_location_access
                             ),
                             onClick = {
-//                                if (locationGranted) {
-//                                    val intent =
-//                                        Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS).apply {
-//                                            data =
-//                                                Uri.fromParts("package", context.packageName, null)
-//                                            addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
-//                                        }
-//                                    context.startActivity(intent)
-//                                }
-
                                 if (locationGranted) {
                                     showDialog = true
                                 } else {
@@ -456,13 +442,19 @@ fun AdditionalInputBottomSheet(
     navController: NavController,
     viewModel: MapScreenViewModel,
     weatherViewModel: WeatherViewModel,
-    selectedRegion: Region?,
-    onRegionSelected: (Region) -> Unit,
 ) {
     var angle by remember { mutableFloatStateOf(0f) }
     var areaState by remember { mutableStateOf(area) }
     var azimuthPosition by remember { mutableFloatStateOf(0f) }
     var efficiency by remember { mutableFloatStateOf(0f) }
+
+    val location = coordinates?.let { (lat, lon) ->
+        Location("").apply {
+            latitude = lat
+            longitude = lon
+        }
+    }
+
 
 //    val context = LocalContext.current
 //    val activity = context as? Activity
@@ -609,10 +601,9 @@ fun AdditionalInputBottomSheet(
 //                    )
 
 
-
                     //Log.d("Efficiency", selected.toString())
                     panelTypes.forEach { panelType ->
-                       val selected = efficiency == panelType.efficiency
+                        val selected = efficiency == panelType.efficiency
                         val glowAlpha by animateFloatAsState(
                             targetValue = if (selected) 1f else 0f,
                             animationSpec = tween(durationMillis = 500)
@@ -733,11 +724,16 @@ fun AdditionalInputBottomSheet(
 
                     Spacer(modifier = Modifier.height(30.dp))
                     SunAngleAnimation(angle = azimuthPosition)
-                    selectedRegion?.let {
-                        RegionDropdown(it) { newRegion ->
-                            onRegionSelected(newRegion)
-                        }
-                    }
+
+//                    Text( //TEST
+//                        "region = ${
+//                            coordinates?.let {
+//                                mapLocationToRegion(Location("").apply {
+//                                    latitude = it.first
+//                                    longitude = it.second
+//                                })
+//                            } ?: "Unknown"
+//                        }")
 
                     Spacer(modifier = Modifier.height(32.dp))
 

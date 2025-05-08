@@ -96,6 +96,7 @@ import kotlinx.coroutines.launch
 import no.solcellepanelerApp.MainActivity
 import no.solcellepanelerApp.R
 import no.solcellepanelerApp.model.electricity.Region
+import no.solcellepanelerApp.ui.electricity.PriceScreenViewModel
 import no.solcellepanelerApp.ui.font.FontScaleViewModel
 import no.solcellepanelerApp.ui.font.FontSizeState
 import no.solcellepanelerApp.ui.navigation.AdditionalInputBottomSheet
@@ -111,6 +112,7 @@ import no.solcellepanelerApp.ui.theme.lightBlue
 import no.solcellepanelerApp.ui.theme.lightGrey
 import no.solcellepanelerApp.ui.theme.orange
 import no.solcellepanelerApp.util.fetchCoordinates
+import no.solcellepanelerApp.util.mapLocationToRegion
 import kotlin.math.max
 
 
@@ -120,6 +122,7 @@ fun MapScreen(
     navController: NavController,
     fontScaleViewModel: FontScaleViewModel,
     weatherViewModel: WeatherViewModel,
+    priceViewModel: PriceScreenViewModel,
 ) {
     val snackbarHostState = remember { SnackbarHostState() }
     val trigger by viewModel.snackbarMessageTrigger
@@ -189,7 +192,8 @@ fun MapScreen(
                 viewModel = viewModel,
                 navController = navController,
                 weatherViewModel = weatherViewModel,
-                setShowDrawOverlay = { showDrawOverlay = it }
+                setShowDrawOverlay = { showDrawOverlay = it },
+                priceViewModel = priceViewModel
             )
         }
     }
@@ -212,9 +216,8 @@ fun DisplayScreen(
     navController: NavController,
     weatherViewModel: WeatherViewModel,
     setShowDrawOverlay: (Boolean) -> Unit,
-
-
-    ) {
+    priceViewModel: PriceScreenViewModel,
+) {
     val context = LocalContext.current
     var selectedCoordinates by remember { mutableStateOf<LatLng?>(null) }
     val markerState = rememberMarkerState(position = selectedCoordinates ?: LatLng(0.0, 0.0))
@@ -236,11 +239,6 @@ fun DisplayScreen(
     var currentLocation by remember { mutableStateOf<Location?>(null) }
     var locationPermissionGranted by remember { mutableStateOf(false) }
 
-//    RequestLocationPermission { region ->
-//        selectedRegion = region
-//        locationPermissionGranted = true
-//
-//    }
 
     LaunchedEffect(locationPermissionGranted) {
         if (locationPermissionGranted && activity != null) {
@@ -457,6 +455,14 @@ fun DisplayScreen(
                                     )
                                 )
                             }
+                            coordinates?.let { (lat, lon) ->
+                                val location = Location("").apply {
+                                    latitude = lat
+                                    longitude = lon
+                                }
+                                val region = mapLocationToRegion(location)
+                                priceViewModel.setRegion(region)
+                            }
                         } else {
                             showMissingLocationDialog = true
                         }
@@ -571,8 +577,8 @@ fun DisplayScreen(
                 )
             }
         }
-        val context = LocalContext.current
-        val onboardingUtils = remember { OnboardingUtils(context) }
+        val currentContext = LocalContext.current
+        val onboardingUtils = remember { OnboardingUtils(currentContext) }
 
         AdditionalInputBottomSheet(
             visible = showBottomSheet,
@@ -594,8 +600,6 @@ fun DisplayScreen(
             navController = navController,
             viewModel = viewModel,
             weatherViewModel = weatherViewModel,
-            selectedRegion = selectedRegion,
-            onRegionSelected = { selectedRegion = it },
         )
     }
 }
