@@ -98,8 +98,14 @@ fun PriceScreen(
             val priceUiState by viewModel.priceUiState.collectAsStateWithLifecycle()
 
             when (priceUiState) {
-                is PriceUiState.Loading -> LoadingScreen()
-                is PriceUiState.Error -> ErrorScreen()
+                is PriceUiState.Loading -> {
+                    Spacer(modifier = Modifier.height(260.dp))
+                    LoadingScreen()
+                }
+                is PriceUiState.Error -> {
+                    Spacer(modifier = Modifier.height(260.dp))
+                    ErrorScreen()
+                }
                 is PriceUiState.Success -> {
                     val prices = (priceUiState as PriceUiState.Success).prices
                     Spacer(modifier = Modifier.height(24.dp))
