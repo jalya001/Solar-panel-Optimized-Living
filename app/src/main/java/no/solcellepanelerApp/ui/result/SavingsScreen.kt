@@ -186,7 +186,8 @@ fun EnergySavingsScreen(
                     connectedDevices = connectedDevices.toMutableMap().apply { remove(deviceName) }
                     currentEnergy += deviceValue
                 } else {
-                    connectedDevices = connectedDevices.toMutableMap().apply { put(deviceName, deviceValue) }
+                    connectedDevices =
+                        connectedDevices.toMutableMap().apply { put(deviceName, deviceValue) }
                     currentEnergy -= deviceValue
                 }
             }
@@ -220,10 +221,10 @@ private fun EnergySavingsContent(
     showHeaderText: Boolean,
     scrollState: ScrollState,
     weather: Map<String, Array<Double>>,
-    calculationResult:  MonthlyCalculationResult?,
+    calculationResult: MonthlyCalculationResult?,
     deviceData: DeviceData,
     connectedDevices: Map<String, Double>,
-    onDeviceToggle: (String, Double) -> Unit
+    onDeviceToggle: (String, Double) -> Unit,
 ) {
     Box(
         modifier = Modifier
@@ -284,7 +285,7 @@ private fun EnergySavingsHeader(
     currentEnergy: Double,
     animatedEnergy: Float,
     energyColor: Color,
-    showHeaderText: Boolean
+    showHeaderText: Boolean,
 ) {
     AnimatedVisibility(
         visible = showHeaderText,
@@ -374,7 +375,7 @@ private fun YearlySavingsText(savings: Double) {
 private fun EnergyDisplay(
     currentEnergy: Double,
     animatedEnergy: Float,
-    energyColor: Color
+    energyColor: Color,
 ) {
     if (currentEnergy < 0) {
         IconTextRow(
@@ -412,7 +413,7 @@ private fun EnergyVisualizationSection() {
 private fun DevicesGridSection(
     deviceData: DeviceData,
     connectedDevices: Map<String, Double>,
-    onDeviceToggle: (String, Double) -> Unit
+    onDeviceToggle: (String, Double) -> Unit,
 ) {
     Text(
         text = stringResource(R.string.device_info),
@@ -420,6 +421,7 @@ private fun DevicesGridSection(
             color = MaterialTheme.colorScheme.secondary,
             fontWeight = FontWeight.ExtraLight
         ),
+        textAlign = TextAlign.Center,
         modifier = Modifier.padding(bottom = 8.dp)
     )
 
@@ -446,7 +448,7 @@ private fun DeviceCard(
     value: Double,
     isConnected: Boolean,
     iconRes: Int,
-    onToggle: () -> Unit
+    onToggle: () -> Unit,
 ) {
     val glowAlpha by animateFloatAsState(
         targetValue = if (isConnected) 1f else 0f,
@@ -501,7 +503,7 @@ private fun DeviceCard(
 @Composable
 private fun WeatherChartsSection(
     weather: Map<String, Array<Double>>,
-    calculationResult: MonthlyCalculationResult?
+    calculationResult: MonthlyCalculationResult?,
 ) {
     Spacer(modifier = Modifier.height(32.dp))
 
@@ -536,7 +538,7 @@ private fun WeatherChartsSection(
 @Composable
 private fun RadiationChart(
     weather: Map<String, Array<Double>>,
-    calculationResult:  MonthlyCalculationResult?
+    calculationResult: MonthlyCalculationResult?,
 ) {
     val global = weather["mean(PVGIS_radiation P1M)"] ?: emptyArray()
     val adjusted = calculationResult?.adjustedRadiation?.toTypedArray() ?: emptyArray()
@@ -601,7 +603,7 @@ fun rememberDeviceData(): DeviceData {
 data class DeviceData(
     val devices: List<Pair<String, Double>>,
     val deviceIcons: Map<String, Int>,
-    val preConnected: List<String>
+    val preConnected: List<String>,
 )
 
 
@@ -828,6 +830,7 @@ fun MonthlyChartSection(
                 color = MaterialTheme.colorScheme.secondary,
                 fontWeight = FontWeight.ExtraLight
             ),
+            textAlign = TextAlign.Center,
             modifier = Modifier.padding(bottom = 8.dp)
         )
         Chart(data = data, measure = unit)
