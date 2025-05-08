@@ -178,6 +178,170 @@ Class Diagram 1st draft
     PVGISApiDataSource --> Energy
 ```
 
+
+
+
+Class Diagram later draft
+```mermaid
+    classDiagram
+    class HomeScreen{
+        +Composabele DisplayElectricityPrice(HomeViewModel)
+        +Composable DispalyInfo()
+    }
+     class MapScreen{
+        +Composable DisplayAdressFelt()
+        +Composable DispalyMap(MapViewModel)
+        +Composable SendAdressButton(MapViewModel,String Adress)
+    }
+    class ResultScreen{
+        +Composable DisplayInfo()
+        +Composable DispalyResults(WeatherDataViewModel)
+        +Composable Diplay MonthlySavings(WeatherDataViewModel)
+    }
+    class PriceScreen{
+        +Composabele DisplayElectricityPrice(HomeViewModel)
+    }
+    %% ViewModels
+   class HomeViewModel {
+        +Double getElectricityPriceForToday(ElectricityPriceRepository)
+        
+    }
+    class PriceViewModel {
+
+    }
+
+    class MapViewModel {
+        +Pair<Double, Double> getLatLong(AddressRepository, String Adress)
+        +Map getMapData(MapRepository)
+    }
+
+    class WeatherDataViewModel {
+
+        +List<AvergeMonthlySnowCover> monthlySnowData(SnowCoverRepository)
+        +List<AvergeMonthlyTemperatures> monthlyTempData(TemperatureRepository)
+        +List<AvergeMonthlyClouds> monthlyCloudData(CloudCoverRepository)
+
+        +List<Radiation> monthlyRadiation(SolarEnergyRepository)
+        +List<EnergyProduction> monthlyEnergy(SolarEnergyRepository)
+        +List<MonthlySavings> monthlySavings(SolarEnergyRepository)
+        
+        fetchWeatherData(latLong: Pair<Double, Double>,TemperatureRepository,CloudCoverRepository,SnowCoverRepository,SolarEnergyRepository)
+
+        
+    }
+
+    %% Repositories
+    class ElectricityPriceRepository {
+        +Double fetchElectricityPriceForToday(HvaErStrømprisenApiDataSource)
+        +List<MonthlyPrice> fetchMonthlyPrice(HvaErStrømprisenApiDataSource)
+    }
+
+    class AddressRepository {
+        +Pair<Double, Double> fetchCurrentAddress(GeocoderDataSource,String Address)
+        +Pair<Double, Double> fetchCurrentAddress(ElevationApi,String Address)
+    }
+
+    class WeatherRepository {
+        +List<> fetchWeatherData(FrostApiDataSource, latLong: Pair<Double, Double>)
+        +List<> fetchRimData(FrostApiDataSource, latLong: Pair<Double, Double>)
+
+        +List<AvergeMonthlyTemperatures> calculateAverge(fetchTemp)
+        +List<AvergeMonthlySnowCover> calculateAverge(fetchSnowCover)
+        +List<AvergeMonthlyClouds> calculateAverge(fetchCloudCover)
+        
+        +List<Radiation> fetchSolarRadiation(PVGISApiDataSource,latLong: Pair<Double, Double>)
+
+        +List<EnergyProduction> fetchEnergyProduced(PVGISApiDataSource,latLong: Pair<Double, Double>)
+
+        +List<MonthlySavings> FetchSavings(List<EnergyProduction>,ElectricityPriceRepository )
+   
+    }
+
+
+    %% Data Sources / APIs
+    class HvaErStrømprisenApiDataSource {
+        +Double getElectricityPriceQuery()
+        +List<monthlyPrice> getMonthlyPriceQuery()
+    }
+
+    class GeocoderDataSource {
+        +LiveData<List<Pair<Double, Double>>>getAddressQuery(String Adress)
+    }
+
+    class ElevationApi {
+        +Map fetchElevation()
+    }
+
+    class FrostApiDataSource {
+        +List<Temperature> getTemperatureQuery(latLong: Pair<Double, Double>)
+        +List<Snow> getSnowCoverQuery(latLong: Pair<Double, Double>)
+        +List<Cloud> getCloudCoverQuery(latLong: Pair<Double, Double>)
+    }
+
+    class PVGISApiDataSource {
+        +List<Radation> getSolarRadiationQuery(latLong: Pair<Double, Double>)
+        +List<EnergyProduction> getEnergyProducedQuery(latLong: Pair<Double, Double>)
+    }
+    %% Data classes
+    class Temperature{
+        date 
+        value
+
+    }
+    class Snow{
+     date 
+        value
+    }
+    class Cloud{
+     date 
+        value
+    }
+    class Energy{
+     date 
+        value
+    }
+    class Radiation{
+     date 
+        value
+    }
+    class Price{
+     date 
+        value
+    }
+    
+    %% Relationships
+    
+    HomeScreen --> HomeViewModel
+    ResultScreen --> WeatherDataViewModel
+    MapScreen --> MapViewModel
+    HomeViewModel --> ElectricityPriceRepository
+    HomeViewModel --> WeatherRepository
+
+    PriceScreen --> PriceViewModel
+    PriceViewModel --> ElectricityPriceRepository
+    ElectricityPriceRepository --> HvaErStrømprisenApiDataSource
+    HvaErStrømprisenApiDataSource --> Price
+
+    MapViewModel --> AddressRepository
+    AddressRepository --> GeocoderDataSource
+    AddressRepository --> ElevationApi
+    
+    WeatherDataViewModel --> AddressRepository
+    WeatherDataViewModel --> WeatherRepository
+
+    WeatherRepository --> FrostApiDataSource
+
+    WeatherRepository --> PVGISApiDataSource
+
+    FrostApiDataSource --> Cloud
+    FrostApiDataSource --> Temperature
+    FrostApiDataSource --> Snow
+
+    PVGISApiDataSource --> Radiation
+    PVGISApiDataSource --> Energy
+
+    
+
 MapScreen: Find Adress
 ```mermaid
     sequenceDiagram
@@ -212,7 +376,7 @@ MapScreen: Find Adress
         MapScreen ->> User: Display Error Message
 
     end
-
+```
     
     
 ```
