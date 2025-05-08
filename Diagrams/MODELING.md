@@ -379,7 +379,6 @@ MapScreen: Find Adress
 ```
     
     
-```
 MapScreen: DrawArea
 
 ```mermaid
