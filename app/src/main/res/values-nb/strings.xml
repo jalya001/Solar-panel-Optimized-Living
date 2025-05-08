@@ -269,6 +269,7 @@ Når du er fornøyd, trykk på "Bekreft tegning" for å fortsette.
     <string name="cloud_full_info">Dette er hvor mye skydekke din nåværende posisjon har i gjennomsnitt per måned:</string>
     <string name="temp_full_info">Dette er den gjennomsnittlige temperaturen per måned for din nåværende posisjon:</string>
     <string name="difference_info">Denne grafen viser gjennomsnittlig global stråling for hver måned for din nåværende posisjon og strålingen justert med snødekke og skydekke-data:</string>
+    <string name="energy_produced">Produsert energi fra panelene:</string>
     <string name="energy_deficit">Energiunderskudd!</string>
 
     <string name="fridge">Kjøleskap</string>
