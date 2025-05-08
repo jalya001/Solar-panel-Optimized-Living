@@ -69,9 +69,11 @@ import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.Density
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.zIndex
@@ -153,18 +155,42 @@ fun MapScreen(
         }
     }
     if (showMapOverlay) {
+        val title = stringResource(R.string.map_overlay_title)
+        val body = stringResource(R.string.map_overlay)
+        val message = buildAnnotatedString {
+            withStyle(style = MaterialTheme.typography.titleLarge.toSpanStyle()) {
+                append("$title\n\n")
+            }
+            withStyle(style = MaterialTheme.typography.bodyLarge.toSpanStyle()) {
+                append(body)
+            }
+        }
+
         SimpleTutorialOverlay(
             onDismiss = { showMapOverlay = false },
-            message = stringResource(R.string.map_overlay)
+            message = message
         )
+
     }
 
     if (showDrawOverlay) {
+        val title = stringResource(R.string.draw_overlay_title)
+        val body = stringResource(R.string.map_draw_overlay)
+        val message = buildAnnotatedString {
+            withStyle(style = MaterialTheme.typography.titleLarge.toSpanStyle()) {
+                append("$title\n\n")
+            }
+            withStyle(style = MaterialTheme.typography.bodyLarge.toSpanStyle()) {
+                append(body)
+            }
+        }
+
         SimpleTutorialOverlay(
             onDismiss = { showDrawOverlay = false },
-            message = stringResource(R.string.map_draw_overlay)
+            message = message
         )
     }
+
     Scaffold(
         snackbarHost = { SnackbarHost(hostState = snackbarHostState) },
         topBar = {

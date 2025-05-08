@@ -161,10 +161,22 @@ fun EnergySavingsScreen(
     ) { paddingValues ->
         // Overlay for first-time users
         if (showOverlay) {
+            val title = stringResource(R.string.saving_overlay_title)
+            val body = stringResource(R.string.saving_overlay)
+            val message = buildAnnotatedString {
+                withStyle(style = MaterialTheme.typography.titleLarge.toSpanStyle()) {
+                    append("$title\n\n")
+                }
+                withStyle(style = MaterialTheme.typography.bodyLarge.toSpanStyle()) {
+                    append(body)
+                }
+            }
+
             SimpleTutorialOverlay(
                 onDismiss = { showOverlay = false },
-                stringResource(R.string.saving_overlay)
+                message = message
             )
+
         }
 
         EnergySavingsContent(

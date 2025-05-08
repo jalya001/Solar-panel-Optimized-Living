@@ -345,21 +345,29 @@ How to draw:\n
 
     <!-- Tutorial Overlays -->
     <string name="overlay_bottom_message">Click anywhere to continue</string>
+    <string name="map_overlay_title">Map Overview</string>
+    <string name="map_overlay">
+    Search for your address, use device location, or tap the map to select a location
+</string>
+
+    <string name="draw_overlay_title">Draw Your Area</string>
+    <string name="map_draw_overlay">
+    Tap the map to start drawing your desired area\n\n
+    Tap the map to place markers\n\n
+    Place at least 3 markers in a geometric shape and in the correct order\n\n
+    Hold a marker for 3 seconds to move it\n\n
+    Tap &quot;Preview Area&quot; to see your drawing
+</string>
+
+    <string name="saving_overlay_title">See How Much You Save</string>
     <string name="saving_overlay">
-        See how much you\'re saving\n\n
-        Tap on each device to see how much it contributes to your energy savings\n\n
-        Scroll up for more information!
-    </string>
+    Tap the different devices to see how much they contribute to energy savings\n\n
+    Scroll up for more information!
+</string>
+
+    <string name="home_overlay_title">Welcome to your home screen!</string>
     <string name="home_overlay">
-    Welcome to your home screen!\n\n
-    Tap "Find your solar potential" to see how much you can save with solar panels!\n\n
+    Tap &quot;Find your solar potential&quot; to see how much you can save with solar panels!\n\n
     Tap the electricity prices in the bottom right corner to get more details about energy costs\n\n
 </string>
-    <string name="map_overlay">Search for your address, use your device location, or tap the map to choose a location</string>
-    <string name="map_draw_overlay">Tap the map to start drawing your desired area\n\n
-        Tap the map to place markers.\n
-Place at least 3 markers in a rectangle-like shape and in correct order.\n
-Hold a marker for 3 seconds to move it.\n
-Tap "Show area" to preview your drawing.
-    </string>
 </resources>
