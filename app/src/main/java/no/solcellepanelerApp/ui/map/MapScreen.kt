@@ -110,6 +110,7 @@ import com.google.maps.android.compose.Polygon
 import com.google.maps.android.compose.rememberCameraPositionState
 import com.google.maps.android.compose.rememberMarkerState
 import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.launch
 import no.solcellepanelerApp.MainActivity
 import no.solcellepanelerApp.R
@@ -196,7 +197,8 @@ fun DisplayScreen(
     val selectedCoordinates = viewModel.selectedCoordinates
     val polygonPoints = viewModel.polygonData
     val isPolygonVisible = viewModel.isPolygonVisible
-    val drawingEnabled = viewModel.drawingEnabled
+    val drawingEnabled by viewModel.drawingEnabled.collectAsState()
+    Log.d("drawing from screen is :",drawingEnabled.toString())
     val showBottomSheet = viewModel.showBottomSheet
     val showMissingLocationDialog = viewModel.showMissingLocationDialog
     val locationPermissionGranted = viewModel.locationPermissionGranted
@@ -397,6 +399,7 @@ fun ControlsColumn(
                 onClick = onConfirmLocation
             ) {
                 Text(stringResource(id = R.string.confirm_location))
+
             }
         }
 
@@ -621,6 +624,9 @@ private fun DrawingControls(
                             .clickable {
                                 viewModel.areaInput =
                                     viewModel.calculateAreaOfPolygon(polygonPoints).toString()
+                                viewModel.drawingEnabled= MutableStateFlow(false)
+                                viewModel.togglePolygonVisibility()
+                                viewModel.removePoints()
                                 toggleBottomSheet()
                             }
                             .width(130.dp)

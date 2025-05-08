@@ -171,7 +171,15 @@ private fun BottomSheetContent(
 
         Spacer(modifier = Modifier.height(20.dp))
 
-        AreaInputRow(areaState, onAreaChange, onStartDrawing, onDismiss, decimalFormatter)
+        AreaInputRow(
+            areaState,
+            onAreaChange,
+            onStartDrawing,
+            onDismiss,
+            viewModel = viewModel,
+
+            decimalFormatter = decimalFormatter
+        )
         Spacer(modifier = Modifier.height(8.dp))
         InfoHelpButton(stringResource(id = R.string.area_label), stringResource(id = R.string.roofAreaHelp))
 
@@ -225,7 +233,8 @@ fun AreaInputRow(
     onAreaChange: (String) -> Unit,
     onStartDrawing: () -> Unit,
     onDismiss: () -> Unit,
-    decimalFormatter: DecimalFormatter
+    decimalFormatter: DecimalFormatter,
+    viewModel: MapScreenViewModel
 ) {
     Row {
         DecimalInputField(
@@ -239,7 +248,10 @@ fun AreaInputRow(
         )
         Button(
             onClick = {
-                onStartDrawing()
+                //viewModel.drawingEnabled= true
+                viewModel.startDrawing()
+                //onStartDrawing()
+
                 onDismiss()
             },
             modifier = Modifier.height(70.dp)

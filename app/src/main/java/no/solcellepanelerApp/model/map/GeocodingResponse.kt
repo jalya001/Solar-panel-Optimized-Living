@@ -6,13 +6,13 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 data class GeocodingResponse(
-    val placeId: Long,
+    val place_id: Long,
     val licence: String,
-    val osmType: String,
-    val osmId: Long,
+    val osm_type: String,
+    val osm_id: Long,
     val lat: String,
     val lon: String,
-    val displayName: String,
+    val display_name: String,
     val boundingbox: List<String>,
     @SerialName("class") val className: String,
     val type: String,

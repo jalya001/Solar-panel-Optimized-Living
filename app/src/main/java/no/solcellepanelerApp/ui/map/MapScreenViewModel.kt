@@ -48,7 +48,9 @@ class MapScreenViewModel : ViewModel() {
     var selectedCoordinates by mutableStateOf<LatLng?>(null)
     var address by mutableStateOf("")
     var isPolygonVisible by mutableStateOf(false)
-    var drawingEnabled by mutableStateOf(false)
+    var drawingEnabled = MutableStateFlow(false)
+
+
     var index by mutableIntStateOf(0)
     var showBottomSheet by mutableStateOf(false)
     var showMissingLocationDialog by mutableStateOf(false)
@@ -107,6 +109,7 @@ class MapScreenViewModel : ViewModel() {
         viewModelScope.launch {
             val location = activityToCoordinates(activity)
             currentLocation = location
+            Log.d("drawing is :",drawingEnabled.toString())
         }
     }
 
@@ -117,7 +120,9 @@ class MapScreenViewModel : ViewModel() {
     }
 
     fun startDrawing() {
-        drawingEnabled = true
+        drawingEnabled= MutableStateFlow(true)
+        Log.d("drawing is :",drawingEnabled.toString())
+
         selectedCoordinates = null
         removePoints()
         index = 0
