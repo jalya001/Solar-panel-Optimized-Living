@@ -65,7 +65,6 @@ import no.solcellepanelerApp.ui.reusables.DecimalInputField
 fun AdditionalInputBottomSheet(
     visible: Boolean,
     onDismiss: () -> Unit,
-    onStartDrawing: () -> Unit,
     coordinates: Pair<Double, Double>?,
     height: Double?,
     area: String,
@@ -109,7 +108,6 @@ fun AdditionalInputBottomSheet(
             BottomSheetContent(
                 areaState = areaState,
                 onAreaChange = { areaState = it },
-                onStartDrawing = onStartDrawing,
                 angle = angle,
                 onAngleChange = { angle = it },
                 efficiency = efficiency,
@@ -134,7 +132,6 @@ fun AdditionalInputBottomSheet(
 private fun BottomSheetContent(
     areaState: String,
     onAreaChange: (String) -> Unit,
-    onStartDrawing: () -> Unit,
     angle: Float,
     onAngleChange: (Float) -> Unit,
     efficiency: Float,
@@ -152,7 +149,6 @@ private fun BottomSheetContent(
     navController: NavController,
 ) {
     val focusManager = LocalFocusManager.current
-    val uriHandler = LocalUriHandler.current
     val decimalFormatter = DecimalFormatter()
 
     Column(
@@ -174,7 +170,6 @@ private fun BottomSheetContent(
         AreaInputRow(
             areaState,
             onAreaChange,
-            onStartDrawing,
             onDismiss,
             viewModel = viewModel,
 
@@ -231,7 +226,6 @@ data class SolarPanelType(
 fun AreaInputRow(
     areaState: String,
     onAreaChange: (String) -> Unit,
-    onStartDrawing: () -> Unit,
     onDismiss: () -> Unit,
     decimalFormatter: DecimalFormatter,
     viewModel: MapScreenViewModel
@@ -248,10 +242,7 @@ fun AreaInputRow(
         )
         Button(
             onClick = {
-                //viewModel.drawingEnabled= true
                 viewModel.startDrawing()
-                //onStartDrawing()
-
                 onDismiss()
             },
             modifier = Modifier.height(70.dp)

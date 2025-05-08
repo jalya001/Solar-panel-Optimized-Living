@@ -16,7 +16,6 @@ import com.google.android.gms.maps.model.LatLng
 import com.google.maps.android.SphericalUtil
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.launch
@@ -31,7 +30,6 @@ import androidx.core.content.ContextCompat
 import com.google.android.gms.maps.model.CameraPosition
 import com.google.maps.android.compose.CameraPositionState
 import com.google.maps.android.compose.MapUiSettings
-import kotlin.math.abs
 import kotlin.math.ceil
 import no.solcellepanelerApp.util.fetchCoordinates as activityToCoordinates
 
@@ -51,7 +49,7 @@ class MapScreenViewModel : ViewModel() {
     var drawingEnabled = MutableStateFlow(false)
 
 
-    var index by mutableIntStateOf(0)
+    private var index by mutableIntStateOf(0)
     var showBottomSheet by mutableStateOf(false)
     var showMissingLocationDialog by mutableStateOf(false)
     var currentLocation by mutableStateOf<Location?>(null)
@@ -157,14 +155,6 @@ class MapScreenViewModel : ViewModel() {
 
     fun togglePolygonVisibility() {
         isPolygonVisible = !isPolygonVisible
-    }
-
-    fun toggleBottomSheet(visible: Boolean) {
-        showBottomSheet = visible
-    }
-
-    fun showMissingLocation(show: Boolean) {
-        showMissingLocationDialog = show
     }
 
     fun clearSelection() {
