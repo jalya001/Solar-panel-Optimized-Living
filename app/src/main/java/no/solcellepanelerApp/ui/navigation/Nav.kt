@@ -64,7 +64,13 @@ fun Nav(navController: NavHostController, fontScaleViewModel: FontScaleViewModel
             )
         }
         composable("map") {
-            MapScreen(viewModel, navController, fontScaleViewModel, weatherViewModel)
+            MapScreen(
+                viewModel,
+                navController,
+                fontScaleViewModel,
+                weatherViewModel,
+                priceScreenViewModel
+            )
         }
         composable("result") {
             ResultScreen(
