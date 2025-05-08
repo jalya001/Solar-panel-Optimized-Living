@@ -7,7 +7,7 @@ import java.time.LocalDate
 class ElectricityPriceRepository {
     private val api = ElectricityPriceApi()
     private var prices: List<ElectricityPrice> = emptyList()
-    private var selectedRegion: String = Region.TROMSO.regionCode
+    private var selectedRegion: String = Region.OSLO.regionCode
 
     fun updateRegion(region: Region) {
         selectedRegion = region.regionCode

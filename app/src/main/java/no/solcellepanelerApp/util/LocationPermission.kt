@@ -122,7 +122,7 @@ fun mapLocationToRegion(location: Location): Region {
         // Vestlandet / Bergen (NO5)
         lat in 60.0..61.5 && lon in 4.5..6.5 -> Region.BERGEN
         // Fallback hvis vi ikke finner match
-        else -> Region.TROMSO
+        else -> Region.OSLO
     }
 }
 
