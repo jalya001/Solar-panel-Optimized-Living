@@ -281,6 +281,8 @@ Når du er fornøyd, trykk på "Bekreft tegning" for å fortsette.
     <string name="washing_machine">Vaskemaskin</string>
     <string name="vacuum_cleaner">Støvsuger</string>
     <string name="dishwasher">Oppvaskmaskin</string>
+    <string name="device_info">Dette er enhetene du har koblet til, og deres månedlige energiforbruk:</string>
+
 
     <!-- Onboarding -->
     <string name="onboard_title_1">Velkommen til SOL</string>

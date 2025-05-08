@@ -571,8 +571,8 @@ fun DisplayScreen(
                 )
             }
         }
-        val context = LocalContext.current
-        val onboardingUtils = remember { OnboardingUtils(context) }
+        val currentContext = LocalContext.current
+        val onboardingUtils = remember { OnboardingUtils(currentContext) }
 
         AdditionalInputBottomSheet(
             visible = showBottomSheet,
