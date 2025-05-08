@@ -237,7 +237,7 @@ How to draw:\n
     <string name="adj_radiation_explanation">This is the amount of solar radiation your panels receive, adjust with snow,cloud, and temperature data for your location</string>
     <string name="estimated_energy_prod">Estimated Energy Produced: \n%.2f kWh </string>
     <string name="estimated_powerpr_hour">Estimated Power Produced per Hour: \n%.2f kW</string>
-    <string name="show_monthly_savings">Click to see Your Savings In %1$s</string>
+    <string name="click_to_see_savings">Click to see Your Savings In %1$s</string>
 
     <!--Savings Screen-->
     <string name="yearly_savings">Saved annually</string>

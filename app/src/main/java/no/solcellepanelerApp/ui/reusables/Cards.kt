@@ -24,11 +24,15 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.SpanStyle
 
 import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.buildAnnotatedString
+import androidx.compose.ui.text.font.FontStyle
 
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.text.withStyle
 
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.DpSize
@@ -200,7 +204,7 @@ fun DataCard(
 ) {
     val cardModifier = modifier
         .fillMaxWidth()
-    val tempEffect= 1 + (-0.44) * (temp - 25)
+    val tempEffect = 1 + (-0.44) * (temp - 25)
     MyCard(
 //        modifier = cardModifier,
 //        elevation = 4.dp,
@@ -282,15 +286,15 @@ fun DataCard(
                     style = MaterialTheme.typography.bodyMedium
                 )
 
-//                Text(
-//                    buildAnnotatedString {
-//                        withStyle(style = SpanStyle(fontStyle = FontStyle.Italic)) {
-//                            append(
-//                                stringResource(R.string.show_monthly_savings, month)
-//                            )
-//                        }
-//                    }
-//                )
+                Text(
+                    buildAnnotatedString {
+                        withStyle(style = SpanStyle(fontStyle = FontStyle.Italic)) {
+                            append(
+                                stringResource(R.string.click_to_see_savings, month)
+                            )
+                        }
+                    }
+                )
 
 
 //            Button(

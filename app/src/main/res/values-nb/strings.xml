@@ -244,7 +244,7 @@ Når du er fornøyd, trykk på "Bekreft tegning" for å fortsette.
     <string name="adj_radiation_explanation">Dette er mengden solstråling panelene dine mottar, juster med snø-, sky- og temperaturdata for posisjonen din</string>
     <string name="estimated_energy_prod">Estimert produsert energi: \n%.2f kWh </string>
     <string name="estimated_powerpr_hour">Estimert kraft produsert per time:\n%.2f kWh</string>
-    <string name="show_monthly_savings"><i>Vis Din Månedlige Sparing I %1$s</i></string>
+    <string name="click_to_see_savings"><i>Trykk her for å se din sparing i %1$s</i></string>
 
     <!--Savings Screen-->
     <string name="yearly_savings">Spares årlig</string>
