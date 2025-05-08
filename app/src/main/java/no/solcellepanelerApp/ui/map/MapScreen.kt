@@ -235,12 +235,7 @@ fun DisplayScreen(
     var selectedRegion by rememberSaveable { mutableStateOf<Region?>(null) }
     var currentLocation by remember { mutableStateOf<Location?>(null) }
     var locationPermissionGranted by remember { mutableStateOf(false) }
-
-//    RequestLocationPermission { region ->
-//        selectedRegion = region
-//        locationPermissionGranted = true
-//
-//    }
+    
 
     LaunchedEffect(locationPermissionGranted) {
         if (locationPermissionGranted && activity != null) {

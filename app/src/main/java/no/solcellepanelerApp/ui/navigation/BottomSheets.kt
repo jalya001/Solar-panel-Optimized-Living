@@ -191,16 +191,6 @@ fun HelpBottomSheet(
                                 R.string.grant_location_access
                             ),
                             onClick = {
-//                                if (locationGranted) {
-//                                    val intent =
-//                                        Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS).apply {
-//                                            data =
-//                                                Uri.fromParts("package", context.packageName, null)
-//                                            addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
-//                                        }
-//                                    context.startActivity(intent)
-//                                }
-
                                 if (locationGranted) {
                                     showDialog = true
                                 } else {
