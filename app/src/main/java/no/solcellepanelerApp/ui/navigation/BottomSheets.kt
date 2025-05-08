@@ -609,9 +609,10 @@ fun AdditionalInputBottomSheet(
 //                    )
 
 
-                    var selected: Boolean by remember { mutableStateOf(false) }
+
+                    //Log.d("Efficiency", selected.toString())
                     panelTypes.forEach { panelType ->
-                        selected = efficiency == panelType.efficiency
+                       val selected = efficiency == panelType.efficiency
                         val glowAlpha by animateFloatAsState(
                             targetValue = if (selected) 1f else 0f,
                             animationSpec = tween(durationMillis = 500)
@@ -740,7 +741,7 @@ fun AdditionalInputBottomSheet(
 
                     Spacer(modifier = Modifier.height(32.dp))
 
-                    if (areaState.isNotEmpty() && coordinates != null && selected) {
+                    if (areaState.isNotEmpty() && coordinates != null && efficiency != 0f) {
                         Button(
                             onClick = {
                                 viewModel.areaInput = areaState
