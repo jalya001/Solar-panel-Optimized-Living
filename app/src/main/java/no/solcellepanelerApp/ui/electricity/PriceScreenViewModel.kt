@@ -9,11 +9,12 @@ import kotlinx.coroutines.launch
 import no.solcellepanelerApp.data.electricitydata.ElectricityPriceRepository
 import no.solcellepanelerApp.model.electricity.ElectricityPrice
 import no.solcellepanelerApp.model.electricity.Region
+import no.solcellepanelerApp.model.reusables.updateStaleData
 import java.time.LocalDate
+import java.time.ZonedDateTime
 
 class PriceScreenViewModel(
     private val repository: ElectricityPriceRepository = ElectricityPriceRepository(),
-
 ) : ViewModel() {
     enum class UiState {
         LOADING, SUCCESS, ERROR
@@ -46,7 +47,8 @@ class PriceScreenViewModel(
                 if (selectedRegion != null) {
                     repository.updateRegion(selectedRegion)
                 } // optional if already updated in setRegion()
-                repository.updatePrices(date)
+                updatePrices(date)
+
                 _prices.value = repository.getPrices(date)
 
                 if (_prices.value?.isNotEmpty() == true) {
@@ -61,5 +63,19 @@ class PriceScreenViewModel(
                 Log.e("PriceScreenViewModel", "Nettverksfeil ved henting av strømpriser", e)
             }
         }
+    }
+
+    private suspend fun updatePrices(date: LocalDate) {
+        updateStaleData(
+            currentTime = ZonedDateTime.now(),
+            dataHolder = { repository.prices.value },
+            fetchData = {
+                repository.updatePrices(date)
+            },
+            computeValue = { timedData ->
+                timedData.data
+            },
+            updateTarget = { _prices.value = it }
+        )
     }
 }

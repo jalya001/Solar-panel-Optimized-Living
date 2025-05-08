@@ -16,6 +16,7 @@ import androidx.core.content.ContextCompat
 import kotlinx.coroutines.delay
 import no.solcellepanelerApp.MainActivity
 import no.solcellepanelerApp.data.electricitydata.ElectricityPriceRepository
+import no.solcellepanelerApp.model.reusables.updateStaleData
 import no.solcellepanelerApp.util.fetchCoordinates
 import no.solcellepanelerApp.util.mapLocationToRegion
 
@@ -70,20 +71,23 @@ class HomeScreenViewModel : ViewModel() {
 
     private suspend fun updateCurrentRadiation(time: ZonedDateTime) {
         val location = _currentLocation.value ?: return
-        val radiationTimedArray = weatherRepository.rimData.value
 
-        // There probably is a more elegant way of doing this
-        if (radiationTimedArray == null || radiationTimedArray.timestamp < time.minusHours(1)) {
-            weatherRepository.fetchRimData(
-                location.latitude, location.longitude,"mean(surface_downwelling_shortwave_flux_in_air PT1H)"
-            )
-        }
-        if (weatherRepository.rimData.value == null || weatherRepository.rimData.value!!.data.isEmpty()) {
-            _currentRadiationValue.value = null // Error
-        } else {
-            val hour = _currentTime.value.minusHours(2).hour
-            _currentRadiationValue.value = weatherRepository.rimData.value!!.data.getOrNull(hour)?.div(1000.0)
-
-        }
+        updateStaleData(
+            currentTime = time,
+            dataHolder = { weatherRepository.rimData.value },
+            fetchData = {
+                weatherRepository.fetchRimData(
+                    location.latitude,
+                    location.longitude,
+                    "mean(surface_downwelling_shortwave_flux_in_air PT1H)"
+                )
+            },
+            computeValue = { timedData ->
+                val hour = _currentTime.value.minusHours(2).hour
+                if ((timedData.data as? Array<Double>).isNullOrEmpty()) null
+                else timedData.data.getOrNull(hour)?.div(1000.0)
+            },
+            updateTarget = { _currentRadiationValue.value = it }
+        )
     }
 }

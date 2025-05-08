@@ -2,18 +2,13 @@ package no.solcellepanelerApp.data.weatherdata
 
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
-import java.time.ZonedDateTime
+import no.solcellepanelerApp.model.reusables.TimedData
 
 class WeatherRepository(
     private val pvgisDataSource: PVGISApi = PVGISApi(),
     private val frostDataSource: FrostApi = FrostApi(),
     private val client: CustomHttpClient = CustomHttpClient(),
 ) {
-    data class TimedData<T>(
-        val data: T,
-        val timestamp: ZonedDateTime = ZonedDateTime.now()
-    )
-
     private val _rimData = MutableStateFlow<TimedData<Array<Double>>?>(null)
     val rimData: StateFlow<TimedData<Array<Double>>?> = _rimData
 
