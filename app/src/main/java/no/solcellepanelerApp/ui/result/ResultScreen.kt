@@ -396,6 +396,6 @@ fun calculateMonthlyEnergyOutput(
 }
 //small function to calculate the saved CO2, since it is simple no need to put in a viewmodel
 fun calculateSavedCO2(energy: Double): Double {
-    val norwayEmissionFactor = 0.03 //0.03 kg CO2/kWh
+    val norwayEmissionFactor = 0.018 //0.018 kg CO2/kWh
     return energy * norwayEmissionFactor
 }
