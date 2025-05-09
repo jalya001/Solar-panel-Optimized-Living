@@ -12,10 +12,10 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.ArrowBack
+import androidx.compose.material.icons.automirrored.filled.ArrowForward
 import androidx.compose.material.icons.filled.AccessTime
-import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.ArrowDownward
-import androidx.compose.material.icons.filled.ArrowForward
 import androidx.compose.material.icons.filled.ArrowUpward
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
@@ -26,9 +26,11 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import no.solcellepanelerApp.R
 import no.solcellepanelerApp.model.electricity.ElectricityPrice
 import no.solcellepanelerApp.model.electricity.Region
 import no.solcellepanelerApp.ui.handling.LoadingScreen
@@ -60,9 +62,17 @@ fun PriceCard(
     val lowestPrice = prices.minByOrNull { it.NOK_per_kWh }
 
     val label = when {
-        ZonedDateTime.parse(currentDisplayedPrice?.time_start).hour == currentHour -> "Pris nå"
-        hourIndex > currentHour -> "Pris om ${hourIndex - currentHour} time${if (hourIndex - currentHour > 1) "r" else ""}"
-        else -> "Pris for ${currentHour - hourIndex} time${if (currentHour - hourIndex > 1) "r" else ""} siden"
+        ZonedDateTime.parse(currentDisplayedPrice?.time_start).hour == currentHour -> stringResource(R.string.price_now_card)
+        hourIndex > currentHour ->
+            stringResource(R.string.future_price_prefix) +
+                " ${hourIndex - currentHour} " +
+                    stringResource(R.string.price_suffix_part1) +
+                    (if (hourIndex - currentHour > 1) stringResource(R.string.price_suffix_part2) else "")
+        else ->
+            stringResource(R.string.past_price_prefix) +
+                " ${currentHour - hourIndex} " +
+                    stringResource(R.string.price_suffix_part1) +
+                    (if (currentHour - hourIndex > 1) stringResource(R.string.price_suffix_part2) else "") + stringResource(R.string.past_price_suffix)
     }
 
 
@@ -93,7 +103,7 @@ fun PriceCard(
                         horizontalAlignment = Alignment.CenterHorizontally
                     ) {
                         Text(
-                            text = "Bruk pilene for å bytte time",
+                            text = stringResource(R.string.change_time_arrows),
                             style = MaterialTheme.typography.bodySmall,
                             color = MaterialTheme.colorScheme.onSurfaceVariant
                         )
@@ -106,7 +116,7 @@ fun PriceCard(
                             verticalAlignment = Alignment.CenterVertically
                         ) {
                             Icon(
-                                imageVector = Icons.Default.ArrowBack,
+                                imageVector = Icons.AutoMirrored.Filled.ArrowBack,
                                 contentDescription = "Forrige time",
                                 modifier = Modifier
                                     .padding(2.dp)
@@ -116,7 +126,7 @@ fun PriceCard(
                                 tint = MaterialTheme.colorScheme.primary
                             )
                             Icon(
-                                imageVector = Icons.Default.ArrowForward,
+                                imageVector = Icons.AutoMirrored.Filled.ArrowForward,
                                 contentDescription = "Neste time",
                                 modifier = Modifier
                                     .padding(2.dp)
@@ -134,7 +144,7 @@ fun PriceCard(
             highestPrice?.let {
                 PriceRow(
                     icon = Icons.Default.ArrowUpward,
-                    label = "Høyeste pris",
+                    label = stringResource(R.string.highest_price),
                     price = it.NOK_per_kWh,
                     time = it.getTimeRange()
                 )
@@ -143,7 +153,7 @@ fun PriceCard(
             lowestPrice?.let {
                 PriceRow(
                     icon = Icons.Default.ArrowDownward,
-                    label = "Laveste pris",
+                    label = stringResource(R.string.lowest_price),
                     price = it.NOK_per_kWh,
                     time = it.getTimeRange()
                 )
@@ -185,11 +195,11 @@ fun PriceRow(
             Spacer(modifier = Modifier.height(8.dp))
 
             Text(
-                text = "${"%2f".format(price)} NOK/kWh",
+                text = "${"%.3f".format(price)} NOK/kWh",
                 style = MaterialTheme.typography.bodyMedium
             )
             Text(
-                text = "Tid: $time",
+                text = stringResource(R.string.time) + " $time",
                 style = MaterialTheme.typography.bodySmall
             )
         }
@@ -201,10 +211,7 @@ fun HomePriceCard(
     prices: List<ElectricityPrice>,
     selectedRegion: Region?,
 ) {
-    Column(
-//        horizontalAlignment = Alignment.CenterHorizontally,
-//        verticalArrangement = Arrangement.Center
-    ) {
+    Column {
         if (selectedRegion == null) {
             LoadingScreen()
             return
@@ -229,7 +236,7 @@ fun HomePriceCard(
             verticalArrangement = Arrangement.Top,
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            val label = "Nåværende strømpris i region: ${selectedRegion?.name}"
+            val label = stringResource(R.string.price_now) + " ${selectedRegion?.name}"
             Spacer(modifier = Modifier.height(8.dp))
             Row(
                 modifier = Modifier.fillMaxWidth(),

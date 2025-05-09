@@ -278,14 +278,14 @@ class FrostApi {
     private fun setModes(
         modes: MutableMap<String, Mode>,
         searchAdvancements: Map<String, MutableMap<Quadrant, Int>>,
+        usableStations: Map<String, Map<Quadrant, MutableList<String>>>
     ) {
         println(modes)
         searchAdvancements.forEach { (element, quadrants) ->
-            if (modes[element] != Mode.NEAREST && modes[element] != Mode.FAIL) resetMode(
-                modes,
-                element,
-                quadrants
-            )
+            val mode = modes[element]
+            if (mode != Mode.NEAREST && mode != Mode.FAIL) {
+                resetMode(modes, element, quadrants, usableStations[element]!!)
+            }
         }
         println(modes)
     }
@@ -300,7 +300,14 @@ class FrostApi {
         modes: MutableMap<String, Mode>,
         element: String,
         quadrants: MutableMap<Quadrant, Int>,
+        elementUsableStations: Map<Quadrant, MutableList<String>>,
     ) {
+        if (modes[element] == Mode.EXTRAPOLATION) { // patchwork idfc and should maybe have one for interpolation
+            val allListsSizeLessThanTwo = elementUsableStations.values?.all { it.size < 2 } ?: true
+            if (!allListsSizeLessThanTwo) {
+                return
+            }
+        }
         val exceeders = mutableListOf<Quadrant>()
         quadrants.forEach { (quadrant, value) ->
             if (value >= 4) exceeders.add(quadrant)
@@ -511,7 +518,8 @@ class FrostApi {
             if (modes[element]!! != Mode.NEAREST) resetMode(
                 modes,
                 element,
-                searchAdvancements[element]!!
+                searchAdvancements[element]!!,
+                usableStations[element]!!,
             ) // idk where to put this
             val mode = modes[element]!!
             var queuableOrUsableStationsCount = 0 // Does not need to be muted later
@@ -690,7 +698,7 @@ class FrostApi {
                         missingIds.add(modesData[element]!!.first[0].first)
                     } else {
                         println("RESETTING " + element)
-                        resetMode(modes, element, searchAdvancements[element]!!)
+                        resetMode(modes, element, searchAdvancements[element]!!, usableStations[element]!!)
                     }
                 }
             }
@@ -800,8 +808,9 @@ class FrostApi {
             while (true) {
                 setModes(
                     modes,
-                    searchAdvancements
-                ) // if it has gone 150km in two directions (which means it has not found anything in them) (it can well interpolate with three quadrants, but four is optimal). if the two directions are diagonal to each other, it's also fine however. if it has found nothing in 150km in all directions, it goes to guesstimation
+                    searchAdvancements,
+                    usableStations
+                )
                 val url = buildStationsUrl(
                     center,
                     requestedQuadrants,

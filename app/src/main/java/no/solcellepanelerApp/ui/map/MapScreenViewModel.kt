@@ -3,6 +3,7 @@ package no.solcellepanelerApp.ui.map
 
 import android.util.Log
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
@@ -19,8 +20,6 @@ import no.solcellepanelerApp.data.mapdata.AddressRepository
 import no.solcellepanelerApp.data.mapdata.AddressDataSource
 import no.solcellepanelerApp.data.mapdata.ElevationApi
 import no.solcellepanelerApp.model.electricity.Region
-
-import kotlin.math.abs
 import kotlin.math.ceil
 
 class MapScreenViewModel(
@@ -59,26 +58,26 @@ class MapScreenViewModel(
         return roundedArea
     }
 
-    fun calculateArea(points: List<LatLng>): Double {
-        if (polygondata.size < 3) return 0.0 // A polygon must have at least 3 points
-
-        var area = 0.0
-        val n = points.size
-
-        for (i in 0 until n) {
-            val j = (i + 1) % n
-            val lat1 = points[i].latitude
-            val lng1 = points[i].longitude
-            val lat2 = points[j].latitude
-            val lng2 = points[j].longitude
-
-            area += (lng1 * lat2 - lng2 * lat1)
-        }
-
-
-        return abs(area) / 2.0
-
-    }
+//    fun calculateArea(points: List<LatLng>): Double {
+//        if (polygondata.size < 3) return 0.0 // A polygon must have at least 3 points
+//
+//        var area = 0.0
+//        val n = points.size
+//
+//        for (i in 0 until n) {
+//            val j = (i + 1) % n
+//            val lat1 = points[i].latitude
+//            val lng1 = points[i].longitude
+//            val lat2 = points[j].latitude
+//            val lng2 = points[j].longitude
+//
+//            area += (lng1 * lat2 - lng2 * lat1)
+//        }
+//
+//
+//        return abs(area) / 2.0
+//
+//    }
 
     fun removePoints() {
         polygondata.clear()
@@ -92,7 +91,7 @@ class MapScreenViewModel(
     }
 
     val addressFetchError = mutableStateOf(false)
-    val snackbarMessageTrigger = mutableStateOf(0)
+    val snackbarMessageTrigger = mutableIntStateOf(0)
 
     fun fetchCoordinates(address: String) {
         viewModelScope.launch {
@@ -100,6 +99,7 @@ class MapScreenViewModel(
                 val result = repository.getCoordinates(address)
                 if (result.isNotEmpty()) {
                     val coordinate = result[0]
+                    Log.d("MyViewModel", "Fetched coordinates: $coordinate")
                     _height.value = repository.getHeight(Pair(coordinate.lat.toDouble(), coordinate.lon.toDouble()))
                     _coordinates.postValue(
                         Pair(
@@ -108,11 +108,11 @@ class MapScreenViewModel(
                         )
                     )
                 } else {
-                    snackbarMessageTrigger.value++
+                    snackbarMessageTrigger.intValue++
                 }
             } catch (e: Exception) {
                 Log.e("MyViewModel", "Error fetching coordinates", e)
-                snackbarMessageTrigger.value++
+                snackbarMessageTrigger.intValue++
             }
         }
     }

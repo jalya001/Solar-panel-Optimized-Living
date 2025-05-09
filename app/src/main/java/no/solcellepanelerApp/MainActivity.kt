@@ -28,6 +28,7 @@ class MainActivity : ComponentActivity() {
         val languageCode = LanguageUtils.getSavedLanguage(this) ?: "en"
         LanguageUtils.setLanguage(this, languageCode)
         installSplashScreen()
+//        onboardingUtils.resetAllOnboardingStates() //for testing
 
         enableEdgeToEdge()
         setContent {
@@ -37,8 +38,6 @@ class MainActivity : ComponentActivity() {
                 } else {
                     ShowOnboardingScreen()
                 }
-
-
             }
         }
     }

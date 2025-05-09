@@ -1,7 +1,6 @@
 package no.solcellepanelerApp.ui.result
 
 import android.annotation.SuppressLint
-import android.util.Log
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.animateColorAsState
 import androidx.compose.animation.core.LinearEasing
@@ -9,13 +8,13 @@ import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.core.tween
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
+import androidx.compose.foundation.ScrollState
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
-
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.BoxWithConstraints
 import androidx.compose.foundation.layout.Column
-
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxSize
@@ -28,12 +27,12 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
-
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedCard
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
@@ -47,6 +46,7 @@ import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.graphicsLayer
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.text.buildAnnotatedString
@@ -74,12 +74,14 @@ import com.airbnb.lottie.compose.animateLottieCompositionAsState
 import com.airbnb.lottie.compose.rememberLottieComposition
 import com.google.accompanist.flowlayout.FlowRow
 import no.solcellepanelerApp.R
-import no.solcellepanelerApp.ui.electricity.ChartType
+import no.solcellepanelerApp.model.electricity.ChartType
 import no.solcellepanelerApp.ui.font.FontScaleViewModel
 import no.solcellepanelerApp.ui.navigation.AppearanceBottomSheet
 import no.solcellepanelerApp.ui.navigation.BottomBar
 import no.solcellepanelerApp.ui.navigation.HelpBottomSheet
+import no.solcellepanelerApp.ui.navigation.InfoHelpButton
 import no.solcellepanelerApp.ui.navigation.TopBar
+import no.solcellepanelerApp.ui.onboarding.OnboardingUtils
 import no.solcellepanelerApp.ui.reusables.IconTextRow
 import no.solcellepanelerApp.ui.reusables.SimpleTutorialOverlay
 import no.solcellepanelerApp.ui.theme.ThemeMode
@@ -87,10 +89,11 @@ import no.solcellepanelerApp.ui.theme.ThemeState
 
 @SuppressLint("MutableCollectionMutableState", "DefaultLocale")
 
+
 @Composable
 fun EnergySavingsScreen(
-    isMonthly: Boolean, // Toggle between monthly and yearly view
-    month: String = "", // Only needed for monthly view
+    isMonthly: Boolean,
+    month: String = "",
     energyProduced: Double,
     energyPrice: Double,
     navController: NavController,
@@ -102,67 +105,36 @@ fun EnergySavingsScreen(
     val calculationResult by weatherViewModel.calculationResults.collectAsState()
     var showHelp by remember { mutableStateOf(false) }
     var showAppearance by remember { mutableStateOf(false) }
-    var showOverlay by remember { mutableStateOf(true) }
+    val context = LocalContext.current
+    val onboardingUtils = remember { OnboardingUtils(context) }
+    var showOverlay by remember { mutableStateOf(false) }
     var currentEnergy by remember { mutableDoubleStateOf(energyProduced) }
 
-    // Device data
-    val devices = listOf(
-        "El-Car" to 100.0,
-        "Fridge" to 30.0,
-        "Heater" to 60.0,
-        "Laptop" to 10.0,
-        "Washing Machine" to 20.0,
-        "TV" to 15.0,
-        "Air Conditioner" to 50.0,
-        "Microwave" to 25.0,
-        "Dishwasher" to 35.0,
-        "Vacuum Cleaner" to 8.0
-    )
-
-    val deviceIcons = mapOf(
-        "Fridge" to R.drawable.kitchen_24px,
-        "Washing Machine" to R.drawable.local_laundry_service_24px,
-        "TV" to R.drawable.tv_24px,
-        "Laptop" to R.drawable.laptop_windows_24px,
-        "Air Conditioner" to R.drawable.mode_fan_24px,
-        "Heater" to R.drawable.fireplace_24px,
-        "Microwave" to R.drawable.microwave_24px,
-        "Dishwasher" to R.drawable.dishwasher_24px,
-        "El-Car" to R.drawable.directions_car_24px,
-        "Vacuum Cleaner" to R.drawable.vacuum_24px,
-    )
-
-    val preConnected = listOf("Fridge", "TV", "Laptop")
-
+    // Device data moved to a separate data provider
+    val deviceData = rememberDeviceData()
     var connectedDevices by remember {
         mutableStateOf(
-            devices
-                .filter { it.first in preConnected }
+            deviceData.devices
+                .filter { it.first in deviceData.preConnected }
                 .associate { it.first to it.second }
                 .toMutableMap()
         )
     }
 
-    // Animation for current energy value
+    // Animation values
     val animatedEnergy = animateFloatAsState(
         targetValue = currentEnergy.toFloat(),
         animationSpec = tween(durationMillis = 500, easing = LinearEasing)
     ).value
 
-    // Animation for color based on energy change
     val energyColor = animateColorAsState(
         targetValue = if (currentEnergy < 0) MaterialTheme.colorScheme.error else MaterialTheme.colorScheme.primary,
         animationSpec = tween(durationMillis = 500, easing = LinearEasing)
     ).value
 
-    // Create scroll state that we can observe
     val scrollState = rememberScrollState()
-    // Control text visibility based on scroll position
     val showHeaderText by remember {
-        derivedStateOf {
-            // Hide text when scrolled beyond a threshold
-            scrollState.value < 2000
-        }
+        derivedStateOf { scrollState.value < 2000 }
     }
 
     val screenTitle = if (isMonthly)
@@ -170,13 +142,16 @@ fun EnergySavingsScreen(
     else
         stringResource(R.string.yearly_savings)
 
+    // Check if we need to show the onboarding overlay
+    LaunchedEffect(Unit) {
+        if (!onboardingUtils.isSavingsOverlayShown()) {
+            showOverlay = true
+            onboardingUtils.setSavingsOverlayShown()
+        }
+    }
+
     Scaffold(
-        topBar = {
-            TopBar(
-                navController,
-                text = screenTitle
-            )
-        },
+        topBar = { TopBar(navController, text = screenTitle) },
         bottomBar = {
             BottomBar(
                 onHelpClicked = { showHelp = true },
@@ -185,264 +160,465 @@ fun EnergySavingsScreen(
             )
         }
     ) { paddingValues ->
+        // Overlay for first-time users
         if (showOverlay) {
+            val title = stringResource(R.string.saving_overlay_title)
+            val body = stringResource(R.string.saving_overlay)
+            val message = buildAnnotatedString {
+                withStyle(style = MaterialTheme.typography.titleLarge.toSpanStyle()) {
+                    append("$title\n\n")
+                }
+                withStyle(style = MaterialTheme.typography.bodyLarge.toSpanStyle()) {
+                    append(body)
+                }
+            }
+
             SimpleTutorialOverlay(
                 onDismiss = { showOverlay = false },
-                "Se hvor mye du sparer \n\n Trykk på de ulike enhetene for å se *trenger en god fromulering* \n\nScroll opp for mer informasjon!"
+                message = message
             )
+
         }
-        Box(
+
+        EnergySavingsContent(
+            paddingValues = paddingValues,
+            isMonthly = isMonthly,
+            month = month,
+            savings = savings,
+            currentEnergy = currentEnergy,
+            animatedEnergy = animatedEnergy,
+            energyColor = energyColor,
+            showHeaderText = showHeaderText,
+            scrollState = scrollState,
+            weather = weather,
+            calculationResult = calculationResult,
+            deviceData = deviceData,
+            connectedDevices = connectedDevices,
+            onDeviceToggle = { deviceName, deviceValue ->
+                if (connectedDevices.containsKey(deviceName)) {
+                    connectedDevices = connectedDevices.toMutableMap().apply { remove(deviceName) }
+                    currentEnergy += deviceValue
+                } else {
+                    connectedDevices =
+                        connectedDevices.toMutableMap().apply { put(deviceName, deviceValue) }
+                    currentEnergy -= deviceValue
+                }
+            }
+        )
+
+        // Bottom sheets
+        HelpBottomSheet(
+            navController = navController,
+            visible = showHelp,
+            onDismiss = { showHelp = false }
+        )
+
+        AppearanceBottomSheet(
+            visible = showAppearance,
+            onDismiss = { showAppearance = false },
+            fontScaleViewModel = fontScaleViewModel
+        )
+    }
+}
+
+
+@Composable
+private fun EnergySavingsContent(
+    paddingValues: PaddingValues,
+    isMonthly: Boolean,
+    month: String,
+    savings: Double,
+    currentEnergy: Double,
+    animatedEnergy: Float,
+    energyColor: Color,
+    showHeaderText: Boolean,
+    scrollState: ScrollState,
+    weather: Map<String, Array<Double>>,
+    calculationResult: MonthlyCalculationResult?,
+    deviceData: DeviceData,
+    connectedDevices: Map<String, Double>,
+    onDeviceToggle: (String, Double) -> Unit,
+) {
+    Box(
+        modifier = Modifier
+            .padding(paddingValues)
+            .fillMaxSize()
+    ) {
+        Column(
             modifier = Modifier
-                .padding(paddingValues)
                 .fillMaxSize()
+                .padding(10.dp)
         ) {
+            // Header with savings and energy info
+            EnergySavingsHeader(
+                isMonthly = isMonthly,
+                month = month,
+                savings = savings,
+                currentEnergy = currentEnergy,
+                animatedEnergy = animatedEnergy,
+                energyColor = energyColor,
+                showHeaderText = showHeaderText
+            )
+
+            // Scrollable content
             Column(
                 modifier = Modifier
-                    .fillMaxSize()
-                    .padding(10.dp)
+                    .weight(1f)
+                    .verticalScroll(scrollState),
+                horizontalAlignment = Alignment.CenterHorizontally
             ) {
-                AnimatedVisibility(
-                    visible = showHeaderText,
-                    enter = fadeIn(),
-                    exit = fadeOut()
-                ) {
-                    Column(horizontalAlignment = Alignment.CenterHorizontally) {
-                        // Savings text
-                        if (isMonthly) {
-                            Text(
-                                text = buildAnnotatedString {
-                                    withStyle(
-                                        style = MaterialTheme.typography.headlineSmall.toSpanStyle()
-                                            .copy(fontWeight = FontWeight.ExtraLight)
-                                    ) {
-                                        append(stringResource(R.string.monthly_savings_prefix))
-                                    }
-                                    append(
-                                        AnnotatedString(
-                                            String.format(" %.2f kroner ", savings),
-                                            MaterialTheme.typography.headlineSmall.toSpanStyle()
-                                        )
-                                    )
-                                    withStyle(
-                                        style = MaterialTheme.typography.headlineSmall.toSpanStyle()
-                                            .copy(fontWeight = FontWeight.ExtraLight)
-                                    ) {
-                                        append(stringResource(R.string.monthly_savings_suffix_part1))
-                                        append(month)
-                                        append(stringResource(R.string.monthly_savings_suffix_part2))
-                                    }
-                                },
-                                textAlign = TextAlign.Center
-                            )
-                        } else {
-                            Text(
-                                text = buildAnnotatedString {
-                                    withStyle(
-                                        style = MaterialTheme.typography.headlineSmall.toSpanStyle()
-                                            .copy(fontWeight = FontWeight.ExtraLight)
-                                    ) {
-                                        append(stringResource(R.string.yearly_savings_prefix))
-                                    }
-                                    append(
-                                        AnnotatedString(
-                                            String.format(" %.2f kroner ", savings),
-                                            MaterialTheme.typography.headlineSmall.toSpanStyle()
-                                        )
-                                    )
-                                    withStyle(
-                                        style = MaterialTheme.typography.headlineSmall.toSpanStyle()
-                                            .copy(fontWeight = FontWeight.ExtraLight)
-                                    ) {
-                                        append(stringResource(R.string.yearly_savings_suffix))
-                                    }
-                                },
-                                textAlign = TextAlign.Center
-                            )
-                        }
+                // Energy visualization section
+                EnergyVisualizationSection()
 
-                        // Energy display below the savings text
-                        if (currentEnergy < 0) {
-                            IconTextRow(
-                                iconRes = R.drawable.baseline_battery_charging_full_24,
-                                text = "Energy deficit! %.2f kWh".format(animatedEnergy),
-                                textStyle = MaterialTheme.typography.titleLarge,
-                                modifier = Modifier.padding(16.dp),
-                                textColor = MaterialTheme.colorScheme.error,
-                                iconColor = MaterialTheme.colorScheme.error,
-                            )
-                        } else {
-                            IconTextRow(
-                                iconRes = R.drawable.baseline_battery_charging_full_24,
-                                text = "%.2f kWh".format(animatedEnergy),
-                                textStyle = MaterialTheme.typography.titleLarge,
-                                modifier = Modifier.padding(16.dp),
-                                textColor = energyColor,
-                                iconColor = energyColor
-                            )
-                            EnergyFlowAnimationDown()
-                        }
-                    }
-                }
-                Column(
-                    modifier = Modifier
-                        .weight(1f) // Take remaining height
-                        .verticalScroll(scrollState), // Use our observable scroll state
-                    horizontalAlignment = Alignment.CenterHorizontally
-                ) {
-
-                    // Energy production visualization
-                    Column(
-                        horizontalAlignment = Alignment.CenterHorizontally,
-                    ) {
-
-
-                        // House and devices visualization
-                        Column(
-                            modifier = Modifier.fillMaxSize(),
-                            horizontalAlignment = Alignment.CenterHorizontally
-                        ) {
-                            HouseAnimation()
-                            EnergyFlowDown()
-
-                            // Device grid using FlowRow
-                            FlowRow(
-                                mainAxisSpacing = 12.dp,
-                                crossAxisSpacing = 12.dp,
-                            ) {
-                                devices.forEach { (name, value) ->
-                                    val connected = connectedDevices.containsKey(name)
-                                    val glowAlpha by animateFloatAsState(
-                                        targetValue = if (connected) 1f else 0f,
-                                        animationSpec = tween(durationMillis = 500)
-                                    )
-
-                                    OutlinedCard(
-                                        modifier = Modifier
-                                            .width(180.dp)
-                                            .border(
-                                                width = if (connected) 3.dp else 1.dp,
-                                                color = MaterialTheme.colorScheme.primary.copy(
-                                                    alpha = glowAlpha
-                                                ),
-                                                shape = RoundedCornerShape(12.dp)
-                                            )
-                                            .shadow(
-                                                elevation = if (connected) 8.dp else 2.dp,
-                                                shape = RoundedCornerShape(12.dp),
-                                                ambientColor = MaterialTheme.colorScheme.primary.copy(
-                                                    alpha = glowAlpha
-                                                )
-                                            )
-                                            .clickable {
-                                                if (connected) {
-                                                    connectedDevices =
-                                                        connectedDevices.toMutableMap()
-                                                            .apply { remove(name) }
-                                                    currentEnergy += value
-                                                } else {
-                                                    connectedDevices =
-                                                        connectedDevices.toMutableMap()
-                                                            .apply { put(name, value) }
-                                                    currentEnergy -= value
-                                                }
-                                            },
-                                        colors = CardDefaults.cardColors(
-                                            containerColor = if (connected) MaterialTheme.colorScheme.surface else MaterialTheme.colorScheme.surfaceVariant
-                                        )
-                                    ) {
-                                        Column(
-                                            modifier = Modifier
-                                                .padding(12.dp)
-                                                .fillMaxWidth(),
-                                            horizontalAlignment = Alignment.CenterHorizontally
-                                        ) {
-                                            val iconRes = deviceIcons[name]
-                                                ?: R.drawable.baseline_battery_6_bar_24
-
-                                            IconTextRow(
-                                                iconRes = iconRes,
-                                                text = name,
-                                                textStyle = MaterialTheme.typography.bodyMedium,
-                                            )
-
-                                            Spacer(modifier = Modifier.height(4.dp))
-                                            Text(
-                                                text = "%.2f kWh".format(value),
-                                                fontWeight = if (connected) FontWeight.Bold else FontWeight.Normal,
-                                                textAlign = TextAlign.Center
-                                            )
-                                        }
-                                    }
-                                }
-                            }
-                        }
-                    }
-
-                    if (isMonthly) {
-                        Spacer(modifier = Modifier.height(32.dp))
-
-                        Column(
-                            modifier = Modifier
-                                .fillMaxSize()
-                                .padding(horizontal = 16.dp, vertical = 8.dp)
-                        ) {
-                            MonthlyChartSection(
-                                title = stringResource(R.string.snow_full_info),
-                                data = weather["mean(snow_coverage_type P1M)"] ?: emptyArray(),
-                                unit = "%"
-                            )
-
-                            MonthlyChartSection(
-                                title = stringResource(R.string.cloud_full_info),
-                                data = weather["mean(cloud_area_fraction P1M)"] ?: emptyArray(),
-                                unit = "%"
-                            )
-
-                            MonthlyChartSection(
-                                title = stringResource(R.string.temp_full_info),
-                                data = weather["mean(air_temperature P1M)"] ?: emptyArray(),
-                                unit = "°C"
-                            )
-
-
-                            val global = weather["mean(PVGIS_radiation P1M)"] ?: emptyArray()
-                            val adjusted =
-                                calculationResult?.adjustedRadiation?.toTypedArray() ?: emptyArray()
-                            val diff = if (global.size == adjusted.size) {
-                                Array(global.size) { i -> global[i] - adjusted[i] }
-                            } else emptyArray()
-
-                            MultiLineChart(
-                                datasets = listOf(
-                                    "Global Radiation" to global,
-                                    "Adjusted Radiation" to adjusted,
-                                    "Difference" to diff
-                                ),
-                                measure = "W/m²"
-                            )
-
-                        }
-                    }
-
-
-                }
-
-                // Bottom sheets
-                HelpBottomSheet(
-                    navController = navController,
-                    visible = showHelp,
-                    onDismiss = { showHelp = false }
+                // Devices grid section
+                DevicesGridSection(
+                    deviceData = deviceData,
+                    connectedDevices = connectedDevices,
+                    onDeviceToggle = onDeviceToggle
                 )
 
-                AppearanceBottomSheet(
-                    visible = showAppearance,
-                    onDismiss = { showAppearance = false },
-                    fontScaleViewModel = fontScaleViewModel
-                )
+                // Weather data charts (only for monthly view)
+                if (isMonthly) {
+                    WeatherChartsSection(
+                        weather = weather,
+                        calculationResult = calculationResult
+                    )
+                }
             }
         }
     }
 }
+
+
+@Composable
+private fun EnergySavingsHeader(
+    isMonthly: Boolean,
+    month: String,
+    savings: Double,
+    currentEnergy: Double,
+    animatedEnergy: Float,
+    energyColor: Color,
+    showHeaderText: Boolean,
+) {
+    AnimatedVisibility(
+        visible = showHeaderText,
+        enter = fadeIn(),
+        exit = fadeOut()
+    ) {
+        Column(horizontalAlignment = Alignment.CenterHorizontally) {
+            // Savings text
+            if (isMonthly) {
+                MonthlySavingsText(month = month, savings = savings)
+            } else {
+                YearlySavingsText(savings = savings)
+            }
+
+            // Energy display
+            EnergyDisplay(
+                currentEnergy = currentEnergy,
+                animatedEnergy = animatedEnergy,
+                energyColor = energyColor
+            )
+        }
+    }
+}
+
+
+@SuppressLint("DefaultLocale")
+@Composable
+private fun MonthlySavingsText(month: String, savings: Double) {
+    Text(
+        text = buildAnnotatedString {
+            withStyle(
+                style = MaterialTheme.typography.headlineSmall.toSpanStyle()
+                    .copy(fontWeight = FontWeight.ExtraLight)
+            ) {
+                append(stringResource(R.string.monthly_savings_prefix))
+            }
+            append(
+                AnnotatedString(
+                    String.format(" %.2f NOK ", savings),
+                    MaterialTheme.typography.headlineSmall.toSpanStyle()
+                )
+            )
+            withStyle(
+                style = MaterialTheme.typography.headlineSmall.toSpanStyle()
+                    .copy(fontWeight = FontWeight.ExtraLight)
+            ) {
+                append(" " + stringResource(R.string.monthly_savings_suffix_part1))
+                append(" $month")
+                append(" " + stringResource(R.string.monthly_savings_suffix_part2))
+            }
+        },
+        textAlign = TextAlign.Center
+    )
+}
+
+// 5. Yearly Savings Text Composable
+@SuppressLint("DefaultLocale")
+@Composable
+private fun YearlySavingsText(savings: Double) {
+    Text(
+        text = buildAnnotatedString {
+            withStyle(
+                style = MaterialTheme.typography.headlineSmall.toSpanStyle()
+                    .copy(fontWeight = FontWeight.ExtraLight)
+            ) {
+                append(stringResource(R.string.yearly_savings_prefix))
+            }
+            append(
+                AnnotatedString(
+                    String.format(" %.2f NOK ", savings),
+                    MaterialTheme.typography.headlineSmall.toSpanStyle()
+                )
+            )
+            withStyle(
+                style = MaterialTheme.typography.headlineSmall.toSpanStyle()
+                    .copy(fontWeight = FontWeight.ExtraLight)
+            ) {
+                append(" " + stringResource(R.string.yearly_savings_suffix))
+            }
+        },
+        textAlign = TextAlign.Center
+    )
+}
+
+
+@Composable
+private fun EnergyDisplay(
+    currentEnergy: Double,
+    animatedEnergy: Float,
+    energyColor: Color,
+) {
+    if (currentEnergy < 0) {
+        IconTextRow(
+            iconRes = R.drawable.baseline_battery_charging_full_24,
+            text = stringResource(R.string.energy_deficit) + " %.2f kWh".format(animatedEnergy),
+            textStyle = MaterialTheme.typography.titleLarge,
+            modifier = Modifier.padding(16.dp),
+            textColor = MaterialTheme.colorScheme.error,
+            iconColor = MaterialTheme.colorScheme.error,
+        )
+    } else {
+        IconTextRow(
+            iconRes = R.drawable.baseline_battery_charging_full_24,
+            text = stringResource(R.string.energy_produced) + " %.2f kWh".format(animatedEnergy),
+            textStyle = MaterialTheme.typography.titleLarge,
+            modifier = Modifier.padding(16.dp),
+            textColor = energyColor,
+            iconColor = energyColor
+        )
+        EnergyFlowAnimationDown()
+    }
+}
+
+
+@Composable
+private fun EnergyVisualizationSection() {
+    Column(horizontalAlignment = Alignment.CenterHorizontally) {
+        HouseAnimation()
+        EnergyFlowDown()
+    }
+}
+
+
+@Composable
+private fun DevicesGridSection(
+    deviceData: DeviceData,
+    connectedDevices: Map<String, Double>,
+    onDeviceToggle: (String, Double) -> Unit,
+) {
+    Text(
+        text = stringResource(R.string.device_info),
+        style = MaterialTheme.typography.headlineSmall.copy(
+            color = MaterialTheme.colorScheme.secondary,
+            fontWeight = FontWeight.ExtraLight
+        ),
+        textAlign = TextAlign.Center,
+        modifier = Modifier.padding(bottom = 8.dp)
+    )
+
+    FlowRow(
+        mainAxisSpacing = 12.dp,
+        crossAxisSpacing = 12.dp,
+    ) {
+        deviceData.devices.forEach { (name, value) ->
+            DeviceCard(
+                name = name,
+                value = value,
+                isConnected = connectedDevices.containsKey(name),
+                iconRes = deviceData.deviceIcons[name] ?: R.drawable.baseline_battery_6_bar_24,
+                onToggle = { onDeviceToggle(name, value) }
+            )
+        }
+    }
+}
+
+
+@Composable
+private fun DeviceCard(
+    name: String,
+    value: Double,
+    isConnected: Boolean,
+    iconRes: Int,
+    onToggle: () -> Unit,
+) {
+    val glowAlpha by animateFloatAsState(
+        targetValue = if (isConnected) 1f else 0f,
+        animationSpec = tween(durationMillis = 500)
+    )
+
+    OutlinedCard(
+        modifier = Modifier
+            .width(180.dp)
+            .border(
+                width = if (isConnected) 3.dp else 1.dp,
+                color = MaterialTheme.colorScheme.primary.copy(alpha = glowAlpha),
+                shape = RoundedCornerShape(12.dp)
+            )
+            .shadow(
+                elevation = if (isConnected) 8.dp else 2.dp,
+                shape = RoundedCornerShape(12.dp),
+                ambientColor = MaterialTheme.colorScheme.primary.copy(alpha = glowAlpha)
+            )
+            .clickable(onClick = onToggle),
+        colors = CardDefaults.cardColors(
+            containerColor = if (isConnected)
+                MaterialTheme.colorScheme.surface
+            else
+                MaterialTheme.colorScheme.surfaceVariant
+        )
+    ) {
+        Column(
+            modifier = Modifier
+                .padding(12.dp)
+                .fillMaxWidth(),
+            horizontalAlignment = Alignment.CenterHorizontally
+        ) {
+            IconTextRow(
+                iconRes = iconRes,
+                text = name,
+                textStyle = MaterialTheme.typography.bodyMedium,
+            )
+
+            Spacer(modifier = Modifier.height(4.dp))
+            Text(
+                text = "%.2f kWh".format(value),
+                fontWeight = if (isConnected) FontWeight.Bold else FontWeight.Normal,
+                textAlign = TextAlign.Center,
+                style = MaterialTheme.typography.bodyLarge
+            )
+        }
+    }
+}
+
+
+@Composable
+private fun WeatherChartsSection(
+    weather: Map<String, Array<Double>>,
+    calculationResult: MonthlyCalculationResult?,
+) {
+    Spacer(modifier = Modifier.height(32.dp))
+
+    Column(
+        modifier = Modifier
+            .fillMaxSize()
+            .padding(horizontal = 16.dp, vertical = 8.dp)
+    ) {
+        MonthlyChartSection(
+            title = stringResource(R.string.snow_full_info),
+            data = weather["mean(snow_coverage_type P1M)"] ?: emptyArray(),
+            unit = "%"
+        )
+
+        MonthlyChartSection(
+            title = stringResource(R.string.cloud_full_info),
+            data = weather["mean(cloud_area_fraction P1M)"] ?: emptyArray(),
+            unit = "%"
+        )
+
+        MonthlyChartSection(
+            title = stringResource(R.string.temp_full_info),
+            data = weather["mean(air_temperature P1M)"] ?: emptyArray(),
+            unit = "°C"
+        )
+
+        RadiationChart(weather, calculationResult)
+    }
+}
+
+
+@Composable
+private fun RadiationChart(
+    weather: Map<String, Array<Double>>,
+    calculationResult: MonthlyCalculationResult?,
+) {
+    val global = weather["mean(PVGIS_radiation P1M)"] ?: emptyArray()
+    val adjusted = calculationResult?.adjustedRadiation?.toTypedArray() ?: emptyArray()
+
+    val diff = if (global.size == adjusted.size) {
+        Array(global.size) { i -> global[i] - adjusted[i] }
+    } else emptyArray()
+
+    MultiLineChart(
+        datasets = listOf(
+            "Global Radiation" to global,
+            "Adjusted Radiation" to adjusted,
+            "Difference" to diff
+        ),
+        measure = "W/m²"
+    )
+}
+
+
+@Composable
+fun rememberDeviceData(): DeviceData {
+    val devices = listOf(
+        stringResource(R.string.el_car) to 100.0,
+        stringResource(R.string.fridge) to 30.0,
+        stringResource(R.string.heater) to 60.0,
+        stringResource(R.string.laptop) to 10.0,
+        stringResource(R.string.washing_machine) to 20.0,
+        stringResource(R.string.tv) to 15.0,
+        stringResource(R.string.air_conditioner) to 50.0,
+        stringResource(R.string.microwave) to 25.0,
+        stringResource(R.string.dishwasher) to 35.0,
+        stringResource(R.string.vacuum_cleaner) to 8.0
+    )
+
+    val deviceIcons = mapOf(
+        stringResource(R.string.fridge) to R.drawable.kitchen_24px,
+        stringResource(R.string.washing_machine) to R.drawable.local_laundry_service_24px,
+        stringResource(R.string.tv) to R.drawable.tv_24px,
+        stringResource(R.string.laptop) to R.drawable.laptop_windows_24px,
+        stringResource(R.string.air_conditioner) to R.drawable.mode_fan_24px,
+        stringResource(R.string.heater) to R.drawable.fireplace_24px,
+        stringResource(R.string.microwave) to R.drawable.microwave_24px,
+        stringResource(R.string.dishwasher) to R.drawable.dishwasher_24px,
+        stringResource(R.string.el_car) to R.drawable.directions_car_24px,
+        stringResource(R.string.vacuum_cleaner) to R.drawable.vacuum_24px,
+    )
+
+    val preConnected = listOf(
+        stringResource(R.string.fridge),
+        stringResource(R.string.tv),
+        stringResource(R.string.laptop),
+        stringResource(R.string.microwave),
+        stringResource(R.string.dishwasher),
+        stringResource(R.string.washing_machine),
+        stringResource(R.string.vacuum_cleaner)
+    )
+
+    return DeviceData(devices, deviceIcons, preConnected)
+}
+
+
+data class DeviceData(
+    val devices: List<Pair<String, Double>>,
+    val deviceIcons: Map<String, Int>,
+    val preConnected: List<String>,
+)
+
 
 @Composable
 fun EnergyFlowAnimationDown() {
@@ -593,7 +769,10 @@ fun Chart(data: Array<Double>, measure: String = "cm") {
                 val month = monthLabels.getOrNull(monthIndx) ?: "?"
                 val depth = it.y
                 Text(
-                    text = "Måned $month: %.1f %s".format(depth, measure),
+                    text = stringResource(R.string.month) + " $month: %.1f %s".format(
+                        depth,
+                        measure
+                    ),
                     style = MaterialTheme.typography.bodyMedium,
                     color = MaterialTheme.colorScheme.primary,
                     fontWeight = FontWeight.Bold
@@ -655,24 +834,26 @@ fun Chart(data: Array<Double>, measure: String = "cm") {
 fun MonthlyChartSection(
     title: String,
     data: Array<Double>,
-    unit: String
+    unit: String,
 ) {
     Column(modifier = Modifier.padding(vertical = 12.dp)) {
         Text(
             text = title,
-            style = MaterialTheme.typography.titleSmall.copy(
-                color = MaterialTheme.colorScheme.primary,
-                fontWeight = FontWeight.Bold
+            style = MaterialTheme.typography.headlineSmall.copy(
+                color = MaterialTheme.colorScheme.secondary,
+                fontWeight = FontWeight.ExtraLight
             ),
+            textAlign = TextAlign.Center,
             modifier = Modifier.padding(bottom = 8.dp)
         )
         Chart(data = data, measure = unit)
     }
 }
+
 @Composable
 fun MultiLineChart(
     datasets: List<Pair<String, Array<Double>>>,
-    measure: String = "W/m²"
+    measure: String = "W/m²",
 ) {
     val monthLabels = listOf(
         "Jan", "Feb", "Mar", "Apr", "May", "Jun",
@@ -697,7 +878,7 @@ fun MultiLineChart(
         Color.Magenta
     )
 
-    val lines = processedDatasets.mapIndexed { index, (label, data) ->
+    val lines = processedDatasets.mapIndexed { index, (_, data) ->
         Line(
             dataPoints = data.mapIndexed { i, value -> Point(i.toFloat(), value.toFloat()) },
             lineStyle = LineStyle(color = colors[index % colors.size]),
@@ -757,8 +938,10 @@ fun MultiLineChart(
         Text(
             text = stringResource(R.string.difference_info),
             modifier = Modifier.padding(top = 8.dp, bottom = 4.dp),
-            style = MaterialTheme.typography.titleMedium,
-            color = MaterialTheme.colorScheme.primary,
+            style = MaterialTheme.typography.headlineSmall.copy(
+                color = MaterialTheme.colorScheme.secondary,
+                fontWeight = FontWeight.ExtraLight
+            ),
             textAlign = TextAlign.Center
         )
 

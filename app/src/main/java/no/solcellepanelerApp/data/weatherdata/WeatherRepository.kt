@@ -58,7 +58,7 @@ class WeatherRepository(
         val result = frostDataSource.fetchRimData(client, lat, lon, elements)
         result.onSuccess { body ->
             return body
-        }.onFailure { error ->
+        }.onFailure {
             return emptyArray() // TBD: Implement actual error-handling
         }
         return emptyArray()

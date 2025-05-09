@@ -20,7 +20,6 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
@@ -40,11 +39,13 @@ import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import com.airbnb.lottie.compose.LottieAnimation
 import com.airbnb.lottie.compose.LottieCompositionSpec
@@ -53,21 +54,21 @@ import com.airbnb.lottie.compose.animateLottieCompositionAsState
 import com.airbnb.lottie.compose.rememberLottieComposition
 import no.solcellepanelerApp.MainActivity
 import no.solcellepanelerApp.R
-import no.solcellepanelerApp.data.homedata.ElectricityPriceRepository
 import no.solcellepanelerApp.model.electricity.Region
 import no.solcellepanelerApp.ui.electricity.HomePriceCard
 import no.solcellepanelerApp.ui.electricity.PriceScreenViewModel
 import no.solcellepanelerApp.ui.electricity.PriceUiState
-import no.solcellepanelerApp.ui.electricity.PriceViewModelFactory
 import no.solcellepanelerApp.ui.font.FontScaleViewModel
 import no.solcellepanelerApp.ui.handling.ErrorScreen
 import no.solcellepanelerApp.ui.handling.LoadingScreen
 import no.solcellepanelerApp.ui.navigation.AppearanceBottomSheet
 import no.solcellepanelerApp.ui.navigation.BottomBar
 import no.solcellepanelerApp.ui.navigation.HelpBottomSheet
+import no.solcellepanelerApp.ui.onboarding.OnboardingUtils
 import no.solcellepanelerApp.ui.result.WeatherViewModel
 import no.solcellepanelerApp.ui.reusables.MyDisplayCard
 import no.solcellepanelerApp.ui.reusables.MyNavCard
+import no.solcellepanelerApp.ui.reusables.SimpleTutorialOverlay
 import no.solcellepanelerApp.ui.theme.ThemeMode
 import no.solcellepanelerApp.ui.theme.ThemeState
 import no.solcellepanelerApp.util.fetchCoordinates
@@ -77,26 +78,37 @@ import java.time.ZonedDateTime
 
 
 @SuppressLint("DefaultLocale")
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun HomeScreen(
     navController: NavController,
     fontScaleViewModel: FontScaleViewModel,
     weatherViewModel: WeatherViewModel,
+    priceScreenViewModel: PriceScreenViewModel,
 ) {
-    var context = LocalContext.current
+    val context = LocalContext.current
     val activity = (context as? MainActivity)
     val radiationArray by weatherViewModel.frostDataRim.collectAsState()
 
     var showHelp by remember { mutableStateOf(false) }
     var showAppearance by remember { mutableStateOf(false) }
-    var isLoading by remember { mutableStateOf(false) }
+    val isLoading by remember { mutableStateOf(false) }
 
     var selectedRegion by rememberSaveable { mutableStateOf<Region?>(null) }
     var currentLocation by remember { mutableStateOf<Location?>(null) }
-    var locationPermissionGranted by remember { mutableStateOf(false) }
     Log.d("HomeScreen", "currentLocation: $currentLocation")
     var dataFetched by remember { mutableStateOf(false) }
+
+    val onboardingUtils = remember { OnboardingUtils(context) }
+
+    var showOverlay by remember { mutableStateOf(false) }
+//    showOverlay = true //testing
+
+    LaunchedEffect(Unit) {
+        if (!onboardingUtils.isHomeOverlayShown()) {
+            showOverlay = true
+            onboardingUtils.setHomeOverlayShown()
+        }
+    }
 
     val currentHour by remember { mutableIntStateOf(ZonedDateTime.now().minusHours(2).hour) }
     //var currentHourValue by remember { mutableStateOf(radiationArray[currentHour]) }
@@ -108,11 +120,9 @@ fun HomeScreen(
     LaunchedEffect(currentHour, radiationArray) {
         radiationArray.let {
             if (it.isNotEmpty()) {
-                it[currentHour]?.let { currentHourValue ->
+                it[currentHour].let { currentHourValue ->
                     Log.e("HomeScreen", "currentHourValue: $currentHourValue")
                     currentHourValueny = currentHourValue / 1000.0
-                } ?: run {
-                    Log.e("HomeScreen", "currentHourValue is null.")
                 }
             } else {
                 Log.e("HomeScreen", "radiationArray is empty.")
@@ -125,21 +135,6 @@ fun HomeScreen(
         return
     }
 
-//    //Request location permission and fetch region
-//    RequestLocationPermission { region ->
-//        selectedRegion = region
-//        locationPermissionGranted = true
-//
-//    }
-//
-//    LaunchedEffect(locationPermissionGranted) {
-//        if (locationPermissionGranted && activity != null) {
-//            val location = fetchCoordinates(context, activity)
-//            currentLocation = location
-//
-//        }
-//    }
-
     LaunchedEffect(Unit) {
         val permissionGranted = ContextCompat.checkSelfPermission(
             context,
@@ -147,7 +142,7 @@ fun HomeScreen(
         ) == PackageManager.PERMISSION_GRANTED
 
         if (permissionGranted && activity != null) {
-            val location = fetchCoordinates(context, activity)
+            val location = fetchCoordinates(activity)
             currentLocation = location
             selectedRegion = location?.let { mapLocationToRegion(it) } ?: Region.OSLO
         } else {
@@ -157,19 +152,22 @@ fun HomeScreen(
 
 
     Log.d("HomeScreen", "currentLocation: $currentLocation")
-    if (currentLocation != null && !dataFetched) {
-        Log.e(
-            "HomeScreen",
-            "currentLocation is now not null and is: ${currentLocation!!.latitude}, ${currentLocation!!.longitude}"
-        )
-        weatherViewModel.fetchRimData(
-            currentLocation!!.latitude,
-            currentLocation!!.longitude,
-            "mean(surface_downwelling_shortwave_flux_in_air PT1H)"
-        )
-        dataFetched = true
-        Log.d("HomeScreen", "radiationArray: $radiationArray")
+    LaunchedEffect(currentLocation) {
+        if (currentLocation != null && !dataFetched) {
+            Log.e(
+                "HomeScreen",
+                "currentLocation is now not null and is: ${currentLocation!!.latitude}, ${currentLocation!!.longitude}"
+            )
+            weatherViewModel.fetchRimData(
+                currentLocation!!.latitude,
+                currentLocation!!.longitude,
+                "mean(surface_downwelling_shortwave_flux_in_air PT1H)"
+            )
+            dataFetched = true
+            Log.d("HomeScreen", "radiationArray: $radiationArray")
+        }
     }
+
 
     val isDark = when (ThemeState.themeMode) {
         ThemeMode.DARK -> true
@@ -177,7 +175,24 @@ fun HomeScreen(
         ThemeMode.SYSTEM -> isSystemInDarkTheme()
     }
 
+    if (showOverlay) {
+        val title = stringResource(R.string.home_overlay_title)
+        val body = stringResource(R.string.home_overlay)
+        val message = buildAnnotatedString {
+            withStyle(style = MaterialTheme.typography.titleLarge.toSpanStyle()) {
+                append("$title\n\n")
+            }
+            withStyle(style = MaterialTheme.typography.bodyLarge.toSpanStyle()) {
+                append(body)
+            }
+        }
 
+        SimpleTutorialOverlay(
+            onDismiss = { showOverlay = false },
+            message = message
+        )
+
+    }
     Scaffold(
         topBar = {
             Surface(
@@ -260,7 +275,7 @@ fun HomeScreen(
                         ) {
                             val timenow = LocalTime.now().hour
                             Text(
-                                "LIVE ENERGY $timenow:00 ",
+                                text = stringResource(R.string.live_energy, timenow),
                                 style = MaterialTheme.typography.titleLarge,
                                 color = MaterialTheme.colorScheme.secondary
 //                                color = MaterialTheme.colorScheme.tertiary Oransje fargen. bare å fjerne kommentaren her hvis dere vil bruke oransj d
@@ -307,8 +322,9 @@ fun HomeScreen(
                                 horizontalAlignment = Alignment.CenterHorizontally,
                             ) {
                                 Text(
-                                    text = "Se strømprisene!",
+                                    text = stringResource(R.string.live_prices),
                                     style = MaterialTheme.typography.titleLarge,
+                                    textAlign = TextAlign.Center,
                                     color = MaterialTheme.colorScheme.secondary
 //                                color = MaterialTheme.colorScheme.tertiary Oransje fargen. bare å fjerne kommentaren her hvis dere vil bruke oransj d
                                 )
@@ -319,18 +335,9 @@ fun HomeScreen(
                                 if (selectedRegion == null) {
                                     LoadingScreen()
                                 } else {
-                                    val repository =
-                                        ElectricityPriceRepository(priceArea = selectedRegion!!.regionCode)
 
-                                    val viewModel: PriceScreenViewModel = viewModel(
-                                        factory = PriceViewModelFactory(
-                                            repository,
-                                            selectedRegion!!.regionCode
-                                        ),
-                                        key = selectedRegion!!.regionCode
-                                    )
 
-                                    val priceUiState by viewModel.priceUiState.collectAsStateWithLifecycle()
+                                    val priceUiState by priceScreenViewModel.priceUiState.collectAsStateWithLifecycle()
 
                                     when (priceUiState) {
                                         is PriceUiState.Loading -> LoadingScreen()
@@ -367,32 +374,32 @@ fun HomeScreen(
     }
 }
 
-@Composable
-fun PanelAnimation() {
-    val animationFile = "solarPanel_anim.json"
-
-    val composition by rememberLottieComposition(
-        LottieCompositionSpec.Asset(animationFile)
-    )
-
-    val progress by animateLottieCompositionAsState(
-        composition = composition,
-        iterations = LottieConstants.IterateForever,
-    )
-
-    Box(
-        modifier = Modifier
-            .height(100.dp)
-    ) {
-        LottieAnimation(
-            composition = composition,
-            progress = { progress },
-            modifier = Modifier
-                .width(130.dp)
-                .aspectRatio(400.dp / 1000.dp),
-        )
-    }
-}
+//@Composable
+//fun PanelAnimation() {
+//    val animationFile = "solarPanel_anim.json"
+//
+//    val composition by rememberLottieComposition(
+//        LottieCompositionSpec.Asset(animationFile)
+//    )
+//
+//    val progress by animateLottieCompositionAsState(
+//        composition = composition,
+//        iterations = LottieConstants.IterateForever,
+//    )
+//
+//    Box(
+//        modifier = Modifier
+//            .height(100.dp)
+//    ) {
+//        LottieAnimation(
+//            composition = composition,
+//            progress = { progress },
+//            modifier = Modifier
+//                .width(130.dp)
+//                .aspectRatio(400.dp / 1000.dp),
+//        )
+//    }
+//}
 
 @Composable
 fun ElectricityTowers() {
@@ -468,4 +475,3 @@ fun SunAnimation(value: Double) {
     )
     Log.d("SunAnimation", "Animating with value: $value")
 }
-

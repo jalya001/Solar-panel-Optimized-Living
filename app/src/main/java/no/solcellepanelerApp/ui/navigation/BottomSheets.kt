@@ -1,32 +1,38 @@
 package no.solcellepanelerApp.ui.navigation
 
-import android.app.Activity
 import android.content.Intent
 import android.content.pm.PackageManager
+import android.location.Location
 import android.net.Uri
 import android.provider.Settings
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.core.tween
+import androidx.compose.foundation.Canvas
+import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.OpenInNew
 import androidx.compose.material.icons.filled.Create
 import androidx.compose.material.icons.filled.Info
-import androidx.compose.material.icons.filled.OpenInNew
 import androidx.compose.material3.Button
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Checkbox
@@ -45,6 +51,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableFloatStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
@@ -52,11 +59,14 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.shadow
+import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.platform.LocalUriHandler
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.Density
@@ -66,11 +76,9 @@ import androidx.navigation.NavController
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
 import no.solcellepanelerApp.R
-import no.solcellepanelerApp.model.electricity.Region
-import no.solcellepanelerApp.ui.electricity.RegionDropdown
 import no.solcellepanelerApp.ui.font.FontScaleViewModel
 import no.solcellepanelerApp.ui.font.FontSizeState
-import no.solcellepanelerApp.ui.language.langSwitch
+import no.solcellepanelerApp.ui.language.LangSwitch
 import no.solcellepanelerApp.ui.map.MapScreenViewModel
 import no.solcellepanelerApp.ui.result.WeatherViewModel
 import no.solcellepanelerApp.ui.reusables.DecimalFormatter
@@ -80,30 +88,19 @@ import no.solcellepanelerApp.ui.reusables.ModeCard
 import no.solcellepanelerApp.ui.reusables.MySection
 import no.solcellepanelerApp.ui.theme.ThemeMode
 import no.solcellepanelerApp.ui.theme.ThemeState
-import no.solcellepanelerApp.util.RememberLocationWithPermission
-
+import kotlin.math.cos
+import kotlin.math.sin
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun HelpBottomSheet(
     visible: Boolean,
     onDismiss: () -> Unit,
-    expandSection: String = "",
     navController: NavController,
+    expandSection: String = "",
 ) {
 
     var triggerLocationFetch by remember { mutableStateOf(false) }
-
-    var region: Region? by remember { mutableStateOf(null) }
-    val (currentLocation, locationGranted) = if (triggerLocationFetch) {
-        RememberLocationWithPermission(
-            triggerRequest = true,
-            onRegionDetermined = { region = it }
-        )
-    } else {
-        Pair(null, false)
-    }
-
 
     val sheetState = rememberModalBottomSheetState(
         skipPartiallyExpanded = true
@@ -143,8 +140,18 @@ fun HelpBottomSheet(
                         if (showDialog) {
                             androidx.compose.material3.AlertDialog(
                                 onDismissRequest = { showDialog = false },
-                                title = { Text("Location Permission Already Granted") },
-                                text = { Text("If you want to change location permissions, go to settings.") },
+                                title = {
+                                    Text(
+                                        stringResource(R.string.location_perm_title),
+                                        style = MaterialTheme.typography.bodyLarge
+                                    )
+                                },
+                                text = {
+                                    Text(
+                                        stringResource(R.string.location_perm_content),
+                                        style = MaterialTheme.typography.bodyLarge
+                                    )
+                                },
                                 confirmButton = {
                                     Button(onClick = {
                                         val intent =
@@ -159,29 +166,27 @@ fun HelpBottomSheet(
                                         context.startActivity(intent)
                                         showDialog = false
                                     }) {
-                                        Text("Go to Settings")
+                                        Text(
+                                            stringResource(R.string.settings),
+                                            style = MaterialTheme.typography.bodyLarge
+                                        )
                                     }
                                 },
                                 dismissButton = {
                                     Button(onClick = { showDialog = false }) {
-                                        Text("Cancel")
+                                        Text(
+                                            stringResource(R.string.close),
+                                            style = MaterialTheme.typography.bodyLarge
+                                        )
                                     }
                                 }
                             )
                         }
                         MySection(
-                            title = if (locationGranted) "Change Location Settings" else "Grant Location Access",
+                            title = if (locationGranted) stringResource(R.string.change_location_settings) else stringResource(
+                                R.string.grant_location_access
+                            ),
                             onClick = {
-//                                if (locationGranted) {
-//                                    val intent =
-//                                        Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS).apply {
-//                                            data =
-//                                                Uri.fromParts("package", context.packageName, null)
-//                                            addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
-//                                        }
-//                                    context.startActivity(intent)
-//                                }
-
                                 if (locationGranted) {
                                     showDialog = true
                                 } else {
@@ -195,7 +200,7 @@ fun HelpBottomSheet(
 
                     item {
                         MySection(
-                            title = "Open Tutorial",
+                            title = stringResource(R.string.tutorial),
                             onClick = {
                                 navController.navigate("onboarding")
                             },
@@ -205,9 +210,9 @@ fun HelpBottomSheet(
 
                     item {
                         ExpandInfoSection(
-//                            title = stringResource(id = R.string.tech_problems_title),
-                            title = "*Noe noe*",
-                            content = stringResource(id = R.string.tech_problems_content)
+                            title = stringResource(id = R.string.how_to_draw),
+                            content = stringResource(id = R.string.how_to_draw_content),
+                            initiallyExpanded = expandSection == "draw"
                         )
                     }
                 }
@@ -238,7 +243,7 @@ fun AppearanceBottomSheet(
         val currentDensity = LocalDensity.current
         val customDensity = Density(
             density = currentDensity.density,
-            fontScale = FontSizeState.fontScale.value
+            fontScale = FontSizeState.fontScale.floatValue
         )
 
         val sheetState = rememberModalBottomSheetState(
@@ -276,7 +281,7 @@ fun AppearanceBottomSheet(
                         ModeCard(
                             label = stringResource(id = R.string.light_mode),
                             iconRes = R.drawable.light_mode_24px,
-                            selected = ThemeState.themeMode == ThemeMode.LIGHT && !followSystem,
+//                            selected = ThemeState.themeMode == ThemeMode.LIGHT && !followSystem,
                             onClick = {
                                 followSystem = false
                                 ThemeState.themeMode = ThemeMode.LIGHT
@@ -286,7 +291,7 @@ fun AppearanceBottomSheet(
                         ModeCard(
                             label = stringResource(id = R.string.dark_mode),
                             iconRes = R.drawable.dark_mode_24px,
-                            selected = ThemeState.themeMode == ThemeMode.DARK && !followSystem,
+//                            selected = ThemeState.themeMode == ThemeMode.DARK && !followSystem,
                             onClick = {
                                 followSystem = false
                                 ThemeState.themeMode = ThemeMode.DARK
@@ -303,12 +308,16 @@ fun AppearanceBottomSheet(
                                 else ThemeMode.LIGHT
                             }
                         )
-                        Text(stringResource(id = R.string.follow_system))
+                        Text(
+                            stringResource(id = R.string.follow_system),
+                            style = MaterialTheme.typography.bodyLarge
+                        )
+
                     }
 
                     Spacer(modifier = Modifier.height(10.dp))
 
-                    langSwitch()
+                    LangSwitch()
 
                     Spacer(modifier = Modifier.height(10.dp))
 
@@ -334,13 +343,16 @@ fun AppearanceBottomSheet(
                             }
 
                         }) {
-                            Text("- A", style = MaterialTheme.typography.bodySmall)
+                            Text("- A", style = MaterialTheme.typography.bodyMedium)
                         }
 
                         Button(onClick = {
                             fontScaleViewModel.resetFontScale()
                         }) {
-                            Text("Reset", style = MaterialTheme.typography.bodySmall)
+                            Text(
+                                stringResource(R.string.reset),
+                                style = MaterialTheme.typography.bodyMedium
+                            )
                         }
 
                         Button(onClick = {
@@ -353,7 +365,7 @@ fun AppearanceBottomSheet(
                             }
 
                         }) {
-                            Text("+ A", style = MaterialTheme.typography.bodySmall)
+                            Text("+ A", style = MaterialTheme.typography.bodyMedium)
                         }
                     }
 
@@ -397,7 +409,7 @@ fun InfoHelpButton(
 
     Column(modifier = Modifier.fillMaxWidth()) {
         Row(verticalAlignment = Alignment.CenterVertically) {
-            Text(label, fontWeight = FontWeight.Bold)
+            Text(label, fontWeight = FontWeight.Bold, style = MaterialTheme.typography.bodyLarge)
             Spacer(modifier = Modifier.width(4.dp))
             IconButton(
                 onClick = { isVisible = !isVisible },
@@ -430,23 +442,41 @@ fun AdditionalInputBottomSheet(
     navController: NavController,
     viewModel: MapScreenViewModel,
     weatherViewModel: WeatherViewModel,
-    selectedRegion: Region?,
-    onRegionSelected: (Region) -> Unit,
 ) {
-    var angle by remember { mutableStateOf(0f) }
+    var angle by remember { mutableFloatStateOf(0f) }
     var areaState by remember { mutableStateOf(area) }
-    var azimuthPosition by remember { mutableStateOf(0f) }
-    var efficiency by remember { mutableStateOf(0f) }
+    var azimuthPosition by remember { mutableFloatStateOf(0f) }
+    var efficiency by remember { mutableFloatStateOf(0f) }
 
-    val context = LocalContext.current
-    val activity = context as? Activity
+    val location = coordinates?.let { (lat, lon) ->
+        Location("").apply {
+            latitude = lat
+            longitude = lon
+        }
+    }
+
+
+//    val context = LocalContext.current
+//    val activity = context as? Activity
 
     data class SolarPanelType(val name: String, val efficiency: Float, val description: String)
 
     val panelTypes = listOf(
-        SolarPanelType("Monokrystallinsk", 20f, "Høy effektivitet, dyrere, Standard"),
-        SolarPanelType("Polykrystallinsk", 15f, "Middels effektivitet, rimeligere"),
-        SolarPanelType("Tynnfilm", 10f, "Lav effektivitet, fleksibel")
+        SolarPanelType(
+            stringResource(R.string.monocrystalline),
+            20f,
+            stringResource(R.string.monocrystalline_content)
+        ),
+        SolarPanelType(
+            stringResource(R.string.polycrystalline),
+            15f,
+            stringResource(R.string.polycrystalline_content)
+        ),
+        SolarPanelType(
+            stringResource(R.string.thinfilm),
+            10f,
+            stringResource(R.string.thinfilm_content)
+        )
     )
 
     LaunchedEffect(area) {
@@ -457,7 +487,7 @@ fun AdditionalInputBottomSheet(
         val currentDensity = LocalDensity.current
         val customDensity = Density(
             density = currentDensity.density,
-            fontScale = FontSizeState.fontScale.value
+            fontScale = FontSizeState.fontScale.floatValue
         )
 
         val sheetState = rememberModalBottomSheetState(
@@ -554,6 +584,7 @@ fun AdditionalInputBottomSheet(
 
                     Spacer(modifier = Modifier.height(16.dp))
 
+
                     Text(
                         stringResource(id = R.string.efficiency_label),
                         style = MaterialTheme.typography.titleLarge
@@ -570,6 +601,7 @@ fun AdditionalInputBottomSheet(
 //                    )
 
 
+                    //Log.d("Efficiency", selected.toString())
                     panelTypes.forEach { panelType ->
                         val selected = efficiency == panelType.efficiency
                         val glowAlpha by animateFloatAsState(
@@ -607,18 +639,24 @@ fun AdditionalInputBottomSheet(
                                 modifier = Modifier.fillMaxWidth(),
                                 horizontalAlignment = Alignment.CenterHorizontally
                             ) {
-                                var panelEff = if (panelType.name == "Monokrystallinsk") {
-                                    "18-23"
-                                } else if (panelType.name == "Polykrystallinsk") {
-                                    "15-17"
-                                } else {
-                                    "10-17"
+                                val panelEff = when (panelType.name) {
+                                    stringResource(R.string.monocrystalline) -> {
+                                        stringResource(R.string.monocrystalline_efficiency)
+                                    }
+
+                                    stringResource(R.string.polycrystalline) -> {
+                                        stringResource(R.string.polycrystalline_efficiency)
+                                    }
+
+                                    else -> {
+                                        stringResource(R.string.thinfilm_efficiency)
+                                    }
                                 }
 
 
 
                                 Text(
-                                    text = "${panelType.name} (${panelEff} %)",
+                                    text = "${panelType.name} $panelEff",
                                     color = MaterialTheme.colorScheme.onSurfaceVariant,
                                     fontWeight = if (selected) FontWeight.Bold else FontWeight.Normal
                                 )
@@ -641,13 +679,13 @@ fun AdditionalInputBottomSheet(
                         verticalAlignment = Alignment.CenterVertically
                     ) {
                         Text(
-                            text = "Les mer om solcellepaneler",
+                            text = stringResource(R.string.more_info_solar_panels),
                             style = MaterialTheme.typography.bodyMedium,
                             modifier = Modifier.clickable { uriHandler.openUri("https://blogg.fusen.no/alle/ulike-typer-solcelleteknologi") }
                         )
                         Spacer(modifier = Modifier.width(2.dp))
                         Icon(
-                            imageVector = Icons.Default.OpenInNew,
+                            imageVector = Icons.AutoMirrored.Filled.OpenInNew,
                             contentDescription = "Les mer",
                             tint = MaterialTheme.colorScheme.primary
                         )
@@ -671,7 +709,7 @@ fun AdditionalInputBottomSheet(
                             azimuthPosition = it
                             focusManager.clearFocus()
                         },
-                        valueRange = 0f..315f,
+                        valueRange = 0f..360f,
                         modifier = Modifier.fillMaxWidth()
                     )
 
@@ -684,17 +722,22 @@ fun AdditionalInputBottomSheet(
                         helpText = stringResource(id = R.string.panelDirectionHelp)
                     )
 
-                    Spacer(modifier = Modifier.height(16.dp))
+                    Spacer(modifier = Modifier.height(30.dp))
+                    SunAngleAnimation(angle = azimuthPosition)
 
-                    selectedRegion?.let {
-                        RegionDropdown(it) { newRegion ->
-                            onRegionSelected(newRegion)
-                        }
-                    }
+//                    Text( //TEST
+//                        "region = ${
+//                            coordinates?.let {
+//                                mapLocationToRegion(Location("").apply {
+//                                    latitude = it.first
+//                                    longitude = it.second
+//                                })
+//                            } ?: "Unknown"
+//                        }")
 
-//                    Spacer(modifier = Modifier.height(32.dp))
+                    Spacer(modifier = Modifier.height(32.dp))
 
-                    if (areaState.isNotEmpty() && coordinates != null) {
+                    if (areaState.isNotEmpty() && coordinates != null && efficiency != 0f) {
                         Button(
                             onClick = {
                                 viewModel.areaInput = areaState
@@ -716,10 +759,90 @@ fun AdditionalInputBottomSheet(
                             },
                             modifier = Modifier.align(Alignment.CenterHorizontally)
                         ) {
-                            Text("Gå til resultater")
+                            Text(stringResource(R.string.navigate_results))
                         }
                     }
 
+                }
+            }
+        }
+    }
+}
+
+@Composable
+fun SunAngleAnimation(angle: Float) {
+    // Calculate sun position based on roof angle (circular motion)
+    val angleRadians = ((angle - 90) * Math.PI / 180).toFloat()
+    val radius = 80f  // Radius for sun's circular motion around house
+
+    Box(
+        modifier = Modifier
+            .height(180.dp)
+            .fillMaxWidth()
+            .padding(vertical = 8.dp)
+    ) {
+        // GROUND
+        Box(
+            modifier = Modifier
+                .fillMaxSize()
+                .background(
+                    color = Color.Transparent,
+                    shape = RoundedCornerShape(bottomStart = 8.dp, bottomEnd = 8.dp)
+                )
+        )
+
+        // House with roof
+        Image(
+            painter = painterResource(id = R.drawable.house),
+            contentDescription = "House",
+            modifier = Modifier
+                .width(200.dp)
+                .height(300.dp)
+                .align(Alignment.Center)
+//                .offset(y = (-10).dp),
+            , contentScale = ContentScale.Fit
+        )
+
+        // Calculate sun position on a circle around the center of the box
+        val centerX = 0f
+        val centerY = 0f
+        val sunX = centerX + radius * cos(angleRadians)
+        val sunY = centerY + radius * sin(angleRadians)
+
+        // Sun with animation
+        Box(
+            modifier = Modifier
+                .size(40.dp)
+                .align(Alignment.Center)  // Align to the center of the parent box
+                .offset(
+                    x = sunX.dp,
+                    y = sunY.dp
+                )
+                .background(
+                    Color(0xFFFFD700),  // Gold color
+                    shape = CircleShape
+                )
+                .border(2.dp, Color(0xFFFF8C00), CircleShape)
+        ) {
+            // Sun rays
+            Canvas(modifier = Modifier.fillMaxSize()) {
+                val x = size.width / 2
+                val y = size.height / 2
+                val rayLength = 15f
+
+                for (i in 0 until 8) {
+                    val directionAngle = (i * 45f) * (Math.PI / 180f)
+                    val startX = x + (10f * cos(directionAngle)).toFloat()
+                    val startY = y + (10f * sin(directionAngle)).toFloat()
+                    val endX = x + ((10f + rayLength) * cos(directionAngle)).toFloat()
+                    val endY = y + ((10f + rayLength) * sin(directionAngle)).toFloat()
+
+                    drawLine(
+                        color = Color(0xFFFF8C00),  // Dark orange
+                        start = Offset(startX, startY),
+                        end = Offset(endX, endY),
+                        strokeWidth = 2f
+                    )
                 }
             }
         }

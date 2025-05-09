@@ -27,11 +27,11 @@ import no.solcellepanelerApp.data.location.LocationService
 import no.solcellepanelerApp.model.electricity.Region
 
 // Funksjon for å sjekke og lagre tillatelse
-fun isLocationPermissionGranted(context: Context): Boolean {
-    val sharedPreferences =
-        context.getSharedPreferences("LocationPreferences", Context.MODE_PRIVATE)
-    return sharedPreferences.getBoolean("LocationPermissionGranted", false)
-}
+//fun isLocationPermissionGranted(context: Context): Boolean {
+//    val sharedPreferences =
+//        context.getSharedPreferences("LocationPreferences", Context.MODE_PRIVATE)
+//    return sharedPreferences.getBoolean("LocationPermissionGranted", false)
+//}
 
 fun setLocationPermissionGranted(context: Context, granted: Boolean) {
     val sharedPreferences =
@@ -46,7 +46,7 @@ fun setLocationPermissionGranted(context: Context, granted: Boolean) {
 fun RequestLocationPermission(
     onLocationFetched: (Region) -> Unit,
 ) {
-    val context = androidx.compose.ui.platform.LocalContext.current
+    val context = LocalContext.current
     val activity = context as? Activity
     var selectedRegion by rememberSaveable { mutableStateOf<Region?>(null) }
 
@@ -56,7 +56,7 @@ fun RequestLocationPermission(
     ) { isGranted ->
         setLocationPermissionGranted(context, isGranted)
         if (isGranted && activity != null) {
-            fetchLocation(context, activity, onLocationFetched)
+            fetchLocation(activity, onLocationFetched)
         } else {
             selectedRegion = Region.OSLO // Fallback hvis tillatelsen blir nektet
             onLocationFetched(selectedRegion ?: Region.OSLO)
@@ -74,14 +74,14 @@ fun RequestLocationPermission(
             permissionLauncher.launch(Manifest.permission.ACCESS_FINE_LOCATION)
         } else {
             // Hvis tillatelsen er gitt, hent lokasjon
-            fetchLocation(context, activity, onLocationFetched)
+            fetchLocation(activity, onLocationFetched)
         }
     }
 }
 
 
 private fun fetchLocation(
-    context: Context,
+
     activity: Activity?,
     onLocationFetched: (Region) -> Unit,
 ) {
@@ -127,7 +127,7 @@ fun mapLocationToRegion(location: Location): Region {
 }
 
 suspend fun fetchCoordinates(
-    context: Context,
+
     activity: Activity?,
 
     ): Location? {
@@ -143,7 +143,7 @@ suspend fun fetchCoordinates(
 
 @SuppressLint("MissingPermission")
 @Composable
-fun RememberLocationWithPermission(
+fun rememberLocationWithPermission(
     triggerRequest: Boolean,
     onRegionDetermined: (Region?) -> Unit,
 ): Pair<Location?, Boolean> {
@@ -163,10 +163,13 @@ fun RememberLocationWithPermission(
 
     // Check permission on recomposition
     LaunchedEffect(Unit) {
-        if (permissionCheck == PackageManager.PERMISSION_GRANTED) {
-            locationPermissionGranted = true
-        } else if (!showRationale && permissionCheck != PackageManager.PERMISSION_GRANTED) {
-            permissionDeniedPermanently = true
+        when {
+            permissionCheck == PackageManager.PERMISSION_GRANTED -> {
+                locationPermissionGranted = true
+            }
+            !showRationale -> {
+                permissionDeniedPermanently = true
+            }
         }
     }
 
@@ -181,8 +184,8 @@ fun RememberLocationWithPermission(
 
     // Once permission is granted, fetch coordinates
     LaunchedEffect(locationPermissionGranted) {
-        if (locationPermissionGranted && activity != null) {
-            val location = fetchCoordinates(context, activity)
+        if (locationPermissionGranted) {
+            val location = fetchCoordinates(activity)
             currentLocation = location
         }
     }

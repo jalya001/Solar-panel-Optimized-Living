@@ -1,5 +1,6 @@
 package no.solcellepanelerApp.ui.reusables
 
+import android.annotation.SuppressLint
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -24,12 +25,15 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.SpanStyle
+
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.font.FontStyle
+
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.withStyle
+
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.DpSize
 import androidx.compose.ui.unit.dp
@@ -39,7 +43,7 @@ import no.solcellepanelerApp.R
 @Composable
 fun MyCard(
     text: String = "",
-    modifier: Modifier = Modifier,
+    @SuppressLint("ModifierParameter") modifier: Modifier = Modifier,
     width: Dp = 240.dp,
     style: TextStyle,
     elevation: Dp = 3.dp,
@@ -55,8 +59,6 @@ fun MyCard(
         onClick = {
             if (route != "") {
                 navController.navigate(route)
-            } else {
-
             }
         },
     ) {
@@ -84,7 +86,7 @@ fun MyNavCard(
     desc: String = "",
     route: String,
     navController: NavController,
-    modifier: Modifier = Modifier,
+    @SuppressLint("ModifierParameter") modifier: Modifier = Modifier,
     size: DpSize = DpSize(width = 240.dp, height = 100.dp),
     style: TextStyle,
     content: (@Composable () -> Unit)? = null,
@@ -98,8 +100,6 @@ fun MyNavCard(
         onClick = {
             if (route != "") {
                 navController.navigate(route)
-            } else {
-
             }
         },
 
@@ -147,7 +147,7 @@ fun MyNavCard(
 @Composable
 fun MyDisplayCard(
     text: String = "",
-    modifier: Modifier = Modifier,
+    @SuppressLint("ModifierParameter") modifier: Modifier = Modifier,
     size: DpSize = DpSize(width = 240.dp, height = 100.dp),
     style: TextStyle,
     content: (@Composable () -> Unit)? = null,
@@ -190,9 +190,6 @@ fun MyDisplayCard(
 @Composable
 fun DataCard(
     month: String,
-    radiation: Double,
-    cloud: Double,
-    snow: Double,
     temp: Double,
     adjusted: Double,
     energy: Double,
@@ -201,10 +198,13 @@ fun DataCard(
     navController: NavController,
     energyPrice: Double,
     allMonths: Boolean,
+//    snow: Double,
+//    cloud: Double,
+//    radiation: Double,
 ) {
     val cardModifier = modifier
         .fillMaxWidth()
-
+    val tempEffect = 1 + (-0.44) * (temp - 25)
     MyCard(
 //        modifier = cardModifier,
 //        elevation = 4.dp,
@@ -272,20 +272,25 @@ fun DataCard(
                     text = stringResource(R.string.adj_radiation, adjusted)
                 )
                 Text(
-                    "This is the amount of solar radiation your panels receive, adjust with snow,cloud, and temperature data for your location.",
+                    text = stringResource(R.string.adj_radiation_explanation),
                     style = MaterialTheme.typography.bodyMedium
                 )
 
+                //Aazan legg til temperatur
                 IconTextRow(
                     iconRes = R.drawable.baseline_device_thermostat_24,
-                    text = stringResource(R.string.temp_factor, 1 + (-0.44) * (temp - 25))
+                    text = stringResource(R.string.temp_factor, tempEffect)
+                )
+                Text(
+                    text = stringResource(R.string.temp_factor_explanation),
+                    style = MaterialTheme.typography.bodyMedium
                 )
 
                 Text(
                     buildAnnotatedString {
                         withStyle(style = SpanStyle(fontStyle = FontStyle.Italic)) {
                             append(
-                                stringResource(R.string.show_monthly_savings, month)
+                                stringResource(R.string.click_to_see_savings, month)
                             )
                         }
                     }
@@ -313,8 +318,8 @@ fun DataCard(
 fun ModeCard(
     label: String,
     iconRes: Int,
-    selected: Boolean,
     onClick: () -> Unit,
+//    selected: Boolean,
 ) {
 //    val border = if (selected) BorderStroke(2.dp, MaterialTheme.colorScheme.primary) else null
 

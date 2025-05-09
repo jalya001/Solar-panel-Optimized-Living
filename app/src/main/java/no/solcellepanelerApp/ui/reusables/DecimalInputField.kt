@@ -1,6 +1,7 @@
 package no.solcellepanelerApp.ui.reusables
 
 import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -101,7 +102,7 @@ fun DecimalInputField(
     label: String,
 ) {
     OutlinedTextField(
-        label = { Text(text = label) },
+        label = { Text(text = label, style = MaterialTheme.typography.bodyLarge) },
         modifier = modifier,
         value = value,
         onValueChange = {
