@@ -469,4 +469,37 @@ BottomBar ->> AppearanceBottomSheet: Show appearance settings
 
 
 ```
+ResultScreen: DisplayResult
+```mermaid
+sequenceDiagram
+    participant User
+    participant MapScreenViewModel
+    participant WeatherViewModel
+    participant PriceScreenViewModel
+    participant ResultScreen
+    participant Repository
+
+    User->>MapScreenViewModel: Inputs area, efficiency, location
+    User->>WeatherViewModel: Triggers loadWeatherData(lat, lon, slope, azimuth)
+    WeatherViewModel->>Repository: getPanelWeatherData()
+    Repository-->>WeatherViewModel: Weather data (radiation, cloud, snow, temp)
+
+    WeatherViewModel->>WeatherViewModel: Set _weatherData
+    WeatherViewModel->>WeatherViewModel: Update uiState to SUCCESS
+
+    User->>ResultScreen: Navigates to ResultScreen
+    ResultScreen->>WeatherViewModel: Observe uiState and weatherData
+    ResultScreen->>PriceScreenViewModel: getCurrentEnergyPrice()
+    PriceScreenViewModel->>PriceScreenViewModel: priceUiState emits
+
+    ResultScreen->>WeatherViewModel: calculateSolarPanelOutput()
+    WeatherViewModel->>WeatherViewModel: Compute adjustedRadiation
+    WeatherViewModel->>WeatherViewModel: Compute energy and power output
+    WeatherViewModel->>WeatherViewModel: Emit MonthlyCalculationResult
+
+    ResultScreen->>ResultContent: Render result with calculated data
+    ResultContent->>User: Shows SingleMonthView or AllMonthsView
+    ResultContent->>User: User can toggle months or view savings
+
+```
 ![Alt text](UseCaeT37.svg)
