@@ -12,6 +12,9 @@ class WeatherRepository(
     private val _rimData = MutableStateFlow<TimedData<Array<Double>>?>(null)
     val rimData: StateFlow<TimedData<Array<Double>>?> = _rimData
 
+    private val _weatherData = MutableStateFlow<Map<String, Array<Double>>?>(null)
+    val weatherData: StateFlow<Map<String, Array<Double>>?> = _weatherData
+
     private suspend fun getRadiationData(
         lat: Double,
         long: Double,
@@ -52,6 +55,7 @@ class WeatherRepository(
         if (!radiationData.isNullOrEmpty()) {
             dataMap["mean(PVGIS_radiation P1M)"] = radiationData
         }
+        _weatherData.value = dataMap
         return Result.success(dataMap)
     }
 

@@ -47,12 +47,12 @@ fun ResultScreen(
     contentPadding: PaddingValues,
     resultViewModel: ResultViewModel = ResultViewModel(),
 ) {
-    val weatherData by resultViewModel.weatherData.collectAsState()
     val errorScreen by resultViewModel.errorScreen.collectAsState()
+    val selectedRegion by resultViewModel.selectedRegionFlow.collectAsState()
     val calc by resultViewModel.calculationResults.collectAsState()
     Log.d("CALC", calc.toString())
     val uiState by resultViewModel.uiState.collectAsState()
-//    val direction = viewModel.directionInput.toInt()
+
     val months = listOf(
         stringResource(R.string.month_january),
         stringResource(R.string.month_february),
@@ -69,7 +69,6 @@ fun ResultScreen(
     )
 
 
-//    val selectedRegion = viewModel.selectedRegion
 
 
     //val priceUiState by priceScreenViewModel.priceUiState.collectAsStateWithLifecycle()
@@ -103,15 +102,6 @@ fun ResultScreen(
             }
 
             else -> {
-
-                val snowCoverData = weatherData["mean(snow_coverage_type P1M)"] ?: emptyArray()
-                val airTempData = weatherData["mean(air_temperature P1M)"] ?: emptyArray()
-                val cloudCoverData =
-                    weatherData["mean(cloud_area_fraction P1M)"] ?: emptyArray()
-                val radiationData = weatherData["mean(PVGIS_radiation P1M)"] ?: emptyArray()
-
-
-
                 val energyPrice = 1.0 // temp
 
                 Row(
@@ -140,13 +130,7 @@ fun ResultScreen(
 
                 calc?.let {
                     MonthDataDisplay(
-                        cloudCoverData = cloudCoverData,
-                        snowCoverData = snowCoverData,
-                        airTempData = airTempData,
-                        radiationData = radiationData,
-                        adjustedRadiation = it.adjustedRadiation,
-                        monthlyEnergyOutput = it.monthlyEnergyOutput,
-                        monthlyPowerOutput = it.monthlyPowerOutput,
+                        resultViewModel = resultViewModel,
                         months = months,
                         navController = navController,
                         energyPrice = energyPrice,
@@ -160,14 +144,8 @@ fun ResultScreen(
 
 
 @Composable
-fun MonthDataDisplay(
-    cloudCoverData: Array<Double>,
-    snowCoverData: Array<Double>,
-    airTempData: Array<Double>,
-    radiationData: Array<Double>,
-    adjustedRadiation: List<Double>,
-    monthlyEnergyOutput: List<Double>,
-    monthlyPowerOutput: List<Double>,
+private fun MonthDataDisplay(
+    resultViewModel: ResultViewModel,
     months: List<String>,
     navController: NavController,
     energyPrice: Double,
@@ -175,6 +153,8 @@ fun MonthDataDisplay(
 ) {
     var expanded by remember { mutableStateOf(false) }
     var selectedMonthIndex by remember { mutableIntStateOf(0) }
+    val temperatureFactors = resultViewModel.temperatureFactors.collectAsState().value ?: emptyList()
+    val calculationResults = resultViewModel.calculationResults.collectAsState().value!!
 
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
@@ -204,13 +184,10 @@ fun MonthDataDisplay(
             }
             DataCard(
                 month = months[selectedMonthIndex],
-                radiation = radiationData[selectedMonthIndex],
-                cloud = cloudCoverData[selectedMonthIndex],
-                snow = snowCoverData[selectedMonthIndex],
-                temp = airTempData[selectedMonthIndex],
-                adjusted = adjustedRadiation[selectedMonthIndex],
-                energy = monthlyEnergyOutput[selectedMonthIndex],
-                power = monthlyPowerOutput[selectedMonthIndex],
+                temperatureFactor = temperatureFactors[selectedMonthIndex],
+                adjusted = calculationResults.adjustedRadiation[selectedMonthIndex],
+                energy = calculationResults.monthlyEnergyOutput[selectedMonthIndex],
+                power = calculationResults.monthlyPowerOutput[selectedMonthIndex],
                 navController = navController,
                 energyPrice = energyPrice,
                 allMonths = false
@@ -226,7 +203,8 @@ fun MonthDataDisplay(
                 Text(
                     stringResource(
                         id = R.string.savedGlobe,
-                        //calculateSavedCO2(monthlyPowerOutput[selectedMonthIndex])
+                        resultViewModel.calculateSavedCO2(calculationResults.monthlyPowerOutput[selectedMonthIndex])
+                        // This should be done in viewmodel?
                     ),
                     style = MaterialTheme.typography.bodyMedium,
                     textAlign = TextAlign.Center
@@ -240,13 +218,10 @@ fun MonthDataDisplay(
                 items(months.size) { month ->
                     DataCard(
                         month = months[month],
-                        radiation = radiationData[month],
-                        cloud = cloudCoverData[month],
-                        snow = snowCoverData[month],
-                        temp = airTempData[month],
-                        adjusted = adjustedRadiation[month],
-                        energy = monthlyEnergyOutput[month],
-                        power = monthlyPowerOutput[month],
+                        temperatureFactor = temperatureFactors[selectedMonthIndex],
+                        adjusted = calculationResults.adjustedRadiation[month],
+                        energy = calculationResults.monthlyEnergyOutput[month],
+                        power = calculationResults.monthlyPowerOutput[month],
                         navController = navController,
                         energyPrice = energyPrice,
                         allMonths = true

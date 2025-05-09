@@ -18,11 +18,34 @@ class ResultViewModel : ViewModel() {
     private val weatherRepository = WeatherRepository.WeatherRepositoryProvider.instance
     private val userDataRepository = UserDataRepository.UserDataRepositoryProvider.instance
 
-    //val panelArea = userDataRepository.areaInput.toDouble()
-    //val efficiency = userDataRepository.efficiencyInput.toDouble()
+    val coordinatesFlow = userDataRepository.coordinatesState.stateFlow
+    val areaFlow = userDataRepository.areaState.stateFlow
+    val angleFlow = userDataRepository.angleState.stateFlow // Make into int all the way
+    val directionFlow = userDataRepository.directionState.stateFlow
+    val efficiencyFlow = userDataRepository.efficiencyState.stateFlow
+    val selectedRegionFlow = userDataRepository.selectedRegionState.stateFlow
+    val heightFlow = userDataRepository.height
+
+    val weatherDataFlow = weatherRepository.weatherData
 
     init {
-        //calculateSolarPanelOutput(panelArea, efficiency)
+        viewModelScope.launch {
+            userDataRepository.getHeight()
+            if (coordinatesFlow.value != null) {
+                val lat = coordinatesFlow.value!!.latitude
+                val lon = coordinatesFlow.value!!.longitude
+                loadWeatherData(lat, lon, heightFlow.value, angleFlow.value.toInt(), directionFlow.value.toInt())
+                calculateSolarPanelOutput(areaFlow.value, efficiencyFlow.value)
+                calculateTemperatureFactors()
+            }
+        }
+    }
+
+    fun calculateTemperatureFactors() {
+        _temperatureFactors.value =
+            weatherRepository.weatherData.value!!["mean(air_temperature P1M)"]!!
+            .map { temp -> 1 + (-0.44) * (temp - 25)
+        }
     }
 
     enum class UiState {
@@ -36,8 +59,10 @@ class ResultViewModel : ViewModel() {
         val yearlyEnergyOutput: Double
     )
 
-    private val _weatherData = MutableStateFlow<Map<String, Array<Double>>>(emptyMap())
-    val weatherData: StateFlow<Map<String, Array<Double>>> = _weatherData
+    private val _temperatureFactors = MutableStateFlow<List<Double>?>(null)
+    val temperatureFactors: StateFlow<List<Double>?> = _temperatureFactors
+
+
     private val _uiState = MutableStateFlow(UiState.LOADING)
     val uiState: StateFlow<UiState> = _uiState
     private val _errorScreen = MutableStateFlow<@Composable () -> Unit> { UnknownErrorScreen() }
@@ -54,7 +79,7 @@ class ResultViewModel : ViewModel() {
 
     private val daysInMonth = arrayOf(31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31)
 
-    fun loadWeatherData(
+    private fun loadWeatherData(
         lat: Double,
         lon: Double,
         height: Double?,
@@ -65,11 +90,10 @@ class ResultViewModel : ViewModel() {
             _uiState.value = UiState.LOADING
             val result = weatherRepository.getPanelWeatherData(lat, lon, height, slope, azimuth)
             if (result.isSuccess) {
-                _weatherData.value = result.getOrNull()?: emptyMap()
-                if (_weatherData.value.isEmpty()) {
+                if (weatherDataFlow.value!!.isEmpty()) {
                     _errorScreen.value = (result.exceptionOrNull() as? ApiException)?.getErrorScreen()?: { NoDataErrorScreen() }
                     _uiState.value = UiState.ERROR
-                } else if (_weatherData.value.size != 4) {
+                } else if (weatherDataFlow.value!!.size != 4) {
                     _errorScreen.value = (result.exceptionOrNull() as? ApiException)?.getErrorScreen()?: { PartialDataErrorScreen() }
                     _uiState.value = UiState.ERROR
                 } else {
@@ -93,18 +117,18 @@ class ResultViewModel : ViewModel() {
     }
     */
 
-    fun calculateSolarPanelOutput(panelArea: Double, efficiency: Double) {
+    private fun calculateSolarPanelOutput(panelArea: Double, efficiency: Double) {
         viewModelScope.launch {
-            if (_weatherData.value.size != 4) {
+            if (weatherDataFlow.value!!.size != 4) {
                 _errorScreen.value = { PartialDataErrorScreen() }
                 _uiState.value = UiState.ERROR
                 return@launch
             }
 
-            val snowCoverData = _weatherData.value["mean(snow_coverage_type P1M)"] ?: emptyArray()
-            val airTempData = _weatherData.value["mean(air_temperature P1M)"] ?: emptyArray()
-            val cloudCoverData = _weatherData.value["mean(cloud_area_fraction P1M)"] ?: emptyArray()
-            val radiationData = _weatherData.value["mean(PVGIS_radiation P1M)"] ?: emptyArray()
+            val snowCoverData = weatherDataFlow.value!!["mean(snow_coverage_type P1M)"] ?: emptyArray()
+            val airTempData = weatherDataFlow.value!!["mean(air_temperature P1M)"] ?: emptyArray()
+            val cloudCoverData = weatherDataFlow.value!!["mean(cloud_area_fraction P1M)"] ?: emptyArray()
+            val radiationData = weatherDataFlow.value!!["mean(PVGIS_radiation P1M)"] ?: emptyArray()
 
             // Process data and calculate energy output
             val adjustedRadiation = mutableListOf<Double>()

@@ -4,15 +4,18 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import no.solcellepanelerApp.ui.result.ResultViewModel.MonthlyCalculationResult
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
+import kotlinx.coroutines.launch
 import no.solcellepanelerApp.R
+import no.solcellepanelerApp.data.weatherdata.WeatherRepository
 
 class SavingsViewModel : ViewModel() {
+    private val weatherRepository = WeatherRepository.WeatherRepositoryProvider.instance
 
     private val _calculationResults = MutableStateFlow<MonthlyCalculationResult?>(null)
     val calculationResults: StateFlow<MonthlyCalculationResult?> = _calculationResults
 
-    private val _weatherData = MutableStateFlow<Map<String, Array<Double>>>(emptyMap())
-    val weatherData: StateFlow<Map<String, Array<Double>>> = _weatherData
+    val weatherDataFlow = weatherRepository.weatherData
 
     private val _connectedDevices = MutableStateFlow<MutableMap<String, Double>>(mutableMapOf())
     val connectedDevices: StateFlow<Map<String, Double>> = _connectedDevices
@@ -25,6 +28,10 @@ class SavingsViewModel : ViewModel() {
 
     private val preConnected = listOf("Fridge", "TV", "Laptop")
 
+    init {
+        viewModelScope.launch {
+        }
+    }
 
     val devices = listOf(
         "El-Car" to 100.0,

@@ -187,7 +187,7 @@ fun MyDisplayCard(
 @Composable
 fun DataCard(
     month: String,
-    temp: Double,
+    temperatureFactor: Double,
     adjusted: Double,
     energy: Double,
     power: Double,
@@ -195,9 +195,9 @@ fun DataCard(
     navController: NavController,
     energyPrice: Double,
     allMonths: Boolean,
-    snow: Double,
-    cloud: Double,
-    radiation: Double,
+    //snow: Double,
+    //cloud: Double,
+    //radiation: Double,
 ) {
     val cardModifier = modifier
         .fillMaxWidth()
@@ -275,7 +275,7 @@ fun DataCard(
 
                 IconTextRow(
                     iconRes = R.drawable.baseline_device_thermostat_24,
-                    text = stringResource(R.string.temp_factor, 1 + (-0.44) * (temp - 25))
+                    text = stringResource(R.string.temp_factor, temperatureFactor)
                 )
 
                 Text(
@@ -311,7 +311,7 @@ fun ModeCard(
     label: String,
     iconRes: Int,
     onClick: () -> Unit,
-    selected: Boolean,
+    //selected: Boolean,
 ) {
 //    val border = if (selected) BorderStroke(2.dp, MaterialTheme.colorScheme.primary) else null
 
