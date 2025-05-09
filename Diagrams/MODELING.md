@@ -426,4 +426,47 @@ MapScreen: DrawArea
     end
 
 ```
+PriceScreen: fetching prices and display
+```mermaid
+sequenceDiagram
+actor User
+
+participant PriceScreen
+participant PriceScreenViewModel
+participant RegionDropdown
+participant Repository
+participant Nav
+participant HelpBottomSheet
+participant AppearanceBottomSheet
+
+User ->> PriceScreen: Screen opened
+PriceScreen ->> RequestLocationPermission: Request location
+RequestLocationPermission ->> PriceScreen: Return region
+PriceScreen ->> PriceScreenViewModel: setRegion(region)
+PriceScreenViewModel ->> Repository: updateRegion(region)
+
+User ->> RegionDropdown: Select a different region
+RegionDropdown ->> PriceScreen: onRegionSelected(region)
+PriceScreen ->> PriceScreenViewModel: setRegion(region)
+PriceScreenViewModel ->> Repository: updateRegion(region)
+
+User ->> PriceScreen: Wait for data to load
+PriceScreenViewModel ->> Repository: updatePrices(date)
+Repository ->> PriceScreenViewModel: Return price list
+alt prices are returned
+    PriceScreenViewModel ->> PriceScreen: Emit Success(prices)
+    PriceScreen ->> PriceScreen: Display chart and PriceCard
+else no prices found
+    PriceScreenViewModel ->> PriceScreen: Emit Error
+    PriceScreen ->> PriceScreen: Show ErrorScreen
+end
+
+User ->> BottomBar: Click Help
+BottomBar ->> HelpBottomSheet: Show help
+
+User ->> BottomBar: Click Appearance
+BottomBar ->> AppearanceBottomSheet: Show appearance settings
+
+
+```
 ![Alt text](UseCaeT37.svg)
