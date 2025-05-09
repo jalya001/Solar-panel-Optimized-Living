@@ -351,15 +351,20 @@ How to draw:\n
         Scroll up for more information!
     </string>
     <string name="home_overlay">
-    Welcome to your home screen!\n\n
-    Tap "Find your solar potential" to see how much you can save with solar panels!\n\n
-    Tap the electricity prices in the bottom right corner to get more details about energy costs\n\n
-</string>
+        Welcome to your home screen!\n\n
+        Tap "Find your solar potential" to see how much you can save with solar panels!\n\n
+        Tap the electricity prices in the bottom right corner to get more details about energy costs\n\n
+    </string>
     <string name="map_overlay">Search for your address, use your device location, or tap the map to choose a location</string>
-    <string name="map_draw_overlay">Tap the map to start drawing your desired area\n\n
+    <string name="map_draw_overlay">
+        Tap the map to start drawing your desired area\n\n
         Tap the map to place markers.\n
-Place at least 3 markers in a rectangle-like shape and in correct order.\n
-Hold a marker for 3 seconds to move it.\n
-Tap "Show area" to preview your drawing.
+        Place at least 3 markers in a rectangle-like shape and in correct order.\n
+        Hold a marker for 3 seconds to move it.\n
+        Tap "Show area" to preview your drawing.
+    </string>
+    <string name="price_overlay">
+        Here you can see today\'s electricity prices, hour by hour.\n\n
+        Tap the arrows or the points on the graph to view electricity prices at different times of the day.
     </string>
 </resources>

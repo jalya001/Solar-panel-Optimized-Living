@@ -26,6 +26,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.unit.dp
@@ -42,6 +43,8 @@ import no.solcellepanelerApp.ui.navigation.AppearanceBottomSheet
 import no.solcellepanelerApp.ui.navigation.BottomBar
 import no.solcellepanelerApp.ui.navigation.HelpBottomSheet
 import no.solcellepanelerApp.ui.navigation.TopBar
+import no.solcellepanelerApp.ui.onboarding.OnboardingUtils
+import no.solcellepanelerApp.ui.reusables.SimpleTutorialOverlay
 import no.solcellepanelerApp.util.RequestLocationPermission
 import java.time.ZoneId
 import java.time.ZonedDateTime
@@ -53,6 +56,10 @@ fun PriceScreen(
     navController: NavController,
     fontScaleViewModel: FontScaleViewModel,
 ) {
+    val context = LocalContext.current
+    var showOverlay by remember { mutableStateOf(false) }
+    val onboardingUtils = remember { OnboardingUtils(context) }
+
     val scrollState = rememberScrollState()
 
     var selectedRegion by remember { mutableStateOf<Region?>(null) }
@@ -67,9 +74,22 @@ fun PriceScreen(
         selectedRegion?.let { viewModel.setRegion(it) }
     }
 
+    LaunchedEffect(Unit) {
+        if (!onboardingUtils.isPriceOverlayShown()) {
+            showOverlay = true
+            onboardingUtils.setPriceOverlayShown()
+        }
+    }
+
     var showHelp by remember { mutableStateOf(false) }
     var showAppearance by remember { mutableStateOf(false) }
 
+    if (showOverlay) {
+        SimpleTutorialOverlay(
+            onDismiss = { showOverlay = false },
+            stringResource(R.string.price_overlay)
+        )
+    }
     Scaffold(
         topBar = { TopBar(navController, stringResource(id = R.string.price_title)) },
         bottomBar = {

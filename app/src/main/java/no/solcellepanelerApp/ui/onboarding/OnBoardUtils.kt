@@ -65,6 +65,18 @@ class OnboardingUtils(private val context: Context) {
             .apply()
     }
 
+    fun isPriceOverlayShown(): Boolean {
+        return context.getSharedPreferences("onboarding", Context.MODE_PRIVATE)
+            .getBoolean("price_overlay_shown", false)
+    }
+
+    fun setPriceOverlayShown() {
+        context.getSharedPreferences("onboarding", Context.MODE_PRIVATE)
+            .edit()
+            .putBoolean("price_overlay_shown", true)
+            .apply()
+    }
+
     fun resetAllOnboardingStates() { //for testing
         context.getSharedPreferences("onboarding", Context.MODE_PRIVATE)
             .edit()
@@ -75,6 +87,4 @@ class OnboardingUtils(private val context: Context) {
             .putBoolean("home_overlay_shown", false)
             .apply()
     }
-
-
 }
