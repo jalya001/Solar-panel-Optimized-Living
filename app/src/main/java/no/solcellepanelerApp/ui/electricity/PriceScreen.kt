@@ -40,7 +40,7 @@ import java.time.ZonedDateTime
 
 @Composable
 fun PriceScreen(
-    viewModel: PriceScreenViewModel,
+    viewModel: PriceViewModel,
     contentPadding: PaddingValues
 ) {
     val scrollState = rememberScrollState()
@@ -75,9 +75,9 @@ fun PriceScreen(
         val priceUiState by viewModel.priceUiState.collectAsStateWithLifecycle()
 
         when (priceUiState) {
-            PriceScreenViewModel.UiState.LOADING -> LoadingScreen()
-            PriceScreenViewModel.UiState.ERROR -> ErrorScreen()
-            PriceScreenViewModel.UiState.SUCCESS -> {
+            PriceViewModel.UiState.LOADING -> LoadingScreen()
+            PriceViewModel.UiState.ERROR -> ErrorScreen()
+            PriceViewModel.UiState.SUCCESS -> {
                 ElectricityPriceChart(prices = prices!!)
                 Spacer(modifier = Modifier.height(16.dp))
                 val currentHour = ZonedDateTime.now(ZoneId.of("Europe/Oslo")).hour

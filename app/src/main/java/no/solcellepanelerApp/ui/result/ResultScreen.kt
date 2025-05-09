@@ -16,7 +16,6 @@ import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedButton
-import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
@@ -30,7 +29,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
-import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
 import com.airbnb.lottie.compose.LottieAnimation
 import com.airbnb.lottie.compose.LottieCompositionSpec
@@ -38,32 +36,22 @@ import com.airbnb.lottie.compose.LottieConstants
 import com.airbnb.lottie.compose.animateLottieCompositionAsState
 import com.airbnb.lottie.compose.rememberLottieComposition
 import no.solcellepanelerApp.R
-import no.solcellepanelerApp.ui.electricity.PriceScreenViewModel
-import no.solcellepanelerApp.ui.font.FontScaleViewModel
 import no.solcellepanelerApp.ui.handling.LoadingScreen
-import no.solcellepanelerApp.ui.map.MapScreenViewModel
-import no.solcellepanelerApp.ui.navigation.AppearanceBottomSheet
-import no.solcellepanelerApp.ui.navigation.BottomBar
-import no.solcellepanelerApp.ui.navigation.HelpBottomSheet
-import no.solcellepanelerApp.ui.navigation.TopBar
 import no.solcellepanelerApp.ui.reusables.DataCard
 import no.solcellepanelerApp.ui.reusables.IconTextRow
 import no.solcellepanelerApp.ui.reusables.SavingsMonth_Card
-import java.time.ZoneId
-import java.time.ZonedDateTime
 
 @Composable
 fun ResultScreen(
-    navController: NavController, viewModel: MapScreenViewModel, weatherViewModel: WeatherViewModel,
+    navController: NavController,
     contentPadding: PaddingValues,
+    resultViewModel: ResultViewModel = ResultViewModel(),
 ) {
-    val weatherData by weatherViewModel.weatherData.collectAsState()
-    val errorScreen by weatherViewModel.errorScreen.collectAsState()
-    val calc by weatherViewModel.calculationResults.collectAsState()
+    val weatherData by resultViewModel.weatherData.collectAsState()
+    val errorScreen by resultViewModel.errorScreen.collectAsState()
+    val calc by resultViewModel.calculationResults.collectAsState()
     Log.d("CALC", calc.toString())
-    val uiState by weatherViewModel.uiState.collectAsState()
-    val panelArea = viewModel.areaInput.toDouble()
-    val efficiency = viewModel.efficiencyInput.toDouble()
+    val uiState by resultViewModel.uiState.collectAsState()
 //    val direction = viewModel.directionInput.toInt()
     val months = listOf(
         stringResource(R.string.month_january),
@@ -106,11 +94,11 @@ fun ResultScreen(
         verticalArrangement = Arrangement.Top
     ) {
         when (uiState) {
-            WeatherViewModel.UiState.LOADING -> {
+            ResultViewModel.UiState.LOADING -> {
                 LoadingScreen()
             }
 
-            WeatherViewModel.UiState.ERROR -> {
+            ResultViewModel.UiState.ERROR -> {
                 errorScreen()
             }
 
@@ -123,9 +111,8 @@ fun ResultScreen(
                 val radiationData = weatherData["mean(PVGIS_radiation P1M)"] ?: emptyArray()
 
 
-                weatherViewModel.calculateSolarPanelOutput(panelArea, efficiency)
 
-                val energyPrice = 1.0
+                val energyPrice = 1.0 // temp
 
                 Row(
                     modifier = Modifier
@@ -171,23 +158,6 @@ fun ResultScreen(
     }
 }
 
-
-fun calculateMonthlyEnergyOutput(
-    avgTemp: List<Double>,
-    cloudCover: List<Double>,
-    snowCover: List<Double>,
-    radiation: List<Double>,
-    panelArea: Double,
-    efficiency: Double,
-    tempCoeff: Double,
-): List<Double> {
-    return radiation.indices.map { month ->
-        val adjustedRadiation =
-            radiation[month] * (1 - cloudCover[month] / 8) * (1 - snowCover[month] / 4)
-        val tempFactor = 1 + tempCoeff * (avgTemp[month] - 25)
-        adjustedRadiation * panelArea * (efficiency / 100.0) * tempFactor
-    }
-}
 
 @Composable
 fun MonthDataDisplay(
@@ -256,7 +226,7 @@ fun MonthDataDisplay(
                 Text(
                     stringResource(
                         id = R.string.savedGlobe,
-                        calculateSavedCO2(monthlyPowerOutput[selectedMonthIndex])
+                        //calculateSavedCO2(monthlyPowerOutput[selectedMonthIndex])
                     ),
                     style = MaterialTheme.typography.bodyMedium,
                     textAlign = TextAlign.Center
@@ -311,12 +281,4 @@ fun GlobeAnimation() {
             .size(150.dp)
 //            .background(Color.Blue)
     )
-}
-
-
-fun calculateSavedCO2(energy: Double): Double {
-    val norwayEmissionFactor = 0.03 //0.03 kg CO2/kWh
-    val norwaySavedCO2 = energy * norwayEmissionFactor
-
-    return norwaySavedCO2
 }

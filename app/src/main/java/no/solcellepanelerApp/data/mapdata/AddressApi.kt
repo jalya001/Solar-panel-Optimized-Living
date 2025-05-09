@@ -12,7 +12,7 @@ import kotlinx.serialization.json.Json
 import no.solcellepanelerApp.model.map.GeocodingResponse
 
 
-class AddressDataSource {
+class AddressApi {
     private val client = HttpClient(OkHttp) {
         install(ContentNegotiation) {
             json(Json { prettyPrint = true })

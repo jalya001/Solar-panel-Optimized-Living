@@ -20,7 +20,6 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.launch
 import no.solcellepanelerApp.data.mapdata.UserDataRepository
-import no.solcellepanelerApp.data.weatherdata.WeatherRepository
 import no.solcellepanelerApp.model.electricity.Region
 
 import android.content.Context
@@ -33,21 +32,21 @@ import com.google.maps.android.compose.MapUiSettings
 import kotlin.math.ceil
 import no.solcellepanelerApp.util.fetchCoordinates as activityToCoordinates
 
-class MapScreenViewModel : ViewModel() {
+class MapViewModel : ViewModel() {
     private val userDataRepository = UserDataRepository.UserDataRepositoryProvider.instance
-    private val weatherRepository = WeatherRepository.WeatherRepositoryProvider.instance
 
-    var areaInput by mutableStateOf("")
-    var angleInput by mutableStateOf("")
-    var directionInput by mutableStateOf("")
-    var efficiencyInput by mutableStateOf("")
-    var selectedRegion: Region = Region.OSLO
+    val coordinatesState = userDataRepository.coordinatesState
+    val areaState = userDataRepository.areaState
+    val angleState = userDataRepository.angleState
+    val directionState = userDataRepository.directionState
+    val efficiencyState = userDataRepository.efficiencyState
+    val selectedRegionState = userDataRepository.selectedRegionState
 
-    var selectedCoordinates by mutableStateOf<LatLng?>(null)
     var address by mutableStateOf("")
     var isPolygonVisible by mutableStateOf(false)
     var drawingEnabled = MutableStateFlow(false)
 
+    var selectedCoordinates by mutableStateOf<LatLng?>(null)
 
     private var index by mutableIntStateOf(0)
     var showBottomSheet by mutableStateOf(false)
@@ -61,26 +60,14 @@ class MapScreenViewModel : ViewModel() {
 
     val mapUiSettings = MapUiSettings()
 
-    private val _coordinates = MutableLiveData<Pair<Double, Double>?>()
-    val coordinates: LiveData<Pair<Double, Double>?> get() = _coordinates
-
-    private val _height = MutableStateFlow<Double?>(null)
-    val height: StateFlow<Double?> = _height
-
     private val _polygonData = mutableStateListOf<LatLng>()
     val polygonData: List<LatLng> get() = _polygonData
 
     private val _snackbarMessages = MutableSharedFlow<String>()
     val snackbarMessages = _snackbarMessages.asSharedFlow()
 
-
     fun selectLocation(lat: Double, lon: Double) {
-        val coordinate = lat to lon
-        _coordinates.postValue(coordinate)
-        selectedCoordinates = LatLng(lat, lon)
-        viewModelScope.launch {
-            _height.value = userDataRepository.getHeight(coordinate)
-        }
+        coordinatesState.value = LatLng(lat, lon)
     }
 
     fun fetchCoordinates(address: String) {
@@ -88,11 +75,7 @@ class MapScreenViewModel : ViewModel() {
             try {
                 val result = userDataRepository.getCoordinates(address)
                 if (result.isNotEmpty()) {
-                    val coords = result.first()
-                    val coordinatePair = coords.lat.toDouble() to coords.lon.toDouble()
-                    _height.value = userDataRepository.getHeight(coordinatePair)
-                    _coordinates.postValue(coordinatePair)
-                    selectedCoordinates = LatLng(coordinatePair.first, coordinatePair.second)
+                    coordinatesState.value = LatLng(result.first().lat.toDouble(), result.first().lon.toDouble())
                 } else {
                     _snackbarMessages.emit("Adresse ikke funnet, prøv igjen.")
                 }
@@ -107,7 +90,6 @@ class MapScreenViewModel : ViewModel() {
         viewModelScope.launch {
             val location = activityToCoordinates(activity)
             currentLocation = location
-            Log.d("drawing is :",drawingEnabled.toString())
         }
     }
 
@@ -118,10 +100,8 @@ class MapScreenViewModel : ViewModel() {
     }
 
     fun startDrawing() {
-        drawingEnabled= MutableStateFlow(true)
-        Log.d("drawing is :",drawingEnabled.toString())
-
-        selectedCoordinates = null
+        drawingEnabled = MutableStateFlow(true)
+        coordinatesState.value = null
         removePoints()
         index = 0
     }
@@ -158,7 +138,7 @@ class MapScreenViewModel : ViewModel() {
     }
 
     fun clearSelection() {
-        selectedCoordinates = null
+        coordinatesState.value = null
         removePoints()
         index = 0
     }

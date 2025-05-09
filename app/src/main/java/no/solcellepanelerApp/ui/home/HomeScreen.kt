@@ -43,7 +43,7 @@ import no.solcellepanelerApp.R
 import no.solcellepanelerApp.model.electricity.ElectricityPrice
 import no.solcellepanelerApp.model.electricity.Region
 import no.solcellepanelerApp.ui.electricity.HomePriceCard
-import no.solcellepanelerApp.ui.electricity.PriceScreenViewModel
+import no.solcellepanelerApp.ui.electricity.PriceViewModel
 import no.solcellepanelerApp.ui.handling.ErrorScreen
 import no.solcellepanelerApp.ui.handling.LoadingScreen
 import no.solcellepanelerApp.ui.reusables.MyDisplayCard
@@ -54,23 +54,23 @@ import java.time.ZonedDateTime
 @Composable
 fun HomeScreen(
     navController: NavController,
-    homeScreenViewModel: HomeScreenViewModel = viewModel(),
-    priceScreenViewModel: PriceScreenViewModel,
+    homeViewModel: HomeViewModel = viewModel(),
+    priceViewModel: PriceViewModel,
     contentPadding: PaddingValues
 ) {
     val context = LocalContext.current
 
     LaunchedEffect(Unit) {
-        homeScreenViewModel.initialize(context)
+        homeViewModel.initialize(context)
     }
 
-    val isLoading by homeScreenViewModel.isLoading.collectAsState()
-    val currentRadiationValue by homeScreenViewModel.currentRadiationValue.collectAsState()
-    val selectedRegion by homeScreenViewModel.selectedRegion.collectAsState()
-    val currentTime by homeScreenViewModel.currentTime.collectAsState()
+    val isLoading by homeViewModel.isLoading.collectAsState()
+    val currentRadiationValue by homeViewModel.currentRadiationValue.collectAsState()
+    val selectedRegion by homeViewModel.selectedRegion.collectAsState()
+    val currentTime by homeViewModel.currentTime.collectAsState()
 
-    val priceUiState by priceScreenViewModel.priceUiState.collectAsState()
-    val prices = priceScreenViewModel.prices.collectAsState()
+    val priceUiState by priceViewModel.priceUiState.collectAsState()
+    val prices = priceViewModel.prices.collectAsState()
 
     if (isLoading) {
         LoadingScreen()
@@ -195,7 +195,7 @@ fun ElectricityPriceCard(
     selectedRegion: Region?,
     navController: NavController,
     modifier: Modifier = Modifier,
-    priceUiState: PriceScreenViewModel.UiState,
+    priceUiState: PriceViewModel.UiState,
     prices: List<ElectricityPrice>
 ) {
     MyNavCard(
@@ -223,9 +223,9 @@ fun ElectricityPriceCard(
                         LoadingScreen()
                     } else {
                         when (priceUiState) {
-                            PriceScreenViewModel.UiState.LOADING -> LoadingScreen()
-                            PriceScreenViewModel.UiState.ERROR -> ErrorScreen()
-                            PriceScreenViewModel.UiState.SUCCESS -> {
+                            PriceViewModel.UiState.LOADING -> LoadingScreen()
+                            PriceViewModel.UiState.ERROR -> ErrorScreen()
+                            PriceViewModel.UiState.SUCCESS -> {
                                 Column {
                                     HomePriceCard(prices, selectedRegion)
                                 }

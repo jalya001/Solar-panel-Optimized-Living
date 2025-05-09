@@ -13,7 +13,7 @@ import no.solcellepanelerApp.model.reusables.updateStaleData
 import java.time.LocalDate
 import java.time.ZonedDateTime
 
-class PriceScreenViewModel(
+class PriceViewModel(
     private val repository: ElectricityPriceRepository = ElectricityPriceRepository(),
 ) : ViewModel() {
     enum class UiState {

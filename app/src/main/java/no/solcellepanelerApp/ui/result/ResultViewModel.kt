@@ -6,6 +6,7 @@ import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
+import no.solcellepanelerApp.data.mapdata.UserDataRepository
 import no.solcellepanelerApp.data.weatherdata.ApiException
 import no.solcellepanelerApp.data.weatherdata.WeatherRepository
 import no.solcellepanelerApp.ui.handling.NoDataErrorScreen
@@ -13,9 +14,17 @@ import no.solcellepanelerApp.ui.handling.PartialDataErrorScreen
 import no.solcellepanelerApp.ui.handling.UnexpectedErrorScreen
 import no.solcellepanelerApp.ui.handling.UnknownErrorScreen
 
-class WeatherViewModel(
-    private val repository: WeatherRepository = WeatherRepository(),
-) : ViewModel() {
+class ResultViewModel : ViewModel() {
+    private val weatherRepository = WeatherRepository.WeatherRepositoryProvider.instance
+    private val userDataRepository = UserDataRepository.UserDataRepositoryProvider.instance
+
+    //val panelArea = userDataRepository.areaInput.toDouble()
+    //val efficiency = userDataRepository.efficiencyInput.toDouble()
+
+    init {
+        //calculateSolarPanelOutput(panelArea, efficiency)
+    }
+
     enum class UiState {
         LOADING, SUCCESS, ERROR
     }
@@ -38,7 +47,6 @@ class WeatherViewModel(
     //val frostDataRim: StateFlow<Array<Double>> = _frostDataRim
 
     private val _calculationResults = MutableStateFlow<MonthlyCalculationResult?>(null)
-
     val calculationResults: StateFlow<MonthlyCalculationResult?> = _calculationResults
 
     // Default temperature coefficient for solar panels
@@ -55,7 +63,7 @@ class WeatherViewModel(
     ) {
         viewModelScope.launch {
             _uiState.value = UiState.LOADING
-            val result = repository.getPanelWeatherData(lat, lon, height, slope, azimuth)
+            val result = weatherRepository.getPanelWeatherData(lat, lon, height, slope, azimuth)
             if (result.isSuccess) {
                 _weatherData.value = result.getOrNull()?: emptyMap()
                 if (_weatherData.value.isEmpty()) {
@@ -126,5 +134,29 @@ class WeatherViewModel(
                 yearlyEnergyOutput = yearlyEnergyOutput
             )
         }
+    }
+
+    fun calculateMonthlyEnergyOutput(
+        avgTemp: List<Double>,
+        cloudCover: List<Double>,
+        snowCover: List<Double>,
+        radiation: List<Double>,
+        panelArea: Double,
+        efficiency: Double,
+        tempCoeff: Double,
+    ): List<Double> {
+        return radiation.indices.map { month ->
+            val adjustedRadiation =
+                radiation[month] * (1 - cloudCover[month] / 8) * (1 - snowCover[month] / 4)
+            val tempFactor = 1 + tempCoeff * (avgTemp[month] - 25)
+            adjustedRadiation * panelArea * (efficiency / 100.0) * tempFactor
+        }
+    }
+
+    fun calculateSavedCO2(energy: Double): Double {
+        val norwayEmissionFactor = 0.03 //0.03 kg CO2/kWh
+        val norwaySavedCO2 = energy * norwayEmissionFactor
+
+        return norwaySavedCO2
     }
 }

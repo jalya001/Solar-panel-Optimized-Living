@@ -88,7 +88,6 @@ import kotlinx.coroutines.launch
 import no.solcellepanelerApp.MainActivity
 import no.solcellepanelerApp.R
 import no.solcellepanelerApp.ui.font.FontSizeState
-import no.solcellepanelerApp.ui.result.WeatherViewModel
 import no.solcellepanelerApp.ui.reusables.AppScaffoldController
 import no.solcellepanelerApp.ui.reusables.SimpleTutorialOverlay
 import no.solcellepanelerApp.ui.theme.darkGrey
@@ -99,11 +98,10 @@ import no.solcellepanelerApp.util.RequestLocationPermission
 
 @Composable
 fun MapScreen(
-    viewModel: MapScreenViewModel,
     navController: NavController,
-    weatherViewModel: WeatherViewModel,
     appScaffoldController: AppScaffoldController,
-    contentPadding: PaddingValues
+    contentPadding: PaddingValues,
+    viewModel: MapViewModel = MapViewModel(),
 ) {
     var showMapOverlay by remember { mutableStateOf(true) }
     var showDrawOverlay by remember { mutableStateOf(false) }
@@ -137,23 +135,20 @@ fun MapScreen(
         DisplayScreen(
             viewModel = viewModel,
             navController = navController,
-            weatherViewModel = weatherViewModel,
         )
     }
 }
 
 @Composable
 fun DisplayScreen(
-    viewModel: MapScreenViewModel,
+    viewModel: MapViewModel,
     navController: NavController,
-    weatherViewModel: WeatherViewModel,
 ) {
     val context = LocalContext.current
     val activity = context as? MainActivity
 
-    val coordinates by viewModel.coordinates.observeAsState()
-    val height by viewModel.height.collectAsState()
-    val selectedCoordinates = viewModel.selectedCoordinates
+    val coordinates by viewModel.coordinatesState.stateFlow.collectAsState() // This is for later calculation
+    val selectedCoordinates = viewModel.selectedCoordinates // This is for onscreen handling stuff idk
     val polygonPoints = viewModel.polygonData
     val isPolygonVisible = viewModel.isPolygonVisible
     val drawingEnabled by viewModel.drawingEnabled.collectAsState()
@@ -169,7 +164,7 @@ fun DisplayScreen(
     val coroutineScope = rememberCoroutineScope()
 
     RequestLocationPermission { region ->
-        viewModel.selectedRegion = region
+        viewModel.selectedRegionState.value = region
         viewModel.locationPermissionGranted = true
     }
 
@@ -247,7 +242,9 @@ fun DisplayScreen(
         }
 
         LaunchedEffect(coordinates) {
-            coordinates?.let { (lat, lon) ->
+            coordinates?.let { coordinate ->
+                val lat = coordinate.latitude
+                val lon = coordinate.longitude
                 val newLatLng = LatLng(lat, lon)
                 viewModel.selectLocation(lat, lon)
                 cameraPositionState.animate(
@@ -311,14 +308,8 @@ fun DisplayScreen(
         AdditionalInputBottomSheet(
             visible = showBottomSheet,
             onDismiss = { viewModel.showBottomSheet = false },
-            coordinates = coordinates,
-            height = height,
-            area = viewModel.areaInput,
             navController = navController,
             viewModel = viewModel,
-            weatherViewModel = weatherViewModel,
-            selectedRegion = viewModel.selectedRegion,
-            onRegionSelected = { viewModel.selectedRegion = it },
         )
     }
 }
@@ -326,7 +317,7 @@ fun DisplayScreen(
 @Composable
 fun ControlsColumn(
     selectedCoordinates: LatLng?,
-    coordinates: Pair<Double, Double>?,
+    coordinates: LatLng?,
     polygonPoints: List<LatLng>,
     isPolygonVisible: Boolean,
     onConfirmLocation: () -> Unit,
@@ -337,7 +328,7 @@ fun ControlsColumn(
     showMissingLocationDialog: Boolean,
     onDismissDialog: () -> Unit,
     onTogglePolygonVisibility: () -> Unit,
-    viewModel: MapScreenViewModel,
+    viewModel: MapViewModel,
     onToggleBottomSheet: () -> Unit
 ) {
     Column(
@@ -433,7 +424,7 @@ fun SearchBar(
     address: String,
     onAddressChange: (String) -> Unit,
     onSearch: () -> Unit,
-    viewModel: MapScreenViewModel
+    viewModel: MapViewModel
 ) {
     Card(
         modifier = Modifier.fillMaxWidth(),
@@ -482,15 +473,13 @@ fun SearchBar(
     }
 }
 
-
-
 @Composable
 fun AddressInputField(
     value: String,
     onValueChange: (String) -> Unit,
     label: String,
     colors: TextFieldColors,
-    viewModel: MapScreenViewModel,
+    viewModel: MapViewModel,
     address: String,
 ) {
     OutlinedTextField(
@@ -512,7 +501,7 @@ fun AddressInputField(
 
 @Composable
 fun LocationNotSelectedDialog(
-    coordinates: Pair<Double, Double>?,
+    coordinates: LatLng?,
     onDismiss: () -> Unit,
 ) {
     val showDialog by remember { mutableStateOf(coordinates == null) }
@@ -551,7 +540,7 @@ fun LocationNotSelectedDialog(
 @Composable
 private fun DrawingControls(
     polygonPoints: List<LatLng>,
-    viewModel: MapScreenViewModel,
+    viewModel: MapViewModel,
     onToggleVisibility: () -> Unit,
     toggleBottomSheet: () -> Unit,
 ) {
@@ -577,8 +566,8 @@ private fun DrawingControls(
                     Card(
                         modifier = Modifier
                             .clickable {
-                                viewModel.areaInput =
-                                    viewModel.calculateAreaOfPolygon(polygonPoints).toString()
+                                viewModel.areaState.value =
+                                    viewModel.calculateAreaOfPolygon(polygonPoints).toDouble()
                                 viewModel.drawingEnabled= MutableStateFlow(false)
                                 viewModel.togglePolygonVisibility()
                                 viewModel.removePoints()

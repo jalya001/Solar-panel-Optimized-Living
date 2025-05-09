@@ -20,7 +20,7 @@ import no.solcellepanelerApp.model.reusables.updateStaleData
 import no.solcellepanelerApp.util.fetchCoordinates
 import no.solcellepanelerApp.util.mapLocationToRegion
 
-class HomeScreenViewModel : ViewModel() {
+class HomeViewModel : ViewModel() {
     private val weatherRepository = WeatherRepository.WeatherRepositoryProvider.instance
     private val electricityPriceRepository = ElectricityPriceRepository.ElectricityPriceRepositoryProvider.instance
 
@@ -72,7 +72,7 @@ class HomeScreenViewModel : ViewModel() {
     private suspend fun updateCurrentRadiation(time: ZonedDateTime) {
         val location = _currentLocation.value ?: return
 
-        updateStaleData(
+        updateStaleData( // TBD: Move to repository level?
             currentTime = time,
             dataHolder = { weatherRepository.rimData.value },
             fetchData = {

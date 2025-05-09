@@ -1,59 +1,47 @@
 package no.solcellepanelerApp.data.mapdata
 
-import android.util.Log
-import androidx.lifecycle.viewModelScope
 import com.google.android.gms.maps.model.LatLng
-import com.google.maps.android.SphericalUtil
-import kotlinx.coroutines.launch
-import no.solcellepanelerApp.data.weatherdata.WeatherRepository
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
+import no.solcellepanelerApp.model.electricity.Region
 import no.solcellepanelerApp.model.map.GeocodingResponse
-import kotlin.math.ceil
+import no.solcellepanelerApp.ui.reusables.StateFlowDelegate
 
 class UserDataRepository(
-    private val dataSource: AddressDataSource,
+    private val addressApi: AddressApi,
     private val elevationApi: ElevationApi
 ) {
-/*
+    var areaState = StateFlowDelegate(0.0)
+    var angleState = StateFlowDelegate(0.0)
+    var directionState = StateFlowDelegate(0.0)
+    var efficiencyState = StateFlowDelegate(0.0)
+    var selectedRegionState = StateFlowDelegate(Region.OSLO)
+    var coordinatesState = StateFlowDelegate<LatLng?>(null)
 
-    fun fetchCoordinates(address: String) {
-        viewModelScope.launch {
-            try {
-                val result = repository.getCoordinates(address)
-                if (result.isNotEmpty()) {
-                    val coords = result.first()
-                    val coordinatePair = coords.lat.toDouble() to coords.lon.toDouble()
-                    _height.value = repository.getHeight(coordinatePair)
-                    _coordinates.postValue(coordinatePair)
-                } else {
-                    _snackbarMessages.emit("Adresse ikke funnet, prøv igjen.")
-                }
-            } catch (e: Exception) {
-                Log.e("MapScreenViewModel", "Error fetching coordinates", e)
-                _snackbarMessages.emit("Noe gikk galt ved henting av koordinater.")
-            }
-        }
-    }
+    private val _height = MutableStateFlow<Double?>(null)
+    val height: StateFlow<Double?> = _height
 
-    // to change if map is clicked not used
-    fun selectLocation(lat: Double, lon: Double) {
-        val coordinate = lat to lon
-        _coordinates.postValue(coordinate)
-        viewModelScope.launch {
-            _height.value = repository.getHeight(coordinate)
-        }
-    }
-*/
     suspend fun getCoordinates(address: String): List<GeocodingResponse> {
-        return dataSource.getCoordinates(address)
+        val result = addressApi.getCoordinates(address)
+        if (result.isNotEmpty()) {
+            val coords = result.first()
+            val coordinatePair = LatLng(coords.lat.toDouble(), coords.lon.toDouble())
+            coordinatesState.value = coordinatePair
+        }
+        return result
     }
 
-    suspend fun getHeight(coordinates: Pair<Double,Double>): Double? {
-        return elevationApi.fetchElevation(coordinates)
+    suspend fun getHeight(): Double? {
+        if (coordinatesState.value != null) {
+            return elevationApi.fetchElevation(coordinatesState.value!!)
+        } else {
+            return null
+        }
     }
 
     object UserDataRepositoryProvider {
         val instance: UserDataRepository by lazy {
-            UserDataRepository(AddressDataSource(), ElevationApi())
+            UserDataRepository(AddressApi(), ElevationApi())
         }
     }
 }

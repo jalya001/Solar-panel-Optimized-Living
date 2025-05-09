@@ -32,6 +32,7 @@ import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableFloatStateOf
 import androidx.compose.runtime.mutableStateOf
@@ -56,7 +57,6 @@ import no.solcellepanelerApp.ui.electricity.RegionDropdown
 import no.solcellepanelerApp.ui.font.FontSizeState
 import no.solcellepanelerApp.ui.navigation.InfoHelpButton
 import no.solcellepanelerApp.ui.navigation.getCompassDirection
-import no.solcellepanelerApp.ui.result.WeatherViewModel
 import no.solcellepanelerApp.ui.reusables.DecimalFormatter
 import no.solcellepanelerApp.ui.reusables.DecimalInputField
 
@@ -65,37 +65,14 @@ import no.solcellepanelerApp.ui.reusables.DecimalInputField
 fun AdditionalInputBottomSheet(
     visible: Boolean,
     onDismiss: () -> Unit,
-    coordinates: Pair<Double, Double>?,
-    height: Double?,
-    area: String,
     navController: NavController,
-    viewModel: MapScreenViewModel,
-    weatherViewModel: WeatherViewModel,
-    selectedRegion: Region?,
-    onRegionSelected: (Region) -> Unit,
+    viewModel: MapViewModel,
 ) {
     if (!visible) return
-
-    var angle by remember { mutableFloatStateOf(0f) }
-    var areaState by remember { mutableStateOf(area) }
-    var azimuthPosition by remember { mutableFloatStateOf(0f) }
-    var efficiency by remember { mutableFloatStateOf(0f) }
-
-    val panelTypes = remember {
-        listOf(
-            SolarPanelType("Monokrystallinsk", 20f, "Høy effektivitet, dyrere, Standard"),
-            SolarPanelType("Polykrystallinsk", 15f, "Middels effektivitet, rimeligere"),
-            SolarPanelType("Tynnfilm", 10f, "Lav effektivitet, fleksibel")
-        )
-    }
 
     val sheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true)
     val currentDensity = LocalDensity.current
     val customDensity = Density(currentDensity.density, FontSizeState.fontScale.floatValue)
-
-    LaunchedEffect(area) {
-        areaState = area
-    }
 
     CompositionLocalProvider(LocalDensity provides customDensity) {
         ModalBottomSheet(
@@ -106,22 +83,8 @@ fun AdditionalInputBottomSheet(
             scrimColor = Color.Black.copy(alpha = 0.8f)
         ) {
             BottomSheetContent(
-                areaState = areaState,
-                onAreaChange = { areaState = it },
-                angle = angle,
-                onAngleChange = { angle = it },
-                efficiency = efficiency,
-                onEfficiencyChange = { efficiency = it },
-                azimuth = azimuthPosition,
-                onAzimuthChange = { azimuthPosition = it },
-                panelTypes = panelTypes,
-                selectedRegion = selectedRegion,
-                onRegionSelected = onRegionSelected,
-                coordinates = coordinates,
-                height = height,
                 onDismiss = onDismiss,
                 viewModel = viewModel,
-                weatherViewModel = weatherViewModel,
                 navController = navController
             )
         }
@@ -130,22 +93,8 @@ fun AdditionalInputBottomSheet(
 
 @Composable
 private fun BottomSheetContent(
-    areaState: String,
-    onAreaChange: (String) -> Unit,
-    angle: Float,
-    onAngleChange: (Float) -> Unit,
-    efficiency: Float,
-    onEfficiencyChange: (Float) -> Unit,
-    azimuth: Float,
-    onAzimuthChange: (Float) -> Unit,
-    panelTypes: List<SolarPanelType>,
-    selectedRegion: Region?,
-    onRegionSelected: (Region) -> Unit,
-    coordinates: Pair<Double, Double>?,
-    height: Double?,
     onDismiss: () -> Unit,
-    viewModel: MapScreenViewModel,
-    weatherViewModel: WeatherViewModel,
+    viewModel: MapViewModel,
     navController: NavController,
 ) {
     val focusManager = LocalFocusManager.current
@@ -168,49 +117,31 @@ private fun BottomSheetContent(
         Spacer(modifier = Modifier.height(20.dp))
 
         AreaInputRow(
-            areaState,
-            onAreaChange,
             onDismiss,
             viewModel = viewModel,
-
             decimalFormatter = decimalFormatter
         )
         Spacer(modifier = Modifier.height(8.dp))
         InfoHelpButton(stringResource(id = R.string.area_label), stringResource(id = R.string.roofAreaHelp))
 
         Spacer(modifier = Modifier.height(16.dp))
-        SlopeSlider(angle, onAngleChange)
-        InfoHelpButton("${stringResource(id = R.string.angle)} ${angle.toInt()}°", stringResource(id = R.string.roofAngleHelp))
+        SlopeSlider(viewModel)
 
         Spacer(modifier = Modifier.height(16.dp))
-        Text(stringResource(id = R.string.efficiency_label), style = MaterialTheme.typography.titleLarge)
 
-        panelTypes.forEach { panelType ->
-            PanelTypeCard(panelType, efficiency, onEfficiencyChange, viewModel, focusManager)
-        }
-
-        LearnMoreLink()
-        InfoHelpButton("${stringResource(id = R.string.efficiency)} ~ ${efficiency.toInt()}%", stringResource(id = R.string.panelEfficencyHelp))
+        PanelPicker(viewModel, focusManager)
 
         Spacer(modifier = Modifier.height(16.dp))
-        DirectionSlider(azimuth, onAzimuthChange)
-        InfoHelpButton("${stringResource(id = R.string.direction)} ${azimuth.toInt()}° (${getCompassDirection(azimuth.toInt())})", stringResource(id = R.string.panelDirectionHelp))
+        DirectionSlider(viewModel)
 
         Spacer(modifier = Modifier.height(16.dp))
-        selectedRegion?.let {
-            RegionDropdown(it, onRegionSelected)
-        }
+        //selectedRegion?.let {
+        //    RegionDropdown(it, onRegionSelected)
+        //}
         Spacer(modifier = Modifier.height(16.dp))
         ResultNavigationButton(
-            areaState = areaState,
-            coordinates = coordinates,
-            angle = angle,
-            efficiency = efficiency,
-            azimuth = azimuth,
-            height = height,
             navController = navController,
             viewModel = viewModel,
-            weatherViewModel = weatherViewModel
         )
     }
 }
@@ -224,18 +155,18 @@ data class SolarPanelType(
 
 @Composable
 fun AreaInputRow(
-    areaState: String,
-    onAreaChange: (String) -> Unit,
     onDismiss: () -> Unit,
     decimalFormatter: DecimalFormatter,
-    viewModel: MapScreenViewModel
+    viewModel: MapViewModel
 ) {
+    val area by viewModel.areaState.stateFlow.collectAsState()
+
     Row {
         DecimalInputField(
             decimalFormatter = decimalFormatter,
-            value = areaState,
+            value = area.toString(),
             label = stringResource(id = R.string.area_label),
-            onValueChange = onAreaChange,
+            onValueChange = { viewModel.areaState.value = it.toDouble() },
             modifier = Modifier
                 .weight(1f)
                 .padding(end = 4.dp)
@@ -264,9 +195,10 @@ fun AreaInputRow(
 
 @Composable
 fun SlopeSlider(
-    angle: Float,
-    onAngleChange: (Float) -> Unit
+    viewModel: MapViewModel
 ) {
+    val angle by viewModel.angleState.stateFlow.collectAsState()
+    val onAngleChange: (Float) -> Unit = { viewModel.angleState.value = it.toDouble() }
     val focusManager = LocalFocusManager.current
 
     Text(
@@ -275,7 +207,7 @@ fun SlopeSlider(
     )
 
     Slider(
-        value = angle,
+        value = angle.toFloat(),
         onValueChange = {
             onAngleChange(it)
             focusManager.clearFocus()
@@ -283,13 +215,16 @@ fun SlopeSlider(
         valueRange = 0f..90f,
         modifier = Modifier.fillMaxWidth()
     )
+
+    InfoHelpButton("${stringResource(id = R.string.angle)} ${angle.toInt()}°", stringResource(id = R.string.roofAngleHelp))
 }
 
 @Composable
 fun DirectionSlider(
-    azimuth: Float,
-    onAzimuthChange: (Float) -> Unit
+    viewModel: MapViewModel
 ) {
+    val azimuth by viewModel.directionState.stateFlow.collectAsState()
+    val onAzimuthChange: (Float) -> Unit = { viewModel.directionState.value = it.toDouble() }
     val focusManager = LocalFocusManager.current
 
     Text(
@@ -298,7 +233,7 @@ fun DirectionSlider(
     )
 
     Slider(
-        value = azimuth,
+        value = azimuth.toFloat(),
         onValueChange = {
             onAzimuthChange(it)
             focusManager.clearFocus()
@@ -306,16 +241,41 @@ fun DirectionSlider(
         valueRange = 0f..315f,
         modifier = Modifier.fillMaxWidth()
     )
+
+    InfoHelpButton("${stringResource(id = R.string.direction)} ${azimuth.toInt()}° (${getCompassDirection(azimuth.toInt())})", stringResource(id = R.string.panelDirectionHelp))
+}
+
+@Composable
+fun PanelPicker(viewModel: MapViewModel, focusManager: FocusManager) {
+    val panelTypes = remember {
+        listOf(
+            SolarPanelType("Monokrystallinsk", 20f, "Høy effektivitet, dyrere, Standard"),
+            SolarPanelType("Polykrystallinsk", 15f, "Middels effektivitet, rimeligere"),
+            SolarPanelType("Tynnfilm", 10f, "Lav effektivitet, fleksibel")
+        )
+    }
+
+    val efficiency by viewModel.efficiencyState.stateFlow.collectAsState()
+
+    Text(stringResource(id = R.string.efficiency_label), style = MaterialTheme.typography.titleLarge)
+
+    panelTypes.forEach { panelType ->
+        PanelTypeCard(panelType, efficiency.toFloat(), viewModel, focusManager)
+    }
+
+    LearnMoreLink()
+    InfoHelpButton("${stringResource(id = R.string.efficiency)} ~ ${efficiency.toInt()}%", stringResource(id = R.string.panelEfficencyHelp))
+
 }
 
 @Composable
 fun PanelTypeCard(
     panelType: SolarPanelType,
     selectedEfficiency: Float,
-    onSelected: (Float) -> Unit,
-    viewModel: MapScreenViewModel,
+    viewModel: MapViewModel,
     focusManager: FocusManager
 ) {
+    val onSelected: (Float) -> Unit = { viewModel.efficiencyState.value = it.toDouble() }
     val selected = selectedEfficiency == panelType.efficiency
     val glowAlpha by animateFloatAsState(
         targetValue = if (selected) 1f else 0f,
@@ -344,7 +304,7 @@ fun PanelTypeCard(
             )
             .clickable {
                 onSelected(panelType.efficiency)
-                viewModel.efficiencyInput = panelType.efficiency.toString()
+                viewModel.efficiencyState.value = panelType.efficiency.toDouble()
                 focusManager.clearFocus()
             },
         colors = CardDefaults.cardColors(
@@ -402,39 +362,17 @@ fun LearnMoreLink(
 
 @Composable
 fun ResultNavigationButton(
-    areaState: String,
-    coordinates: Pair<Double, Double>?,
-    angle: Float,
-    efficiency: Float,
-    azimuth: Float,
-    height: Double?,
+    viewModel: MapViewModel,
     navController: NavController,
-    viewModel: MapScreenViewModel,
-    weatherViewModel: WeatherViewModel
 ) {
-    if (areaState.isNotEmpty() && coordinates != null) {
+    //if (viewModel.area > 0 && viewModel.coordinates != null) {
         Button(
             onClick = {
-                viewModel.areaInput = areaState
-                viewModel.angleInput = angle.toString()
-                viewModel.efficiencyInput = efficiency.toString()
-                viewModel.directionInput = azimuth.toInt().toString()
-
-                val (lat, lon) = coordinates
-
-                weatherViewModel.loadWeatherData(
-                    lat = lat,
-                    lon = lon,
-                    height = height,
-                    slope = angle.toInt(),
-                    azimuth = azimuth.toInt()
-                )
-
                 navController.navigate("result")
             },
             //modifier = Modifier.align(Alignment.CenterHorizontally)
         ) {
             Text("Gå til resultater")
         }
-    }
+    //}
 }

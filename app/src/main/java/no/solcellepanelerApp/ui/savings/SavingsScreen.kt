@@ -1,4 +1,4 @@
-package no.solcellepanelerApp.ui.result
+package no.solcellepanelerApp.ui.savings
 
 import android.annotation.SuppressLint
 import androidx.compose.animation.AnimatedVisibility
@@ -31,14 +31,12 @@ import androidx.compose.material3.CardDefaults
 
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedCard
-import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableDoubleStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
@@ -55,7 +53,6 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
-import androidx.navigation.NavController
 import co.yml.charts.axis.AxisData
 import co.yml.charts.common.model.Point
 import co.yml.charts.ui.barchart.models.BarData
@@ -76,101 +73,54 @@ import com.airbnb.lottie.compose.rememberLottieComposition
 import com.google.accompanist.flowlayout.FlowRow
 import no.solcellepanelerApp.R
 import no.solcellepanelerApp.model.electricity.ChartType
-import no.solcellepanelerApp.ui.font.FontScaleViewModel
-import no.solcellepanelerApp.ui.home.HomeTopBar
-import no.solcellepanelerApp.ui.navigation.AppearanceBottomSheet
-import no.solcellepanelerApp.ui.navigation.BottomBar
-import no.solcellepanelerApp.ui.navigation.HelpBottomSheet
-import no.solcellepanelerApp.ui.navigation.TopBar
 import no.solcellepanelerApp.ui.reusables.AppScaffoldController
 import no.solcellepanelerApp.ui.reusables.IconTextRow
 import no.solcellepanelerApp.ui.reusables.SimpleTutorialOverlay
 import no.solcellepanelerApp.ui.theme.ThemeMode
 import no.solcellepanelerApp.ui.theme.ThemeState
-import no.solcellepanelerApp.ui.theme.isDarkThemeEnabled
 
 @SuppressLint("MutableCollectionMutableState", "DefaultLocale")
-
 @Composable
-fun EnergySavingsScreen(
+fun SavingsScreen(
     isMonthly: Boolean, // Toggle between monthly and yearly view
     month: String = "", // Only needed for monthly view
     energyProduced: Double,
     energyPrice: Double,
-    navController: NavController,
-    fontScaleViewModel: FontScaleViewModel,
-    weatherViewModel: WeatherViewModel,
     appScaffoldController: AppScaffoldController,
-    contentPadding: PaddingValues
+    contentPadding: PaddingValues,
+    savingsViewModel: SavingsViewModel = SavingsViewModel(),
 ) {
-    val savings: Double = energyProduced * energyPrice
-    val weather by weatherViewModel.weatherData.collectAsState()
-    val calculationResult by weatherViewModel.calculationResults.collectAsState()
+    val savings by savingsViewModel.savings.collectAsState()
+    val currentEnergy by savingsViewModel.currentEnergy.collectAsState()
+    val connectedDevices by savingsViewModel.connectedDevices.collectAsState()
+    val weather by savingsViewModel.weatherData.collectAsState()
+    val calculationResult by savingsViewModel.calculationResults.collectAsState()
+
+    val devices = savingsViewModel.devices
+    val deviceIcons = savingsViewModel.deviceIcons
+
     var showOverlay by remember { mutableStateOf(true) }
-    var currentEnergy by remember { mutableDoubleStateOf(energyProduced) }
 
-    // Device data
-    val devices = listOf(
-        "El-Car" to 100.0,
-        "Fridge" to 30.0,
-        "Heater" to 60.0,
-        "Laptop" to 10.0,
-        "Washing Machine" to 20.0,
-        "TV" to 15.0,
-        "Air Conditioner" to 50.0,
-        "Microwave" to 25.0,
-        "Dishwasher" to 35.0,
-        "Vacuum Cleaner" to 8.0
-    )
-
-    val deviceIcons = mapOf(
-        "Fridge" to R.drawable.kitchen_24px,
-        "Washing Machine" to R.drawable.local_laundry_service_24px,
-        "TV" to R.drawable.tv_24px,
-        "Laptop" to R.drawable.laptop_windows_24px,
-        "Air Conditioner" to R.drawable.mode_fan_24px,
-        "Heater" to R.drawable.fireplace_24px,
-        "Microwave" to R.drawable.microwave_24px,
-        "Dishwasher" to R.drawable.dishwasher_24px,
-        "El-Car" to R.drawable.directions_car_24px,
-        "Vacuum Cleaner" to R.drawable.vacuum_24px,
-    )
-
-    val preConnected = listOf("Fridge", "TV", "Laptop")
-
-    var connectedDevices by remember {
-        mutableStateOf(
-            devices
-                .filter { it.first in preConnected }
-                .associate { it.first to it.second }
-                .toMutableMap()
-        )
-    }
-
-    // Animation for current energy value
     val animatedEnergy = animateFloatAsState(
         targetValue = currentEnergy.toFloat(),
         animationSpec = tween(durationMillis = 500, easing = LinearEasing)
     ).value
 
-    // Animation for color based on energy change
     val energyColor = animateColorAsState(
         targetValue = if (currentEnergy < 0) MaterialTheme.colorScheme.error else MaterialTheme.colorScheme.primary,
         animationSpec = tween(durationMillis = 500, easing = LinearEasing)
     ).value
 
-    // Create scroll state that we can observe
     val scrollState = rememberScrollState()
-    // Control text visibility based on scroll position
     val showHeaderText by remember {
         derivedStateOf {
-            // Hide text when scrolled beyond a threshold
             scrollState.value < 2000
         }
     }
 
     val monthlyTitle = stringResource(R.string.monthly_savings, month)
     val yearlyTitle = stringResource(R.string.yearly_savings)
+
     LaunchedEffect(Unit) {
         val screenTitle = if (isMonthly)
             monthlyTitle
@@ -179,14 +129,17 @@ fun EnergySavingsScreen(
         appScaffoldController.setTopBar(screenTitle)
     }
 
-
+    LaunchedEffect(energyProduced, energyPrice) {
+        savingsViewModel.initialize(energyProduced, energyPrice)
+    }
 
     if (showOverlay) {
         SimpleTutorialOverlay(
             onDismiss = { showOverlay = false },
-            "Se hvor mye du sparer \n\n Trykk på de ulike enhetene for å se *trenger en god fromulering* \n\nScroll opp for mer informasjon!"
+            "Se hvor mye du sparer \n\n Trykk på de ulike enhetene for å se *trenger en god formulering* \n\nScroll opp for mer informasjon!"
         )
     }
+
     Box(
         modifier = Modifier
             .padding(contentPadding)
@@ -203,7 +156,6 @@ fun EnergySavingsScreen(
                 exit = fadeOut()
             ) {
                 Column(horizontalAlignment = Alignment.CenterHorizontally) {
-                    // Savings text
                     if (isMonthly) {
                         Text(
                             text = buildAnnotatedString {
@@ -256,7 +208,6 @@ fun EnergySavingsScreen(
                         )
                     }
 
-                    // Energy display below the savings text
                     if (currentEnergy < 0) {
                         IconTextRow(
                             iconRes = R.drawable.baseline_battery_charging_full_24,
@@ -281,18 +232,13 @@ fun EnergySavingsScreen(
             }
             Column(
                 modifier = Modifier
-                    .weight(1f) // Take remaining height
-                    .verticalScroll(scrollState), // Use our observable scroll state
+                    .weight(1f)
+                    .verticalScroll(scrollState),
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
-
-                // Energy production visualization
                 Column(
                     horizontalAlignment = Alignment.CenterHorizontally,
                 ) {
-
-
-                    // House and devices visualization
                     Column(
                         modifier = Modifier.fillMaxSize(),
                         horizontalAlignment = Alignment.CenterHorizontally
@@ -300,7 +246,6 @@ fun EnergySavingsScreen(
                         HouseAnimation()
                         EnergyFlowDown()
 
-                        // Device grid using FlowRow
                         FlowRow(
                             mainAxisSpacing = 12.dp,
                             crossAxisSpacing = 12.dp,
@@ -330,17 +275,7 @@ fun EnergySavingsScreen(
                                             )
                                         )
                                         .clickable {
-                                            if (connected) {
-                                                connectedDevices =
-                                                    connectedDevices.toMutableMap()
-                                                        .apply { remove(name) }
-                                                currentEnergy += value
-                                            } else {
-                                                connectedDevices =
-                                                    connectedDevices.toMutableMap()
-                                                        .apply { put(name, value) }
-                                                currentEnergy -= value
-                                            }
+                                            savingsViewModel.toggleDevice(name)
                                         },
                                     colors = CardDefaults.cardColors(
                                         containerColor = if (connected) MaterialTheme.colorScheme.surface else MaterialTheme.colorScheme.surfaceVariant
@@ -419,8 +354,6 @@ fun EnergySavingsScreen(
 
                     }
                 }
-
-
             }
         }
     }
@@ -442,8 +375,8 @@ fun EnergyFlowAnimationDown() {
             composition = composition,
             progress = { progress },
             modifier = Modifier
-                .fillMaxWidth()
-                .aspectRatio(100.dp / 30.dp)
+                .fillMaxSize()
+                .padding(top = 20.dp)
         )
     }
 }
@@ -489,6 +422,7 @@ fun EnergyFlowDown() {
             )
     )
 }
+
 
 @SuppressLint("UnusedBoxWithConstraintsScope")
 @Composable
@@ -631,6 +565,7 @@ fun Chart(data: Array<Double>, measure: String = "cm") {
         }
 
     }
+
 }
 
 @Composable
@@ -651,6 +586,7 @@ fun MonthlyChartSection(
         Chart(data = data, measure = unit)
     }
 }
+
 @Composable
 fun MultiLineChart(
     datasets: List<Pair<String, Array<Double>>>,
@@ -679,7 +615,7 @@ fun MultiLineChart(
         Color.Magenta
     )
 
-    val lines = processedDatasets.mapIndexed { index, (label, data) ->
+    val lines = processedDatasets.mapIndexed { index, (_, data) ->
         Line(
             dataPoints = data.mapIndexed { i, value -> Point(i.toFloat(), value.toFloat()) },
             lineStyle = LineStyle(color = colors[index % colors.size]),

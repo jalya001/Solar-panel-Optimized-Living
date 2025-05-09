@@ -34,31 +34,25 @@ import androidx.navigation.navArgument
 import no.solcellepanelerApp.R
 
 import no.solcellepanelerApp.ui.electricity.PriceScreen
-import no.solcellepanelerApp.ui.electricity.PriceScreenViewModel
-import no.solcellepanelerApp.ui.font.FontScaleViewModel
+import no.solcellepanelerApp.ui.electricity.PriceViewModel
 import no.solcellepanelerApp.ui.home.HomeScreen
 import no.solcellepanelerApp.ui.home.HomeTopBar
 import no.solcellepanelerApp.ui.infoscreen.InfoScreen
 import no.solcellepanelerApp.ui.map.MapScreen
-import no.solcellepanelerApp.ui.map.MapScreenViewModel
 import no.solcellepanelerApp.ui.onboarding.OnboardingScreen
-import no.solcellepanelerApp.ui.result.EnergySavingsScreen
+import no.solcellepanelerApp.ui.savings.SavingsScreen
 import no.solcellepanelerApp.ui.result.ResultScreen
 
-import no.solcellepanelerApp.ui.result.WeatherViewModel
 import no.solcellepanelerApp.ui.reusables.AppScaffoldController
 import no.solcellepanelerApp.ui.theme.isDarkThemeEnabled
 
 @Composable
 fun Nav(
     navController: NavHostController,
-    fontScaleViewModel: FontScaleViewModel,
     appScaffoldController: AppScaffoldController,
     contentPadding: PaddingValues
 ) {
-    val mapScreenViewModel: MapScreenViewModel = viewModel()
-    val weatherViewModel: WeatherViewModel = viewModel()
-    val priceScreenViewModel : PriceScreenViewModel = viewModel()
+    val priceViewModel : PriceViewModel = viewModel()
 
     val titles = mapOf(
         "prices" to stringResource(R.string.price_title),
@@ -95,26 +89,24 @@ fun Nav(
 
         composable("home") { HomeScreen(
             navController,
-            priceScreenViewModel = priceScreenViewModel,
+            priceViewModel = priceViewModel,
             contentPadding = contentPadding
         ) }
         composable("map") {
             MapScreen(
-                mapScreenViewModel,
                 navController,
-                weatherViewModel,
                 appScaffoldController,
                 contentPadding = contentPadding
             )
         }
         composable("result") {
             ResultScreen(
-                navController, mapScreenViewModel, weatherViewModel, contentPadding
+                navController, contentPadding
             )
         }
         composable("prices") {
             PriceScreen(
-                viewModel = priceScreenViewModel,
+                viewModel = priceViewModel,
                 contentPadding = contentPadding
             )
         }
@@ -126,18 +118,12 @@ fun Nav(
         savingsComposable(
             route = "monthly_savings/{month}/{energyProduced}/{energyPrice}",
             isMonthly = true,
-            navController = navController,
-            fontScaleViewModel = fontScaleViewModel,
-            weatherViewModel = weatherViewModel,
             appScaffoldController = appScaffoldController,
             contentPadding = contentPadding
         )
         savingsComposable(
             route = "yearly_savings/{energyProduced}/{energyPrice}",
             isMonthly = false,
-            navController = navController,
-            fontScaleViewModel = fontScaleViewModel,
-            weatherViewModel = weatherViewModel,
             appScaffoldController = appScaffoldController,
             contentPadding = contentPadding
         )
@@ -260,9 +246,6 @@ fun TopBar(
 fun NavGraphBuilder.savingsComposable(
     route: String,
     isMonthly: Boolean,
-    navController: NavHostController,
-    fontScaleViewModel: FontScaleViewModel,
-    weatherViewModel: WeatherViewModel,
     appScaffoldController: AppScaffoldController,
     contentPadding: PaddingValues
 ) {
@@ -283,14 +266,11 @@ fun NavGraphBuilder.savingsComposable(
         val energyProduced = backStackEntry.arguments?.getString("energyProduced")?.toDoubleOrNull() ?: 0.0
         val energyPrice = backStackEntry.arguments?.getString("energyPrice")?.toDoubleOrNull() ?: 0.0
 
-        EnergySavingsScreen(
+        SavingsScreen(
             isMonthly = isMonthly,
             month = if (isMonthly) month else "",
             energyProduced = energyProduced,
             energyPrice = energyPrice,
-            navController = navController,
-            fontScaleViewModel = fontScaleViewModel,
-            weatherViewModel = weatherViewModel,
             appScaffoldController = appScaffoldController,
             contentPadding = contentPadding
         )

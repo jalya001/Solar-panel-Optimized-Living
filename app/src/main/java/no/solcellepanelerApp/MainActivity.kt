@@ -76,7 +76,6 @@ class MainActivity : ComponentActivity() {
             ) { padding ->
                 Nav(
                     navController = navController,
-                    fontScaleViewModel = fontScaleViewModel,
                     appScaffoldController = appScaffoldController,
                     contentPadding = padding
                 )
