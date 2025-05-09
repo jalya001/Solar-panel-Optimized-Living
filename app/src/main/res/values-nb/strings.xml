@@ -176,7 +176,8 @@ Når du er fornøyd, trykk på "Bekreft tegning" for å fortsette.
     <string name="roofAreaHelp"> Det totale arealet på taket som er egnet for solcellepaneler, målt i kvadratmeter (m²) </string>
     <string name="roofAngleHelp"> Også kjent som helning. Dette er hvor bratt taket er. Paneler fungerer best når de er vinklet mot solen.</string>
     <string name="panelEfficencyHelp"> Hvor godt panelene omdanner sollys til strøm. Vanligvis mellom 16–20 % </string>
-    <string name="panelDirectionHelp">Også kalt azimuth. Sørvendt gir som regel best effekt i Norge, men appen beregner dette ut fra din lokasjon.</string>
+    <string name="panelDirectionHelp">Retning (azimuth) viser hvilken himmelretning panelet peker mot – for eksempel nord, øst, sør eller vest.
+Animasjonen viser hvordan solen beveger seg over himmelen i løpet av dagen. Hvor mye solenergi panelet mottar, avhenger av om det er vendt i retning solen kommer fra.</string>
     <string name="more_info_solar_panels">Les mer om solcellepaneler</string>
     <string name="monocrystalline">Monokrystallinsk</string>
     <string name="monocrystalline_efficiency">(18–23%)</string>
