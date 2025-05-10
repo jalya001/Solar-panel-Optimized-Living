@@ -7,6 +7,8 @@ import org.junit.Test
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertTrue
 
+// TBD: These might be outdated now
+
 class WeatherRepositoryTest {
     private val mockPvgisApi = mockk<PVGISApi>()
     private val mockFrostApi = mockk<FrostApi>()

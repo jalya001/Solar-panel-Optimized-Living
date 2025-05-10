@@ -19,45 +19,71 @@ class ResultViewModel : ViewModel() {
     private val weatherRepository = WeatherRepository.WeatherRepositoryProvider.instance
     private val userDataRepository = UserDataRepository.UserDataRepositoryProvider.instance
 
-    val coordinatesFlow = userDataRepository.coordinatesState.stateFlow
-    val areaFlow = userDataRepository.areaState.stateFlow
-    val angleFlow = userDataRepository.angleState.stateFlow // Make into int all the way
-    val directionFlow = userDataRepository.directionState.stateFlow
-    val efficiencyFlow = userDataRepository.efficiencyState.stateFlow
-    val selectedRegionFlow = userDataRepository.selectedRegionState.stateFlow
-    val heightFlow = userDataRepository.height
+    val coordinatesState = userDataRepository.coordinatesState
+    val areaState = userDataRepository.areaState
+    val angleState = userDataRepository.angleState // Make into int all the way
+    val directionState = userDataRepository.directionState
+    val efficiencyState = userDataRepository.efficiencyState
+    val selectedRegionState = userDataRepository.selectedRegionState
+    val height = userDataRepository.height
 
     val weatherDataFlow = weatherRepository.weatherData
 
-    init {
+    private var hasInitialized = false
+
+    fun initialize() {
+        if (hasInitialized) return
+        hasInitialized = true
+
         viewModelScope.launch {
-            Log.d("HELLO HELLO coords",coordinatesFlow.value.toString())
-            Log.d("HELLO HELLO area",areaFlow.value.toString())
-            Log.d("HELLO HELLO angle",angleFlow.value.toString())
-            Log.d("HELLO HELLO direction",directionFlow.value.toString())
-            Log.d("HELLO HELLO efficiency",efficiencyFlow.value.toString())
-            Log.d("HELLO HELLO region",selectedRegionFlow.value.toString())
-            Log.d("HELLO HELLO height",heightFlow.value.toString())
-            if (coordinatesFlow.value != null) {
-                userDataRepository.getHeight()
-                val lat = coordinatesFlow.value!!.latitude
-                val lon = coordinatesFlow.value!!.longitude
-                loadWeatherData(lat, lon, heightFlow.value, angleFlow.value.toInt(), directionFlow.value.toInt())
-                if (_uiState.value == UiState.SUCCESS) {
-                    calculateSolarPanelOutput(areaFlow.value, efficiencyFlow.value)
-                    calculateTemperatureFactors()
-                } else {
-                    _errorScreen.value = { UnexpectedErrorScreen() }
+            try {
+                _uiState.value = UiState.LOADING
+
+                val coordinates = coordinatesState.value ?: throw IllegalStateException("Coordinates missing")
+                userDataRepository.fetchHeight()
+
+                Log.d("ResultViewModel coords",coordinatesState.value.toString())
+                Log.d("ResultViewModel area",areaState.value.toString())
+                Log.d("ResultViewModel angle",angleState.value.toString())
+                Log.d("ResultViewModel direction",directionState.value.toString())
+                Log.d("ResultViewModel efficiency",efficiencyState.value.toString())
+                Log.d("ResultViewModel region",selectedRegionState.value.toString())
+                Log.d("ResultViewModel height",height.value.toString())
+
+                val lat = coordinates.latitude
+                val lon = coordinates.longitude
+
+                weatherRepository.getPanelWeatherData(lat, lon, height.value, angleState.value.toInt() , directionState.value.toInt())
+
+                if (weatherDataFlow.value!!.isEmpty()) {
+                    _errorScreen.value = { NoDataErrorScreen() }
                     _uiState.value = UiState.ERROR
+                    return@launch
+                } else if (weatherDataFlow.value!!.size != 4) {
+                    _errorScreen.value = { PartialDataErrorScreen() }
+                    _uiState.value = UiState.ERROR
+                    return@launch
                 }
-            } else {
-               _errorScreen.value = { UnexpectedErrorScreen() }
-               _uiState.value = UiState.ERROR
+
+                val area = areaState.value
+                val efficiency = efficiencyState.value
+
+                calculateSolarPanelOutput(area, efficiency)
+                calculateTemperatureFactors()
+
+                _uiState.value = UiState.SUCCESS
+
+                Log.d("ResultViewModel", "Calculation: ${calculationResults.value}")
+            } catch (t: Throwable) {
+                Log.e("ResultViewModel", "Error loading panel weather data", t)
+                _uiState.value = UiState.ERROR
+                _errorScreen.value = (t as? ApiException)?.getErrorScreen()?: { UnexpectedErrorScreen() }
+                return@launch
             }
         }
     }
 
-    fun calculateTemperatureFactors() {
+    private fun calculateTemperatureFactors() {
         _temperatureFactors.value =
             weatherRepository.weatherData.value!!["mean(air_temperature P1M)"]!!
             .map { temp -> 1 + (-0.44) * (temp - 25)
@@ -78,7 +104,6 @@ class ResultViewModel : ViewModel() {
     private val _temperatureFactors = MutableStateFlow<List<Double>?>(null)
     val temperatureFactors: StateFlow<List<Double>?> = _temperatureFactors
 
-
     private val _uiState = MutableStateFlow(UiState.LOADING)
     val uiState: StateFlow<UiState> = _uiState
     private val _errorScreen = MutableStateFlow<@Composable () -> Unit> { UnknownErrorScreen() }
@@ -87,41 +112,12 @@ class ResultViewModel : ViewModel() {
     //private val _frostDataRim = MutableStateFlow<Array<Double>>(emptyArray())
     //val frostDataRim: StateFlow<Array<Double>> = _frostDataRim
 
-    private val _calculationResults = MutableStateFlow<MonthlyCalculationResult?>(null)
-    val calculationResults: StateFlow<MonthlyCalculationResult?> = _calculationResults
+    val calculationResults = weatherRepository.calculationResults
 
     // Default temperature coefficient for solar panels
     private val temperatureCoefficient = -0.44
 
     private val daysInMonth = arrayOf(31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31)
-
-    private fun loadWeatherData(
-        lat: Double,
-        lon: Double,
-        height: Double?,
-        slope: Int,
-        azimuth: Int,
-    ) {
-        viewModelScope.launch {
-            _uiState.value = UiState.LOADING
-            val result = weatherRepository.getPanelWeatherData(lat, lon, height, slope, azimuth)
-            if (result.isSuccess) {
-                if (weatherDataFlow.value!!.isEmpty()) {
-                    _errorScreen.value = (result.exceptionOrNull() as? ApiException)?.getErrorScreen()?: { NoDataErrorScreen() }
-                    _uiState.value = UiState.ERROR
-                } else if (weatherDataFlow.value!!.size != 4) {
-                    _errorScreen.value = (result.exceptionOrNull() as? ApiException)?.getErrorScreen()?: { PartialDataErrorScreen() }
-                    _uiState.value = UiState.ERROR
-                } else {
-                    _uiState.value = UiState.SUCCESS
-                }
-            } else {
-                _uiState.value = UiState.ERROR
-                println(result.exceptionOrNull())
-                _errorScreen.value = (result.exceptionOrNull() as? ApiException)?.getErrorScreen()?: { UnexpectedErrorScreen() }
-            }
-        }
-    }
 
     /*
     fun fetchRimData(lat: Double, lon: Double, elements: String) {
@@ -134,48 +130,40 @@ class ResultViewModel : ViewModel() {
     */
 
     private fun calculateSolarPanelOutput(panelArea: Double, efficiency: Double) {
-        viewModelScope.launch {
-            if (weatherDataFlow.value!!.size != 4) {
-                _errorScreen.value = { PartialDataErrorScreen() }
-                _uiState.value = UiState.ERROR
-                return@launch
-            }
+        val snowCoverData = weatherDataFlow.value!!["mean(snow_coverage_type P1M)"]!!
+        val airTempData = weatherDataFlow.value!!["mean(air_temperature P1M)"]!!
+        val cloudCoverData = weatherDataFlow.value!!["mean(cloud_area_fraction P1M)"]!!
+        val radiationData = weatherDataFlow.value!!["mean(PVGIS_radiation P1M)"]!!
 
-            val snowCoverData = weatherDataFlow.value!!["mean(snow_coverage_type P1M)"] ?: emptyArray()
-            val airTempData = weatherDataFlow.value!!["mean(air_temperature P1M)"] ?: emptyArray()
-            val cloudCoverData = weatherDataFlow.value!!["mean(cloud_area_fraction P1M)"] ?: emptyArray()
-            val radiationData = weatherDataFlow.value!!["mean(PVGIS_radiation P1M)"] ?: emptyArray()
-
-            // Process data and calculate energy output
-            val adjustedRadiation = mutableListOf<Double>()
-            val monthlyEnergyOutput = radiationData.indices.map { month ->
-                adjustedRadiation.add(
-                    radiationData[month] *
-                            (1 - (cloudCoverData[month].coerceIn(0.0, 8.0) / 8)) *
-                            (1 - (snowCoverData[month].coerceIn(0.0, 4.0) / 4))
-                )
-                val tempFactor = 1 + temperatureCoefficient * (airTempData[month] - 25)
-                adjustedRadiation[month] * panelArea * (efficiency / 100.0) * tempFactor
-            }
-
-            // Calculate monthly power output (kW)
-            val monthlyPowerOutput = monthlyEnergyOutput.mapIndexed { index, energyKWh ->
-                val totalHours = daysInMonth[index] * 24 // Total hours in the month
-                energyKWh / totalHours // Convert kWh to kW
-            }
-
-            // Calculate yearly total energy output
-            val yearlyEnergyOutput = monthlyEnergyOutput.sum()
-
-            _calculationResults.value = MonthlyCalculationResult(
-                adjustedRadiation = adjustedRadiation,
-                monthlyEnergyOutput = monthlyEnergyOutput,
-                monthlyPowerOutput = monthlyPowerOutput,
-                yearlyEnergyOutput = yearlyEnergyOutput
+        // Process data and calculate energy output
+        val adjustedRadiation = mutableListOf<Double>()
+        val monthlyEnergyOutput = radiationData.indices.map { month ->
+            adjustedRadiation.add(
+                radiationData[month] *
+                        (1 - (cloudCoverData[month].coerceIn(0.0, 8.0) / 8)) *
+                        (1 - (snowCoverData[month].coerceIn(0.0, 4.0) / 4))
             )
+            val tempFactor = 1 + temperatureCoefficient * (airTempData[month] - 25)
+            adjustedRadiation[month] * panelArea * (efficiency / 100.0) * tempFactor
         }
-    }
 
+        // Calculate monthly power output (kW)
+        val monthlyPowerOutput = monthlyEnergyOutput.mapIndexed { index, energyKWh ->
+            val totalHours = daysInMonth[index] * 24 // Total hours in the month
+            energyKWh / totalHours // Convert kWh to kW
+        }
+
+        // Calculate yearly total energy output
+        val yearlyEnergyOutput = monthlyEnergyOutput.sum()
+
+        calculationResults.value = MonthlyCalculationResult(
+            adjustedRadiation = adjustedRadiation,
+            monthlyEnergyOutput = monthlyEnergyOutput,
+            monthlyPowerOutput = monthlyPowerOutput,
+            yearlyEnergyOutput = yearlyEnergyOutput
+        )
+    }
+/*
     fun calculateMonthlyEnergyOutput(
         avgTemp: List<Double>,
         cloudCover: List<Double>,
@@ -192,7 +180,7 @@ class ResultViewModel : ViewModel() {
             adjustedRadiation * panelArea * (efficiency / 100.0) * tempFactor
         }
     }
-
+*/
     fun calculateSavedCO2(energy: Double): Double {
         val norwayEmissionFactor = 0.03 //0.03 kg CO2/kWh
         val norwaySavedCO2 = energy * norwayEmissionFactor

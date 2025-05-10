@@ -12,9 +12,7 @@ import no.solcellepanelerApp.data.weatherdata.WeatherRepository
 class SavingsViewModel : ViewModel() {
     private val weatherRepository = WeatherRepository.WeatherRepositoryProvider.instance
 
-    private val _calculationResults = MutableStateFlow<MonthlyCalculationResult?>(null)
-    val calculationResults: StateFlow<MonthlyCalculationResult?> = _calculationResults
-
+    val calculationResults = weatherRepository.calculationResults
     val weatherDataFlow = weatherRepository.weatherData
 
     private val _connectedDevices = MutableStateFlow<MutableMap<String, Double>>(mutableMapOf())

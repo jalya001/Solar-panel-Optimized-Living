@@ -3,6 +3,8 @@ package no.solcellepanelerApp.data.weatherdata
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import no.solcellepanelerApp.model.reusables.TimedData
+import no.solcellepanelerApp.ui.result.ResultViewModel.MonthlyCalculationResult
+import no.solcellepanelerApp.ui.reusables.StateFlowDelegate
 
 class WeatherRepository(
     private val pvgisDataSource: PVGISApi = PVGISApi(),
@@ -14,6 +16,8 @@ class WeatherRepository(
 
     private val _weatherData = MutableStateFlow<Map<String, Array<Double>>?>(null)
     val weatherData: StateFlow<Map<String, Array<Double>>?> = _weatherData
+
+    var calculationResults = StateFlowDelegate<MonthlyCalculationResult?>(null)
 
     private suspend fun getRadiationData(
         lat: Double,
@@ -39,24 +43,25 @@ class WeatherRepository(
         height: Double?,
         slope: Int,
         azimuth: Int,
-    ): Result<Map<String, Array<Double>>> {
-        val radiationResult = getRadiationData(lat, lon, slope, azimuth)
-        if (radiationResult.isFailure) return Result.failure(radiationResult.exceptionOrNull()!!)
-        val radiationData = radiationResult.getOrNull()
+    ) {
+        val radiationData = getRadiationData(lat, lon, slope, azimuth)
+            .getOrElse { throw it }
+
         val frostElements = listOf(
-            "mean(air_temperature P1M)", // This needs to come before snow, or else it will give an error
+            "mean(air_temperature P1M)", // This needs to come before snow or else you die
             "mean(snow_coverage_type P1M)",
             "mean(cloud_area_fraction P1M)"
         )
-        val frostResult = getFrostData(lat, lon, height, frostElements)
-        if (frostResult.isFailure) return Result.failure(frostResult.exceptionOrNull()!!)
 
-        val dataMap: MutableMap<String, Array<Double>> = frostResult.getOrNull()?: mutableMapOf()
-        if (!radiationData.isNullOrEmpty()) {
+        val frostData = getFrostData(lat, lon, height, frostElements).getOrElse { throw it }
+
+        val dataMap: MutableMap<String, Array<Double>> = frostData.toMutableMap()
+        if (radiationData.isNotEmpty()) {
             dataMap["mean(PVGIS_radiation P1M)"] = radiationData
         }
+
         _weatherData.value = dataMap
-        return Result.success(dataMap)
+        println("HELLO HELLO $dataMap")
     }
 
     suspend fun fetchRimData(

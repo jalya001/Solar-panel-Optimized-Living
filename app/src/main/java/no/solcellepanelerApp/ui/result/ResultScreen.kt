@@ -18,6 +18,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
@@ -49,10 +50,14 @@ fun ResultScreen(
     resultViewModel: ResultViewModel = viewModel(),
 ) {
     val errorScreen by resultViewModel.errorScreen.collectAsState()
-    val selectedRegion by resultViewModel.selectedRegionFlow.collectAsState()
-    val calc by resultViewModel.calculationResults.collectAsState()
+    val selectedRegion by resultViewModel.selectedRegionState.stateFlow.collectAsState()
+    val calc by resultViewModel.calculationResults.stateFlow.collectAsState()
     Log.d("CALC", calc.toString())
     val uiState by resultViewModel.uiState.collectAsState()
+
+    LaunchedEffect(Unit) {
+        resultViewModel.initialize()
+    }
 
     val months = listOf(
         stringResource(R.string.month_january),
@@ -155,7 +160,7 @@ private fun MonthDataDisplay(
     var expanded by remember { mutableStateOf(false) }
     var selectedMonthIndex by remember { mutableIntStateOf(0) }
     val temperatureFactors = resultViewModel.temperatureFactors.collectAsState().value ?: emptyList()
-    val calculationResults = resultViewModel.calculationResults.collectAsState().value!!
+    val calculationResults = resultViewModel.calculationResults.stateFlow.collectAsState().value!! // This is a dup
 
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,

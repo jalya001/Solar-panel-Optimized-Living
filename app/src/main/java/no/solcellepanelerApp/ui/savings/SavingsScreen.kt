@@ -94,8 +94,8 @@ fun SavingsScreen(
     val savings by savingsViewModel.savings.collectAsState()
     val currentEnergy by savingsViewModel.currentEnergy.collectAsState()
     val connectedDevices by savingsViewModel.connectedDevices.collectAsState()
-    val weather = savingsViewModel.weatherDataFlow.collectAsState().value ?: emptyMap()
-    val calculationResult by savingsViewModel.calculationResults.collectAsState()
+    val weather = savingsViewModel.weatherDataFlow.collectAsState().value!!
+    val calculationResult by savingsViewModel.calculationResults.stateFlow.collectAsState()
 
     val devices = savingsViewModel.devices
     val deviceIcons = savingsViewModel.deviceIcons

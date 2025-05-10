@@ -31,11 +31,11 @@ class UserDataRepository(
         return result
     }
 
-    suspend fun getHeight(): Double? {
+    suspend fun fetchHeight() {
         if (coordinatesState.value != null) {
-            return elevationApi.fetchElevation(coordinatesState.value!!)
+            _height.value = elevationApi.fetchElevation(coordinatesState.value!!)
         } else {
-            return null
+            _height.value = null
         }
     }
 
