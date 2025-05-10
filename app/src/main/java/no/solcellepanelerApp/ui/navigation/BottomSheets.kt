@@ -250,7 +250,7 @@ fun AppearanceBottomSheet(
                         ModeCard(
                             label = stringResource(id = R.string.light_mode),
                             iconRes = R.drawable.light_mode_24px,
-                            selected = ThemeState.themeMode == ThemeMode.LIGHT && !followSystem,
+                            //selected = ThemeState.themeMode == ThemeMode.LIGHT && !followSystem,
                             onClick = {
                                 followSystem = false
                                 ThemeState.themeMode = ThemeMode.LIGHT
@@ -260,7 +260,7 @@ fun AppearanceBottomSheet(
                         ModeCard(
                             label = stringResource(id = R.string.dark_mode),
                             iconRes = R.drawable.dark_mode_24px,
-                            selected = ThemeState.themeMode == ThemeMode.DARK && !followSystem,
+                            //selected = ThemeState.themeMode == ThemeMode.DARK && !followSystem,
                             onClick = {
                                 followSystem = false
                                 ThemeState.themeMode = ThemeMode.DARK

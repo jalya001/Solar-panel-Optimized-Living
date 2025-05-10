@@ -29,6 +29,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import com.airbnb.lottie.compose.LottieAnimation
 import com.airbnb.lottie.compose.LottieCompositionSpec
@@ -45,7 +46,7 @@ import no.solcellepanelerApp.ui.reusables.SavingsMonth_Card
 fun ResultScreen(
     navController: NavController,
     contentPadding: PaddingValues,
-    resultViewModel: ResultViewModel = ResultViewModel(),
+    resultViewModel: ResultViewModel = viewModel(),
 ) {
     val errorScreen by resultViewModel.errorScreen.collectAsState()
     val selectedRegion by resultViewModel.selectedRegionFlow.collectAsState()

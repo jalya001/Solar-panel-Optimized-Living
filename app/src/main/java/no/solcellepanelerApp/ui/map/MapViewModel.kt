@@ -25,10 +25,12 @@ import no.solcellepanelerApp.model.electricity.Region
 import android.content.Context
 import android.content.pm.PackageManager
 import android.location.Location
+import androidx.compose.runtime.snapshots.SnapshotStateList
 import androidx.core.content.ContextCompat
 import com.google.android.gms.maps.model.CameraPosition
 import com.google.maps.android.compose.CameraPositionState
 import com.google.maps.android.compose.MapUiSettings
+import no.solcellepanelerApp.ui.result.ResultViewModel.UiState
 import kotlin.math.ceil
 import no.solcellepanelerApp.util.fetchCoordinates as activityToCoordinates
 
@@ -44,7 +46,8 @@ class MapViewModel : ViewModel() {
 
     var address by mutableStateOf("")
     var isPolygonVisible by mutableStateOf(false)
-    var drawingEnabled = MutableStateFlow(false)
+    private val _drawingEnabled = MutableStateFlow(false)
+    val drawingEnabled: StateFlow<Boolean> = _drawingEnabled
 
     var selectedCoordinates by mutableStateOf<LatLng?>(null)
 
@@ -61,13 +64,16 @@ class MapViewModel : ViewModel() {
     val mapUiSettings = MapUiSettings()
 
     private val _polygonData = mutableStateListOf<LatLng>()
-    val polygonData: List<LatLng> get() = _polygonData
+    val polygonData: SnapshotStateList<LatLng> get() = _polygonData
 
     private val _snackbarMessages = MutableSharedFlow<String>()
     val snackbarMessages = _snackbarMessages.asSharedFlow()
 
     fun selectLocation(lat: Double, lon: Double) {
-        coordinatesState.value = LatLng(lat, lon)
+        val coordinates = LatLng(lat, lon)
+        selectedCoordinates = coordinates
+        coordinatesState.value = coordinates
+        Log.d("HELLO HELLO", coordinatesState.value.toString())
     }
 
     fun fetchCoordinates(address: String) {
@@ -100,10 +106,16 @@ class MapViewModel : ViewModel() {
     }
 
     fun startDrawing() {
-        drawingEnabled = MutableStateFlow(true)
-        coordinatesState.value = null
+        _drawingEnabled.value = true
+        Log.d("drawing is :",drawingEnabled.toString())
+
+        selectedCoordinates = null
         removePoints()
         index = 0
+    }
+
+    fun stopDrawing() {
+        _drawingEnabled.value = false
     }
 
     fun addPoint(latLng: LatLng) {
@@ -138,7 +150,7 @@ class MapViewModel : ViewModel() {
     }
 
     fun clearSelection() {
-        coordinatesState.value = null
+        selectedCoordinates = null
         removePoints()
         index = 0
     }

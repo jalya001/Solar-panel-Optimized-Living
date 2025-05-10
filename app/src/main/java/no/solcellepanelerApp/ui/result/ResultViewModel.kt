@@ -1,5 +1,6 @@
 package no.solcellepanelerApp.ui.result
 
+import android.util.Log
 import androidx.compose.runtime.Composable
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -30,13 +31,28 @@ class ResultViewModel : ViewModel() {
 
     init {
         viewModelScope.launch {
-            userDataRepository.getHeight()
+            Log.d("HELLO HELLO coords",coordinatesFlow.value.toString())
+            Log.d("HELLO HELLO area",areaFlow.value.toString())
+            Log.d("HELLO HELLO angle",angleFlow.value.toString())
+            Log.d("HELLO HELLO direction",directionFlow.value.toString())
+            Log.d("HELLO HELLO efficiency",efficiencyFlow.value.toString())
+            Log.d("HELLO HELLO region",selectedRegionFlow.value.toString())
+            Log.d("HELLO HELLO height",heightFlow.value.toString())
             if (coordinatesFlow.value != null) {
+                userDataRepository.getHeight()
                 val lat = coordinatesFlow.value!!.latitude
                 val lon = coordinatesFlow.value!!.longitude
                 loadWeatherData(lat, lon, heightFlow.value, angleFlow.value.toInt(), directionFlow.value.toInt())
-                calculateSolarPanelOutput(areaFlow.value, efficiencyFlow.value)
-                calculateTemperatureFactors()
+                if (_uiState.value == UiState.SUCCESS) {
+                    calculateSolarPanelOutput(areaFlow.value, efficiencyFlow.value)
+                    calculateTemperatureFactors()
+                } else {
+                    _errorScreen.value = { UnexpectedErrorScreen() }
+                    _uiState.value = UiState.ERROR
+                }
+            } else {
+               _errorScreen.value = { UnexpectedErrorScreen() }
+               _uiState.value = UiState.ERROR
             }
         }
     }

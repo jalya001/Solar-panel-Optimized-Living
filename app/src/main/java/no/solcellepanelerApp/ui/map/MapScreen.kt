@@ -95,13 +95,14 @@ import no.solcellepanelerApp.ui.theme.lightBlue
 import no.solcellepanelerApp.ui.theme.lightGrey
 import no.solcellepanelerApp.ui.theme.orange
 import no.solcellepanelerApp.util.RequestLocationPermission
+import androidx.lifecycle.viewmodel.compose.viewModel
 
 @Composable
 fun MapScreen(
     navController: NavController,
     appScaffoldController: AppScaffoldController,
     contentPadding: PaddingValues,
-    viewModel: MapViewModel = MapViewModel(),
+    viewModel: MapViewModel = viewModel(),
 ) {
     var showMapOverlay by remember { mutableStateOf(true) }
     var showDrawOverlay by remember { mutableStateOf(false) }
@@ -149,10 +150,11 @@ fun DisplayScreen(
 
     val coordinates by viewModel.coordinatesState.stateFlow.collectAsState() // This is for later calculation
     val selectedCoordinates = viewModel.selectedCoordinates // This is for onscreen handling stuff idk
-    val polygonPoints = viewModel.polygonData
+    val polygonData = viewModel.polygonData
+    Log.d("HELLO HELLO", "UI Polygon has ${polygonData.size} points")
     val isPolygonVisible = viewModel.isPolygonVisible
     val drawingEnabled by viewModel.drawingEnabled.collectAsState()
-    Log.d("drawing from screen is :",drawingEnabled.toString())
+    Log.d("HELLO HELLO drawing from screen is :",drawingEnabled.toString())
     val showBottomSheet = viewModel.showBottomSheet
     val showMissingLocationDialog = viewModel.showMissingLocationDialog
     val locationPermissionGranted = viewModel.locationPermissionGranted
@@ -203,6 +205,7 @@ fun DisplayScreen(
             }
         ) {
             if (!drawingEnabled) {
+                Log.d("HELLO HELLO", "drawing not")
                 selectedCoordinates?.let {
                     markerState.position = it
                     MapMarker(
@@ -214,7 +217,8 @@ fun DisplayScreen(
                     )
                 }
             } else {
-                polygonPoints.forEachIndexed { index, point ->
+                Log.d("HELLO HELLO", "YES DRAW")
+                polygonData.forEachIndexed { index, point ->
                     val pointMarkerState = rememberMarkerState(position = point)
 
                     LaunchedEffect(pointMarkerState) {
@@ -232,7 +236,7 @@ fun DisplayScreen(
 
                 if (isPolygonVisible) {
                     Polygon(
-                        points = polygonPoints.toList(),
+                        points = polygonData,
                         fillColor = lightBlue.copy(0.6f),
                         strokeColor = lightBlue,
                         strokeWidth = 5f
@@ -265,7 +269,7 @@ fun DisplayScreen(
         ControlsColumn(
             selectedCoordinates = selectedCoordinates,
             coordinates = coordinates,
-            polygonPoints = polygonPoints,
+            polygonData = polygonData,
             isPolygonVisible = isPolygonVisible,
             onConfirmLocation = {
                 if (coordinates != null) {
@@ -287,7 +291,7 @@ fun DisplayScreen(
                     viewModel.showMissingLocationDialog = true
                 }
             },
-            areaText = viewModel.calculateAreaOfPolygon(polygonPoints).toString(),
+            areaText = viewModel.calculateAreaOfPolygon(polygonData).toString(),
             onMapUseLocationClick = {
                 mapUseLocation(
                     viewModel.currentLocation,
@@ -318,7 +322,7 @@ fun DisplayScreen(
 fun ControlsColumn(
     selectedCoordinates: LatLng?,
     coordinates: LatLng?,
-    polygonPoints: List<LatLng>,
+    polygonData: List<LatLng>,
     isPolygonVisible: Boolean,
     onConfirmLocation: () -> Unit,
     areaText: String,
@@ -403,7 +407,7 @@ fun ControlsColumn(
 
         if (drawingEnabled) {
             DrawingControls(
-                polygonPoints = polygonPoints,
+                polygonData = polygonData,
                 viewModel = viewModel,
                 toggleBottomSheet = onToggleBottomSheet,
                 onToggleVisibility = onTogglePolygonVisibility
@@ -496,7 +500,8 @@ fun AddressInputField(
             onDone = {
                 viewModel.fetchCoordinates(address)
             }
-        ))
+        )
+    )
 }
 
 @Composable
@@ -539,7 +544,7 @@ fun LocationNotSelectedDialog(
 
 @Composable
 private fun DrawingControls(
-    polygonPoints: List<LatLng>,
+    polygonData: List<LatLng>,
     viewModel: MapViewModel,
     onToggleVisibility: () -> Unit,
     toggleBottomSheet: () -> Unit,
@@ -567,8 +572,8 @@ private fun DrawingControls(
                         modifier = Modifier
                             .clickable {
                                 viewModel.areaState.value =
-                                    viewModel.calculateAreaOfPolygon(polygonPoints).toDouble()
-                                viewModel.drawingEnabled= MutableStateFlow(false)
+                                    viewModel.calculateAreaOfPolygon(polygonData).toDouble()
+                                viewModel.stopDrawing()
                                 viewModel.togglePolygonVisibility()
                                 viewModel.removePoints()
                                 toggleBottomSheet()
@@ -606,7 +611,7 @@ private fun DrawingControls(
                 }
 
 
-                if (polygonPoints.size >= 3) {
+                if (polygonData.size >= 3) {
                     Card(
                         modifier = Modifier
                             .clickable {
@@ -646,7 +651,7 @@ private fun DrawingControls(
 
                 }
 
-                if (polygonPoints.size >= 2) {
+                if (polygonData.size >= 2) {
                     Card(
                         modifier = Modifier
                             .clickable {
@@ -686,7 +691,7 @@ private fun DrawingControls(
                     }
                 }
 
-                if (polygonPoints.isNotEmpty()) {
+                if (polygonData.isNotEmpty()) {
                     Card(
                         modifier = Modifier
                             .clickable {
