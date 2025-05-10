@@ -20,6 +20,12 @@ import kotlin.math.pow
 import kotlin.math.sin
 import kotlin.math.sqrt
 
+/*
+ * This code is not good and could be a lot better, but it is also not as bad as it seems.
+ * For an explanation on the latter, see our report.
+ * For an explanation on the former, see FrostApi.md.
+ */
+
 class FrostApi {
     private val basicAuth =
         "4868c766-7477-484f-b767-6e5776a60a26:49ee1988-7461-4452-97a3-8ae5cbb133d7"
@@ -1191,5 +1197,4 @@ class FrostApi {
         }
         return Result.failure(ApiException(ApiError.UNKNOWN_ERROR)) // Did I mention I hate kotlin?
     }
-
 }
