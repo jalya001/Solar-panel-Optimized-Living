@@ -53,6 +53,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import co.yml.charts.axis.AxisData
 import co.yml.charts.common.model.Point
 import co.yml.charts.ui.barchart.models.BarData
@@ -88,7 +89,7 @@ fun SavingsScreen(
     energyPrice: Double,
     appScaffoldController: AppScaffoldController,
     contentPadding: PaddingValues,
-    savingsViewModel: SavingsViewModel = SavingsViewModel(),
+    savingsViewModel: SavingsViewModel = viewModel(),
 ) {
     val savings by savingsViewModel.savings.collectAsState()
     val currentEnergy by savingsViewModel.currentEnergy.collectAsState()
