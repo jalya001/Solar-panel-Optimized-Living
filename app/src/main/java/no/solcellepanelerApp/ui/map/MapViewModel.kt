@@ -8,8 +8,6 @@ import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.google.android.gms.maps.model.LatLng
@@ -86,7 +84,7 @@ class MapViewModel : ViewModel() {
                     _snackbarMessages.emit("Adresse ikke funnet, prøv igjen.")
                 }
             } catch (e: Exception) {
-                Log.e("MapScreenViewModel", "Error fetching coordinates", e)
+                Log.e("MapViewModel", "Error fetching coordinates", e)
                 _snackbarMessages.emit("Noe gikk galt ved henting av koordinater.")
             }
         }
