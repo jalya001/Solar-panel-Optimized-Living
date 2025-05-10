@@ -36,7 +36,6 @@ import co.yml.charts.ui.linechart.model.SelectionHighlightPoint
 import co.yml.charts.ui.linechart.model.SelectionHighlightPopUp
 import co.yml.charts.ui.linechart.model.ShadowUnderLine
 import no.solcellepanelerApp.R
-import no.solcellepanelerApp.model.electricity.ChartType
 import no.solcellepanelerApp.model.electricity.ElectricityPrice
 import no.solcellepanelerApp.ui.theme.ThemeMode
 import no.solcellepanelerApp.ui.theme.ThemeState
