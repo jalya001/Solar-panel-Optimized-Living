@@ -6,8 +6,8 @@
     <string name="install_panels_title">Finn ditt \n solcellepotensial!</string>
     <string name="install_panels_desc">Legg inn adresse og detaljer — se estimert strøm og besparelse med solcellepaneler.</string>
     <string name="last_location">Siste posisjon (trenger bedre navn)</string>
-    <string name="prices"> Strømpriser </string>
-    <string name="live_energy"> Direkte energi %1$d:00</string>
+    <string name="prices"> Sjekk Strømpriser </string>
+    <string name="live_energy"> Direkte Solenergi %1$d:00</string>
     <string name="help"> Hjelp</string>
     <string name="appearance"> Utseende</string>
     <string name="dark_mode">Mørkmodus </string>
@@ -147,21 +147,30 @@
     <string name="need_help">Trenger hjelp?</string>
     <string name="tech_problems_content">Problemer med appen</string>
     <string name="how_to_draw">Hvordan tegne i kartet</string>
-
-    <string name="how_to_draw_content">
-Slik tegner du:\n
-Trykk på kartet for å plassere nummererte punkter. Plasser minst 3 punkter i en rektangulær eller polygonform.\n\n
-
-Slik flytter du et punkt:\n
-Hold inne på et punkt i minst 3 sekunder for å dra og flytte det.\n
-Du kan også fjerne punkter og plassere dem på nytt.\n\n
-
-Slik ser du tegningen din:\n
-Trykk på "Vis areal" for å forhåndsvise markeringen.\n
-Når du er fornøyd, trykk på "Bekreft tegning" for å fortsette.
-</string>
-
-
+    <string name="how_to_draw1">
+        Slik tegner du:
+    </string>
+    <string name="how_to_draw2">
+        Trykk på kartet for å plassere nummererte punkter i rekkefølge. Plasser minst 3 punkter i en rektangulær eller polygonform.
+    </string>
+    <string name="how_to_draw3">
+        Slik flytter du et punkt:
+    </string>
+    <string name="how_to_draw4">
+        Hold inne på et punkt i minst 3 sekunder for å dra og flytte det.
+    </string>
+    <string name="how_to_draw5">
+        Du kan også fjerne punkter og plassere dem på nytt.
+    </string>
+    <string name="how_to_draw6">
+        Slik ser du tegningen din:
+    </string>
+    <string name="how_to_draw7">
+        Trykk på "Vis areal" for å forhåndsvise markeringen.
+    </string>
+    <string name="how_to_draw8">
+        Når du er fornøyd, trykk på "Bekreft tegning" for å fortsette.
+    </string>
     <string name="need_help_drawing">Trenger du hjelp med å tegne?</string>
     <string name="tech_problems_title">Problemer</string>
     <string name="help_draw">Draw on the map</string>
@@ -339,7 +348,7 @@ Når du er fornøyd, trykk på "Bekreft tegning" for å fortsette.
     <string name="y_axis_name">Strømpris (kr/kWh)</string>
     <string name="change_time_arrows">Bruk pilene for å bytte time</string>
     <string name="time">Tid:</string>
-    <string name="price_now">Nåværende strømpris i region:</string>
+    <string name="price_now">Nåværende strømpris i:</string>
     <string name="highest_price">Høyeste pris</string>
     <string name="lowest_price">Laveste pris</string>
     <string name="price_now_card">Pris nå</string>
@@ -359,15 +368,22 @@ Når du er fornøyd, trykk på "Bekreft tegning" for å fortsette.
     <string name="saving_overlay">
         Se hvor mye du sparer\n\n
         Trykk på de ulike enhetene for å se hvor mye de bidrar til besparelsen av energi\n\n
-        Scroll opp for mer informasjon!
+        Scroll opp for mer informasjon!\n
+        Trykk på punktene på grafene for å se data for hver måned.
     </string>
     <string name="home_overlay">
         Velkommen til hjemskjermen din!\n\n
-        <!--        Trykk på  &quot;Finn ditt socellepotensiale&quot; for å se hvor mye du sparer på solcellepaneler!\n\n-->
-        Trykk på strømprisene nede til høyre for å få mer detaljer om strømprisene\n\n
+        Trykk på "Finn Ditt Socellepotensiale" for å se hvor mye du sparer på solcellepaneler basert på adressen din!\n\n
+        Trykk på "Sjekk Strømprisene" for å få mer detaljer om strømprisene.\n\n
+        Se din Live Solenergi for din lokasjon, time for time.
     </string>
     <string name="map_overlay">Søk etter adressen din, bruk enhetsposisjon, eller trykk på kartet for å velge en lokasjon</string>
-    <string name="map_draw_overlay">" Trykk på kartet for å starte å tegne ønsket område\n\n Trykk på kartet for å plassere markører.\n\n Plasser minst 3 markører i rektangelform og i riktig rekkefølge.\n\n Hold inne en markør i 3 sekunder for å flytte den.\n\n Trykk på "Vis område" for å forhåndsvise tegningen."</string>
+    <string name="map_draw_overlay">
+        Trykk på kartet for å starte å tegne ønsket område.\n\n
+        Trykk på kartet for å plassere markører.\n\n
+        Plasser minst 3 markører i riktig rekkefølge for å få ønsket område.\n\n
+        Hold inne en markør i 3 sekunder for å flytte den.\n\n
+        Trykk på "Vis Område" for å forhåndsvise tegningen."</string>
     <string name="price_overlay">
         Her kan du se strømprisene i dag, time for time.\n\n
         Trykk på pilene eller puktene på grafen for å se strømpriser for ulike tidspunkter på dagen.

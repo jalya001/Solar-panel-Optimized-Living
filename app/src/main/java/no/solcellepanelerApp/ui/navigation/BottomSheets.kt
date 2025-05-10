@@ -83,7 +83,7 @@ import no.solcellepanelerApp.ui.map.MapScreenViewModel
 import no.solcellepanelerApp.ui.result.WeatherViewModel
 import no.solcellepanelerApp.ui.reusables.DecimalFormatter
 import no.solcellepanelerApp.ui.reusables.DecimalInputField
-import no.solcellepanelerApp.ui.reusables.ExpandInfoSection
+import no.solcellepanelerApp.ui.reusables.ExpandInfoSectionContent
 import no.solcellepanelerApp.ui.reusables.ModeCard
 import no.solcellepanelerApp.ui.reusables.MySection
 import no.solcellepanelerApp.ui.theme.ThemeMode
@@ -209,9 +209,36 @@ fun HelpBottomSheet(
                     }
 
                     item {
-                        ExpandInfoSection(
+                        ExpandInfoSectionContent(
                             title = stringResource(id = R.string.how_to_draw),
-                            content = stringResource(id = R.string.how_to_draw_content),
+                            content = {
+                                Column {
+                                    Spacer(modifier = Modifier.height(16.dp))
+                                    Text(
+                                        stringResource(id = R.string.how_to_draw1),
+                                        style = MaterialTheme.typography.titleMedium
+                                    )
+                                    Text(text = "• " + stringResource(id = R.string.how_to_draw2))
+
+                                    Spacer(modifier = Modifier.height(16.dp))
+
+                                    Text(
+                                        stringResource(id = R.string.how_to_draw3),
+                                        style = MaterialTheme.typography.titleMedium
+                                    )
+                                    Text(text = "• " + stringResource(id = R.string.how_to_draw4))
+                                    Text(text = "• " + stringResource(id = R.string.how_to_draw5))
+
+                                    Spacer(modifier = Modifier.height(16.dp))
+
+                                    Text(
+                                        stringResource(id = R.string.how_to_draw6),
+                                        style = MaterialTheme.typography.titleMedium
+                                    )
+                                    Text(text = "• " + stringResource(id = R.string.how_to_draw7))
+                                    Text(text = "• " + stringResource(id = R.string.how_to_draw8))
+                                }
+                            },
                             initiallyExpanded = expandSection == "draw"
                         )
                     }
