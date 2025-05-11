@@ -1,4 +1,4 @@
-package no.solcellepanelerApp.data.electricitydata
+package no.solcellepanelerApp.data.pricedata
 
 import android.annotation.SuppressLint
 import android.util.Log

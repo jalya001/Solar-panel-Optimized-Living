@@ -1,4 +1,4 @@
-package no.solcellepanelerApp.data.mapdata
+package no.solcellepanelerApp.data.userdata
 
 import android.util.Log
 import io.ktor.client.HttpClient

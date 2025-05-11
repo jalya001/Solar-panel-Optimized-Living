@@ -33,8 +33,8 @@ import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
 import no.solcellepanelerApp.R
 
-import no.solcellepanelerApp.ui.electricity.PriceScreen
-import no.solcellepanelerApp.ui.electricity.PriceViewModel
+import no.solcellepanelerApp.ui.price.PriceScreen
+import no.solcellepanelerApp.ui.price.PriceViewModel
 import no.solcellepanelerApp.ui.home.HomeScreen
 import no.solcellepanelerApp.ui.home.HomeTopBar
 import no.solcellepanelerApp.ui.infoscreen.InfoScreen

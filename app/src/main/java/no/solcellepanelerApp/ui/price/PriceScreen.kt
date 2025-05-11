@@ -1,4 +1,4 @@
-package no.solcellepanelerApp.ui.electricity
+package no.solcellepanelerApp.ui.price
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues

@@ -15,14 +15,14 @@ import android.location.Location
 import androidx.core.content.ContextCompat
 import kotlinx.coroutines.delay
 import no.solcellepanelerApp.MainActivity
-import no.solcellepanelerApp.data.electricitydata.ElectricityPriceRepository
+import no.solcellepanelerApp.data.pricedata.PriceRepository
 import no.solcellepanelerApp.model.reusables.updateStaleData
 import no.solcellepanelerApp.util.fetchCoordinates
 import no.solcellepanelerApp.util.mapLocationToRegion
 
 class HomeViewModel : ViewModel() {
     private val weatherRepository = WeatherRepository.WeatherRepositoryProvider.instance
-    private val electricityPriceRepository = ElectricityPriceRepository.ElectricityPriceRepositoryProvider.instance
+    private val priceRepository = PriceRepository.ElectricityPriceRepositoryProvider.instance
 
     private val _isLoading = MutableStateFlow(false)
     val isLoading: StateFlow<Boolean> = _isLoading

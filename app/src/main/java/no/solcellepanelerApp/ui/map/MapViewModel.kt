@@ -17,8 +17,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.launch
-import no.solcellepanelerApp.data.mapdata.UserDataRepository
-import no.solcellepanelerApp.model.electricity.Region
+import no.solcellepanelerApp.data.userdata.UserDataRepository
 
 import android.content.Context
 import android.content.pm.PackageManager
@@ -28,7 +27,6 @@ import androidx.core.content.ContextCompat
 import com.google.android.gms.maps.model.CameraPosition
 import com.google.maps.android.compose.CameraPositionState
 import com.google.maps.android.compose.MapUiSettings
-import no.solcellepanelerApp.ui.result.ResultViewModel.UiState
 import java.math.BigDecimal
 import kotlin.math.ceil
 import no.solcellepanelerApp.util.fetchCoordinates as activityToCoordinates

@@ -1,4 +1,4 @@
-package no.solcellepanelerApp.ui.electricity
+package no.solcellepanelerApp.ui.price
 
 import android.util.Log
 import androidx.compose.foundation.clickable

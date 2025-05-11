@@ -1,4 +1,4 @@
-package no.solcellepanelerApp.ui.electricity
+package no.solcellepanelerApp.ui.price
 
 import android.util.Log
 import androidx.lifecycle.ViewModel
@@ -6,7 +6,7 @@ import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
-import no.solcellepanelerApp.data.electricitydata.ElectricityPriceRepository
+import no.solcellepanelerApp.data.pricedata.PriceRepository
 import no.solcellepanelerApp.model.electricity.ElectricityPrice
 import no.solcellepanelerApp.model.electricity.Region
 import no.solcellepanelerApp.model.reusables.updateStaleData
@@ -14,7 +14,7 @@ import java.time.LocalDate
 import java.time.ZonedDateTime
 
 class PriceViewModel(
-    private val repository: ElectricityPriceRepository = ElectricityPriceRepository(),
+    private val repository: PriceRepository = PriceRepository(),
 ) : ViewModel() {
     enum class UiState {
         LOADING, SUCCESS, ERROR

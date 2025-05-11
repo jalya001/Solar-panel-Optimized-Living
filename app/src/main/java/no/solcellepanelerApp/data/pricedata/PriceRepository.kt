@@ -1,4 +1,4 @@
-package no.solcellepanelerApp.data.electricitydata
+package no.solcellepanelerApp.data.pricedata
 
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -7,7 +7,7 @@ import no.solcellepanelerApp.model.electricity.Region
 import no.solcellepanelerApp.model.reusables.TimedData
 import java.time.LocalDate
 
-class ElectricityPriceRepository {
+class PriceRepository {
     private val api = ElectricityPriceApi()
     private var selectedRegion: String = Region.OSLO.regionCode
 
@@ -33,8 +33,8 @@ class ElectricityPriceRepository {
     }
 
     object ElectricityPriceRepositoryProvider {
-        val instance: ElectricityPriceRepository by lazy {
-            ElectricityPriceRepository()
+        val instance: PriceRepository by lazy {
+            PriceRepository()
         }
     }
 }

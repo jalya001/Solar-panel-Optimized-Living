@@ -42,8 +42,8 @@ import com.airbnb.lottie.compose.rememberLottieComposition
 import no.solcellepanelerApp.R
 import no.solcellepanelerApp.model.electricity.ElectricityPrice
 import no.solcellepanelerApp.model.electricity.Region
-import no.solcellepanelerApp.ui.electricity.HomePriceCard
-import no.solcellepanelerApp.ui.electricity.PriceViewModel
+import no.solcellepanelerApp.ui.price.HomePriceCard
+import no.solcellepanelerApp.ui.price.PriceViewModel
 import no.solcellepanelerApp.ui.handling.ErrorScreen
 import no.solcellepanelerApp.ui.handling.LoadingScreen
 import no.solcellepanelerApp.ui.reusables.MyDisplayCard

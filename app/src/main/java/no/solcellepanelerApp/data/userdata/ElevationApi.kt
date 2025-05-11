@@ -1,4 +1,4 @@
-package no.solcellepanelerApp.data.mapdata
+package no.solcellepanelerApp.data.userdata
 
 import com.google.android.gms.maps.model.LatLng
 import io.ktor.client.*

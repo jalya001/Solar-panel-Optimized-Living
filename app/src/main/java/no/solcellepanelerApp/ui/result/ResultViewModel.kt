@@ -7,7 +7,7 @@ import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
-import no.solcellepanelerApp.data.mapdata.UserDataRepository
+import no.solcellepanelerApp.data.userdata.UserDataRepository
 import no.solcellepanelerApp.data.weatherdata.ApiException
 import no.solcellepanelerApp.data.weatherdata.WeatherRepository
 import no.solcellepanelerApp.ui.handling.NoDataErrorScreen

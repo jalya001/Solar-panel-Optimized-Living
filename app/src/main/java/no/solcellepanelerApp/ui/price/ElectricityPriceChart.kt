@@ -1,4 +1,4 @@
-package no.solcellepanelerApp.ui.electricity
+package no.solcellepanelerApp.ui.price
 
 import android.annotation.SuppressLint
 import androidx.compose.foundation.layout.Box
