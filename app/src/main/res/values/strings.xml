@@ -340,7 +340,7 @@
     <string name="y_axis_name">Electricity price (NOK/kWh)</string>
     <string name="change_time_arrows">Use the arrows to change the time</string>
     <string name="time">Time:</string>
-    <string name="price_now">Current electricity price in:</string>
+    <string name="price_now">Current electricity price in</string>
     <string name="highest_price">Highest price</string>
     <string name="lowest_price">Lowest price</string>
     <string name="price_now_card">Price now</string>

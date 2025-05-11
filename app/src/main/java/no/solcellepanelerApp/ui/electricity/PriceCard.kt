@@ -40,6 +40,7 @@ import no.solcellepanelerApp.ui.theme.ThemeState
 import java.time.ZoneId
 import java.time.ZonedDateTime
 
+// Show electricity prices for today - current, highest, and lowest
 @Composable
 fun PriceCard(
     prices: List<ElectricityPrice>,
@@ -61,6 +62,8 @@ fun PriceCard(
     val highestPrice = prices.maxByOrNull { it.NOK_per_kWh }
     val lowestPrice = prices.minByOrNull { it.NOK_per_kWh }
 
+    // Sets the label for the electricity price card,
+    // showing whether the price is for now, the future, or in the past
     val label = when {
         ZonedDateTime.parse(currentDisplayedPrice?.time_start).hour == currentHour -> stringResource(R.string.price_now_card)
         hourIndex > currentHour ->
@@ -75,7 +78,7 @@ fun PriceCard(
                     (if (currentHour - hourIndex > 1) stringResource(R.string.price_suffix_part2) else "") + stringResource(R.string.past_price_suffix)
     }
 
-
+    // The price card
     Card(
         modifier = Modifier
             .fillMaxWidth()
@@ -87,6 +90,7 @@ fun PriceCard(
                 horizontalArrangement = Arrangement.Center,
                 verticalAlignment = Alignment.CenterVertically
             ) {
+                // Current price
                 currentDisplayedPrice?.let {
                     PriceRow(
                         icon = Icons.Default.AccessTime,
@@ -108,6 +112,7 @@ fun PriceCard(
                             color = MaterialTheme.colorScheme.onSurfaceVariant
                         )
 
+                        // Navigation arrows that let the user cycle through hourly electricity prices
                         Row(
                             modifier = Modifier
                                 .fillMaxWidth()
@@ -115,6 +120,7 @@ fun PriceCard(
                             horizontalArrangement = Arrangement.Center,
                             verticalAlignment = Alignment.CenterVertically
                         ) {
+                            // Previous hour(s) (if available)
                             Icon(
                                 imageVector = Icons.AutoMirrored.Filled.ArrowBack,
                                 contentDescription = "Forrige time",
@@ -125,6 +131,7 @@ fun PriceCard(
                                     },
                                 tint = MaterialTheme.colorScheme.primary
                             )
+                            // Next hour(s) (if not at the end)
                             Icon(
                                 imageVector = Icons.AutoMirrored.Filled.ArrowForward,
                                 contentDescription = "Neste time",
@@ -140,6 +147,7 @@ fun PriceCard(
                 }
             }
 
+            // Highest price
             Spacer(modifier = Modifier.height(16.dp))
             highestPrice?.let {
                 PriceRow(
@@ -149,6 +157,7 @@ fun PriceCard(
                     time = it.getTimeRange()
                 )
             }
+            // Lowest price
             Spacer(modifier = Modifier.height(16.dp))
             lowestPrice?.let {
                 PriceRow(
@@ -162,6 +171,7 @@ fun PriceCard(
     }
 }
 
+// Composable that displays an electricity price row with optional icon, label, price and time
 @Composable
 fun PriceRow(
     icon: ImageVector?,
@@ -206,6 +216,7 @@ fun PriceRow(
     }
 }
 
+// Price card for home screen, show current electricity price based on location (if granted), default is Oslo
 @Composable
 fun HomePriceCard(
     prices: List<ElectricityPrice>,
@@ -230,9 +241,8 @@ fun HomePriceCard(
 
     currentPrice?.let {
         Column(
-            modifier = Modifier
-//                .fillMaxSize()
-            ,
+//            modifier = Modifier
+//                .fillMaxSize(),
             verticalArrangement = Arrangement.Top,
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
@@ -257,6 +267,7 @@ fun HomePriceCard(
             ) {
                 Spacer(modifier = Modifier.height(20.dp))
 
+                // Animation
                 ElectricityTowers()
 
             }

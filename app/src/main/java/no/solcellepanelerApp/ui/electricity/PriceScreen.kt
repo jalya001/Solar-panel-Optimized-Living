@@ -74,6 +74,7 @@ fun PriceScreen(
         selectedRegion?.let { viewModel.setRegion(it) }
     }
 
+    // Overlay only first time the app is used
     LaunchedEffect(Unit) {
         if (!onboardingUtils.isPriceOverlayShown()) {
             showOverlay = true
@@ -107,6 +108,7 @@ fun PriceScreen(
                 .padding(padding),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
+            Spacer(modifier = Modifier.height(12.dp))
             selectedRegion?.let {
                 RegionDropdown(it) { newRegion ->
                     selectedRegion = newRegion
@@ -120,17 +122,17 @@ fun PriceScreen(
             when (priceUiState) {
                 is PriceUiState.Loading -> {
                     Spacer(modifier = Modifier.height(260.dp))
-                    LoadingScreen()
+                    LoadingScreen()     // While fetching data
                 }
                 is PriceUiState.Error -> {
                     Spacer(modifier = Modifier.height(260.dp))
-                    ErrorScreen()
+                    ErrorScreen()       // If network error (or other error)
                 }
+                // On success when retrieving electricity prices from API, show graph and price card
                 is PriceUiState.Success -> {
                     val prices = (priceUiState as PriceUiState.Success).prices
                     Spacer(modifier = Modifier.height(24.dp))
                     ElectricityPriceChart(prices = prices)
-                    Spacer(modifier = Modifier.height(16.dp))
                     val currentHour = ZonedDateTime.now(ZoneId.of("Europe/Oslo")).hour
                     val initialIndex =
                         prices.indexOfFirst { ZonedDateTime.parse(it.time_start).hour == currentHour }
@@ -156,6 +158,8 @@ fun PriceScreen(
     }
 }
 
+// Dropdown to select region in case user does not grant location permission - or just is curious
+// about electricity prices in Norway
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun RegionDropdown(

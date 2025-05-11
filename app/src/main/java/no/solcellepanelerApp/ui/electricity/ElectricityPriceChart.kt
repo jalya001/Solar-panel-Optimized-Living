@@ -60,7 +60,7 @@ fun ElectricityPriceChart(prices: List<ElectricityPrice>) {
     // Prepare X-axis (hours)
     val xAxisData = AxisData.Builder()
         .axisStepSize(12.dp)
-        .steps(prices.size / 2) // Showing fewer steps
+        .steps(prices.size / 2) // Showing fewer steps (12 points but 24 points)
         .labelData { i -> if (i % 2 == 0) "%02d".format(i) else "" }
         .axisLabelColor(MaterialTheme.colorScheme.tertiary)
         .axisLineColor(MaterialTheme.colorScheme.tertiary)
@@ -68,11 +68,11 @@ fun ElectricityPriceChart(prices: List<ElectricityPrice>) {
         .bottomPadding(32.dp)
         .build()
 
-    // Prepare Y-axis (price)
+    // Prepare Y-axis (price) - min and max value on the y-axis is today's min and max price
     val maxPrice = prices.maxOf { it.NOK_per_kWh }
     val minPrice = prices.minOf { it.NOK_per_kWh }
 
-    val steps = 1
+    val steps = 4
     val stepSize = ((maxPrice - minPrice) / steps).coerceAtLeast(0.1)
 
     val yAxisData = AxisData.Builder()
@@ -105,6 +105,7 @@ fun ElectricityPriceChart(prices: List<ElectricityPrice>) {
                 .fillMaxWidth(),
             contentAlignment = Alignment.Center
         ) {
+            // Make graph interactive, show time and price for selected point
             selectedPoint.value?.let {
                 val hour = it.x.toInt()
                 val price = it.y
@@ -126,6 +127,7 @@ fun ElectricityPriceChart(prices: List<ElectricityPrice>) {
             modifier = Modifier
                 .height(320.dp)
         ) {
+            // Line chart data - plot the chart and the graph
             val lineChartData = LineChartData(
                 linePlotData = LinePlotData(
                     lines = listOf(
@@ -188,7 +190,7 @@ fun ElectricityPriceChart(prices: List<ElectricityPrice>) {
                 style = MaterialTheme.typography.bodySmall,
                 modifier = Modifier
                     .align(Alignment.BottomCenter)
-                    .offset(y = (-5).dp),
+                    .offset(y = (-20).dp),
                 color = MaterialTheme.colorScheme.tertiary
             )
 
@@ -198,7 +200,7 @@ fun ElectricityPriceChart(prices: List<ElectricityPrice>) {
                 style = MaterialTheme.typography.bodySmall,
                 modifier = Modifier
                     .align(Alignment.CenterStart)
-                    .offset(x = (-28).dp, y = (-5).dp)
+                    .offset(x = (-65).dp, y = (-22).dp)
                     .rotate(-90f),
                 color = MaterialTheme.colorScheme.tertiary
             )

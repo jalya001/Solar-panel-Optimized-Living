@@ -15,8 +15,8 @@ class ElectricityPriceApi {
     private val client = HttpClient {
         install(ContentNegotiation) {
             json(Json {
-                ignoreUnknownKeys = true
-            }) //Ignore any unexpected fields in the JSON response
+                ignoreUnknownKeys = true    //Ignore any unexpected fields in the JSON response
+            })
         }
     }
 
