@@ -159,14 +159,16 @@ fun AreaInputRow(
     decimalFormatter: DecimalFormatter,
     viewModel: MapViewModel
 ) {
-    val area by viewModel.areaState.stateFlow.collectAsState()
+    LaunchedEffect(Unit) {
+        viewModel.initializeArea()
+    }
 
     Row {
         DecimalInputField(
             decimalFormatter = decimalFormatter,
-            value = area.toString(),
+            value = viewModel.areaInputText,
             label = stringResource(id = R.string.area_label),
-            onValueChange = { viewModel.areaState.value = it.toDouble() },
+            onValueChange = { input -> viewModel.onAreaInputChanged(input) },
             modifier = Modifier
                 .weight(1f)
                 .padding(end = 4.dp)

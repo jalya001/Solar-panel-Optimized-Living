@@ -29,6 +29,7 @@ import com.google.android.gms.maps.model.CameraPosition
 import com.google.maps.android.compose.CameraPositionState
 import com.google.maps.android.compose.MapUiSettings
 import no.solcellepanelerApp.ui.result.ResultViewModel.UiState
+import java.math.BigDecimal
 import kotlin.math.ceil
 import no.solcellepanelerApp.util.fetchCoordinates as activityToCoordinates
 
@@ -41,6 +42,25 @@ class MapViewModel : ViewModel() {
     val directionState = userDataRepository.directionState
     val efficiencyState = userDataRepository.efficiencyState
     val selectedRegionState = userDataRepository.selectedRegionState
+
+    var areaInputText by mutableStateOf("")
+        private set
+
+    fun initializeArea() {
+        val area = areaState.value
+        if (area == 0.0) {
+            areaInputText = ""
+        } else {
+            areaInputText = BigDecimal(area).stripTrailingZeros().toPlainString()
+        }
+    }
+
+    fun onAreaInputChanged(input: String) {
+        areaInputText = input
+        input.replace(',', '.').toDoubleOrNull()?.let {
+            areaState.value = it
+        }
+    }
 
     var address by mutableStateOf("")
     var isPolygonVisible by mutableStateOf(false)
@@ -148,6 +168,7 @@ class MapViewModel : ViewModel() {
     }
 
     fun clearSelection() {
+        isPolygonVisible = false
         selectedCoordinates = null
         removePoints()
         index = 0

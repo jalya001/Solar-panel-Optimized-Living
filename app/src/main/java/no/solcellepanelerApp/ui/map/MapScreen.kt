@@ -55,6 +55,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.graphics.toArgb
+import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.painterResource
@@ -232,7 +233,7 @@ fun DisplayScreen(
                     )
                 }
 
-                if (isPolygonVisible) {
+                if (isPolygonVisible && polygonData.isNotEmpty()) {
                     Polygon(
                         points = polygonData,
                         fillColor = lightBlue.copy(0.6f),
@@ -407,6 +408,7 @@ fun ControlsColumn(
             DrawingControls(
                 polygonData = polygonData,
                 viewModel = viewModel,
+                isPolygonVisible = isPolygonVisible,
                 toggleBottomSheet = onToggleBottomSheet,
                 onToggleVisibility = onTogglePolygonVisibility
             )
@@ -544,197 +546,113 @@ fun LocationNotSelectedDialog(
 private fun DrawingControls(
     polygonData: List<LatLng>,
     viewModel: MapViewModel,
+    isPolygonVisible: Boolean,
     onToggleVisibility: () -> Unit,
     toggleBottomSheet: () -> Unit,
 ) {
-    Box(
-        modifier = Modifier
-            .fillMaxSize()
-//            .padding(10.dp)
-    ) {
-        Column(
-            modifier = Modifier
-                .align(Alignment.BottomStart)
-//                .width(300.dp)
-        ) {
-            var areaShown by remember { mutableStateOf(false) }
+    Box(modifier = Modifier.fillMaxSize()) {
+        Column(modifier = Modifier.align(Alignment.BottomStart)) {
+            Box(modifier = Modifier.width(270.dp).height(200.dp)) {
 
-            Box(
-                modifier = Modifier
-                    .width(270.dp)
-                    .height(200.dp)
-            )
-            {
-                if (areaShown) {
-                    Card(
-                        modifier = Modifier
-                            .clickable {
-                                viewModel.areaState.value =
-                                    viewModel.calculateAreaOfPolygon(polygonData).toDouble()
-                                viewModel.stopDrawing()
-                                viewModel.togglePolygonVisibility()
-                                viewModel.removePoints()
-                                toggleBottomSheet()
-                            }
-                            .width(130.dp)
-                            .align(Alignment.TopEnd),
-                        colors = CardColors(
-                            containerColor = MaterialTheme.colorScheme.onPrimaryContainer,
-                            contentColor = MaterialTheme.colorScheme.background,
-                            disabledContainerColor = Color(0xFF4CAF50),
-                            disabledContentColor = Color(0xFF4CAF50)
-                        )
-                    ) {
-                        Column(horizontalAlignment = Alignment.CenterHorizontally) {
-                            Icon(
-                                Icons.Filled.CheckCircle,
-                                contentDescription = "Confirm Drawing",
-                                modifier = Modifier.padding(top = 6.dp),
-                            )
-                            Text(
-                                text = stringResource(id = R.string.confirm_drawing),
-                                modifier = Modifier
-                                    .padding(
-                                        top = 2.dp,
-                                        start = 16.dp,
-                                        end = 16.dp,
-                                        bottom = 10.dp
-                                    )
-                                    .width(130.dp),
-                                textAlign = TextAlign.Center,
-                                color = MaterialTheme.colorScheme.background
-                            )
-                        }
-                    }
+                if (isPolygonVisible) {
+                    DrawingControlButton(
+                        modifier = Modifier.align(Alignment.TopEnd),
+                        icon = Icons.Filled.CheckCircle,
+                        label = stringResource(R.string.confirm_drawing),
+                        onClick = {
+                            viewModel.areaState.value =
+                                viewModel.calculateAreaOfPolygon(polygonData).toDouble()
+                            viewModel.stopDrawing()
+                            viewModel.togglePolygonVisibility()
+                            viewModel.removePoints()
+                            toggleBottomSheet()
+                        },
+                        containerColor = MaterialTheme.colorScheme.onPrimaryContainer,
+                        contentColor = MaterialTheme.colorScheme.background
+                    )
                 }
 
-
                 if (polygonData.size >= 3) {
-                    Card(
-                        modifier = Modifier
-                            .clickable {
-                                onToggleVisibility()
-                                areaShown = !areaShown
-                            }
-                            .width(130.dp)
-                            .align(Alignment.TopStart),
-                        colors = CardColors(
-                            containerColor = MaterialTheme.colorScheme.onPrimaryContainer,
-                            contentColor = MaterialTheme.colorScheme.background,
-                            disabledContainerColor = Color(0xFF4CAF50),
-                            disabledContentColor = Color(0xFF4CAF50)
-                        )
-                    ) {
-                        Column(horizontalAlignment = Alignment.CenterHorizontally) {
-                            Icon(
-                                imageVector = if (!areaShown) Icons.Filled.Visibility else Icons.Filled.VisibilityOff,
-                                contentDescription = "Show area",
-                                modifier = Modifier.padding(top = 6.dp),
-                            )
-                            Text(
-                                text = stringResource(id = if (!areaShown) R.string.show_area else R.string.hide_area),
-                                modifier = Modifier
-                                    .padding(
-                                        top = 2.dp,
-                                        start = 16.dp,
-                                        end = 16.dp,
-                                        bottom = 10.dp
-                                    )
-                                    .width(130.dp),
-                                textAlign = TextAlign.Center,
-                                color = MaterialTheme.colorScheme.background
-                            )
-                        }
-                    }
-
+                    DrawingControlButton(
+                        modifier = Modifier.align(Alignment.TopStart),
+                        icon = if (!isPolygonVisible) Icons.Filled.Visibility else Icons.Filled.VisibilityOff,
+                        label = stringResource(
+                            if (!isPolygonVisible) R.string.show_area else R.string.hide_area
+                        ),
+                        onClick = onToggleVisibility,
+                        containerColor = MaterialTheme.colorScheme.onPrimaryContainer,
+                        contentColor = MaterialTheme.colorScheme.background
+                    )
                 }
 
                 if (polygonData.size >= 2) {
-                    Card(
-                        modifier = Modifier
-                            .clickable {
-                                viewModel.removePoints()
-                                onToggleVisibility()
-                            }
-                            .width(130.dp)
-                            .align(Alignment.BottomEnd),
-                        colors = CardColors(
-                            containerColor = MaterialTheme.colorScheme.background,
-                            contentColor = MaterialTheme.colorScheme.onPrimaryContainer,
-                            disabledContainerColor = Color(0xFF4CAF50),
-                            disabledContentColor = Color(0xFF4CAF50)
-                        )
-                    ) {
-                        Column(horizontalAlignment = Alignment.CenterHorizontally) {
-                            Icon(
-                                Icons.Filled.DeleteForever,
-                                contentDescription = "remove all points",
-                                modifier = Modifier.padding(top = 6.dp),
-                            )
-                            Text(
-                                text = stringResource(id = R.string.remove_points),
-                                modifier = Modifier
-                                    .padding(
-                                        top = 2.dp,
-                                        start = 16.dp,
-                                        end = 16.dp,
-                                        bottom = 10.dp
-                                    )
-                                    .width(130.dp),
-                                textAlign = TextAlign.Center,
-                                color = MaterialTheme.colorScheme.onPrimaryContainer
-                            )
-                        }
-
-                    }
+                    DrawingControlButton(
+                        modifier = Modifier.align(Alignment.BottomEnd),
+                        icon = Icons.Filled.DeleteForever,
+                        label = stringResource(R.string.remove_points),
+                        onClick = {
+                            viewModel.clearSelection()
+                        },
+                        containerColor = MaterialTheme.colorScheme.background,
+                        contentColor = MaterialTheme.colorScheme.onPrimaryContainer
+                    )
                 }
 
                 if (polygonData.isNotEmpty()) {
-                    Card(
-                        modifier = Modifier
-                            .clickable {
-                                viewModel.removeLastPoint()
-//                                onToggleVisibility
-                            }
-                            .width(130.dp)
-                            .align(Alignment.BottomStart),
-                        colors = CardColors(
-                            containerColor = MaterialTheme.colorScheme.background,
-                            contentColor = MaterialTheme.colorScheme.onPrimaryContainer,
-                            disabledContainerColor = Color(0xFF4CAF50),
-                            disabledContentColor = Color(0xFF4CAF50)
-                        )
-                    ) {
-                        Column(horizontalAlignment = Alignment.CenterHorizontally) {
-                            Icon(
-                                Icons.AutoMirrored.Filled.Undo,
-                                contentDescription = "remove last point",
-                                modifier = Modifier.padding(top = 6.dp),
-                            )
-                            Text(
-                                text = stringResource(id = R.string.remove_last_point),
-                                modifier = Modifier
-                                    .padding(
-                                        top = 2.dp,
-                                        start = 10.dp,
-                                        end = 10.dp,
-                                        bottom = 10.dp
-                                    )
-                                    .width(130.dp),
-                                textAlign = TextAlign.Center,
-                                color = MaterialTheme.colorScheme.onPrimaryContainer
-                            )
-                        }
-                    }
+                    DrawingControlButton(
+                        modifier = Modifier.align(Alignment.BottomStart),
+                        icon = Icons.AutoMirrored.Filled.Undo,
+                        label = stringResource(R.string.remove_last_point),
+                        onClick = { viewModel.removeLastPoint() },
+                        containerColor = MaterialTheme.colorScheme.background,
+                        contentColor = MaterialTheme.colorScheme.onPrimaryContainer
+                    )
                 }
             }
-
-
         }
     }
-
-
 }
+
+@Composable
+private fun DrawingControlButton(
+    modifier: Modifier = Modifier,
+    icon: ImageVector,
+    label: String,
+    onClick: () -> Unit,
+    containerColor: Color,
+    contentColor: Color
+) {
+    Card(
+        modifier = modifier
+            .width(130.dp)
+            .clickable { onClick() },
+        colors = CardColors(
+            containerColor = containerColor,
+            contentColor = contentColor,
+            disabledContainerColor = containerColor,
+            disabledContentColor = contentColor
+        )
+    ) {
+        Column(horizontalAlignment = Alignment.CenterHorizontally) {
+            Icon(
+                imageVector = icon,
+                contentDescription = label,
+                modifier = Modifier.padding(top = 6.dp),
+                tint = contentColor
+            )
+            Text(
+                text = label,
+                modifier = Modifier
+                    .padding(top = 2.dp, start = 10.dp, end = 10.dp, bottom = 10.dp)
+                    .width(130.dp),
+                textAlign = TextAlign.Center,
+                color = contentColor
+            )
+        }
+    }
+}
+
+
 
 // hentet fra https://stackoverflow.com/questions/70598043/how-to-use-custom-icon-of-google-maps-marker-in-compose
 
