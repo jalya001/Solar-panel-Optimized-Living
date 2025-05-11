@@ -10,13 +10,17 @@ data class TimedData<T>(
 suspend fun <T> updateStaleData(
     currentTime: ZonedDateTime,
     getData: () -> TimedData<T>?,
-    setData: (TimedData<T>) -> Unit,
-    fetchData: suspend () -> T,
+    setData: (TimedData<T>?) -> Unit,
+    fetchData: suspend () -> T?,
 ) {
     val cachedData = getData()
     val isStale = cachedData == null || cachedData.timestamp < currentTime.minusHours(1)
     if (isStale) {
         val fresh = fetchData()
-        setData(TimedData(fresh, currentTime))
+        if (fresh != null) {
+            setData(TimedData(fresh, currentTime))
+        } else {
+            setData(null)
+        }
     }
 }

@@ -51,31 +51,34 @@ class HomeViewModel : ViewModel() {
     init {
         viewModelScope.launch {
             while (true) {
-                _currentTime.value = ZonedDateTime.now()
-                updateCurrentRadiation(_currentTime.value)
                 delay(6_000_000L) // update every now and then
+                _currentTime.value = ZonedDateTime.now()
+                launch { doFetchPrices() }
+                launch { updateCurrentRadiation(_currentTime.value) }
             }
         }
     }
 
-    suspend fun initialize(context: Context) {
-        val permissionGranted = ContextCompat.checkSelfPermission(
-            context,
-            Manifest.permission.ACCESS_FINE_LOCATION
-        ) == PackageManager.PERMISSION_GRANTED
+    fun initialize(context: Context) {
+        viewModelScope.launch {
+            val permissionGranted = ContextCompat.checkSelfPermission(
+                context,
+                Manifest.permission.ACCESS_FINE_LOCATION
+            ) == PackageManager.PERMISSION_GRANTED
 
-        _locationPermissionGranted.value = permissionGranted
+            _locationPermissionGranted.value = permissionGranted
 
-        if (permissionGranted && context is MainActivity) {
-            val location = fetchCoordinates(context)
-            _currentLocation.value = location
-            region.value = location?.let { mapLocationToRegion(it) } ?: Region.OSLO
-        } else {
-            region.value = Region.OSLO
+            if (permissionGranted && context is MainActivity) {
+                val location = fetchCoordinates(context)
+                _currentLocation.value = location
+                region.value = location?.let { mapLocationToRegion(it) } ?: Region.OSLO
+            } else {
+                region.value = Region.OSLO
+            }
+
+            launch { doFetchPrices() }
+            launch { updateCurrentRadiation(_currentTime.value) }
         }
-
-        doFetchPrices() // These two could be parallel
-        updateCurrentRadiation(_currentTime.value)
     }
 
     private suspend fun updateCurrentRadiation(time: ZonedDateTime) {

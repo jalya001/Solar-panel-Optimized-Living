@@ -78,7 +78,7 @@ class WeatherRepository(
             setData = { newData -> _rimData.value = newData },
             fetchData = {
                 val result = frostDataSource.fetchRimData(client, lat, lon, elements)
-                result.getOrElse { emptyArray() }
+                result.getOrElse { null }
             }
         )
     }
