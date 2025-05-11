@@ -167,7 +167,7 @@
         How to see your drawing:
     </string>
     <string name="how_to_draw7">
-        Tap "Show area" to preview your selection.
+        Tap "Show Area" to preview your selection.
     </string>
     <string name="how_to_draw8">
         When you are satisfied, tap "Confirm Drawing" to continue.
@@ -246,7 +246,7 @@
     <string name="temp_factor">Temperature factor: %.2f%%</string>
     <string name="temp_factor_explanation">Temperature factor adjusts the estimated energy output based on average monthly temperature.</string>
     <string name="adj_radiation">Adjusted Radiation: %.2f kWh/m²</string>
-    <string name="adj_radiation_explanation">This is the amount of solar radiation your panels receive, adjust with snow,cloud, and temperature data for your location</string>
+    <string name="adj_radiation_explanation">This is the amount of solar radiation your panels receive, adjust with snow, cloud, and temperature data for your location</string>
     <string name="estimated_energy_prod">Estimated Energy Produced: \n%.2f kWh </string>
     <string name="estimated_powerpr_hour">Estimated Power Produced per Hour: \n%.2f kW</string>
     <string name="show_monthly_savings">Click to see Your Savings In %1$s</string>
@@ -291,28 +291,28 @@
 
     <string name="onboard_title_2">What does the app do?</string>
     <string name="onboard_highlight_1">Save money:</string>
-    <string name="onboard_desc_2_1">Use solar energy instead of electricity from the grid.</string>
+    <string name="onboard_desc_2_1">Use solar energy instead of electricity from the grid.\n</string>
     <string name="onboard_highlight_2">Compare electricity prices:</string>
-    <string name="onboard_desc_2_2">View live electricity prices in your area.</string>
+    <string name="onboard_desc_2_2">View live electricity prices in your area.\n</string>
     <string name="onboard_highlight_3">Reduce carbon footprint:</string>
-    <string name="onboard_desc_2_3">Track how much CO₂ you’re saving.</string>
+    <string name="onboard_desc_2_3">Track how much CO₂ you’re saving.\n</string>
     <string name="onboard_highlight_4">Get insights:</string>
     <string name="onboard_desc_2_4">Visualize your potential savings over time.</string>
 
     <string name="onboard_title_3">How does it work?</string>
     <string name="onboard_how_1">Find address:</string>
-    <string name="onboard_how_desc_1">Choose your house on the map or search by address.</string>
+    <string name="onboard_how_desc_1">Choose your house on the map or search by address.\n</string>
     <string name="onboard_how_2">Fill in details:</string>
-    <string name="onboard_how_desc_2">Enter roof tilt, energy usage, and other info for accuracy.</string>
+    <string name="onboard_how_desc_2">Enter roof tilt, energy usage, and other info for accuracy.\n</string>
     <string name="onboard_how_3">Draw area (optional):</string>
-    <string name="onboard_how_desc_3">Mark where on your roof you want solar panels for better results.</string>
+    <string name="onboard_how_desc_3">Mark where on your roof you want solar panels for better results.\n</string>
     <string name="onboard_how_4">View results:</string>
     <string name="onboard_how_desc_4">See production estimates, savings, and environmental impact.</string>
 
     <string name="onboard_title_4">Location access</string>
     <string name="onboard_desc_4">Grant location access to find your nearest address and optimize the experience.</string>
     <string name="onboard_title_5">Change appearance</string>
-    <string name="onboard_desc_5">Ps. Click on the appearance button in the bottom right to change language, theme and font size.</string>
+    <string name="onboard_desc_5">PS: Click on Appearance in the bottom right to change language, theme and font size.</string>
 
 
     <string name="hide_area">Hide\nArea</string>
@@ -347,7 +347,7 @@
     <string name="future_price_prefix">Price in</string>
     <string name="price_suffix_part1">hour</string>
     <string name="price_suffix_part2">s</string>
-    <string name="past_price_prefix">Price for</string>
+    <string name="past_price_prefix">Price</string>
     <string name="past_price_suffix">ago</string>
     <string name="oslo">Oslo/Eastern Norway</string>
     <string name="kristiansand">Kristiansand/Southern Norway</string>
@@ -375,7 +375,7 @@
         Tap the map to place markers.\n
         Place the markers in correct order to get your desired area.\n
         Hold a marker for 3 seconds to move it.\n
-        Tap "Show area" to preview your drawing.
+        Tap "Show Area" to preview your drawing.
     </string>
     <string name="price_overlay">
         Here you can see today\'s electricity prices, hour by hour.\n\n

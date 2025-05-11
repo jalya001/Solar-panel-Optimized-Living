@@ -75,7 +75,7 @@ fun PriceCard(
             stringResource(R.string.past_price_prefix) +
                 " ${currentHour - hourIndex} " +
                     stringResource(R.string.price_suffix_part1) +
-                    (if (currentHour - hourIndex > 1) stringResource(R.string.price_suffix_part2) else "") + stringResource(R.string.past_price_suffix)
+                    (if (currentHour - hourIndex > 1) stringResource(R.string.price_suffix_part2) else "") + " " + stringResource(R.string.past_price_suffix)
     }
 
     // The price card

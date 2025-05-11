@@ -166,10 +166,10 @@
         Slik ser du tegningen din:
     </string>
     <string name="how_to_draw7">
-        Trykk på "Vis areal" for å forhåndsvise markeringen.
+        Trykk på "Vis Areal" for å forhåndsvise markeringen.
     </string>
     <string name="how_to_draw8">
-        Når du er fornøyd, trykk på "Bekreft tegning" for å fortsette.
+        Når du er fornøyd, trykk på "Bekreft Tegning" for å fortsette.
     </string>
     <string name="need_help_drawing">Trenger du hjelp med å tegne?</string>
     <string name="tech_problems_title">Problemer</string>
@@ -299,28 +299,28 @@
 
     <string name="onboard_title_2">Hva gjør appen?</string>
     <string name="onboard_highlight_1">Spar penger:</string>
-    <string name="onboard_desc_2_1">Bruk solenergi i stedet for strøm fra nettet.</string>
+    <string name="onboard_desc_2_1">Bruk solenergi i stedet for strøm fra strømnettet.\n</string>
     <string name="onboard_highlight_2">Sammenlign strømpriser:</string>
-    <string name="onboard_desc_2_2">Se live strømpriser i ditt område.</string>
+    <string name="onboard_desc_2_2">Se live strømpriser i ditt område.\n</string>
     <string name="onboard_highlight_3">Reduser karbonavtrykk:</string>
-    <string name="onboard_desc_2_3">Følg med på hvor mye CO₂ du sparer.</string>
+    <string name="onboard_desc_2_3">Følg med på hvor mye CO₂ du sparer.\n</string>
     <string name="onboard_highlight_4">Få innsikt:</string>
     <string name="onboard_desc_2_4">Visualiser potensielle besparelser over tid.</string>
 
     <string name="onboard_title_3">Hvordan fungerer det?</string>
     <string name="onboard_how_1">Finn adresse:</string>
-    <string name="onboard_how_desc_1">Velg huset ditt på kartet eller søk etter adresse.</string>
+    <string name="onboard_how_desc_1">Velg huset ditt på kartet eller søk etter adresse.\n</string>
     <string name="onboard_how_2">Fyll inn detaljer:</string>
-    <string name="onboard_how_desc_2">Skriv inn takvinkel, energibruk og annen informasjon for bedre presisjon.</string>
+    <string name="onboard_how_desc_2">Skriv inn takvinkel, energibruk og annen informasjon for bedre presisjon.\n</string>
     <string name="onboard_how_3">Tegn område (valgfritt):</string>
-    <string name="onboard_how_desc_3">Marker hvor på taket du vil ha solcellepaneler for best resultat.</string>
+    <string name="onboard_how_desc_3">Marker hvor på taket du vil ha solcellepaneler for best resultat.\n</string>
     <string name="onboard_how_4">Se resultater:</string>
     <string name="onboard_how_desc_4">Se produksjonsestimater, besparelser og miljøpåvirkning.</string>
 
     <string name="onboard_title_4">Lokasjonstilgang</string>
     <string name="onboard_desc_4">Gi tilgang til enhetslokasjon for å finne nærmeste adresse og få en bedre opplevelse.</string>
     <string name="onboard_title_5">Endre utseende</string>
-    <string name="onboard_desc_5">Ps. Trykk på utseende knappen i nederste høyre hjørnet for å bytte språk, tema og skriftstørrelse</string>
+    <string name="onboard_desc_5">PS: Trykk på Utseende nederst i høyre hjørnet for å bytte språk, tema og skriftstørrelse</string>
 
 
     <string name="hide_area">Skjul\nområde</string>
