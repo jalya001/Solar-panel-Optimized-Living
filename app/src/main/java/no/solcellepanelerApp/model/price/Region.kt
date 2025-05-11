@@ -1,4 +1,4 @@
-package no.solcellepanelerApp.model.electricity
+package no.solcellepanelerApp.model.price
 
 enum class Region(val displayName: String, val regionCode: String) {
     OSLO("Oslo/Øst-Norge", "NO1"),

@@ -73,7 +73,7 @@ import com.airbnb.lottie.compose.animateLottieCompositionAsState
 import com.airbnb.lottie.compose.rememberLottieComposition
 import com.google.accompanist.flowlayout.FlowRow
 import no.solcellepanelerApp.R
-import no.solcellepanelerApp.model.electricity.ChartType
+import no.solcellepanelerApp.model.price.ChartType
 import no.solcellepanelerApp.ui.reusables.AppScaffoldController
 import no.solcellepanelerApp.ui.reusables.IconTextRow
 import no.solcellepanelerApp.ui.reusables.SimpleTutorialOverlay

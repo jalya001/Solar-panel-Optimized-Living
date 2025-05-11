@@ -52,8 +52,6 @@ fun Nav(
     appScaffoldController: AppScaffoldController,
     contentPadding: PaddingValues
 ) {
-    val priceViewModel : PriceViewModel = viewModel()
-
     val titles = mapOf(
         "prices" to stringResource(R.string.price_title),
         "map" to stringResource(R.string.map_title),
@@ -89,7 +87,6 @@ fun Nav(
 
         composable("home") { HomeScreen(
             navController,
-            priceViewModel = priceViewModel,
             contentPadding = contentPadding
         ) }
         composable("map") {
@@ -106,7 +103,6 @@ fun Nav(
         }
         composable("prices") {
             PriceScreen(
-                viewModel = priceViewModel,
                 contentPadding = contentPadding
             )
         }

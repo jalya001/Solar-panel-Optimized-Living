@@ -40,10 +40,8 @@ import com.airbnb.lottie.compose.LottieConstants
 import com.airbnb.lottie.compose.animateLottieCompositionAsState
 import com.airbnb.lottie.compose.rememberLottieComposition
 import no.solcellepanelerApp.R
-import no.solcellepanelerApp.model.electricity.ElectricityPrice
-import no.solcellepanelerApp.model.electricity.Region
+import no.solcellepanelerApp.model.reusables.UiState
 import no.solcellepanelerApp.ui.price.HomePriceCard
-import no.solcellepanelerApp.ui.price.PriceViewModel
 import no.solcellepanelerApp.ui.handling.ErrorScreen
 import no.solcellepanelerApp.ui.handling.LoadingScreen
 import no.solcellepanelerApp.ui.reusables.MyDisplayCard
@@ -55,7 +53,6 @@ import java.time.ZonedDateTime
 fun HomeScreen(
     navController: NavController,
     homeViewModel: HomeViewModel = viewModel(),
-    priceViewModel: PriceViewModel,
     contentPadding: PaddingValues
 ) {
     val context = LocalContext.current
@@ -65,12 +62,7 @@ fun HomeScreen(
     }
 
     val isLoading by homeViewModel.isLoading.collectAsState()
-    val currentRadiationValue by homeViewModel.currentRadiationValue.collectAsState()
-    val selectedRegion by homeViewModel.selectedRegion.collectAsState()
     val currentTime by homeViewModel.currentTime.collectAsState()
-
-    val priceUiState by priceViewModel.priceUiState.collectAsState()
-    val prices = priceViewModel.prices.collectAsState()
 
     if (isLoading) {
         LoadingScreen()
@@ -90,13 +82,11 @@ fun HomeScreen(
             modifier = Modifier.fillMaxWidth(),
             horizontalArrangement = Arrangement.spacedBy(1.dp),
         ) {
-            CurrentRadiationCard(currentRadiationValue, Modifier.weight(1f), currentTime)
+            CurrentRadiationCard(homeViewModel, Modifier.weight(1f), currentTime)
             ElectricityPriceCard(
-                selectedRegion,
+                homeViewModel,
                 navController,
                 Modifier.weight(1f),
-                priceUiState,
-                prices.value?: emptyList() // Makeshift
             )
         }
     }
@@ -146,10 +136,13 @@ fun SolarPanelInstallationCard(navController: NavController) {
 @SuppressLint("DefaultLocale")
 @Composable
 fun CurrentRadiationCard(
-    currentRadiationValue: Double?,
+    homeViewModel: HomeViewModel,
     modifier: Modifier = Modifier,
     currentTime: ZonedDateTime
 ) {
+    val currentRadiationValue by homeViewModel.currentRadiationValue.collectAsState()
+    val rimUiState by homeViewModel.rimUiState.collectAsState()
+
     MyDisplayCard(
         modifier = modifier.height(400.dp),
         style = MaterialTheme.typography.displaySmall,
@@ -168,21 +161,18 @@ fun CurrentRadiationCard(
 //                  color = MaterialTheme.colorScheme.tertiary Oransje fargen. bare å fjerne kommentaren her hvis dere vil bruke oransj d
                 )
                 Spacer(modifier = Modifier.height(10.dp))
-                if (currentRadiationValue != null) {
-                    Text(
-                        text = currentRadiationValue.let {
-                            String.format(
-                                "%.4f",
-                                it
-                            ) + " kW/m²"
-                        },
-                        style = MaterialTheme.typography.headlineSmall,
-                        fontWeight = FontWeight.ExtraLight,
-                        color = MaterialTheme.colorScheme.primary,
-                    )
-                    SunAnimation(currentRadiationValue)
-                } else {
-                    LoadingScreen()
+                when (rimUiState) {
+                    UiState.LOADING -> { LoadingScreen() }
+                    UiState.SUCCESS -> {
+                        Text(
+                            text = String.format("%.4f", currentRadiationValue) + " kW/m²",
+                            style = MaterialTheme.typography.headlineSmall,
+                            fontWeight = FontWeight.ExtraLight,
+                            color = MaterialTheme.colorScheme.primary,
+                        )
+                        SunAnimation(currentRadiationValue!!)
+                    }
+                    else -> { ErrorScreen() }
                 }
             }
         },
@@ -192,12 +182,15 @@ fun CurrentRadiationCard(
 
 @Composable
 fun ElectricityPriceCard(
-    selectedRegion: Region?,
+    homeViewModel: HomeViewModel,
     navController: NavController,
     modifier: Modifier = Modifier,
-    priceUiState: PriceViewModel.UiState,
-    prices: List<ElectricityPrice>
 ) {
+
+    val selectedRegion by homeViewModel.region.stateFlow.collectAsState()
+    val priceUiState by homeViewModel.priceUiState.collectAsState()
+    val prices = homeViewModel.prices.stateFlow.collectAsState()
+
     MyNavCard(
         route = "prices",
         navController = navController,
@@ -219,19 +212,14 @@ fun ElectricityPriceCard(
 //                      color = MaterialTheme.colorScheme.tertiary Oransje fargen. bare å fjerne kommentaren her hvis dere vil bruke oransj d
                     )
                     Spacer(modifier = Modifier.height(10.dp))
-                    if (selectedRegion == null) {
-                        LoadingScreen()
-                    } else {
-                        when (priceUiState) {
-                            PriceViewModel.UiState.LOADING -> LoadingScreen()
-                            PriceViewModel.UiState.ERROR -> ErrorScreen()
-                            PriceViewModel.UiState.SUCCESS -> {
-                                Column {
-                                    HomePriceCard(prices, selectedRegion)
-                                }
+                    when (priceUiState) {
+                        UiState.LOADING -> LoadingScreen()
+                        UiState.ERROR -> ErrorScreen()
+                        UiState.SUCCESS -> {
+                            Column {
+                                HomePriceCard(prices.value[selectedRegion]?.data?: emptyList(), selectedRegion)
                             }
                         }
-
                     }
                 }
             }

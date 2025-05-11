@@ -3,7 +3,6 @@ package no.solcellepanelerApp.data.userdata
 import com.google.android.gms.maps.model.LatLng
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
-import no.solcellepanelerApp.model.electricity.Region
 import no.solcellepanelerApp.model.map.GeocodingResponse
 import no.solcellepanelerApp.ui.reusables.StateFlowDelegate
 
@@ -15,7 +14,6 @@ class UserDataRepository(
     var angleState = StateFlowDelegate(0.0)
     var directionState = StateFlowDelegate(0.0)
     var efficiencyState = StateFlowDelegate(0.0)
-    var selectedRegionState = StateFlowDelegate(Region.OSLO)
     var coordinatesState = StateFlowDelegate<LatLng?>(null)
 
     private val _height = MutableStateFlow<Double?>(null)

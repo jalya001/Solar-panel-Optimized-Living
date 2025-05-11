@@ -7,24 +7,28 @@ import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
+import no.solcellepanelerApp.data.pricedata.PriceRepository
 import no.solcellepanelerApp.data.userdata.UserDataRepository
 import no.solcellepanelerApp.data.weatherdata.ApiException
 import no.solcellepanelerApp.data.weatherdata.WeatherRepository
+import no.solcellepanelerApp.model.reusables.UiState
 import no.solcellepanelerApp.ui.handling.NoDataErrorScreen
 import no.solcellepanelerApp.ui.handling.PartialDataErrorScreen
 import no.solcellepanelerApp.ui.handling.UnexpectedErrorScreen
 import no.solcellepanelerApp.ui.handling.UnknownErrorScreen
+import java.time.ZonedDateTime
 
 class ResultViewModel : ViewModel() {
     private val weatherRepository = WeatherRepository.WeatherRepositoryProvider.instance
     private val userDataRepository = UserDataRepository.UserDataRepositoryProvider.instance
+    private val priceRepository = PriceRepository.PriceRepositoryProvider.instance
 
     val coordinatesState = userDataRepository.coordinatesState
     val areaState = userDataRepository.areaState
     val angleState = userDataRepository.angleState // Make into int all the way
     val directionState = userDataRepository.directionState
     val efficiencyState = userDataRepository.efficiencyState
-    val selectedRegionState = userDataRepository.selectedRegionState
+    //val selectedRegionState = userDataRepository.selectedRegionState
     val height = userDataRepository.height
 
     val weatherDataFlow = weatherRepository.weatherData
@@ -47,7 +51,7 @@ class ResultViewModel : ViewModel() {
                 Log.d("ResultViewModel angle",angleState.value.toString())
                 Log.d("ResultViewModel direction",directionState.value.toString())
                 Log.d("ResultViewModel efficiency",efficiencyState.value.toString())
-                Log.d("ResultViewModel region",selectedRegionState.value.toString())
+                //Log.d("ResultViewModel region",selectedRegionState.value.toString())
                 Log.d("ResultViewModel height",height.value.toString())
 
                 val lat = coordinates.latitude
@@ -68,6 +72,8 @@ class ResultViewModel : ViewModel() {
                 val area = areaState.value
                 val efficiency = efficiencyState.value
 
+                priceRepository.updatePrices(ZonedDateTime.now())
+                _averagePrice.value = priceRepository.getCurrentRegionsAverage()
                 calculateSolarPanelOutput(area, efficiency)
                 calculateTemperatureFactors()
 
@@ -90,16 +96,15 @@ class ResultViewModel : ViewModel() {
         }
     }
 
-    enum class UiState {
-        LOADING, SUCCESS, ERROR
-    }
-
     data class MonthlyCalculationResult(
         val adjustedRadiation: List<Double>,
         val monthlyEnergyOutput: List<Double>,
         val monthlyPowerOutput: List<Double>,
         val yearlyEnergyOutput: Double
     )
+
+    private val _averagePrice = MutableStateFlow<Double?>(null)
+    val averagePrice: StateFlow<Double?> = _averagePrice
 
     private val _temperatureFactors = MutableStateFlow<List<Double>?>(null)
     val temperatureFactors: StateFlow<List<Double>?> = _temperatureFactors

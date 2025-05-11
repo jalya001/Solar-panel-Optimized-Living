@@ -165,7 +165,7 @@ fun DisplayScreen(
     val coroutineScope = rememberCoroutineScope()
 
     RequestLocationPermission { region ->
-        viewModel.selectedRegionState.value = region
+        viewModel.region.value = region
         viewModel.locationPermissionGranted = true
     }
 

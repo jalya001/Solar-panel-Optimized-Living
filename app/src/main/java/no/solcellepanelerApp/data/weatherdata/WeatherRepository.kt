@@ -3,8 +3,10 @@ package no.solcellepanelerApp.data.weatherdata
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import no.solcellepanelerApp.model.reusables.TimedData
+import no.solcellepanelerApp.model.reusables.updateStaleData
 import no.solcellepanelerApp.ui.result.ResultViewModel.MonthlyCalculationResult
 import no.solcellepanelerApp.ui.reusables.StateFlowDelegate
+import java.time.ZonedDateTime
 
 class WeatherRepository(
     private val pvgisDataSource: PVGISApi = PVGISApi(),
@@ -64,17 +66,21 @@ class WeatherRepository(
         println("HELLO HELLO $dataMap")
     }
 
-    suspend fun fetchRimData(
+    suspend fun updateRimData(
         lat: Double,
         lon: Double,
-        elements: String
+        elements: String,
+        time: ZonedDateTime
     ) {
-        val result = frostDataSource.fetchRimData(client, lat, lon, elements)
-        result.onSuccess { body ->
-            _rimData.value = TimedData(body)
-        }.onFailure {
-            _rimData.value = TimedData(emptyArray())
-        }
+        updateStaleData(
+            currentTime = time,
+            getData = { _rimData.value },
+            setData = { newData -> _rimData.value = newData },
+            fetchData = {
+                val result = frostDataSource.fetchRimData(client, lat, lon, elements)
+                result.getOrElse { emptyArray() }
+            }
+        )
     }
 
     object WeatherRepositoryProvider {

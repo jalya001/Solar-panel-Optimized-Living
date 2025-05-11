@@ -31,30 +31,36 @@ import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import no.solcellepanelerApp.model.electricity.Region
+import no.solcellepanelerApp.model.price.Region
 import no.solcellepanelerApp.ui.handling.ErrorScreen
 import no.solcellepanelerApp.ui.handling.LoadingScreen
 import no.solcellepanelerApp.util.RequestLocationPermission
 import java.time.ZoneId
 import java.time.ZonedDateTime
+import androidx.lifecycle.viewmodel.compose.viewModel
+import no.solcellepanelerApp.model.reusables.UiState
 
 @Composable
 fun PriceScreen(
-    viewModel: PriceViewModel,
-    contentPadding: PaddingValues
+    contentPadding: PaddingValues,
+    viewModel: PriceViewModel = viewModel(),
 ) {
     val scrollState = rememberScrollState()
-    var selectedRegion by remember { mutableStateOf<Region?>(null) }
-    val prices by viewModel.prices.collectAsState()
+    val selectedRegion by viewModel.region.stateFlow.collectAsState()
+    val prices by viewModel.prices.stateFlow.collectAsState()
+
+    LaunchedEffect(Unit) {
+        viewModel.doFetchPrices()
+    }
 
     // Request location and set region once on permission
     RequestLocationPermission { newRegion ->
-        selectedRegion = newRegion
+        viewModel.setRegion(newRegion)
     }
 
     // Call ViewModel when selectedRegion changes
     LaunchedEffect(selectedRegion) {
-        selectedRegion?.let { viewModel.setRegion(it) }
+        selectedRegion.let { viewModel.setRegion(it) }
     }
 
     Column(
@@ -64,10 +70,8 @@ fun PriceScreen(
             .padding(contentPadding),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        selectedRegion?.let {
-            RegionDropdown(it) { newRegion ->
-                selectedRegion = newRegion
-            }
+        RegionDropdown(selectedRegion) { newRegion ->
+            viewModel.setRegion(newRegion)
         }
 
         Spacer(modifier = Modifier.height(8.dp))
@@ -75,17 +79,17 @@ fun PriceScreen(
         val priceUiState by viewModel.priceUiState.collectAsStateWithLifecycle()
 
         when (priceUiState) {
-            PriceViewModel.UiState.LOADING -> LoadingScreen()
-            PriceViewModel.UiState.ERROR -> ErrorScreen()
-            PriceViewModel.UiState.SUCCESS -> {
-                ElectricityPriceChart(prices = prices!!)
+            UiState.LOADING -> LoadingScreen()
+            UiState.ERROR -> ErrorScreen()
+            UiState.SUCCESS -> {
+                ElectricityPriceChart(prices = prices[selectedRegion]!!.data)
                 Spacer(modifier = Modifier.height(16.dp))
                 val currentHour = ZonedDateTime.now(ZoneId.of("Europe/Oslo")).hour
                 val initialIndex =
-                    prices!!.indexOfFirst { ZonedDateTime.parse(it.time_start).hour == currentHour }
+                    prices[selectedRegion]!!.data.indexOfFirst { ZonedDateTime.parse(it.time_start).hour == currentHour }
                 var hourIndex by remember { mutableIntStateOf(initialIndex.coerceAtLeast(0)) }
                 PriceCard(
-                    prices = prices!!,
+                    prices = prices[selectedRegion]!!.data,
                     hourIndex = hourIndex,
                     onHourChange = { newIndex -> hourIndex = newIndex }
                 )

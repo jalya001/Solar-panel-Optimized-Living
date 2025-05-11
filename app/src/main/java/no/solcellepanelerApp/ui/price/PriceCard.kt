@@ -29,8 +29,8 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
-import no.solcellepanelerApp.model.electricity.ElectricityPrice
-import no.solcellepanelerApp.model.electricity.Region
+import no.solcellepanelerApp.model.price.ElectricityPrice
+import no.solcellepanelerApp.model.price.Region
 import no.solcellepanelerApp.ui.handling.LoadingScreen
 import no.solcellepanelerApp.ui.home.ElectricityTowers
 import no.solcellepanelerApp.ui.theme.ThemeMode

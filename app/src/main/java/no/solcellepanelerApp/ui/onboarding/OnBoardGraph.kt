@@ -34,7 +34,7 @@ import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
 import androidx.core.content.ContextCompat
 import no.solcellepanelerApp.R
-import no.solcellepanelerApp.model.electricity.Region
+import no.solcellepanelerApp.model.price.Region
 import no.solcellepanelerApp.model.onboarding.OnBoardModel
 import no.solcellepanelerApp.util.rememberLocationWithPermission
 

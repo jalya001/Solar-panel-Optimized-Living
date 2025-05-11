@@ -38,6 +38,7 @@ import com.airbnb.lottie.compose.LottieConstants
 import com.airbnb.lottie.compose.animateLottieCompositionAsState
 import com.airbnb.lottie.compose.rememberLottieComposition
 import no.solcellepanelerApp.R
+import no.solcellepanelerApp.model.reusables.UiState
 import no.solcellepanelerApp.ui.handling.LoadingScreen
 import no.solcellepanelerApp.ui.reusables.DataCard
 import no.solcellepanelerApp.ui.reusables.IconTextRow
@@ -50,10 +51,10 @@ fun ResultScreen(
     resultViewModel: ResultViewModel = viewModel(),
 ) {
     val errorScreen by resultViewModel.errorScreen.collectAsState()
-    val selectedRegion by resultViewModel.selectedRegionState.stateFlow.collectAsState()
     val calc by resultViewModel.calculationResults.stateFlow.collectAsState()
     Log.d("CALC", calc.toString())
     val uiState by resultViewModel.uiState.collectAsState()
+    val energyPrice = resultViewModel.averagePrice.collectAsState().value ?: 0.0
 
     LaunchedEffect(Unit) {
         resultViewModel.initialize()
@@ -75,21 +76,6 @@ fun ResultScreen(
     )
 
 
-
-
-    //val priceUiState by priceScreenViewModel.priceUiState.collectAsStateWithLifecycle()
-/*
-    val energyPrice = when (priceUiState) {
-        is PriceUiState.Success -> {
-            val prices = (priceUiState as PriceUiState.Success).prices
-            val currentHour = ZonedDateTime.now(ZoneId.of("Europe/Oslo")).hour
-            prices.find { price -> ZonedDateTime.parse(price.time_start).hour == currentHour }?.NOK_per_kWh
-                ?: 0.0
-        }
-
-        else -> 0.0
-    }*/
-
     var showAllMonths by remember { mutableStateOf(false) }
 
     Column(
@@ -99,16 +85,15 @@ fun ResultScreen(
         verticalArrangement = Arrangement.Top
     ) {
         when (uiState) {
-            ResultViewModel.UiState.LOADING -> {
+            UiState.LOADING -> {
                 LoadingScreen()
             }
 
-            ResultViewModel.UiState.ERROR -> {
+            UiState.ERROR -> {
                 errorScreen()
             }
 
             else -> {
-                val energyPrice = 1.0 // temp
 
                 Row(
                     modifier = Modifier

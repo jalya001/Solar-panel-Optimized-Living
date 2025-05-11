@@ -27,19 +27,22 @@ import androidx.core.content.ContextCompat
 import com.google.android.gms.maps.model.CameraPosition
 import com.google.maps.android.compose.CameraPositionState
 import com.google.maps.android.compose.MapUiSettings
+import no.solcellepanelerApp.data.pricedata.PriceRepository
 import java.math.BigDecimal
 import kotlin.math.ceil
 import no.solcellepanelerApp.util.fetchCoordinates as activityToCoordinates
 
 class MapViewModel : ViewModel() {
     private val userDataRepository = UserDataRepository.UserDataRepositoryProvider.instance
+    private val priceRepository = PriceRepository.PriceRepositoryProvider.instance
 
     val coordinatesState = userDataRepository.coordinatesState
     val areaState = userDataRepository.areaState
     val angleState = userDataRepository.angleState
     val directionState = userDataRepository.directionState
     val efficiencyState = userDataRepository.efficiencyState
-    val selectedRegionState = userDataRepository.selectedRegionState
+
+    val region = priceRepository.region // Seems like a waste to import pricerepo just for this, but oh well
 
     var areaInputText by mutableStateOf("")
         private set

@@ -6,7 +6,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 import no.solcellepanelerApp.data.weatherdata.WeatherRepository
-import no.solcellepanelerApp.model.electricity.Region
+import no.solcellepanelerApp.model.price.Region
 import java.time.ZonedDateTime
 import android.Manifest
 import android.content.Context
@@ -16,24 +16,34 @@ import androidx.core.content.ContextCompat
 import kotlinx.coroutines.delay
 import no.solcellepanelerApp.MainActivity
 import no.solcellepanelerApp.data.pricedata.PriceRepository
-import no.solcellepanelerApp.model.reusables.updateStaleData
+import no.solcellepanelerApp.model.reusables.UiState
+import no.solcellepanelerApp.model.price.fetchPrices
 import no.solcellepanelerApp.util.fetchCoordinates
 import no.solcellepanelerApp.util.mapLocationToRegion
 
 class HomeViewModel : ViewModel() {
     private val weatherRepository = WeatherRepository.WeatherRepositoryProvider.instance
-    private val priceRepository = PriceRepository.ElectricityPriceRepositoryProvider.instance
+    private val priceRepository = PriceRepository.PriceRepositoryProvider.instance
+
+
+    private val _rimUiState = MutableStateFlow(UiState.LOADING)
+    val rimUiState: StateFlow<UiState> = _rimUiState
+    private val _priceUiState = MutableStateFlow(UiState.LOADING)
+    val priceUiState: StateFlow<UiState> = _priceUiState
+
+    val region = priceRepository.region
+    val prices = priceRepository.prices
 
     private val _isLoading = MutableStateFlow(false)
     val isLoading: StateFlow<Boolean> = _isLoading
-    private val _selectedRegion = MutableStateFlow<Region?>(null)
-    val selectedRegion: StateFlow<Region?> = _selectedRegion
     private val _currentLocation = MutableStateFlow<Location?>(null)
     //val currentLocation: StateFlow<Location?> = _currentLocation
     private val _locationPermissionGranted = MutableStateFlow(false)
     //val locationPermissionGranted: StateFlow<Boolean> = _locationPermissionGranted
     private val _currentRadiationValue = MutableStateFlow<Double?>(null)
     val currentRadiationValue: StateFlow<Double?> = _currentRadiationValue
+
+    private val radiationArray = weatherRepository.rimData
 
     private val _currentTime = MutableStateFlow(ZonedDateTime.now())
     val currentTime: StateFlow<ZonedDateTime> = _currentTime
@@ -48,46 +58,46 @@ class HomeViewModel : ViewModel() {
         }
     }
 
-    fun initialize(context: Context) {
-        viewModelScope.launch {
-            val permissionGranted = ContextCompat.checkSelfPermission(
-                context,
-                Manifest.permission.ACCESS_FINE_LOCATION
-            ) == PackageManager.PERMISSION_GRANTED
+    suspend fun initialize(context: Context) {
+        val permissionGranted = ContextCompat.checkSelfPermission(
+            context,
+            Manifest.permission.ACCESS_FINE_LOCATION
+        ) == PackageManager.PERMISSION_GRANTED
 
-            _locationPermissionGranted.value = permissionGranted
+        _locationPermissionGranted.value = permissionGranted
 
-            if (permissionGranted && context is MainActivity) {
-                val location = fetchCoordinates(context)
-                _currentLocation.value = location
-                _selectedRegion.value = location?.let { mapLocationToRegion(it) } ?: Region.OSLO
-            } else {
-                _selectedRegion.value = Region.OSLO
-            }
-
-            updateCurrentRadiation(_currentTime.value)
+        if (permissionGranted && context is MainActivity) {
+            val location = fetchCoordinates(context)
+            _currentLocation.value = location
+            region.value = location?.let { mapLocationToRegion(it) } ?: Region.OSLO
+        } else {
+            region.value = Region.OSLO
         }
+
+        doFetchPrices() // These two could be parallel
+        updateCurrentRadiation(_currentTime.value)
     }
 
     private suspend fun updateCurrentRadiation(time: ZonedDateTime) {
         val location = _currentLocation.value ?: return
 
-        updateStaleData( // TBD: Move to repository level?
-            currentTime = time,
-            dataHolder = { weatherRepository.rimData.value },
-            fetchData = {
-                weatherRepository.fetchRimData(
-                    location.latitude,
-                    location.longitude,
-                    "mean(surface_downwelling_shortwave_flux_in_air PT1H)"
-                )
-            },
-            computeValue = { timedData ->
-                val hour = _currentTime.value.minusHours(2).hour
-                if ((timedData.data as? Array<Double>).isNullOrEmpty()) null
-                else timedData.data.getOrNull(hour)?.div(1000.0)
-            },
-            updateTarget = { _currentRadiationValue.value = it }
+        weatherRepository.updateRimData(
+            location.latitude,
+            location.longitude,
+            "mean(surface_downwelling_shortwave_flux_in_air PT1H)",
+            time
         )
+        val hour = _currentTime.value.minusHours(2).hour
+        _currentRadiationValue.value = if (radiationArray.value?.data.isNullOrEmpty()) {
+            _rimUiState.value = UiState.ERROR
+            null
+        } else {
+            _rimUiState.value = UiState.SUCCESS
+            radiationArray.value!!.data[hour].div(1000.0)
+        }
+    }
+
+    private suspend fun doFetchPrices() {
+        fetchPrices(_priceUiState, _currentTime.value, priceRepository)
     }
 }
