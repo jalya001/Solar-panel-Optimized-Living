@@ -143,10 +143,13 @@ private fun BottomSheetContent(
         DirectionSlider(viewModel)
 
         Spacer(modifier = Modifier.height(16.dp))
-        ResultNavigationButton(
-            navController = navController,
-            viewModel = viewModel,
-        )
+        Button(
+            onClick = {
+                navController.navigate("result")
+            },
+        ) {
+            Text("Gå til resultater")
+        }
     }
 }
 
@@ -155,6 +158,7 @@ data class SolarPanelType(
     val name: String,
     val efficiency: Float,
     val description: String,
+    val efficiencyDesc: String,
 )
 
 @Composable
@@ -271,17 +275,20 @@ fun PanelPicker(viewModel: MapViewModel, focusManager: FocusManager) {
         SolarPanelType(
             stringResource(R.string.monocrystalline),
             20f,
-            stringResource(R.string.monocrystalline_content)
+            stringResource(R.string.monocrystalline_content),
+            stringResource(R.string.monocrystalline_efficiency)
         ),
         SolarPanelType(
             stringResource(R.string.polycrystalline),
             15f,
-            stringResource(R.string.polycrystalline_content)
+            stringResource(R.string.polycrystalline_content),
+            stringResource(R.string.polycrystalline_efficiency)
         ),
         SolarPanelType(
             stringResource(R.string.thinfilm),
             10f,
-            stringResource(R.string.thinfilm_content)
+            stringResource(R.string.thinfilm_content),
+            stringResource(R.string.thinfilm_efficiency)
         )
     )
 
@@ -318,12 +325,6 @@ fun PanelTypeCard(
         animationSpec = tween(durationMillis = 500)
     )
 
-    val panelEff = when (panelType.name) {
-        "Monokrystallinsk" -> "18-23"
-        "Polykrystallinsk" -> "15-17"
-        else -> "10-17"
-    }
-
     OutlinedCard(
         modifier = Modifier
             .fillMaxWidth()
@@ -355,7 +356,7 @@ fun PanelTypeCard(
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             Text(
-                text = "${panelType.name} (${panelEff} %)",
+                text = "${panelType.name} ${panelType.efficiencyDesc}",
                 color = MaterialTheme.colorScheme.onSurfaceVariant,
                 fontWeight = if (selected) FontWeight.Bold else FontWeight.Normal
             )
@@ -392,22 +393,6 @@ fun LearnMoreLink(
             contentDescription = "Les mer",
             tint = MaterialTheme.colorScheme.primary
         )
-    }
-}
-
-@Composable
-fun ResultNavigationButton(
-    viewModel: MapViewModel,
-    navController: NavController,
-) {
-    //if (viewModel.area > 0 && viewModel.coordinates != null) {
-    Button(
-        onClick = {
-            navController.navigate("result")
-        },
-        //modifier = Modifier.align(Alignment.CenterHorizontally)
-    ) {
-        Text("Gå til resultater")
     }
 }
 
