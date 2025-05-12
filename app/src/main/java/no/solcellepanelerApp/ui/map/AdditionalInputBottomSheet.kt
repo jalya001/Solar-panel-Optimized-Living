@@ -147,13 +147,14 @@ private fun BottomSheetContent(
         Spacer(modifier = Modifier.height(16.dp))
 
 
-        //mangler en if check her for å ikke vise knappen før alle feltene er fylt ut
-        Button(
-            onClick = {
-                navController.navigate("result")
-            },
-        ) {
-            Text(stringResource(id = R.string.go_to_results))
+        if (area > 0 && efficiency > 0) {
+            Button(
+                onClick = {
+                    navController.navigate("result")
+                },
+            ) {
+                Text(stringResource(id = R.string.go_to_results))
+            }
         }
     }
 }
