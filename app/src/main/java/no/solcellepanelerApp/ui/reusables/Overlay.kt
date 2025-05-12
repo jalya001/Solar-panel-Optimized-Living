@@ -50,11 +50,15 @@ fun SimpleTutorialOverlay(
             text = bottomMessage,
             color = Color.White,
             style = MaterialTheme.typography.bodyMedium,
-            modifier = Modifier.align(Alignment.BottomCenter),
+            modifier = Modifier
+                .align(Alignment.BottomCenter)
+                .padding(100.dp),
             textAlign = TextAlign.Center
         )
     }
-}@Preview
+}
+
+@Preview
 @Composable
 fun PreviewMapOverlay() {
     val title = stringResource(R.string.map_overlay_title)
