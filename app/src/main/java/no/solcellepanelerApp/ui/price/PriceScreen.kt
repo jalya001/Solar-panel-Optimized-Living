@@ -27,8 +27,11 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.buildAnnotatedString
+import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
@@ -39,6 +42,8 @@ import no.solcellepanelerApp.model.price.getRegionName
 import no.solcellepanelerApp.model.reusables.UiState
 import no.solcellepanelerApp.ui.handling.ErrorScreen
 import no.solcellepanelerApp.ui.handling.LoadingScreen
+import no.solcellepanelerApp.ui.onboarding.OnboardingUtils
+import no.solcellepanelerApp.ui.reusables.SimpleTutorialOverlay
 import no.solcellepanelerApp.util.RequestLocationPermission
 import java.time.ZoneId
 import java.time.ZonedDateTime
@@ -49,12 +54,43 @@ fun PriceScreen(
     contentPadding: PaddingValues,
     viewModel: PriceViewModel = viewModel(),
 ) {
+    val context = LocalContext.current
+    var showOverlay by remember { mutableStateOf(false) }
+    val onboardingUtils = remember { OnboardingUtils(context) }
+
     val scrollState = rememberScrollState()
     val selectedRegion by viewModel.region.stateFlow.collectAsState()
     val prices by viewModel.prices.stateFlow.collectAsState()
 
     LaunchedEffect(Unit) {
         viewModel.doFetchPrices()
+    }
+
+    LaunchedEffect(Unit) {
+        if (!onboardingUtils.isPriceOverlayShown()) {
+            showOverlay = true
+            onboardingUtils.setPriceOverlayShown()
+        }
+    }
+
+    val title = stringResource(R.string.price_overlay_title)
+    val body = stringResource(R.string.price_overlay)
+
+    val message = buildAnnotatedString {
+        withStyle(style = MaterialTheme.typography.titleLarge.toSpanStyle()) {
+            append("$title\n\n")
+        }
+        withStyle(style = MaterialTheme.typography.bodyLarge.toSpanStyle()) {
+            append(body)
+        }
+    }
+
+    if (showOverlay) {
+        SimpleTutorialOverlay(
+            onDismiss = { showOverlay = false },
+            message = message
+
+        )
     }
 
     // Request location and set region once on permission
@@ -104,6 +140,8 @@ fun PriceScreen(
     }
 }
 
+// Dropdown to select region in case user does not grant location permission - or just is curious
+// about electricity prices in Norway
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun RegionDropdown(
