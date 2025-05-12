@@ -104,6 +104,8 @@ private fun BottomSheetContent(
 ) {
     val focusManager = LocalFocusManager.current
     val decimalFormatter = DecimalFormatter()
+    val area by viewModel.areaState.stateFlow.collectAsState()
+    val efficiency by viewModel.efficiencyState.stateFlow.collectAsState()
 
     Column(
         modifier = Modifier
@@ -143,12 +145,14 @@ private fun BottomSheetContent(
         DirectionSlider(viewModel)
 
         Spacer(modifier = Modifier.height(16.dp))
-        Button(
-            onClick = {
-                navController.navigate("result")
-            },
-        ) {
-            Text("Gå til resultater")
+        if (area > 0 && efficiency > 0) {
+            Button(
+                onClick = {
+                    navController.navigate("result")
+                },
+            ) {
+                Text("Gå til resultater")
+            }
         }
     }
 }
@@ -265,8 +269,6 @@ fun DirectionSlider(
     Spacer(modifier = Modifier.height(30.dp))
 
     SunAngleAnimation(angle = azimuth.toFloat())
-
-
 }
 
 @Composable
