@@ -61,7 +61,35 @@ fun PriceScreen(
     val scrollState = rememberScrollState()
     val selectedRegion by viewModel.region.stateFlow.collectAsState()
     val prices by viewModel.prices.stateFlow.collectAsState()
+    val context = LocalContext.current
+    val onboardingUtils = remember { OnboardingUtils(context) }
 
+    var showPriceOverlay by remember { mutableStateOf(true) }
+    LaunchedEffect(Unit) {
+        if (!onboardingUtils.isPriceOverlayShown()) {
+            showPriceOverlay = true
+            onboardingUtils.setPriceOverlayShown()
+        }
+    }
+
+    if (showPriceOverlay) {
+        val title = stringResource(R.string.map_overlay_title)
+        val body = stringResource(R.string.map_overlay)
+        val message = buildAnnotatedString {
+            withStyle(style = MaterialTheme.typography.titleLarge.toSpanStyle()) {
+                append("$title\n\n")
+            }
+            withStyle(style = MaterialTheme.typography.bodyLarge.toSpanStyle()) {
+                append(body)
+            }
+        }
+
+        SimpleTutorialOverlay(
+            onDismiss = { showPriceOverlay = false },
+            message = message
+        )
+
+    }
     LaunchedEffect(Unit) {
         viewModel.doFetchPrices()
     }

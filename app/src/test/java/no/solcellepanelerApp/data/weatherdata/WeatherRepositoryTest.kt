@@ -6,8 +6,7 @@ import kotlinx.coroutines.runBlocking
 import org.junit.Test
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertTrue
-
-// TBD: These might be outdated now
+import org.junit.jupiter.api.assertThrows
 
 class WeatherRepositoryTest {
     private val mockPvgisApi = mockk<PVGISApi>()
@@ -29,29 +28,30 @@ class WeatherRepositoryTest {
         coEvery { mockPvgisApi.getRadiation(any(), any(), any(), any(), any()) } returns Result.success(testArray)
         coEvery { mockFrostApi.fetchFrostData(any(), any(), any(), any(), any(), any()) } returns Result.success(testMap)
 
-        val result = weatherRepository.getPanelWeatherData(10.0, 20.0, 30.0, 30, 40)
-        assertTrue(result.isSuccess)
-        val data = result.getOrNull()
-        assertEquals(4, data?.size)
-        assertTrue(data?.containsKey("mean(PVGIS_radiation P1M)") == true)
+        val weatherDataFlow = weatherRepository.weatherData
+        weatherRepository.getPanelWeatherData(10.0, 20.0, 30.0, 30, 40)
+        assertEquals(4, weatherDataFlow.value?.size)
+        assertTrue(weatherDataFlow.value?.containsKey("mean(PVGIS_radiation P1M)") == true)
     }
 
     @Test
-    fun `test failure when radiation data fails`() = runBlocking {
+    fun `test failure when radiation data fails`(): Unit = runBlocking {
         coEvery { mockPvgisApi.getRadiation(any(), any(), any(), any(), any()) } returns Result.failure(ApiException(ApiError.UNKNOWN_ERROR))
         coEvery { mockFrostApi.fetchFrostData(any(), any(), any(), any(), any(), any()) } returns Result.success(testMap)
 
-        val result = weatherRepository.getPanelWeatherData(10.0, 20.0, 30.0, 30, 40)
-        assertTrue(result.isFailure)
+        assertThrows<Throwable> {
+            weatherRepository.getPanelWeatherData(10.0, 20.0, 30.0, 30, 40)
+        }
     }
 
     @Test
-    fun `test failure when frost data fails`() = runBlocking {
+    fun `test failure when frost data fails`(): Unit = runBlocking {
         coEvery { mockPvgisApi.getRadiation(any(), any(), any(), any(), any()) } returns Result.success(testArray)
         coEvery { mockFrostApi.fetchFrostData(any(), any(), any(), any(), any(), any()) } returns Result.failure(ApiException(ApiError.UNKNOWN_ERROR))
 
-        val result = weatherRepository.getPanelWeatherData(10.0, 20.0, 30.0, 30, 40)
-        assertTrue(result.isFailure)
+        assertThrows<Throwable> {
+            weatherRepository.getPanelWeatherData(10.0, 20.0, 30.0, 30, 40)
+        }
     }
 
     @Test
@@ -59,11 +59,10 @@ class WeatherRepositoryTest {
         coEvery { mockPvgisApi.getRadiation(any(), any(), any(), any(), any()) } returns Result.success(testArray)
         coEvery { mockFrostApi.fetchFrostData(any(), any(), any(), any(), any(), any()) } returns Result.success(mutableMapOf())
 
-        val result = weatherRepository.getPanelWeatherData(10.0, 20.0, 30.0, 30, 40)
-        assertTrue(result.isSuccess)
-        val data = result.getOrNull()
-        assertEquals(1, data?.size)
-        assertTrue(data?.containsKey("mean(PVGIS_radiation P1M)") == true)
+        val weatherDataFlow = weatherRepository.weatherData
+        weatherRepository.getPanelWeatherData(10.0, 20.0, 30.0, 30, 40)
+        assertEquals(1, weatherDataFlow.value?.size)
+        assertTrue(weatherDataFlow.value?.containsKey("mean(PVGIS_radiation P1M)") == true)
     }
 
     @Test
@@ -71,11 +70,10 @@ class WeatherRepositoryTest {
         coEvery { mockPvgisApi.getRadiation(any(), any(), any(), any(), any()) } returns Result.success(arrayOf())
         coEvery { mockFrostApi.fetchFrostData(any(), any(), any(), any(), any(), any()) } returns Result.success(testMap)
 
-        val result = weatherRepository.getPanelWeatherData(10.0, 20.0, 30.0, 30, 40)
-        assertTrue(result.isSuccess)
-        val data = result.getOrNull()
-        assertEquals(3, data?.size)
-        assertTrue(data?.containsKey("mean(PVGIS_radiation P1M)") == false)
-        assertTrue(data?.containsKey("mean(air_temperature P1M)") == true)
+        val weatherDataFlow = weatherRepository.weatherData
+        weatherRepository.getPanelWeatherData(10.0, 20.0, 30.0, 30, 40)
+        assertEquals(3, weatherDataFlow.value?.size)
+        assertTrue(weatherDataFlow.value?.containsKey("mean(PVGIS_radiation P1M)") == false)
+        assertTrue(weatherDataFlow.value?.containsKey("mean(air_temperature P1M)") == true)
     }
 }

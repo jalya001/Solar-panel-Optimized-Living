@@ -7,7 +7,7 @@
 
 ### MEDLEMMER AV TEAM 37
 
-[aazann,saleemti,mikass,anisai,jacobhl,amwarsam]
+[Aazan Nisar (aazann), Saleem Toure Issifou [(saleemti)](https://www.linkedin.com/in/saleem-toure-issifou), Mika Stenersen (mikass), Anisa Ifzal (anisai), Jacob He Ly (jacobhl), Abdirahman Mohamed Abdi Warsame (amwarsam)]
  
 ## 1. Introduksjon
 
@@ -126,4 +126,7 @@ Dette prosjektet har potensiale til å implementere flere funksjoner som:
     Analyser for å gi brukeren anbefalinger om takvinkel og effektivitetsinnstillinger for optimal solenergiutnyttelse
 
     Lagring av Posisjoner 
+
+    Implementering av horisontal modus i appen
+
     
