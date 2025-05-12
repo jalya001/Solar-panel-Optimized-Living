@@ -35,7 +35,6 @@ class MainActivity : ComponentActivity() {
         LanguageUtils.setLanguage(this, languageCode)
         installSplashScreen()
         onboardingUtils.resetAllOnboardingStates() //for testing
-
         enableEdgeToEdge()
         setContent {
             SolcellepanelerAppTheme {

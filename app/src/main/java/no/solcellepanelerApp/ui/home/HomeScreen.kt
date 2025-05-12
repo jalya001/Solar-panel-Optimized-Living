@@ -33,9 +33,7 @@ import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
@@ -52,7 +50,6 @@ import no.solcellepanelerApp.ui.onboarding.OnboardingUtils
 import no.solcellepanelerApp.ui.price.HomePriceCard
 import no.solcellepanelerApp.ui.reusables.MyDisplayCard
 import no.solcellepanelerApp.ui.reusables.MyNavCard
-import no.solcellepanelerApp.ui.reusables.SimpleTutorialOverlay
 import no.solcellepanelerApp.ui.theme.isDarkThemeEnabled
 import java.time.ZonedDateTime
 
@@ -88,23 +85,24 @@ fun HomeScreen(
         return
     }
 
-    if (showOverlay) {
-        val title = stringResource(R.string.home_overlay_title)
-        val body = stringResource(R.string.home_overlay)
-        val message = buildAnnotatedString {
-            withStyle(style = MaterialTheme.typography.titleLarge.toSpanStyle()) {
-                append("$title\n\n")
-            }
-            withStyle(style = MaterialTheme.typography.bodyLarge.toSpanStyle()) {
-                append(body)
-            }
-        }
+//    if (showOverlay) {
+//        val title = stringResource(R.string.home_overlay_title)
+//        val body = stringResource(R.string.home_overlay)
+//        val message = buildAnnotatedString {
+//            withStyle(style = MaterialTheme.typography.titleLarge.toSpanStyle()) {
+//                append("$title\n\n")
+//            }
+//            withStyle(style = MaterialTheme.typography.bodyLarge.toSpanStyle()) {
+//                append(body)
+//            }
+//        }
+//
+//        SimpleTutorialOverlay(
+//            onDismiss = { showOverlay = false },
+//            message = message
+//        )
+//    }
 
-        SimpleTutorialOverlay(
-            onDismiss = { showOverlay = false },
-            message = message
-        )
-    }
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -308,19 +306,7 @@ fun IndefiniteAnimationBox(
     }
 }
 
-/*
-@Composable
-fun PanelAnimation() {
-IndefiniteAnimationBox(
-    animationFile = "solarPanel_anim.json",
-    modifier = Modifier
-        .height(100.dp),
-    innerModifier = Modifier
-        .width(130.dp)
-        .aspectRatio(400.dp / 1000.dp)
-)
-}
-*/
+
 @Composable
 fun ElectricityTowers() {
     val animationFile =
