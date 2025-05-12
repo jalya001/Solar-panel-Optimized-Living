@@ -38,6 +38,7 @@ import androidx.compose.ui.unit.dp
 import androidx.core.content.ContextCompat
 import no.solcellepanelerApp.R
 
+import no.solcellepanelerApp.model.price.Region
 import no.solcellepanelerApp.model.onboarding.OnBoardModel
 import no.solcellepanelerApp.ui.language.LangSwitch
 import no.solcellepanelerApp.ui.reusables.ModeCard

@@ -183,6 +183,7 @@ Class Diagram 1st draft
 
 Class Diagram later draft
 ```mermaid
+
     classDiagram
     class HomeScreen{
         +Composabele DisplayElectricityPrice(HomeViewModel)
@@ -201,9 +202,15 @@ Class Diagram later draft
     class PriceScreen{
         +Composabele DisplayElectricityPrice(HomeViewModel)
     }
+    class SavingsScreen{
+
+    }
     %% ViewModels
    class HomeViewModel {
         +Double getElectricityPriceForToday(ElectricityPriceRepository)
+        
+    }
+    class SavingsViewModel{
         
     }
     class PriceViewModel {
@@ -215,7 +222,7 @@ Class Diagram later draft
         +Map getMapData(MapRepository)
     }
 
-    class WeatherDataViewModel {
+    class ResultViewModel {
 
         +List<AvergeMonthlySnowCover> monthlySnowData(SnowCoverRepository)
         +List<AvergeMonthlyTemperatures> monthlyTempData(TemperatureRepository)
@@ -236,7 +243,7 @@ Class Diagram later draft
         +List<MonthlyPrice> fetchMonthlyPrice(HvaErStrømprisenApiDataSource)
     }
 
-    class AddressRepository {
+    class UserDataRepository {
         +Pair<Double, Double> fetchCurrentAddress(GeocoderDataSource,String Address)
         +Pair<Double, Double> fetchCurrentAddress(ElevationApi,String Address)
     }
@@ -312,7 +319,7 @@ Class Diagram later draft
     %% Relationships
     
     HomeScreen --> HomeViewModel
-    ResultScreen --> WeatherDataViewModel
+    ResultScreen --> ResultViewModel
     MapScreen --> MapViewModel
     HomeViewModel --> ElectricityPriceRepository
     HomeViewModel --> WeatherRepository
@@ -322,12 +329,17 @@ Class Diagram later draft
     ElectricityPriceRepository --> HvaErStrømprisenApiDataSource
     HvaErStrømprisenApiDataSource --> Price
 
-    MapViewModel --> AddressRepository
-    AddressRepository --> GeocoderDataSource
-    AddressRepository --> ElevationApi
+    SavingsScreen --> SavingsViewModel
+    SavingsViewModel --> WeatherRepository
+    SavingsViewModel --> ElectricityPriceRepository
+
+    MapViewModel --> UserDataRepository
+    MapViewModel --> ElectricityPriceRepository
+    UserDataRepository --> GeocoderDataSource
+    UserDataRepository --> ElevationApi
     
-    WeatherDataViewModel --> AddressRepository
-    WeatherDataViewModel --> WeatherRepository
+    ResultViewModel --> UserDataRepository
+    ResultViewModel --> WeatherRepository
 
     WeatherRepository --> FrostApiDataSource
 
@@ -340,8 +352,7 @@ Class Diagram later draft
     PVGISApiDataSource --> Radiation
     PVGISApiDataSource --> Energy
 
-    
-
+ ```
 MapScreen: Find Adress
 ```mermaid
     sequenceDiagram

@@ -1,4 +1,4 @@
-package no.solcellepanelerApp.data.mapdata
+package no.solcellepanelerApp.data.userdata
 
 import android.util.Log
 import io.ktor.client.HttpClient
@@ -12,7 +12,7 @@ import kotlinx.serialization.json.Json
 import no.solcellepanelerApp.model.map.GeocodingResponse
 
 
-class AddressDataSource {
+class AddressApi {
     private val client = HttpClient(OkHttp) {
         install(ContentNegotiation) {
             json(Json { prettyPrint = true })

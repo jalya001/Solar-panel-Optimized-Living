@@ -1,20 +1,24 @@
-package no.solcellepanelerApp.ui.electricity
+package no.solcellepanelerApp.ui.price
 
 import android.annotation.SuppressLint
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.BoxWithConstraints
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
+import androidx.compose.material3.Button
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardColors
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.rotate
@@ -25,6 +29,10 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import co.yml.charts.axis.AxisData
 import co.yml.charts.common.model.Point
+import co.yml.charts.ui.barchart.BarChart
+import co.yml.charts.ui.barchart.models.BarChartData
+import co.yml.charts.ui.barchart.models.BarData
+import co.yml.charts.ui.barchart.models.BarStyle
 import co.yml.charts.ui.linechart.LineChart
 import co.yml.charts.ui.linechart.model.GridLines
 import co.yml.charts.ui.linechart.model.IntersectionPoint
@@ -35,8 +43,9 @@ import co.yml.charts.ui.linechart.model.LineStyle
 import co.yml.charts.ui.linechart.model.SelectionHighlightPoint
 import co.yml.charts.ui.linechart.model.SelectionHighlightPopUp
 import co.yml.charts.ui.linechart.model.ShadowUnderLine
+import no.solcellepanelerApp.model.price.ChartType
+import no.solcellepanelerApp.model.price.ElectricityPrice
 import no.solcellepanelerApp.R
-import no.solcellepanelerApp.model.electricity.ElectricityPrice
 import no.solcellepanelerApp.ui.theme.ThemeMode
 import no.solcellepanelerApp.ui.theme.ThemeState
 import java.time.ZonedDateTime
@@ -46,12 +55,6 @@ import java.time.ZonedDateTime
 fun ElectricityPriceChart(prices: List<ElectricityPrice>) {
     val selectedPoint = remember { mutableStateOf<Point?>(null) }
 
-    val currentHour = ZonedDateTime.now().hour
-    val currentPrice = prices.find { ZonedDateTime.parse(it.time_start).hour == currentHour }
-    currentPrice?.let {
-        selectedPoint.value = Point(currentHour.toFloat(), it.NOK_per_kWh.toFloat())
-    }
-
     val points = prices.map { price ->
         val hour = ZonedDateTime.parse(price.time_start).hour
         Point(hour.toFloat(), price.NOK_per_kWh.toFloat())
@@ -60,7 +63,7 @@ fun ElectricityPriceChart(prices: List<ElectricityPrice>) {
     // Prepare X-axis (hours)
     val xAxisData = AxisData.Builder()
         .axisStepSize(12.dp)
-        .steps(prices.size / 2) // Showing fewer steps (12 points but 24 points)
+        .steps(prices.size / 2) // Showing fewer steps
         .labelData { i -> if (i % 2 == 0) "%02d".format(i) else "" }
         .axisLabelColor(MaterialTheme.colorScheme.tertiary)
         .axisLineColor(MaterialTheme.colorScheme.tertiary)
@@ -68,11 +71,11 @@ fun ElectricityPriceChart(prices: List<ElectricityPrice>) {
         .bottomPadding(32.dp)
         .build()
 
-    // Prepare Y-axis (price) - min and max value on the y-axis is today's min and max price
+    // Prepare Y-axis (price)
     val maxPrice = prices.maxOf { it.NOK_per_kWh }
     val minPrice = prices.minOf { it.NOK_per_kWh }
 
-    val steps = 4
+    val steps = 1
     val stepSize = ((maxPrice - minPrice) / steps).coerceAtLeast(0.1)
 
     val yAxisData = AxisData.Builder()
@@ -105,7 +108,6 @@ fun ElectricityPriceChart(prices: List<ElectricityPrice>) {
                 .fillMaxWidth(),
             contentAlignment = Alignment.Center
         ) {
-            // Make graph interactive, show time and price for selected point
             selectedPoint.value?.let {
                 val hour = it.x.toInt()
                 val price = it.y
@@ -127,7 +129,6 @@ fun ElectricityPriceChart(prices: List<ElectricityPrice>) {
             modifier = Modifier
                 .height(320.dp)
         ) {
-            // Line chart data - plot the chart and the graph
             val lineChartData = LineChartData(
                 linePlotData = LinePlotData(
                     lines = listOf(
@@ -190,7 +191,7 @@ fun ElectricityPriceChart(prices: List<ElectricityPrice>) {
                 style = MaterialTheme.typography.bodySmall,
                 modifier = Modifier
                     .align(Alignment.BottomCenter)
-                    .offset(y = (-20).dp),
+                    .offset(y = (-5).dp),
                 color = MaterialTheme.colorScheme.tertiary
             )
 
@@ -200,7 +201,7 @@ fun ElectricityPriceChart(prices: List<ElectricityPrice>) {
                 style = MaterialTheme.typography.bodySmall,
                 modifier = Modifier
                     .align(Alignment.CenterStart)
-                    .offset(x = (-65).dp, y = (-22).dp)
+                    .offset(x = (-28).dp, y = (-5).dp)
                     .rotate(-90f),
                 color = MaterialTheme.colorScheme.tertiary
             )

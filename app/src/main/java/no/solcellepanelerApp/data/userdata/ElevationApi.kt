@@ -1,5 +1,6 @@
-package no.solcellepanelerApp.data.mapdata
+package no.solcellepanelerApp.data.userdata
 
+import com.google.android.gms.maps.model.LatLng
 import io.ktor.client.*
 import io.ktor.client.call.*
 import io.ktor.client.engine.cio.*
@@ -8,7 +9,7 @@ import io.ktor.client.plugins.contentnegotiation.*
 import io.ktor.serialization.kotlinx.json.*
 
 class ElevationApi {
-    suspend fun fetchElevation(coordinates: Pair<Double, Double>): Double? {
+    suspend fun fetchElevation(coordinates: LatLng): Double? {
         val client = HttpClient(CIO) { // TBD: Make a reusable client
             install(ContentNegotiation) {
                 json()
@@ -16,8 +17,8 @@ class ElevationApi {
         }
 
         try {
-            val latitude = String.format(java.util.Locale.US, "%.7f", coordinates.first)
-            val longitude = String.format(java.util.Locale.US, "%.7f", coordinates.second)
+            val latitude = String.format(java.util.Locale.US, "%.7f", coordinates.latitude)
+            val longitude = String.format(java.util.Locale.US, "%.7f", coordinates.longitude)
             val url = "https://www.elevation-api.eu/v1/elevation/$latitude/$longitude"
 
             println(url)

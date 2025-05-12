@@ -1,4 +1,4 @@
-package no.solcellepanelerApp.ui.electricity
+package no.solcellepanelerApp.ui.price
 
 import android.util.Log
 import androidx.compose.foundation.clickable
@@ -31,8 +31,8 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import no.solcellepanelerApp.R
-import no.solcellepanelerApp.model.electricity.ElectricityPrice
-import no.solcellepanelerApp.model.electricity.Region
+import no.solcellepanelerApp.model.price.ElectricityPrice
+import no.solcellepanelerApp.model.price.Region
 import no.solcellepanelerApp.ui.handling.LoadingScreen
 import no.solcellepanelerApp.ui.home.ElectricityTowers
 import no.solcellepanelerApp.ui.theme.ThemeMode
@@ -40,7 +40,6 @@ import no.solcellepanelerApp.ui.theme.ThemeState
 import java.time.ZoneId
 import java.time.ZonedDateTime
 
-// Show electricity prices for today - current, highest, and lowest
 @Composable
 fun PriceCard(
     prices: List<ElectricityPrice>,
@@ -62,23 +61,27 @@ fun PriceCard(
     val highestPrice = prices.maxByOrNull { it.NOK_per_kWh }
     val lowestPrice = prices.minByOrNull { it.NOK_per_kWh }
 
-    // Sets the label for the electricity price card,
-    // showing whether the price is for now, the future, or in the past
     val label = when {
-        ZonedDateTime.parse(currentDisplayedPrice?.time_start).hour == currentHour -> stringResource(R.string.price_now_card)
+        ZonedDateTime.parse(currentDisplayedPrice?.time_start).hour == currentHour -> stringResource(
+            R.string.price_now_card
+        )
+
         hourIndex > currentHour ->
             stringResource(R.string.future_price_prefix) +
-                " ${hourIndex - currentHour} " +
+                    " ${hourIndex - currentHour} " +
                     stringResource(R.string.price_suffix_part1) +
                     (if (hourIndex - currentHour > 1) stringResource(R.string.price_suffix_part2) else "")
+
         else ->
             stringResource(R.string.past_price_prefix) +
-                " ${currentHour - hourIndex} " +
+                    " ${currentHour - hourIndex} " +
                     stringResource(R.string.price_suffix_part1) +
-                    (if (currentHour - hourIndex > 1) stringResource(R.string.price_suffix_part2) else "") + " " + stringResource(R.string.past_price_suffix)
+                    (if (currentHour - hourIndex > 1) stringResource(R.string.price_suffix_part2) else "") + stringResource(
+                R.string.past_price_suffix
+            )
     }
 
-    // The price card
+
     Card(
         modifier = Modifier
             .fillMaxWidth()
@@ -90,7 +93,6 @@ fun PriceCard(
                 horizontalArrangement = Arrangement.Center,
                 verticalAlignment = Alignment.CenterVertically
             ) {
-                // Current price
                 currentDisplayedPrice?.let {
                     PriceRow(
                         icon = Icons.Default.AccessTime,
@@ -112,7 +114,6 @@ fun PriceCard(
                             color = MaterialTheme.colorScheme.onSurfaceVariant
                         )
 
-                        // Navigation arrows that let the user cycle through hourly electricity prices
                         Row(
                             modifier = Modifier
                                 .fillMaxWidth()
@@ -120,7 +121,6 @@ fun PriceCard(
                             horizontalArrangement = Arrangement.Center,
                             verticalAlignment = Alignment.CenterVertically
                         ) {
-                            // Previous hour(s) (if available)
                             Icon(
                                 imageVector = Icons.AutoMirrored.Filled.ArrowBack,
                                 contentDescription = "Forrige time",
@@ -131,7 +131,6 @@ fun PriceCard(
                                     },
                                 tint = MaterialTheme.colorScheme.primary
                             )
-                            // Next hour(s) (if not at the end)
                             Icon(
                                 imageVector = Icons.AutoMirrored.Filled.ArrowForward,
                                 contentDescription = "Neste time",
@@ -147,7 +146,6 @@ fun PriceCard(
                 }
             }
 
-            // Highest price
             Spacer(modifier = Modifier.height(16.dp))
             highestPrice?.let {
                 PriceRow(
@@ -157,7 +155,6 @@ fun PriceCard(
                     time = it.getTimeRange()
                 )
             }
-            // Lowest price
             Spacer(modifier = Modifier.height(16.dp))
             lowestPrice?.let {
                 PriceRow(
@@ -171,7 +168,6 @@ fun PriceCard(
     }
 }
 
-// Composable that displays an electricity price row with optional icon, label, price and time
 @Composable
 fun PriceRow(
     icon: ImageVector?,
@@ -216,7 +212,6 @@ fun PriceRow(
     }
 }
 
-// Price card for home screen, show current electricity price based on location (if granted), default is Oslo
 @Composable
 fun HomePriceCard(
     prices: List<ElectricityPrice>,
@@ -241,8 +236,9 @@ fun HomePriceCard(
 
     currentPrice?.let {
         Column(
-//            modifier = Modifier
-//                .fillMaxSize(),
+            modifier = Modifier
+//                .fillMaxSize()
+            ,
             verticalArrangement = Arrangement.Top,
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
@@ -267,7 +263,6 @@ fun HomePriceCard(
             ) {
                 Spacer(modifier = Modifier.height(20.dp))
 
-                // Animation
                 ElectricityTowers()
 
             }

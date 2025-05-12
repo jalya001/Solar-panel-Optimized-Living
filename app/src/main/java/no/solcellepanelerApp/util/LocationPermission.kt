@@ -24,7 +24,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import no.solcellepanelerApp.MainActivity
 import no.solcellepanelerApp.data.location.LocationService
-import no.solcellepanelerApp.model.electricity.Region
+import no.solcellepanelerApp.model.price.Region
 
 // Funksjon for å sjekke og lagre tillatelse
 //fun isLocationPermissionGranted(context: Context): Boolean {

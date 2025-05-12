@@ -1,4 +1,4 @@
-package no.solcellepanelerApp.model.electricity
+package no.solcellepanelerApp.model.price
 
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.res.stringResource

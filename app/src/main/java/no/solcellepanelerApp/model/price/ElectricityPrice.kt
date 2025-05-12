@@ -1,4 +1,4 @@
-package no.solcellepanelerApp.model.electricity
+package no.solcellepanelerApp.model.price
 
 import kotlinx.serialization.Serializable
 import java.time.LocalDate
