@@ -1,5 +1,6 @@
 package no.solcellepanelerApp.ui.savings
 
+import androidx.compose.ui.res.stringResource
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import no.solcellepanelerApp.ui.result.ResultViewModel.MonthlyCalculationResult
@@ -24,7 +25,15 @@ class SavingsViewModel : ViewModel() {
     private val _savings = MutableStateFlow(0.0)
     val savings: StateFlow<Double> = _savings
 
-    private val preConnected = listOf("Fridge", "TV", "Laptop")
+    private val preConnected = listOf(
+        stringResource(R.string.fridge),
+        stringResource(R.string.tv),
+        stringResource(R.string.laptop),
+        stringResource(R.string.microwave),
+        stringResource(R.string.dishwasher),
+        stringResource(R.string.washing_machine),
+        stringResource(R.string.vacuum_cleaner)
+    )
 
     init {
         viewModelScope.launch {
@@ -32,29 +41,29 @@ class SavingsViewModel : ViewModel() {
     }
 
     val devices = listOf(
-        "El-Car" to 100.0,
-        "Fridge" to 30.0,
-        "Heater" to 60.0,
-        "Laptop" to 10.0,
-        "Washing Machine" to 20.0,
-        "TV" to 15.0,
-        "Air Conditioner" to 50.0,
-        "Microwave" to 25.0,
-        "Dishwasher" to 35.0,
-        "Vacuum Cleaner" to 8.0
+        stringResource(R.string.el_car) to 100.0,
+        stringResource(R.string.fridge) to 30.0,
+        stringResource(R.string.heater) to 60.0,
+        stringResource(R.string.laptop) to 10.0,
+        stringResource(R.string.washing_machine) to 20.0,
+        stringResource(R.string.tv) to 15.0,
+        stringResource(R.string.air_conditioner) to 50.0,
+        stringResource(R.string.microwave) to 25.0,
+        stringResource(R.string.dishwasher) to 35.0,
+        stringResource(R.string.vacuum_cleaner) to 8.0
     )
 
     val deviceIcons = mapOf(
-        "Fridge" to R.drawable.kitchen_24px,
-        "Washing Machine" to R.drawable.local_laundry_service_24px,
-        "TV" to R.drawable.tv_24px,
-        "Laptop" to R.drawable.laptop_windows_24px,
-        "Air Conditioner" to R.drawable.mode_fan_24px,
-        "Heater" to R.drawable.fireplace_24px,
-        "Microwave" to R.drawable.microwave_24px,
-        "Dishwasher" to R.drawable.dishwasher_24px,
-        "El-Car" to R.drawable.directions_car_24px,
-        "Vacuum Cleaner" to R.drawable.vacuum_24px,
+        stringResource(R.string.fridge) to R.drawable.kitchen_24px,
+        stringResource(R.string.washing_machine) to R.drawable.local_laundry_service_24px,
+        stringResource(R.string.tv) to R.drawable.tv_24px,
+        stringResource(R.string.laptop) to R.drawable.laptop_windows_24px,
+        stringResource(R.string.air_conditioner) to R.drawable.mode_fan_24px,
+        stringResource(R.string.heater) to R.drawable.fireplace_24px,
+        stringResource(R.string.microwave) to R.drawable.microwave_24px,
+        stringResource(R.string.dishwasher) to R.drawable.dishwasher_24px,
+        stringResource(R.string.el_car) to R.drawable.directions_car_24px,
+        stringResource(R.string.vacuum_cleaner) to R.drawable.vacuum_24px,
     )
 
     fun initialize(energyProduced: Double, energyPrice: Double) {
