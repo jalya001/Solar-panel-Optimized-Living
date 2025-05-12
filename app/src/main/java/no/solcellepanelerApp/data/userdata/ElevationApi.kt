@@ -1,12 +1,12 @@
 package no.solcellepanelerApp.data.userdata
 
 import com.google.android.gms.maps.model.LatLng
-import io.ktor.client.*
-import io.ktor.client.call.*
-import io.ktor.client.engine.cio.*
-import io.ktor.client.request.*
-import io.ktor.client.plugins.contentnegotiation.*
-import io.ktor.serialization.kotlinx.json.*
+import io.ktor.client.HttpClient
+import io.ktor.client.call.body
+import io.ktor.client.engine.cio.CIO
+import io.ktor.client.plugins.contentnegotiation.ContentNegotiation
+import io.ktor.client.request.get
+import io.ktor.serialization.kotlinx.json.json
 
 class ElevationApi {
     suspend fun fetchElevation(coordinates: LatLng): Double? {

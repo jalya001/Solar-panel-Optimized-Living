@@ -1,16 +1,22 @@
 package no.solcellepanelerApp.data.weatherdata
 
-import io.ktor.client.*
-import io.ktor.client.request.*
-import io.ktor.client.call.*
-import io.ktor.client.statement.*
-import kotlinx.serialization.json.*
-import io.ktor.client.plugins.contentnegotiation.*
-import io.ktor.client.plugins.*
-import io.ktor.serialization.kotlinx.json.*
+import io.ktor.client.HttpClient
+import io.ktor.client.call.body
+import io.ktor.client.plugins.HttpRequestTimeoutException
+import io.ktor.client.plugins.HttpTimeout
+import io.ktor.client.plugins.contentnegotiation.ContentNegotiation
+import io.ktor.client.request.header
+import io.ktor.client.request.request
+import io.ktor.client.request.setBody
+import io.ktor.client.statement.HttpResponse
+import io.ktor.http.ContentType
+import io.ktor.http.HttpMethod
+import io.ktor.http.HttpStatusCode
+import io.ktor.http.contentType
+import io.ktor.serialization.kotlinx.json.json
+import kotlinx.coroutines.delay
+import kotlinx.serialization.json.Json
 import java.io.IOException
-import io.ktor.http.*
-import kotlinx.coroutines.*
 
 class CustomHttpClient {
     val client = HttpClient {

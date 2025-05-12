@@ -1,25 +1,25 @@
 package no.solcellepanelerApp.ui.home
 
-import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewModelScope
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.launch
-import no.solcellepanelerApp.data.weatherdata.WeatherRepository
-import no.solcellepanelerApp.model.price.Region
-import java.time.ZonedDateTime
 import android.Manifest
 import android.content.Context
 import android.content.pm.PackageManager
 import android.location.Location
 import androidx.core.content.ContextCompat
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.launch
 import no.solcellepanelerApp.MainActivity
 import no.solcellepanelerApp.data.pricedata.PriceRepository
-import no.solcellepanelerApp.model.reusables.UiState
+import no.solcellepanelerApp.data.weatherdata.WeatherRepository
+import no.solcellepanelerApp.model.price.Region
 import no.solcellepanelerApp.model.price.fetchPrices
+import no.solcellepanelerApp.model.reusables.UiState
 import no.solcellepanelerApp.util.fetchCoordinates
 import no.solcellepanelerApp.util.mapLocationToRegion
+import java.time.ZonedDateTime
 
 class HomeViewModel : ViewModel() {
     private val weatherRepository = WeatherRepository.WeatherRepositoryProvider.instance

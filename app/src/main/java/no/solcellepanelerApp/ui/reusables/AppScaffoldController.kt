@@ -5,6 +5,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
+
 class AppScaffoldController {
     var topBarContent by mutableStateOf<(@Composable () -> Unit)?>(null)
     var topBarTitle by mutableStateOf<String?>(null)
