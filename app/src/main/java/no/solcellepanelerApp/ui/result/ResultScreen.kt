@@ -1,5 +1,6 @@
 package no.solcellepanelerApp.ui.result
 
+
 import android.util.Log
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -144,8 +145,10 @@ private fun MonthDataDisplay(
 ) {
     var expanded by remember { mutableStateOf(false) }
     var selectedMonthIndex by remember { mutableIntStateOf(0) }
-    val temperatureFactors = resultViewModel.temperatureFactors.collectAsState().value ?: emptyList()
-    val calculationResults = resultViewModel.calculationResults.stateFlow.collectAsState().value!! // This is a dup
+    val temperatureFactors =
+        resultViewModel.temperatureFactors.collectAsState().value ?: emptyList()
+    val calculationResults =
+        resultViewModel.calculationResults.stateFlow.collectAsState().value!! // This is a dup
 
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
@@ -223,28 +226,23 @@ private fun MonthDataDisplay(
     }
 }
 
+//animation for globe
 @Composable
 fun GlobeAnimation() {
-
     val animationFile = "globe_anim.json"
 
-    // Force new composition when value changes
     val composition by rememberLottieComposition(
         LottieCompositionSpec.Asset(animationFile)
     )
 
-    // Reset animation state when value changes
     val progress by animateLottieCompositionAsState(
         composition = composition,
         iterations = LottieConstants.IterateForever,
-        // Add a key to restart animation when value changes
     )
 
     LottieAnimation(
         composition = composition,
         progress = { progress },
-        modifier = Modifier
-            .size(150.dp)
-//            .background(Color.Blue)
+        modifier = Modifier.size(150.dp)
     )
 }

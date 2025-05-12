@@ -4,9 +4,10 @@
     <!--Home Screen-->
     <string name="home"> Hjemme</string>
     <string name="install_panels_title">Finn ditt \n solcellepotensial!</string>
-    <string name="install_panels_desc">Legg inn adresse og detaljer — se estimert strøm og besparelse med solcellepaneler. *må jobbes med*</string>
+    <string name="install_panels_desc">Legg inn adresse og detaljer — se estimert strøm og besparelse med solcellepaneler.</string>
     <string name="last_location">Siste posisjon (trenger bedre navn)</string>
     <string name="prices"> Strømpriser </string>
+    <string name="live_energy"> Direkte energi %1$d:00</string>
     <string name="help"> Hjelp</string>
     <string name="appearance"> Utseende</string>
     <string name="dark_mode">Mørkmodus </string>
@@ -16,13 +17,22 @@
     <string name="go_back"> Tilbake </string>
     <string name="close"> Lukk</string>
     <string name="prod">Produksjon</string>
+    <string name="live_prices">Se strømprisene!</string>
+    <string name="reset">Tilbakestill</string>
+    <string name="location_perm_title">Lokasjonstillatelse er allerede aktivert</string>
+    <string name="location_perm_content">For å endre posisjonstilgang, åpne innstillinger</string>
+    <string name="settings">Gå til Innstillinger</string>
+    <string name="change_location_settings">Endre posisjonsinnstillinger</string>
+    <string name="grant_location_access">Gi tilgang til plassering</string>
+    <string name="tutorial">Start Introduksjon</string>
 
     <!--Info Screen-->
     <string name='intro_title'>Introduksjon</string>
     <string name="intro_content">
-    Å installere solcellepaneler kan være en smart investering – både økonomisk og miljømessig.
-    Men hvor lønnsomt det er, avhenger av hvor du bor, hvor mye sol du får, og hva strømprisene er i ditt område.
-    Denne appen hjelper deg med å vurdere om solenergi er verdt det for deg, basert på værdata, strømpriser og din lokasjon.\n\n
+        Å installere solcellepaneler kan være en smart investering – både økonomisk og miljømessig.
+        Lønnsomheten avhenger av hvor du bor, hvor mye sol du får, og strømprisene i ditt område.
+        Denne appen hjelper deg med å vurdere om solenergi er verdt det for deg, basert på værdata, strømpriser og din lokasjon.
+        Her forklarer vi det viktigste du bør vite før du tar en beslutning.
     </string>
 
     <string name='price_title'>Strømpriser</string>
@@ -36,42 +46,74 @@
     <string name='pros_and_cons_title'>Fordeler og ulemper </string>
     <string name='pros_and_cons_content'>
         Solcellepaneler har blitt et populært alternativ for mange som ønsker å produsere sin egen strøm, spare penger og bidra til et mer bærekraftig energiforbruk. Men som med alle investeringer, finnes det både fordeler og ulemper du bør være klar over.\n
-        \n
-        Fordeler:\n
-        • Miljøvennlig: Solcellepaneler produserer ren, fornybar energi og bidrar til å redusere klimagassutslipp.\n
-        • Reduserte strømregninger: Du kan spare penger over tid ved å produsere din egen elektrisitet.\n
-        • Støtteordninger: I Norge finnes det offentlige støtteordninger som kan dekke deler av installasjonskostnaden.\n
-        • Lite vedlikehold: Når systemet først er installert, krever det minimalt med vedlikehold.\n
-        • Økt verdi på boligen: Et solcellesystem kan gjøre boligen mer attraktiv ved videresalg.\n
-        \n
-        Ulemper:\n
-        • Høye startkostnader: Investeringen i solcellepaneler er fortsatt relativt høy.\n
-        • Lav produksjon om vinteren: Mørke vintre og snø kan redusere effektiviteten betydelig.\n
-        • Avhengig av beliggenhet: Hvor mye strøm du produserer avhenger av hvor du bor og hvor mye sol du får.\n
-        • Lang tilbakebetalingstid: Det kan ta mange år før investeringen betaler seg.\n
-        • Tekniske begrensninger: Ikke alle bygninger er like godt egnet for montering av solcellepaneler.\n
+    </string>
+    <string name="pros">
+        Fordeler:
+    </string>
+    <string name="solar_pro_1">
+        Miljøvennlig: Solcellepaneler produserer ren, fornybar energi og bidrar til å redusere klimagassutslipp.\n
+    </string>
+    <string name="solar_pro_2">
+        Reduserte strømregninger: Du kan spare penger over tid ved å produsere din egen elektrisitet.\n
+    </string>
+    <string name="solar_pro_3">
+        Støtteordninger: I Norge finnes det offentlige støtteordninger som kan dekke deler av installasjonskostnaden.\n
+    </string>
+    <string name="solar_pro_4">
+        Lite vedlikehold: Når systemet først er installert, krever det minimalt med vedlikehold.\n
+    </string>
+    <string name="solar_pro_5">
+        Økt verdi på boligen: Et solcellesystem kan gjøre boligen mer attraktiv ved videresalg.\n
+    </string>
+    <string name="cons">
+        Ulemper:
+    </string>
+    <string name="solar_con_1">
+        Høye startkostnader: Investeringen i solcellepaneler er fortsatt relativt høy.\n
+    </string>
+    <string name="solar_con_2">
+        Lav produksjon om vinteren: Mørke vintre og snø kan redusere effektiviteten betydelig.\n
+    </string>
+    <string name="solar_con_3">
+        Avhengig av beliggenhet: Hvor mye strøm du produserer avhenger av hvor du bor og hvor mye sol du får.\n
+    </string>
+    <string name="solar_con_4">
+        Lang tilbakebetalingstid: Det kan ta mange år før investeringen betaler seg.\n
+    </string>
+    <string name="solar_con_5">
+        Tekniske begrensninger: Ikke alle bygninger er like godt egnet for montering av solcellepaneler.\n
     </string>
 
     <string name="money_saved_title">Penger spart</string>
     <string name="money_saved_content">
-        Appen beregner hvor mye penger du potensielt kan spare ved å installere solcellepaneler, basert på værforhold der du bor og historiske strømpriser.
-        Ved å sammenligne hvor mye strøm du kan produsere med solcellepaneler med hvor mye strøm koster i dag, får du et estimat på årlige besparelser.
-        Jo mer sol du får og jo høyere strømprisene er, desto mer kan du spare. Beregningen gir deg bedre grunnlag for å vurdere om investeringen i solceller er lønnsom for deg.
+        Appen beregner hvor mye du kan spare ved å installere solcellepaneler, basert på værforhold der du bor og tidligere strømpriser.
+        Ved å se hvor mye strøm du kan produsere og hva strøm koster i dag, får du et anslag på hvor mye du kan spare hvert år.
+        Jo mer sol og høyere strømprisene, jo større besparelse. Dette gir deg et bedre grunnlag for å vurdere om investeringen i solceller er lønnsom for deg.
     </string>
 
 
     <string name="cabin_title"> Hytte</string>
     <string name="cabin_content">
-        For hytter uten tilkobling til strømnettet kan solcellepaneler være en effektiv og bærekraftig løsning for å dekke grunnleggende strømbehov.
-        Basert på beliggenhet og lokale solforhold kan du med solenergi få nok kapasitet til blant annet belysning, lading av elektroniske enheter, kjølebokser eller små vannpumper.
-        Denne appen hjelper deg med å vurdere hvor mye solenergi hytta di potensielt kan produsere, og om det er tilstrekkelig for dine behov.
+        For hytter uten tilkobling til strømnettet kan solcellepaneler være en effektiv og bærekraftig løsning for å dekke det grunnleggende strømbehovet.
+        Avhengig av hvor hytta ligger og hvor mye sol den får, kan du produsere nok strøm til for eksempel belysning, lading av mobil og nettbrett, bruk av
+        kjøleboks eller drift av små vannpumper. Med denne appen kan du enkelt finne ut hvor mye solenergi hytta di kan produsere, og hva slags elektrisk utstyr
+        det kan være nok til.
+    </string>
+
+    <string name="solar_panels_title">Solcellepaneler</string>
+    <string name="solar_panels_content">
+        Solcellepaneler finnes i flere varianter, hver med sine egne fordeler og egenskaper. Monokrystallinske paneler tilbyr høy effektivitet og lang levetid, noe som gjør dem ideelle for begrensede takarealer.
+        Polykrystallinske paneler er rimeligere og passer godt for større installasjoner. Tynnfilmspaneler er fleksible og lette, noe som gjør dem egnet for spesielle bruksområder som buede overflater.
+        Valget av paneltype avhenger av faktorer som budsjett, tilgjengelig plass og ønsket effektivitet.
+        For mer detaljert informasjon om de ulike solcelleteknologiene, kan du besøke FUSen-bloggen:
     </string>
 
     <string name="support_title">Støtteordninger</string>
     <string name="support_content">
-        Du kan være kvalifisert for økonomisk støtte fra Enova, en statlig aktør som gir tilskudd til energieffektive tiltak – inkludert solcelleanlegg.
-        Gjennom sitt program for boligeiere kan du få inntil 32 500 kr i støtte totalt, avhengig av anleggets størrelse og effektivitet.
-        For mer informasjon og søknad, gå til:
+        Du kan være kvalifisert for økonomisk støtte fra Enova, en statlig aktør som støtter energieffektive tiltak som solcelleanlegg.
+        Som boligeier kan du få inntil 32 500 kr i støtte, avhengig av hvor stort og effektivt anlegget ditt er.
+        Du får 7 500 kr i grunnstøtte for et solcelleanlegg, pluss 2 000 kr per kW installert effekt, opptil 25 000 kr ekstra.
+        For mer informasjon og for å søke, gå til:
     </string>
 
 
@@ -92,9 +134,9 @@
     <!--Additional Input-->
     <string name="area_label">Takareal (m²)</string>
     <string name="draw_area">Tegn areal</string>
-    <string name="slope_label">Vinkel på taket fra 0 - 90°</string>
+    <string name="slope_label">Vinkel på taket fra 0 – 90°</string>
     <string name="direction_label">Retningen panelet vender mot</string>
-    <string name="efficiency_label">Effektiviteten til panelene, vanligvis mellom 16-20 %</string>
+    <string name="efficiency_label">Effektiviteten til panelene, vanligvis mellom 16–20 %</string>
     <string name="coordinates_label">Koordinater (fra kart):</string>
     <string name="coordinates_unavailable">Ingen koordinater tilgjengelig</string>
     <string name="closest_weather_station">Nærmeste værstasjon:</string>
@@ -105,6 +147,21 @@
     <string name="need_help">Trenger hjelp?</string>
     <string name="tech_problems_content">Problemer med appen</string>
     <string name="how_to_draw">Hvordan tegne i kartet</string>
+
+    <string name="how_to_draw_content">
+Slik tegner du:\n
+Trykk på kartet for å plassere nummererte punkter. Plasser minst 3 punkter i en rektangulær eller polygonform.\n\n
+
+Slik flytter du et punkt:\n
+Hold inne på et punkt i minst 3 sekunder for å dra og flytte det.\n
+Du kan også fjerne punkter og plassere dem på nytt.\n\n
+
+Slik ser du tegningen din:\n
+Trykk på "Vis areal" for å forhåndsvise markeringen.\n
+Når du er fornøyd, trykk på "Bekreft tegning" for å fortsette.
+</string>
+
+
     <string name="need_help_drawing">Trenger du hjelp med å tegne?</string>
     <string name="tech_problems_title">Problemer</string>
     <string name="help_draw">Draw on the map</string>
@@ -119,7 +176,18 @@
     <string name="roofAreaHelp"> Det totale arealet på taket som er egnet for solcellepaneler, målt i kvadratmeter (m²) </string>
     <string name="roofAngleHelp"> Også kjent som helning. Dette er hvor bratt taket er. Paneler fungerer best når de er vinklet mot solen.</string>
     <string name="panelEfficencyHelp"> Hvor godt panelene omdanner sollys til strøm. Vanligvis mellom 16–20 % </string>
-    <string name="panelDirectionHelp">Også kalt azimuth. Sørvendt gir som regel best effekt i Norge, men appen beregner dette ut fra din lokasjon.</string>
+    <string name="panelDirectionHelp">Retning (azimuth) viser hvilken himmelretning panelet peker mot – for eksempel nord, øst, sør eller vest.
+Animasjonen viser hvordan solen beveger seg over himmelen i løpet av dagen. Hvor mye solenergi panelet mottar, avhenger av om det er vendt i retning solen kommer fra.</string>
+    <string name="more_info_solar_panels">Les mer om solcellepaneler</string>
+    <string name="monocrystalline">Monokrystallinsk</string>
+    <string name="monocrystalline_efficiency">(18–23%)</string>
+    <string name="monocrystalline_content">Høy effektivitet, dyrere, standard</string>
+    <string name="polycrystalline">Polykrystallinsk</string>
+    <string name="polycrystalline_efficiency">(15–17%)</string>
+    <string name="polycrystalline_content">Middels effektivitet, rimeligere</string>
+    <string name="thinfilm">Tynnfilm</string>
+    <string name="thinfilm_efficiency">(10–17%)</string>
+    <string name="thinfilm_content">Lav effektivitet, fleksibel</string>
 
     <!--Result Screen-->
     <string name="results"> Resultater </string>
@@ -128,9 +196,9 @@
     <string name="efficiency"> Effektivitet: </string>
     <string name="data_not_added"> Data ikke lagt til</string>
     <string name="get_data">Hent data </string>
-    <string name="loading"> Laster inn data, vennligst vent… </string>
+    <string name="loading">Laster inn data, vennligst vent… </string>
 
-    <string name="address_not_found">Adresse ikke funnet, prøv igjen</string>
+    <string name="address_not_found">Fant ikke adressen, prøv igjen</string>
     <string name="follow_system">Følg systemtema</string>
     <string name="navigate_results">Gå til resultater</string>
 
@@ -170,11 +238,14 @@
     <string name="global_radiation">Global stråling: %.2f kWh/m²</string>
     <string name="avg_cloud_cover"> Gjennomsnittlig skydekke: %.2f</string>
     <string name="avg_snow_cover">Gjennomsnittlig snødekke: %.2f</string>
-    <string name="temp_factor">Temperaturfaktor: %.2f °C</string>
+    <string name="temp_factor">Temperaturfaktor: %.2f%%</string>
+
+    <string name="temp_factor_explanation">Temperaturfaktor justerer estimert energiproduksjon basert på gjennomsnittlig månedstemperatur.</string>
     <string name="adj_radiation">Justert stråling: %.2f kWh/m²</string>
+    <string name="adj_radiation_explanation">Dette er mengden solstråling panelene dine mottar, juster med snø-, sky- og temperaturdata for posisjonen din</string>
     <string name="estimated_energy_prod">Estimert produsert energi: \n%.2f kWh </string>
     <string name="estimated_powerpr_hour">Estimert kraft produsert per time:\n%.2f kWh</string>
-    <string name="show_monthly_savings"><i>Vis Din Månedlige Sparing I %1$s</i></string>
+    <string name="click_to_see_savings"><i>Trykk her for å se din sparing i %1$s</i></string>
 
     <!--Savings Screen-->
     <string name="yearly_savings">Spares årlig</string>
@@ -186,7 +257,7 @@
     <string name="monthly_savings_suffix_part1"> i </string>
     <string name="monthly_savings_suffix_part2"> på strøm fra solcellepaneler</string>
 
-    <string name="yearly_savings_prefix">Du vil spare </string>
+    <string name="yearly_savings_prefix">Du vil spare</string>
     <string name="yearly_savings_suffix">i året på strøm fra solcellepaneler</string>
 
 
@@ -199,10 +270,23 @@
     <string name="cloud_full_info">Dette er hvor mye skydekke din nåværende posisjon har i gjennomsnitt per måned:</string>
     <string name="temp_full_info">Dette er den gjennomsnittlige temperaturen per måned for din nåværende posisjon:</string>
     <string name="difference_info">Denne grafen viser gjennomsnittlig global stråling for hver måned for din nåværende posisjon og strålingen justert med snødekke og skydekke-data:</string>
+    <string name="energy_produced">Produsert energi fra panelene:</string>
+    <string name="energy_deficit">Energiunderskudd!</string>
+
+    <string name="fridge">Kjøleskap</string>
+    <string name="el_car">Elbil</string>
+    <string name="heater">Varmeovn</string>
+    <string name="microwave">Mikrobølgeovn</string>
+    <string name="air_conditioner">Air Conditioner</string>
+    <string name="laptop">Laptop</string>
+    <string name="tv">TV</string>
+    <string name="washing_machine">Vaskemaskin</string>
+    <string name="vacuum_cleaner">Støvsuger</string>
+    <string name="dishwasher">Oppvaskmaskin</string>
+    <string name="device_info">Dette er enhetene du har koblet til, og deres månedlige energiforbruk:</string>
 
 
     <!-- Onboarding -->
-
     <string name="onboard_title_1">Velkommen til SOL</string>
     <string name="onboard_desc_1">Din digitale rådgiver for optimal plassering og bruk av solcellepaneler.</string>
 
@@ -228,6 +312,10 @@
 
     <string name="onboard_title_4">Lokasjonstilgang</string>
     <string name="onboard_desc_4">Gi tilgang til enhetslokasjon for å finne nærmeste adresse og få en bedre opplevelse.</string>
+    <string name="onboard_title_5">Endre utseende</string>
+    <string name="onboard_desc_5">Ps. Trykk på utseende knappen i nederste høyre hjørnet for å bytte språk, tema og skriftstørrelse</string>
+
+
     <string name="hide_area">Skjul\nområde</string>
 
     <string name="generic_error">Noe gikk galt! Prøv igjen senere.</string>
@@ -242,4 +330,59 @@
     <string name="nodata_error">Vi fant ingen data for dette området. Unnskyld!</string>
     <string name="partialdata_error">Det mangler data for dette området, og vi kan ikke gi et estimat. Unnskyld!</string>
     <string name="unexpected_error">Uforventet oppførsel. Kontakt utviklerne.</string>
+    <string name="next">Neste</string>
+    <string name="back">Tilbake</string>
+
+    <!-- Price Screen -->
+    <string name="region">Velg distrikt</string>
+    <string name="bar_chart">Vis søylediagram</string>
+    <string name="line_chart">Vis linjediagram</string>
+    <string name="x_axis_name">Tid (timer)</string>
+    <string name="y_axis_name">Strømpris (kr/kWh)</string>
+    <string name="change_time_arrows">Bruk pilene for å bytte time</string>
+    <string name="time">Tid:</string>
+    <string name="price_now">Nåværende strømpris i region:</string>
+    <string name="highest_price">Høyeste pris</string>
+    <string name="lowest_price">Laveste pris</string>
+    <string name="price_now_card">Pris nå</string>
+    <string name="future_price_prefix">Pris om</string>
+    <string name="price_suffix_part1">time</string>
+    <string name="price_suffix_part2">r</string>
+    <string name="past_price_prefix">Pris for</string>
+    <string name="past_price_suffix">siden</string>
+    <string name="oslo">Oslo/Øst-Norge</string>
+    <string name="kristiansand">Kristiansand/Sør-Norge</string>
+    <string name="trondheim">Trondheim/Midt-Norge</string>
+    <string name="tromso">Tromsø/Nord-Norge</string>
+    <string name="bergen">Bergen/Vest-Norge</string>
+
+    <!-- Tutorial Overlays -->
+    <string name="overlay_bottom_message">Klikk hvor som helst for å fortsette</string>
+    <string name="map_overlay_title">Kartoversikt</string>
+    <string name="map_overlay">
+    Søk etter adressen din, bruk enhetsposisjon, eller trykk på kartet for å velge en lokasjon
+</string>
+
+    <string name="draw_overlay_title">Tegn området ditt</string>
+    <string name="map_draw_overlay">
+    Trykk på kartet for å starte å tegne ønsket område\n\n
+    Trykk på kartet for å plassere markører\n\n
+    Plasser minst 3 markører i rektangelform og i riktig rekkefølge\n\n
+    Plasser minst 3 markører slik at de danner en geometrisk form, og i riktig rekkefølge\n\n
+    Trykk på &quot;Vis område&quot; for å forhåndsvise tegningen
+</string>
+
+    <string name="saving_overlay_title">Se hvor mye du sparer</string>
+    <string name="saving_overlay">
+    Trykk på de ulike enhetene for å se hvor mye de bidrar til besparelsen av energi\n\n
+    Scroll opp for mer informasjon!
+</string>
+
+    <string name="home_overlay_title">Velkommen til hjemskjermen din!</string>
+    <string name="home_overlay">
+    Trykk på &quot;Finn ditt solcellepotensiale&quot; for å se hvor mye du kan spare med solcellepaneler!\n\n
+    Trykk på strømprisene nede til høyre for å få mer detaljer om strømprisene\n\n
+</string>
+
+
 </resources>

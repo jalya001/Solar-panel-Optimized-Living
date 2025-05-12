@@ -2,18 +2,24 @@ package no.solcellepanelerApp.ui.map
 
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.core.tween
+import androidx.compose.foundation.Canvas
+import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
@@ -34,15 +40,17 @@ import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.focus.FocusManager
+import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.platform.LocalUriHandler
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.Density
@@ -54,6 +62,8 @@ import no.solcellepanelerApp.ui.navigation.InfoHelpButton
 import no.solcellepanelerApp.ui.navigation.getCompassDirection
 import no.solcellepanelerApp.ui.reusables.DecimalFormatter
 import no.solcellepanelerApp.ui.reusables.DecimalInputField
+import kotlin.math.cos
+import kotlin.math.sin
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -117,7 +127,10 @@ private fun BottomSheetContent(
             decimalFormatter = decimalFormatter
         )
         Spacer(modifier = Modifier.height(8.dp))
-        InfoHelpButton(stringResource(id = R.string.area_label), stringResource(id = R.string.roofAreaHelp))
+        InfoHelpButton(
+            stringResource(id = R.string.area_label),
+            stringResource(id = R.string.roofAreaHelp)
+        )
 
         Spacer(modifier = Modifier.height(16.dp))
         SlopeSlider(viewModel)
@@ -130,10 +143,6 @@ private fun BottomSheetContent(
         DirectionSlider(viewModel)
 
         Spacer(modifier = Modifier.height(16.dp))
-        //selectedRegion?.let {
-        //    RegionDropdown(it, onRegionSelected)
-        //}
-        Spacer(modifier = Modifier.height(16.dp))
         ResultNavigationButton(
             navController = navController,
             viewModel = viewModel,
@@ -145,14 +154,14 @@ private fun BottomSheetContent(
 data class SolarPanelType(
     val name: String,
     val efficiency: Float,
-    val description: String
+    val description: String,
 )
 
 @Composable
 fun AreaInputRow(
     onDismiss: () -> Unit,
     decimalFormatter: DecimalFormatter,
-    viewModel: MapViewModel
+    viewModel: MapViewModel,
 ) {
     LaunchedEffect(Unit) {
         viewModel.initializeArea()
@@ -192,7 +201,7 @@ fun AreaInputRow(
 
 @Composable
 fun SlopeSlider(
-    viewModel: MapViewModel
+    viewModel: MapViewModel,
 ) {
     val angle by viewModel.angleState.stateFlow.collectAsState()
     val onAngleChange: (Float) -> Unit = { viewModel.angleState.value = it.toDouble() }
@@ -213,12 +222,15 @@ fun SlopeSlider(
         modifier = Modifier.fillMaxWidth()
     )
 
-    InfoHelpButton("${stringResource(id = R.string.angle)} ${angle.toInt()}°", stringResource(id = R.string.roofAngleHelp))
+    InfoHelpButton(
+        "${stringResource(id = R.string.angle)} ${angle.toInt()}°",
+        stringResource(id = R.string.roofAngleHelp)
+    )
 }
 
 @Composable
 fun DirectionSlider(
-    viewModel: MapViewModel
+    viewModel: MapViewModel,
 ) {
     val azimuth by viewModel.directionState.stateFlow.collectAsState()
     val onAzimuthChange: (Float) -> Unit = { viewModel.directionState.value = it.toDouble() }
@@ -239,29 +251,56 @@ fun DirectionSlider(
         modifier = Modifier.fillMaxWidth()
     )
 
-    InfoHelpButton("${stringResource(id = R.string.direction)} ${azimuth.toInt()}° (${getCompassDirection(azimuth.toInt())})", stringResource(id = R.string.panelDirectionHelp))
+    InfoHelpButton(
+        "${stringResource(id = R.string.direction)} ${azimuth.toInt()}° (${
+            getCompassDirection(
+                azimuth.toInt()
+            )
+        })", stringResource(id = R.string.panelDirectionHelp)
+    )
+    Spacer(modifier = Modifier.height(30.dp))
+
+    SunAngleAnimation(angle = azimuth.toFloat())
+
+
 }
 
 @Composable
 fun PanelPicker(viewModel: MapViewModel, focusManager: FocusManager) {
-    val panelTypes = remember {
-        listOf(
-            SolarPanelType("Monokrystallinsk", 20f, "Høy effektivitet, dyrere, Standard"),
-            SolarPanelType("Polykrystallinsk", 15f, "Middels effektivitet, rimeligere"),
-            SolarPanelType("Tynnfilm", 10f, "Lav effektivitet, fleksibel")
+    val panelTypes = listOf(
+        SolarPanelType(
+            stringResource(R.string.monocrystalline),
+            20f,
+            stringResource(R.string.monocrystalline_content)
+        ),
+        SolarPanelType(
+            stringResource(R.string.polycrystalline),
+            15f,
+            stringResource(R.string.polycrystalline_content)
+        ),
+        SolarPanelType(
+            stringResource(R.string.thinfilm),
+            10f,
+            stringResource(R.string.thinfilm_content)
         )
-    }
+    )
 
     val efficiency by viewModel.efficiencyState.stateFlow.collectAsState()
 
-    Text(stringResource(id = R.string.efficiency_label), style = MaterialTheme.typography.titleLarge)
+    Text(
+        stringResource(id = R.string.efficiency_label),
+        style = MaterialTheme.typography.titleLarge
+    )
 
     panelTypes.forEach { panelType ->
         PanelTypeCard(panelType, efficiency.toFloat(), viewModel, focusManager)
     }
 
     LearnMoreLink()
-    InfoHelpButton("${stringResource(id = R.string.efficiency)} ~ ${efficiency.toInt()}%", stringResource(id = R.string.panelEfficencyHelp))
+    InfoHelpButton(
+        "${stringResource(id = R.string.efficiency)} ~ ${efficiency.toInt()}%",
+        stringResource(id = R.string.panelEfficencyHelp)
+    )
 
 }
 
@@ -270,7 +309,7 @@ fun PanelTypeCard(
     panelType: SolarPanelType,
     selectedEfficiency: Float,
     viewModel: MapViewModel,
-    focusManager: FocusManager
+    focusManager: FocusManager,
 ) {
     val onSelected: (Float) -> Unit = { viewModel.efficiencyState.value = it.toDouble() }
     val selected = selectedEfficiency == panelType.efficiency
@@ -328,13 +367,12 @@ fun PanelTypeCard(
             )
         }
     }
-
     Spacer(modifier = Modifier.height(12.dp))
 }
 
 @Composable
 fun LearnMoreLink(
-    url: String = "https://blogg.fusen.no/alle/ulike-typer-solcelleteknologi"
+    url: String = "https://blogg.fusen.no/alle/ulike-typer-solcelleteknologi",
 ) {
     val uriHandler = LocalUriHandler.current
 
@@ -363,13 +401,95 @@ fun ResultNavigationButton(
     navController: NavController,
 ) {
     //if (viewModel.area > 0 && viewModel.coordinates != null) {
-        Button(
-            onClick = {
-                navController.navigate("result")
-            },
-            //modifier = Modifier.align(Alignment.CenterHorizontally)
-        ) {
-            Text("Gå til resultater")
-        }
-    //}
+    Button(
+        onClick = {
+            navController.navigate("result")
+        },
+        //modifier = Modifier.align(Alignment.CenterHorizontally)
+    ) {
+        Text("Gå til resultater")
+    }
 }
+
+@Composable
+fun SunAngleAnimation(angle: Float) {
+    // Calculate sun position based on roof angle (circular motion)
+    val angleRadians = ((angle - 90) * Math.PI / 180).toFloat()
+    val radius = 80f  // Radius for sun's circular motion around house
+
+    Box(
+        modifier = Modifier
+            .height(180.dp)
+            .fillMaxWidth()
+            .padding(vertical = 8.dp)
+    ) {
+        // GROUND
+        Box(
+            modifier = Modifier
+                .fillMaxSize()
+                .background(
+                    color = Color.Transparent,
+                    shape = RoundedCornerShape(bottomStart = 8.dp, bottomEnd = 8.dp)
+                )
+        )
+
+        // House with roof
+        Image(
+            painter = painterResource(id = R.drawable.house),
+            contentDescription = "House",
+            modifier = Modifier
+                .width(200.dp)
+                .height(300.dp)
+                .align(Alignment.Center)
+//                .offset(y = (-10).dp),
+            , contentScale = ContentScale.Fit
+        )
+
+        // Calculate sun position on a circle around the center of the box
+        val centerX = 0f
+        val centerY = 0f
+        val sunX = centerX + radius * cos(angleRadians)
+        val sunY = centerY + radius * sin(angleRadians)
+
+        // Sun with animation
+        Box(
+            modifier = Modifier
+                .size(40.dp)
+                .align(Alignment.Center)  // Align to the center of the parent box
+                .offset(
+                    x = sunX.dp,
+                    y = sunY.dp
+                )
+                .background(
+                    Color(0xFFFFD700),  // Gold color
+                    shape = CircleShape
+                )
+                .border(2.dp, Color(0xFFFF8C00), CircleShape)
+        ) {
+            // Sun rays
+            Canvas(modifier = Modifier.fillMaxSize()) {
+                val x = size.width / 2
+                val y = size.height / 2
+                val rayLength = 15f
+
+                for (i in 0 until 8) {
+                    val directionAngle = (i * 45f) * (Math.PI / 180f)
+                    val startX = x + (10f * cos(directionAngle)).toFloat()
+                    val startY = y + (10f * sin(directionAngle)).toFloat()
+                    val endX = x + ((10f + rayLength) * cos(directionAngle)).toFloat()
+                    val endY = y + ((10f + rayLength) * sin(directionAngle)).toFloat()
+
+                    drawLine(
+                        color = Color(0xFFFF8C00),  // Dark orange
+                        start = Offset(startX, startY),
+                        end = Offset(endX, endY),
+                        strokeWidth = 2f
+                    )
+                }
+            }
+        }
+    }
+}
+
+
+

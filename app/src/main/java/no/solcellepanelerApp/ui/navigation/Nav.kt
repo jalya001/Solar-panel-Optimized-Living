@@ -23,7 +23,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
-import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavHostController
@@ -32,25 +31,22 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
 import no.solcellepanelerApp.R
-
-import no.solcellepanelerApp.ui.price.PriceScreen
-import no.solcellepanelerApp.ui.price.PriceViewModel
 import no.solcellepanelerApp.ui.home.HomeScreen
 import no.solcellepanelerApp.ui.home.HomeTopBar
 import no.solcellepanelerApp.ui.infoscreen.InfoScreen
 import no.solcellepanelerApp.ui.map.MapScreen
 import no.solcellepanelerApp.ui.onboarding.OnboardingScreen
-import no.solcellepanelerApp.ui.savings.SavingsScreen
+import no.solcellepanelerApp.ui.price.PriceScreen
 import no.solcellepanelerApp.ui.result.ResultScreen
-
 import no.solcellepanelerApp.ui.reusables.AppScaffoldController
+import no.solcellepanelerApp.ui.savings.SavingsScreen
 import no.solcellepanelerApp.ui.theme.isDarkThemeEnabled
 
 @Composable
 fun Nav(
     navController: NavHostController,
     appScaffoldController: AppScaffoldController,
-    contentPadding: PaddingValues
+    contentPadding: PaddingValues,
 ) {
     val titles = mapOf(
         "prices" to stringResource(R.string.price_title),
@@ -66,14 +62,17 @@ fun Nav(
                     appScaffoldController.setCustomTopBar { HomeTopBar(isDarkTheme = isDarkThemeEnabled()) }
                     appScaffoldController.reinstateBottomBar()
                 }
+
                 "onboarding" -> {
                     appScaffoldController.clearTopBar()
                     appScaffoldController.clearBottomBar()
                 }
+
                 in titles.keys -> {
                     appScaffoldController.setTopBar(titles[route] ?: "")
                     appScaffoldController.reinstateBottomBar()
                 }
+
                 else -> {
                     appScaffoldController.setTopBar("")
                     appScaffoldController.reinstateBottomBar()
@@ -85,10 +84,12 @@ fun Nav(
     NavHost(navController, startDestination = "home") {
         composable("onboarding") { OnboardingScreen(onFinished = { navController.popBackStack() }) }
 
-        composable("home") { HomeScreen(
-            navController,
-            contentPadding = contentPadding
-        ) }
+        composable("home") {
+            HomeScreen(
+                navController,
+                contentPadding = contentPadding
+            )
+        }
         composable("map") {
             MapScreen(
                 navController,
@@ -134,8 +135,18 @@ fun BottomBar(
 ) {
     NavigationBar {
         NavigationBarItem(
-            icon = { Icon(painterResource(R.drawable.help_24px), contentDescription = "Help") },
-            label = { Text(stringResource(id = R.string.help)) },
+            icon = {
+                Icon(
+                    painterResource(R.drawable.help_24px),
+                    contentDescription = "Help"
+                )
+            },
+            label = {
+                Text(
+                    stringResource(id = R.string.help),
+                    style = MaterialTheme.typography.bodyMedium
+                )
+            },
             selected = false,
             onClick = onHelpClicked,
             colors = NavigationBarItemDefaults.colors(
@@ -150,7 +161,7 @@ fun BottomBar(
                     contentDescription = "Information"
                 )
             },
-            label = { Text("Info") },
+            label = { Text("Info", style = MaterialTheme.typography.bodyLarge) },
             selected = false,
             onClick = {
                 if (navController.currentDestination?.route != "info_screen") {
@@ -164,7 +175,12 @@ fun BottomBar(
         )
         NavigationBarItem(//taktisk plassering innit, høyre tommel
             icon = { Icon(painterResource(R.drawable.home_24px), contentDescription = "Home") },
-            label = { Text(stringResource(id = R.string.home_bottom_bar)) },
+            label = {
+                Text(
+                    stringResource(id = R.string.home_bottom_bar),
+                    style = MaterialTheme.typography.bodyLarge
+                )
+            },
             selected = false,
             onClick = { navController.navigate("home") },
             colors = NavigationBarItemDefaults.colors(
@@ -179,7 +195,12 @@ fun BottomBar(
                     contentDescription = "Appearance"
                 )
             },
-            label = { Text(stringResource(id = R.string.appearance)) },
+            label = {
+                Text(
+                    stringResource(id = R.string.appearance),
+                    style = MaterialTheme.typography.bodyLarge
+                )
+            },
             selected = false,
             onClick = onAppearanceClicked,
             colors = NavigationBarItemDefaults.colors(
@@ -243,7 +264,7 @@ fun NavGraphBuilder.savingsComposable(
     route: String,
     isMonthly: Boolean,
     appScaffoldController: AppScaffoldController,
-    contentPadding: PaddingValues
+    contentPadding: PaddingValues,
 ) {
     val arguments = when (isMonthly) {
         true -> listOf(
@@ -251,6 +272,7 @@ fun NavGraphBuilder.savingsComposable(
             navArgument("energyProduced") { type = NavType.StringType },
             navArgument("energyPrice") { type = NavType.StringType }
         )
+
         false -> listOf(
             navArgument("energyProduced") { type = NavType.StringType },
             navArgument("energyPrice") { type = NavType.StringType }
@@ -259,8 +281,10 @@ fun NavGraphBuilder.savingsComposable(
 
     composable(route, arguments = arguments) { backStackEntry ->
         val month = backStackEntry.arguments?.getString("month") ?: ""
-        val energyProduced = backStackEntry.arguments?.getString("energyProduced")?.toDoubleOrNull() ?: 0.0
-        val energyPrice = backStackEntry.arguments?.getString("energyPrice")?.toDoubleOrNull() ?: 0.0
+        val energyProduced =
+            backStackEntry.arguments?.getString("energyProduced")?.toDoubleOrNull() ?: 0.0
+        val energyPrice =
+            backStackEntry.arguments?.getString("energyPrice")?.toDoubleOrNull() ?: 0.0
 
         SavingsScreen(
             isMonthly = isMonthly,

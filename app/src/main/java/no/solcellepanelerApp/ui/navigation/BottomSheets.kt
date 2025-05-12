@@ -57,27 +57,16 @@ import no.solcellepanelerApp.ui.reusables.MySection
 import no.solcellepanelerApp.ui.theme.ThemeMode
 import no.solcellepanelerApp.ui.theme.ThemeState
 
-
-
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun HelpBottomSheet(
     visible: Boolean,
     onDismiss: () -> Unit,
     navController: NavController,
+    expandSection: String = "",
 ) {
 
     var triggerLocationFetch by remember { mutableStateOf(false) }
-
-//    var region: Region? by remember { mutableStateOf(null) }
-//   val (currentLocation, locationGranted) = if (triggerLocationFetch) {
-//        RememberLocationWithPermission(
-//            triggerRequest = true,
-//          onRegionDetermined = { region = it }
-//       ) } else {
-//       Pair(null, false)
-//    }
-
 
     val sheetState = rememberModalBottomSheetState(
         skipPartiallyExpanded = true
@@ -117,8 +106,18 @@ fun HelpBottomSheet(
                         if (showDialog) {
                             androidx.compose.material3.AlertDialog(
                                 onDismissRequest = { showDialog = false },
-                                title = { Text("Location Permission Already Granted") },
-                                text = { Text("If you want to change location permissions, go to settings.") },
+                                title = {
+                                    Text(
+                                        stringResource(R.string.location_perm_title),
+                                        style = MaterialTheme.typography.bodyLarge
+                                    )
+                                },
+                                text = {
+                                    Text(
+                                        stringResource(R.string.location_perm_content),
+                                        style = MaterialTheme.typography.bodyLarge
+                                    )
+                                },
                                 confirmButton = {
                                     Button(onClick = {
                                         val intent =
@@ -133,29 +132,27 @@ fun HelpBottomSheet(
                                         context.startActivity(intent)
                                         showDialog = false
                                     }) {
-                                        Text("Go to Settings")
+                                        Text(
+                                            stringResource(R.string.settings),
+                                            style = MaterialTheme.typography.bodyLarge
+                                        )
                                     }
                                 },
                                 dismissButton = {
                                     Button(onClick = { showDialog = false }) {
-                                        Text("Cancel")
+                                        Text(
+                                            stringResource(R.string.close),
+                                            style = MaterialTheme.typography.bodyLarge
+                                        )
                                     }
                                 }
                             )
                         }
                         MySection(
-                            title = if (locationGranted) "Change Location Settings" else "Grant Location Access",
+                            title = if (locationGranted) stringResource(R.string.change_location_settings) else stringResource(
+                                R.string.grant_location_access
+                            ),
                             onClick = {
-//                                if (locationGranted) {
-//                                    val intent =
-//                                        Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS).apply {
-//                                            data =
-//                                                Uri.fromParts("package", context.packageName, null)
-//                                            addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
-//                                        }
-//                                    context.startActivity(intent)
-//                                }
-
                                 if (locationGranted) {
                                     showDialog = true
                                 } else {
@@ -169,7 +166,7 @@ fun HelpBottomSheet(
 
                     item {
                         MySection(
-                            title = "Open Tutorial",
+                            title = stringResource(R.string.tutorial),
                             onClick = {
                                 navController.navigate("onboarding")
                             },
@@ -179,9 +176,9 @@ fun HelpBottomSheet(
 
                     item {
                         ExpandInfoSection(
-//                            title = stringResource(id = R.string.tech_problems_title),
-                            title = "*Noe noe*",
-                            content = stringResource(id = R.string.tech_problems_content)
+                            title = stringResource(id = R.string.how_to_draw),
+                            content = stringResource(id = R.string.how_to_draw_content),
+                            initiallyExpanded = expandSection == "draw"
                         )
                     }
                 }
@@ -250,7 +247,7 @@ fun AppearanceBottomSheet(
                         ModeCard(
                             label = stringResource(id = R.string.light_mode),
                             iconRes = R.drawable.light_mode_24px,
-                            //selected = ThemeState.themeMode == ThemeMode.LIGHT && !followSystem,
+//                            selected = ThemeState.themeMode == ThemeMode.LIGHT && !followSystem,
                             onClick = {
                                 followSystem = false
                                 ThemeState.themeMode = ThemeMode.LIGHT
@@ -260,7 +257,7 @@ fun AppearanceBottomSheet(
                         ModeCard(
                             label = stringResource(id = R.string.dark_mode),
                             iconRes = R.drawable.dark_mode_24px,
-                            //selected = ThemeState.themeMode == ThemeMode.DARK && !followSystem,
+//                            selected = ThemeState.themeMode == ThemeMode.DARK && !followSystem,
                             onClick = {
                                 followSystem = false
                                 ThemeState.themeMode = ThemeMode.DARK
@@ -277,7 +274,11 @@ fun AppearanceBottomSheet(
                                 else ThemeMode.LIGHT
                             }
                         )
-                        Text(stringResource(id = R.string.follow_system))
+                        Text(
+                            stringResource(id = R.string.follow_system),
+                            style = MaterialTheme.typography.bodyLarge
+                        )
+
                     }
 
                     Spacer(modifier = Modifier.height(10.dp))
@@ -308,13 +309,16 @@ fun AppearanceBottomSheet(
                             }
 
                         }) {
-                            Text("- A", style = MaterialTheme.typography.bodySmall)
+                            Text("- A", style = MaterialTheme.typography.bodyMedium)
                         }
 
                         Button(onClick = {
                             fontScaleViewModel.resetFontScale()
                         }) {
-                            Text("Reset", style = MaterialTheme.typography.bodySmall)
+                            Text(
+                                stringResource(R.string.reset),
+                                style = MaterialTheme.typography.bodyMedium
+                            )
                         }
 
                         Button(onClick = {
@@ -327,7 +331,7 @@ fun AppearanceBottomSheet(
                             }
 
                         }) {
-                            Text("+ A", style = MaterialTheme.typography.bodySmall)
+                            Text("+ A", style = MaterialTheme.typography.bodyMedium)
                         }
                     }
 
@@ -371,7 +375,7 @@ fun InfoHelpButton(
 
     Column(modifier = Modifier.fillMaxWidth()) {
         Row(verticalAlignment = Alignment.CenterVertically) {
-            Text(label, fontWeight = FontWeight.Bold)
+            Text(label, fontWeight = FontWeight.Bold, style = MaterialTheme.typography.bodyLarge)
             Spacer(modifier = Modifier.width(4.dp))
             IconButton(
                 onClick = { isVisible = !isVisible },

@@ -27,18 +27,22 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.lifecycle.viewmodel.compose.viewModel
+import no.solcellepanelerApp.R
 import no.solcellepanelerApp.model.price.Region
+import no.solcellepanelerApp.model.price.getRegionName
+import no.solcellepanelerApp.model.reusables.UiState
 import no.solcellepanelerApp.ui.handling.ErrorScreen
 import no.solcellepanelerApp.ui.handling.LoadingScreen
 import no.solcellepanelerApp.util.RequestLocationPermission
 import java.time.ZoneId
 import java.time.ZonedDateTime
-import androidx.lifecycle.viewmodel.compose.viewModel
-import no.solcellepanelerApp.model.reusables.UiState
+
 
 @Composable
 fun PriceScreen(
@@ -82,6 +86,8 @@ fun PriceScreen(
             UiState.LOADING -> LoadingScreen()
             UiState.ERROR -> ErrorScreen()
             UiState.SUCCESS -> {
+                Spacer(modifier = Modifier.height(24.dp))
+
                 ElectricityPriceChart(prices = prices[selectedRegion]!!.data)
                 Spacer(modifier = Modifier.height(16.dp))
                 val currentHour = ZonedDateTime.now(ZoneId.of("Europe/Oslo")).hour
@@ -110,15 +116,23 @@ fun RegionDropdown(
         onExpandedChange = { expanded = it }
     ) {
         TextField(
-            value = selectedRegion.displayName,
+            value = getRegionName(selectedRegion),
             onValueChange = {},
             readOnly = true,
-            label = { Text("Velg distrikt", color = MaterialTheme.colorScheme.tertiary) },
+            label = {
+                Text(
+                    stringResource(R.string.region),
+                    color = MaterialTheme.colorScheme.tertiary
+                )
+            },
             trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(expanded) },
             textStyle = TextStyle(color = MaterialTheme.colorScheme.tertiary, fontSize = 18.sp),
             modifier = Modifier
                 .fillMaxWidth()
-                .menuAnchor(MenuAnchorType.PrimaryNotEditable, true), // Updated to use non-deprecated version
+                .menuAnchor(
+                    MenuAnchorType.PrimaryNotEditable,
+                    true
+                ), // Updated to use non-deprecated version
         )
         ExposedDropdownMenu(
             expanded = expanded,
@@ -126,7 +140,13 @@ fun RegionDropdown(
         ) {
             Region.entries.forEach { region ->
                 DropdownMenuItem(
-                    text = { Text(region.displayName, color = MaterialTheme.colorScheme.tertiary) },
+                    text = {
+                        Text(
+                            getRegionName(region),
+                            color = MaterialTheme.colorScheme.tertiary,
+                            style = MaterialTheme.typography.bodyLarge
+                        )
+                    },
                     onClick = {
                         onRegionSelected(region)
                         expanded = false

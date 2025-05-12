@@ -25,12 +25,15 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.SpanStyle
+
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.font.FontStyle
+
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.withStyle
+
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.DpSize
 import androidx.compose.ui.unit.dp
@@ -269,7 +272,7 @@ fun DataCard(
                     text = stringResource(R.string.adj_radiation, adjusted)
                 )
                 Text(
-                    "This is the amount of solar radiation your panels receive, adjust with snow,cloud, and temperature data for your location.",
+                    text = stringResource(R.string.adj_radiation_explanation),
                     style = MaterialTheme.typography.bodyMedium
                 )
 
@@ -277,12 +280,16 @@ fun DataCard(
                     iconRes = R.drawable.baseline_device_thermostat_24,
                     text = stringResource(R.string.temp_factor, temperatureFactor)
                 )
+                Text(
+                    text = stringResource(R.string.temp_factor_explanation),
+                    style = MaterialTheme.typography.bodyMedium
+                )
 
                 Text(
                     buildAnnotatedString {
                         withStyle(style = SpanStyle(fontStyle = FontStyle.Italic)) {
                             append(
-                                stringResource(R.string.show_monthly_savings, month)
+                                stringResource(R.string.click_to_see_savings, month)
                             )
                         }
                     }

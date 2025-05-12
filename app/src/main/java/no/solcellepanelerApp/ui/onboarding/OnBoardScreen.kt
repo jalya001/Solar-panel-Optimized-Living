@@ -17,12 +17,15 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import kotlinx.coroutines.launch
+import no.solcellepanelerApp.R
 import no.solcellepanelerApp.model.onboarding.OnBoardModel
 import no.solcellepanelerApp.ui.theme.SolcellepanelerAppTheme
 
+//hentet fra https://medium.com/@samadtalukder/implement-an-intro-onboarding-screen-in-android-jetpack-compose-9f464de08b43
 
 @Composable
 fun OnboardingScreen(onFinished: () -> Unit) {
@@ -31,19 +34,25 @@ fun OnboardingScreen(onFinished: () -> Unit) {
         OnBoardModel.FirstPage,
         OnBoardModel.SecondPage,
         OnBoardModel.ThirdPage,
-        OnBoardModel.FourthPage
+        OnBoardModel.FourthPage,
+        OnBoardModel.FifthPage
     )
 
     val pagerState = rememberPagerState(initialPage = 0) {
         pages.size
     }
+
+    val nextButton = stringResource(R.string.next)
+    val backButton = stringResource(R.string.back)
+
     val buttonState = remember {
         derivedStateOf {
             when (pagerState.currentPage) {
-                0 -> listOf("", "Next")
-                1 -> listOf("Back", "Next")
-                2 -> listOf("Back", "Next")
-                3 -> listOf("Back", "Start")
+                0 -> listOf("", nextButton)
+                1 -> listOf(backButton, nextButton)
+                2 -> listOf(backButton, nextButton)
+                3 -> listOf(backButton, nextButton)
+                4 -> listOf(backButton, "Start")
                 else -> listOf("", "")
             }
         }
@@ -55,7 +64,7 @@ fun OnboardingScreen(onFinished: () -> Unit) {
         Row(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(10.dp, 10.dp),
+                .padding(10.dp, 10.dp, 10.dp, 60.dp),
             horizontalArrangement = Arrangement.SpaceBetween,
             verticalAlignment = Alignment.CenterVertically
         ) {
@@ -108,7 +117,7 @@ fun OnboardingScreen(onFinished: () -> Unit) {
     }, content = {
         Column(Modifier.padding(it)) {
             HorizontalPager(state = pagerState) { index ->
-                OnboardingGraphUI(OnBoardModel = pages[index])
+                OnboardingGraphUI(onBoardModel = pages[index])
             }
         }
     })

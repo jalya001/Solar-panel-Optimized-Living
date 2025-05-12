@@ -11,6 +11,7 @@ import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ElevatedCard
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -71,6 +72,7 @@ fun LangSwitch() {
             modifier = Modifier
                 .padding(16.dp)
                 .align(Alignment.CenterHorizontally),
+            style = MaterialTheme.typography.bodyLarge,
         )
     }
 }

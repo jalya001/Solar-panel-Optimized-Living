@@ -178,6 +178,170 @@ Class Diagram 1st draft
     PVGISApiDataSource --> Energy
 ```
 
+
+
+
+Class Diagram later draft
+```mermaid
+    classDiagram
+    class HomeScreen{
+        +Composabele DisplayElectricityPrice(HomeViewModel)
+        +Composable DispalyInfo()
+    }
+     class MapScreen{
+        +Composable DisplayAdressFelt()
+        +Composable DispalyMap(MapViewModel)
+        +Composable SendAdressButton(MapViewModel,String Adress)
+    }
+    class ResultScreen{
+        +Composable DisplayInfo()
+        +Composable DispalyResults(WeatherDataViewModel)
+        +Composable Diplay MonthlySavings(WeatherDataViewModel)
+    }
+    class PriceScreen{
+        +Composabele DisplayElectricityPrice(HomeViewModel)
+    }
+    %% ViewModels
+   class HomeViewModel {
+        +Double getElectricityPriceForToday(ElectricityPriceRepository)
+        
+    }
+    class PriceViewModel {
+
+    }
+
+    class MapViewModel {
+        +Pair<Double, Double> getLatLong(AddressRepository, String Adress)
+        +Map getMapData(MapRepository)
+    }
+
+    class WeatherDataViewModel {
+
+        +List<AvergeMonthlySnowCover> monthlySnowData(SnowCoverRepository)
+        +List<AvergeMonthlyTemperatures> monthlyTempData(TemperatureRepository)
+        +List<AvergeMonthlyClouds> monthlyCloudData(CloudCoverRepository)
+
+        +List<Radiation> monthlyRadiation(SolarEnergyRepository)
+        +List<EnergyProduction> monthlyEnergy(SolarEnergyRepository)
+        +List<MonthlySavings> monthlySavings(SolarEnergyRepository)
+        
+        fetchWeatherData(latLong: Pair<Double, Double>,TemperatureRepository,CloudCoverRepository,SnowCoverRepository,SolarEnergyRepository)
+
+        
+    }
+
+    %% Repositories
+    class ElectricityPriceRepository {
+        +Double fetchElectricityPriceForToday(HvaErStrømprisenApiDataSource)
+        +List<MonthlyPrice> fetchMonthlyPrice(HvaErStrømprisenApiDataSource)
+    }
+
+    class AddressRepository {
+        +Pair<Double, Double> fetchCurrentAddress(GeocoderDataSource,String Address)
+        +Pair<Double, Double> fetchCurrentAddress(ElevationApi,String Address)
+    }
+
+    class WeatherRepository {
+        +List<> fetchWeatherData(FrostApiDataSource, latLong: Pair<Double, Double>)
+        +List<> fetchRimData(FrostApiDataSource, latLong: Pair<Double, Double>)
+
+        +List<AvergeMonthlyTemperatures> calculateAverge(fetchTemp)
+        +List<AvergeMonthlySnowCover> calculateAverge(fetchSnowCover)
+        +List<AvergeMonthlyClouds> calculateAverge(fetchCloudCover)
+        
+        +List<Radiation> fetchSolarRadiation(PVGISApiDataSource,latLong: Pair<Double, Double>)
+
+        +List<EnergyProduction> fetchEnergyProduced(PVGISApiDataSource,latLong: Pair<Double, Double>)
+
+        +List<MonthlySavings> FetchSavings(List<EnergyProduction>,ElectricityPriceRepository )
+   
+    }
+
+
+    %% Data Sources / APIs
+    class HvaErStrømprisenApiDataSource {
+        +Double getElectricityPriceQuery()
+        +List<monthlyPrice> getMonthlyPriceQuery()
+    }
+
+    class GeocoderDataSource {
+        +LiveData<List<Pair<Double, Double>>>getAddressQuery(String Adress)
+    }
+
+    class ElevationApi {
+        +Map fetchElevation()
+    }
+
+    class FrostApiDataSource {
+        +List<Temperature> getTemperatureQuery(latLong: Pair<Double, Double>)
+        +List<Snow> getSnowCoverQuery(latLong: Pair<Double, Double>)
+        +List<Cloud> getCloudCoverQuery(latLong: Pair<Double, Double>)
+    }
+
+    class PVGISApiDataSource {
+        +List<Radation> getSolarRadiationQuery(latLong: Pair<Double, Double>)
+        +List<EnergyProduction> getEnergyProducedQuery(latLong: Pair<Double, Double>)
+    }
+    %% Data classes
+    class Temperature{
+        date 
+        value
+
+    }
+    class Snow{
+     date 
+        value
+    }
+    class Cloud{
+     date 
+        value
+    }
+    class Energy{
+     date 
+        value
+    }
+    class Radiation{
+     date 
+        value
+    }
+    class Price{
+     date 
+        value
+    }
+    
+    %% Relationships
+    
+    HomeScreen --> HomeViewModel
+    ResultScreen --> WeatherDataViewModel
+    MapScreen --> MapViewModel
+    HomeViewModel --> ElectricityPriceRepository
+    HomeViewModel --> WeatherRepository
+
+    PriceScreen --> PriceViewModel
+    PriceViewModel --> ElectricityPriceRepository
+    ElectricityPriceRepository --> HvaErStrømprisenApiDataSource
+    HvaErStrømprisenApiDataSource --> Price
+
+    MapViewModel --> AddressRepository
+    AddressRepository --> GeocoderDataSource
+    AddressRepository --> ElevationApi
+    
+    WeatherDataViewModel --> AddressRepository
+    WeatherDataViewModel --> WeatherRepository
+
+    WeatherRepository --> FrostApiDataSource
+
+    WeatherRepository --> PVGISApiDataSource
+
+    FrostApiDataSource --> Cloud
+    FrostApiDataSource --> Temperature
+    FrostApiDataSource --> Snow
+
+    PVGISApiDataSource --> Radiation
+    PVGISApiDataSource --> Energy
+
+    
+
 MapScreen: Find Adress
 ```mermaid
     sequenceDiagram
@@ -212,10 +376,9 @@ MapScreen: Find Adress
         MapScreen ->> User: Display Error Message
 
     end
-
-    
-    
 ```
+    
+    
 MapScreen: DrawArea
 
 ```mermaid
@@ -261,6 +424,82 @@ MapScreen: DrawArea
     User ->> MapScreen : Click "Go to Results"
     MapScreen ->> User : Show Error Message
     end
+
+```
+PriceScreen: fetching prices and display
+```mermaid
+sequenceDiagram
+actor User
+
+participant PriceScreen
+participant PriceScreenViewModel
+participant RegionDropdown
+participant Repository
+participant Nav
+participant HelpBottomSheet
+participant AppearanceBottomSheet
+
+User ->> PriceScreen: Screen opened
+PriceScreen ->> RequestLocationPermission: Request location
+RequestLocationPermission ->> PriceScreen: Return region
+PriceScreen ->> PriceScreenViewModel: setRegion(region)
+PriceScreenViewModel ->> Repository: updateRegion(region)
+
+User ->> RegionDropdown: Select a different region
+RegionDropdown ->> PriceScreen: onRegionSelected(region)
+PriceScreen ->> PriceScreenViewModel: setRegion(region)
+PriceScreenViewModel ->> Repository: updateRegion(region)
+
+User ->> PriceScreen: Wait for data to load
+PriceScreenViewModel ->> Repository: updatePrices(date)
+Repository ->> PriceScreenViewModel: Return price list
+alt prices are returned
+    PriceScreenViewModel ->> PriceScreen: Emit Success(prices)
+    PriceScreen ->> PriceScreen: Display chart and PriceCard
+else no prices found
+    PriceScreenViewModel ->> PriceScreen: Emit Error
+    PriceScreen ->> PriceScreen: Show ErrorScreen
+end
+
+User ->> BottomBar: Click Help
+BottomBar ->> HelpBottomSheet: Show help
+
+User ->> BottomBar: Click Appearance
+BottomBar ->> AppearanceBottomSheet: Show appearance settings
+
+
+```
+ResultScreen: DisplayResult
+```mermaid
+sequenceDiagram
+    participant User
+    participant MapScreenViewModel
+    participant WeatherViewModel
+    participant PriceScreenViewModel
+    participant ResultScreen
+    participant Repository
+
+    User->>MapScreenViewModel: Inputs area, efficiency, location
+    User->>WeatherViewModel: Triggers loadWeatherData(lat, lon, slope, azimuth)
+    WeatherViewModel->>Repository: getPanelWeatherData()
+    Repository-->>WeatherViewModel: Weather data (radiation, cloud, snow, temp)
+
+    WeatherViewModel->>WeatherViewModel: Set _weatherData
+    WeatherViewModel->>WeatherViewModel: Update uiState to SUCCESS
+
+    User->>ResultScreen: Navigates to ResultScreen
+    ResultScreen->>WeatherViewModel: Observe uiState and weatherData
+    ResultScreen->>PriceScreenViewModel: getCurrentEnergyPrice()
+    PriceScreenViewModel->>PriceScreenViewModel: priceUiState emits
+
+    ResultScreen->>WeatherViewModel: calculateSolarPanelOutput()
+    WeatherViewModel->>WeatherViewModel: Compute adjustedRadiation
+    WeatherViewModel->>WeatherViewModel: Compute energy and power output
+    WeatherViewModel->>WeatherViewModel: Emit MonthlyCalculationResult
+
+    ResultScreen->>ResultContent: Render result with calculated data
+    ResultContent->>User: Shows SingleMonthView or AllMonthsView
+    ResultContent->>User: User can toggle months or view savings
 
 ```
 ![Alt text](UseCaeT37.svg)

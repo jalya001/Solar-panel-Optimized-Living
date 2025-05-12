@@ -24,6 +24,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import co.yml.charts.axis.AxisData
@@ -44,6 +45,7 @@ import co.yml.charts.ui.linechart.model.SelectionHighlightPopUp
 import co.yml.charts.ui.linechart.model.ShadowUnderLine
 import no.solcellepanelerApp.model.price.ChartType
 import no.solcellepanelerApp.model.price.ElectricityPrice
+import no.solcellepanelerApp.R
 import no.solcellepanelerApp.ui.theme.ThemeMode
 import no.solcellepanelerApp.ui.theme.ThemeState
 import java.time.ZonedDateTime
@@ -51,7 +53,6 @@ import java.time.ZonedDateTime
 @SuppressLint("UnusedBoxWithConstraintsScope")
 @Composable
 fun ElectricityPriceChart(prices: List<ElectricityPrice>) {
-    var chartType by remember { mutableStateOf(ChartType.LINE) }
     val selectedPoint = remember { mutableStateOf<Point?>(null) }
 
     val points = prices.map { price ->
@@ -59,22 +60,10 @@ fun ElectricityPriceChart(prices: List<ElectricityPrice>) {
         Point(hour.toFloat(), price.NOK_per_kWh.toFloat())
     }
 
-    val barColor =
-        if (ThemeState.themeMode == ThemeMode.DARK) MaterialTheme.colorScheme.tertiary else MaterialTheme.colorScheme.primary
-
-    val bars = prices.map { price ->
-        val hour = ZonedDateTime.parse(price.time_start).hour
-        BarData(
-            point = Point(hour.toFloat(), price.NOK_per_kWh.toFloat()),
-            label = "%02d:00".format(hour),
-            color = barColor
-        )
-    }
-
-    //Prepare X-axis (hours) - Showing fewer labels to prevent crowding
+    // Prepare X-axis (hours)
     val xAxisData = AxisData.Builder()
         .axisStepSize(12.dp)
-        .steps(prices.size / 2)//Showing fewer steps
+        .steps(prices.size / 2) // Showing fewer steps
         .labelData { i -> if (i % 2 == 0) "%02d".format(i) else "" }
         .axisLabelColor(MaterialTheme.colorScheme.tertiary)
         .axisLineColor(MaterialTheme.colorScheme.tertiary)
@@ -82,7 +71,7 @@ fun ElectricityPriceChart(prices: List<ElectricityPrice>) {
         .bottomPadding(32.dp)
         .build()
 
-    //Prepare Y-axis (price)
+    // Prepare Y-axis (price)
     val maxPrice = prices.maxOf { it.NOK_per_kWh }
     val minPrice = prices.minOf { it.NOK_per_kWh }
 
@@ -100,15 +89,7 @@ fun ElectricityPriceChart(prices: List<ElectricityPrice>) {
         .axisLineColor(MaterialTheme.colorScheme.tertiary)
         .build()
 
-    Button(
-        onClick = {
-            chartType = if (chartType == ChartType.LINE) ChartType.BAR else ChartType.LINE
-        },
-        modifier = Modifier.padding(8.dp)
-    ) {
-        Text(text = if (chartType == ChartType.LINE) "Vis søylediagram" else "Vis linjediagram")
-    }
-
+    // Card and chart display
     Card(
         modifier = Modifier
             .fillMaxWidth()
@@ -121,16 +102,12 @@ fun ElectricityPriceChart(prices: List<ElectricityPrice>) {
             disabledContainerColor = MaterialTheme.colorScheme.primary
         )
     ) {
-
-        Spacer(modifier = Modifier.height(10.dp))
-
         Box(
             modifier = Modifier
                 .height(20.dp)
                 .fillMaxWidth(),
             contentAlignment = Alignment.Center
         ) {
-            // Show selected point's time and price
             selectedPoint.value?.let {
                 val hour = it.x.toInt()
                 val price = it.y
@@ -151,92 +128,66 @@ fun ElectricityPriceChart(prices: List<ElectricityPrice>) {
         BoxWithConstraints(
             modifier = Modifier
                 .height(320.dp)
-                //.padding(start = 4.dp, end = 4.dp)
         ) {
-            when (chartType) {
-                ChartType.LINE -> {
-                    val lineChartData = LineChartData(
-                        linePlotData = LinePlotData(
-                            lines = listOf(
-                                Line(
-                                    dataPoints = points,
-                                    LineStyle(color = if (ThemeState.themeMode == ThemeMode.DARK) MaterialTheme.colorScheme.tertiary else MaterialTheme.colorScheme.primary),
-                                    IntersectionPoint(color = if (ThemeState.themeMode == ThemeMode.DARK) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.tertiary),
-                                    SelectionHighlightPoint(
-                                         color = if (ThemeState.themeMode == ThemeMode.DARK) MaterialTheme.colorScheme.tertiary else MaterialTheme.colorScheme.primary,
-                                         draw = { offset ->
-                                             drawCircle(
-                                                 color = if (ThemeState.themeMode == ThemeMode.DARK) {
-                                                    Color(0xFFF3BD6E)
-                                                } else {
-                                                    Color(0xFF00696D)
-                                                },
-                                             radius = 6.dp.toPx(),
-                                             center = offset
-                                             )
-                                         },
-                                         isHighlightLineRequired = true
-                                     ),
-                                    ShadowUnderLine(
-                                        alpha = 0.5f,
-                                        brush = Brush.verticalGradient(
-                                            colors = listOf(
-                                                if (ThemeState.themeMode == ThemeMode.DARK) MaterialTheme.colorScheme.tertiary else MaterialTheme.colorScheme.primary,
-                                                Color.Transparent
-                                            )
-                                        )
-                                    ),
-                                    selectionHighlightPopUp = SelectionHighlightPopUp { _, point ->
-                                        selectedPoint.value = point
-                                    }
+            val lineChartData = LineChartData(
+                linePlotData = LinePlotData(
+                    lines = listOf(
+                        Line(
+                            dataPoints = points,
+                            LineStyle(
+                                color = if (ThemeState.themeMode == ThemeMode.DARK) MaterialTheme.colorScheme.tertiary else MaterialTheme.colorScheme.primary
+                            ),
+                            IntersectionPoint(
+                                color = if (ThemeState.themeMode == ThemeMode.DARK) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.tertiary
+                            ),
+                            SelectionHighlightPoint(
+                                color = if (ThemeState.themeMode == ThemeMode.DARK) MaterialTheme.colorScheme.tertiary else MaterialTheme.colorScheme.primary,
+                                draw = { offset ->
+                                    drawCircle(
+                                        color = if (ThemeState.themeMode == ThemeMode.DARK) {
+                                            Color(0xFFF3BD6E)
+                                        } else {
+                                            Color(0xFF00696D)
+                                        },
+                                        radius = 6.dp.toPx(),
+                                        center = offset
+                                    )
+                                },
+                                isHighlightLineRequired = true
+                            ),
+                            ShadowUnderLine(
+                                alpha = 0.5f,
+                                brush = Brush.verticalGradient(
+                                    colors = listOf(
+                                        if (ThemeState.themeMode == ThemeMode.DARK) MaterialTheme.colorScheme.tertiary else MaterialTheme.colorScheme.primary,
+                                        Color.Transparent
+                                    )
                                 )
                             ),
-                        ),
-                        xAxisData = xAxisData,
-                        yAxisData = yAxisData,
-                        gridLines = GridLines(color = Color.LightGray),
-                        backgroundColor = MaterialTheme.colorScheme.surface,
-                        bottomPadding = 30.dp
+                            selectionHighlightPopUp = SelectionHighlightPopUp { offset, point ->
+                                selectedPoint.value = point
+                            }
+                        )
                     )
+                ),
+                xAxisData = xAxisData,
+                yAxisData = yAxisData,
+                gridLines = GridLines(color = Color.LightGray),
+                backgroundColor = MaterialTheme.colorScheme.surface,
+                bottomPadding = 30.dp
+            )
 
-                    LineChart(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(8.dp)
-                            .height(300.dp),
-                        lineChartData = lineChartData
-                    )
-                }
-
-                ChartType.BAR -> {
-                    val barChartData = BarChartData(
-                        chartData = bars,
-                        xAxisData = xAxisData,
-                        yAxisData = yAxisData,
-                        barStyle = BarStyle(
-                            paddingBetweenBars = 1.5.dp,
-                            barWidth = 10.dp
-                        ),
-                        backgroundColor = MaterialTheme.colorScheme.surface,
-                        paddingEnd = 16.dp
-                    )
-
-                    BarChart(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(8.dp)
-                            .height(300.dp),
-                        barChartData = barChartData
-                    )
-                }
-            }
-
-
-
+            LineChart(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(8.dp)
+                    .height(300.dp),
+                lineChartData = lineChartData
+            )
 
             // X-axis name
             Text(
-                text = "Tid (timer)",
+                text = stringResource(R.string.x_axis_name),
                 style = MaterialTheme.typography.bodySmall,
                 modifier = Modifier
                     .align(Alignment.BottomCenter)
@@ -246,7 +197,7 @@ fun ElectricityPriceChart(prices: List<ElectricityPrice>) {
 
             // Y-axis name
             Text(
-                text = "Strømpris (kr/kWh)",
+                text = stringResource(R.string.y_axis_name),
                 style = MaterialTheme.typography.bodySmall,
                 modifier = Modifier
                     .align(Alignment.CenterStart)

@@ -8,12 +8,15 @@ import androidx.compose.foundation.Image
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.material3.Button
+import androidx.compose.material3.Checkbox
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -34,33 +37,39 @@ import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
 import androidx.core.content.ContextCompat
 import no.solcellepanelerApp.R
+
 import no.solcellepanelerApp.model.price.Region
 import no.solcellepanelerApp.model.onboarding.OnBoardModel
-import no.solcellepanelerApp.util.rememberLocationWithPermission
+import no.solcellepanelerApp.ui.language.LangSwitch
+import no.solcellepanelerApp.ui.reusables.ModeCard
+import no.solcellepanelerApp.ui.theme.ThemeMode
+import no.solcellepanelerApp.ui.theme.ThemeState
+
 
 @Composable
-fun OnboardingGraphUI(OnBoardModel: OnBoardModel) {
+fun OnboardingGraphUI(onBoardModel: OnBoardModel) {
     val isDark = isSystemInDarkTheme()
     var triggerLocationFetch by remember { mutableStateOf(false) }
 
-    var region: Region? by remember { mutableStateOf(null) }
-    val (currentLocation, locationGranted) = if (triggerLocationFetch) {
-        rememberLocationWithPermission(
-            triggerRequest = true,
-            onRegionDetermined = { region = it }
-        )
-    } else {
-        Pair(null, false)
-    }
+//    var region: Region? by remember { mutableStateOf(null) }
+//    val (currentLocation, locationGranted) = if (triggerLocationFetch) {
+//        rememberLocationWithPermission(
+//            triggerRequest = true,
+//            onRegionDetermined = { region = it }
+//        )
+//    } else {
+//        Pair(null, false)
+//    }
 
-    val imageRes = when (OnBoardModel) {
+    val imageRes = when (onBoardModel) {
         is OnBoardModel.FirstPage -> if (isDark) R.drawable.onboard_logo_dark else R.drawable.onboard_logo_light
-        is OnBoardModel.SecondPage -> R.drawable.home_24px
+        is OnBoardModel.SecondPage -> R.drawable.baseline_lightbulb_circle_24
         is OnBoardModel.ThirdPage -> R.drawable.school_24px
         is OnBoardModel.FourthPage -> R.drawable.baseline_my_location_24
+        is OnBoardModel.FifthPage -> R.drawable.palette_24px
     }
 
-    val descriptionText: AnnotatedString = when (OnBoardModel) {
+    val descriptionText: AnnotatedString = when (onBoardModel) {
         is OnBoardModel.FirstPage -> buildAnnotatedString {
             withStyle(style = MaterialTheme.typography.bodyLarge.toSpanStyle()) {
                 append(stringResource(id = R.string.onboard_desc_1))
@@ -152,6 +161,10 @@ fun OnboardingGraphUI(OnBoardModel: OnBoardModel) {
                 append(stringResource(id = R.string.onboard_desc_4))
             }
         }
+
+        is OnBoardModel.FifthPage -> buildAnnotatedString {
+
+        }
     }
 
     Column(
@@ -171,21 +184,21 @@ fun OnboardingGraphUI(OnBoardModel: OnBoardModel) {
             colorFilter = if (imageRes != logo) ColorFilter.tint(MaterialTheme.colorScheme.primary) else null
         )
 
-        Spacer(modifier = Modifier.size(50.dp))
+        if (onBoardModel !is OnBoardModel.FifthPage) {
+            Spacer(modifier = Modifier.size(50.dp))
+        }
 
         Text(
-            text = stringResource(OnBoardModel.titleRes),
+            text = stringResource(onBoardModel.titleRes),
             modifier = Modifier.fillMaxWidth(),
             textAlign = TextAlign.Center,
             style = MaterialTheme.typography.headlineSmall,
             color = MaterialTheme.colorScheme.tertiary
         )
 
-        Spacer(
-            modifier = Modifier
-                .fillMaxWidth()
-                .size(15.dp)
-        )
+        if (onBoardModel !is OnBoardModel.FifthPage) {
+            Spacer(modifier = Modifier.size(15.dp))
+        }
 
         Text(
             text = descriptionText,
@@ -202,7 +215,7 @@ fun OnboardingGraphUI(OnBoardModel: OnBoardModel) {
                 .size(10.dp)
         )
 
-        if (OnBoardModel is OnBoardModel.FourthPage) {
+        if (onBoardModel is OnBoardModel.FourthPage) {
             val context = LocalContext.current
             val locationGranted = ContextCompat.checkSelfPermission(
                 context,
@@ -214,8 +227,18 @@ fun OnboardingGraphUI(OnBoardModel: OnBoardModel) {
             if (showDialog) {
                 androidx.compose.material3.AlertDialog(
                     onDismissRequest = { showDialog = false },
-                    title = { Text("Location Permission Already Granted") },
-                    text = { Text("If you want to change location permissions, go to settings.") },
+                    title = {
+                        Text(
+                            stringResource(R.string.location_perm_title),
+                            style = MaterialTheme.typography.bodyLarge
+                        )
+                    },
+                    text = {
+                        Text(
+                            stringResource(R.string.location_perm_content),
+                            style = MaterialTheme.typography.bodyLarge
+                        )
+                    },
                     confirmButton = {
                         Button(onClick = {
                             val intent =
@@ -226,12 +249,18 @@ fun OnboardingGraphUI(OnBoardModel: OnBoardModel) {
                             context.startActivity(intent)
                             showDialog = false
                         }) {
-                            Text("Go to Settings")
+                            Text(
+                                stringResource(R.string.settings),
+                                style = MaterialTheme.typography.bodyLarge
+                            )
                         }
                     },
                     dismissButton = {
                         Button(onClick = { showDialog = false }) {
-                            Text("Cancel")
+                            Text(
+                                stringResource(R.string.close),
+                                style = MaterialTheme.typography.bodyLarge
+                            )
                         }
                     }
                 )
@@ -244,11 +273,71 @@ fun OnboardingGraphUI(OnBoardModel: OnBoardModel) {
                     triggerLocationFetch = true
                 }
             }) {
-                Text(if (locationGranted) "Change Location Settings" else "Grant Location Access")
+                Text(
+                    if (locationGranted) stringResource(R.string.change_location_settings) else stringResource(
+                        R.string.grant_location_access
+                    ), style = MaterialTheme.typography.bodyLarge
+                )
             }
         }
 
+        if (onBoardModel is OnBoardModel.FifthPage) {
+            var followSystem by remember { mutableStateOf(ThemeState.themeMode == ThemeMode.SYSTEM) }
 
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(vertical = 8.dp),
+                horizontalArrangement = Arrangement.SpaceEvenly
+            ) {
+                ModeCard(
+                    label = stringResource(id = R.string.light_mode),
+                    iconRes = R.drawable.light_mode_24px,
+//                    selected = ThemeState.themeMode == ThemeMode.LIGHT && !followSystem,
+                    onClick = {
+                        followSystem = false
+                        ThemeState.themeMode = ThemeMode.LIGHT
+                    }
+                )
+
+                ModeCard(
+                    label = stringResource(id = R.string.dark_mode),
+                    iconRes = R.drawable.dark_mode_24px,
+//                    selected = ThemeState.themeMode == ThemeMode.DARK && !followSystem,
+                    onClick = {
+                        followSystem = false
+                        ThemeState.themeMode = ThemeMode.DARK
+                    }
+                )
+            }
+
+            Row(verticalAlignment = Alignment.CenterVertically) {
+                Checkbox(
+                    checked = followSystem,
+                    onCheckedChange = { checked ->
+                        followSystem = checked
+                        ThemeState.themeMode = if (checked) ThemeMode.SYSTEM
+                        else ThemeMode.LIGHT
+                    }
+                )
+                Text(
+                    stringResource(id = R.string.follow_system),
+                    style = MaterialTheme.typography.bodyLarge
+                )
+            }
+
+            Spacer(modifier = Modifier.height(10.dp))
+
+            LangSwitch()
+
+            Spacer(modifier = Modifier.height(20.dp))
+
+            Text(
+                stringResource(id = R.string.onboard_desc_5),
+                style = MaterialTheme.typography.bodyMedium,
+                textAlign = TextAlign.Center
+            )
+        }
 
         Spacer(
             modifier = Modifier

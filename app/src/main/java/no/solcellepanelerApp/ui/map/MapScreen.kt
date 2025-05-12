@@ -1,7 +1,10 @@
 package no.solcellepanelerApp.ui.map
 
 import android.content.Context
+import android.graphics.Bitmap
 import android.graphics.Canvas
+import android.graphics.Paint
+import android.graphics.RectF
 import android.location.Location
 import android.util.Log
 import androidx.compose.foundation.background
@@ -30,6 +33,7 @@ import androidx.compose.material.icons.filled.Visibility
 import androidx.compose.material.icons.filled.VisibilityOff
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonColors
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardColors
@@ -60,17 +64,19 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.buildAnnotatedString
+import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.Density
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.zIndex
 import androidx.core.content.ContextCompat
-import androidx.core.graphics.createBitmap
-import androidx.core.graphics.scale
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import com.google.android.gms.maps.CameraUpdateFactory
-import com.google.android.gms.maps.model.BitmapDescriptor
 import com.google.android.gms.maps.model.BitmapDescriptorFactory
 import com.google.android.gms.maps.model.CameraPosition
 import com.google.android.gms.maps.model.LatLng
@@ -87,6 +93,8 @@ import kotlinx.coroutines.launch
 import no.solcellepanelerApp.MainActivity
 import no.solcellepanelerApp.R
 import no.solcellepanelerApp.ui.font.FontSizeState
+import no.solcellepanelerApp.ui.navigation.HelpBottomSheet
+import no.solcellepanelerApp.ui.onboarding.OnboardingUtils
 import no.solcellepanelerApp.ui.reusables.AppScaffoldController
 import no.solcellepanelerApp.ui.reusables.SimpleTutorialOverlay
 import no.solcellepanelerApp.ui.theme.darkGrey
@@ -94,7 +102,8 @@ import no.solcellepanelerApp.ui.theme.lightBlue
 import no.solcellepanelerApp.ui.theme.lightGrey
 import no.solcellepanelerApp.ui.theme.orange
 import no.solcellepanelerApp.util.RequestLocationPermission
-import androidx.lifecycle.viewmodel.compose.viewModel
+import kotlin.math.max
+
 
 @Composable
 fun MapScreen(
@@ -105,24 +114,62 @@ fun MapScreen(
 ) {
     var showMapOverlay by remember { mutableStateOf(true) }
     var showDrawOverlay by remember { mutableStateOf(false) }
+    val context = LocalContext.current
+    val onboardingUtils = remember { OnboardingUtils(context) }
 
     LaunchedEffect(Unit) {
         viewModel.snackbarMessages.collect { message ->
             appScaffoldController.showSnackbar(message)
         }
     }
+    LaunchedEffect(Unit) {
+        if (!onboardingUtils.isMapOverlayShown()) {
+            showMapOverlay = true
+            onboardingUtils.setMapOverlayShown()
+        }
+    }
+    val message = stringResource(R.string.address_not_found)
 
+//    LaunchedEffect(trigger) {
+//        if (trigger > lastShownTrigger) {
+//            snackbarHostState.showSnackbar(message)
+//            lastShownTrigger = trigger
+//        }
+//    }
     if (showMapOverlay) {
+        val title = stringResource(R.string.map_overlay_title)
+        val body = stringResource(R.string.map_overlay)
+        val message = buildAnnotatedString {
+            withStyle(style = MaterialTheme.typography.titleLarge.toSpanStyle()) {
+                append("$title\n\n")
+            }
+            withStyle(style = MaterialTheme.typography.bodyLarge.toSpanStyle()) {
+                append(body)
+            }
+        }
+
         SimpleTutorialOverlay(
             onDismiss = { showMapOverlay = false },
-            message = "Søk etter adressen din, bruk enhetsposisjon, eller trykk på kartet for å velge lokasjon"
+            message = message
         )
+
     }
 
     if (showDrawOverlay) {
+        val title = stringResource(R.string.draw_overlay_title)
+        val body = stringResource(R.string.map_draw_overlay)
+        val message = buildAnnotatedString {
+            withStyle(style = MaterialTheme.typography.titleLarge.toSpanStyle()) {
+                append("$title\n\n")
+            }
+            withStyle(style = MaterialTheme.typography.bodyLarge.toSpanStyle()) {
+                append(body)
+            }
+        }
+
         SimpleTutorialOverlay(
             onDismiss = { showDrawOverlay = false },
-            message = "Trykk på kartet for å starte tegningen av ønsket område"
+            message = message
         )
     }
     Column(
@@ -148,12 +195,13 @@ fun DisplayScreen(
     val activity = context as? MainActivity
 
     val coordinates by viewModel.coordinatesState.stateFlow.collectAsState() // This is for later calculation
-    val selectedCoordinates = viewModel.selectedCoordinates // This is for onscreen handling stuff idk
+    val selectedCoordinates =
+        viewModel.selectedCoordinates // This is for onscreen handling stuff idk
     val polygonData = viewModel.polygonData
     Log.d("HELLO HELLO", "UI Polygon has ${polygonData.size} points")
     val isPolygonVisible = viewModel.isPolygonVisible
     val drawingEnabled by viewModel.drawingEnabled.collectAsState()
-    Log.d("HELLO HELLO drawing from screen is :",drawingEnabled.toString())
+    Log.d("HELLO HELLO drawing from screen is :", drawingEnabled.toString())
     val showBottomSheet = viewModel.showBottomSheet
     val showMissingLocationDialog = viewModel.showMissingLocationDialog
     val locationPermissionGranted = viewModel.locationPermissionGranted
@@ -161,6 +209,7 @@ fun DisplayScreen(
 
     val cameraPositionState = viewModel.cameraPositionState
     val mapUiSettings = viewModel.mapUiSettings
+    var showDrawHelp by remember { mutableStateOf(false) }
 
     val coroutineScope = rememberCoroutineScope()
 
@@ -197,7 +246,10 @@ fun DisplayScreen(
                     viewModel.selectLocation(latLng.latitude, latLng.longitude)
                     coroutineScope.launch {
                         cameraPositionState.animate(
-                            CameraUpdateFactory.newLatLngZoom(latLng, cameraPositionState.position.zoom)
+                            CameraUpdateFactory.newLatLngZoom(
+                                latLng,
+                                cameraPositionState.position.zoom
+                            )
                         )
                     }
                 }
@@ -228,8 +280,9 @@ fun DisplayScreen(
                     MapMarker(
                         state = pointMarkerState,
                         title = "${stringResource(id = R.string.point)} ${index + 1}",
-                        context = context,
-                        draggable = true
+                        draggable = true,
+                        displayLabel = true,
+                        context = context
                     )
                 }
 
@@ -332,7 +385,7 @@ fun ControlsColumn(
     onDismissDialog: () -> Unit,
     onTogglePolygonVisibility: () -> Unit,
     viewModel: MapViewModel,
-    onToggleBottomSheet: () -> Unit
+    onToggleBottomSheet: () -> Unit,
 ) {
     Column(
         modifier = Modifier
@@ -405,20 +458,54 @@ fun ControlsColumn(
         }
 
         if (drawingEnabled) {
-            DrawingControls(
-                polygonData = polygonData,
-                viewModel = viewModel,
-                isPolygonVisible = isPolygonVisible,
-                toggleBottomSheet = onToggleBottomSheet,
-                onToggleVisibility = onTogglePolygonVisibility
-            )
-        }
+            Box(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(16.dp)
+            ) {
+                Column(
+                    modifier = Modifier
+                        .align(Alignment.TopEnd)
+                ) {
+                    HelpDrawingDialog(
+                        navController = navController,
+                        showHelp = showDrawHelp,
+                        onDismiss = { showDrawHelp = false }
+                    )
+                    Button(
+                        onClick = {
+                            showDrawHelp = true
+                        },
+                        colors = ButtonColors(
+                            containerColor = MaterialTheme.colorScheme.background,
+                            contentColor = MaterialTheme.colorScheme.primary,
+                            disabledContainerColor = darkGrey,
+                            disabledContentColor = lightGrey,
+                        )
+                    ) {
+                        Icon(
+                            painter = painterResource(id = R.drawable.help_24px),
+                            contentDescription = null,
+                            modifier = Modifier.size(30.dp),
+                            tint = MaterialTheme.colorScheme.primary
+                        )
+                    }
+                }
+                DrawingControls(
+                    polygonData = polygonData,
+                    viewModel = viewModel,
+                    isPolygonVisible = isPolygonVisible,
+                    toggleBottomSheet = onToggleBottomSheet,
+                    onToggleVisibility = onTogglePolygonVisibility
+                )
+            }
 
-        if (showMissingLocationDialog) {
-            LocationNotSelectedDialog(
-                onDismiss = onDismissDialog,
-                coordinates = coordinates
-            )
+            if (showMissingLocationDialog) {
+                LocationNotSelectedDialog(
+                    onDismiss = onDismissDialog,
+                    coordinates = coordinates
+                )
+            }
         }
     }
 }
@@ -428,7 +515,7 @@ fun SearchBar(
     address: String,
     onAddressChange: (String) -> Unit,
     onSearch: () -> Unit,
-    viewModel: MapViewModel
+    viewModel: MapViewModel,
 ) {
     Card(
         modifier = Modifier.fillMaxWidth(),
@@ -488,8 +575,9 @@ fun AddressInputField(
 ) {
     OutlinedTextField(
         value = value,
+        textStyle = TextStyle(fontFamily = FontFamily.Default),
         onValueChange = onValueChange,
-        label = { Text(label) },
+        label = { Text(label, style = MaterialTheme.typography.bodyMedium) },
         colors = colors,
         singleLine = true,
         modifier = Modifier
@@ -522,10 +610,16 @@ fun LocationNotSelectedDialog(
             AlertDialog(
                 onDismissRequest = onDismiss,
                 title = {
-                    Text(stringResource(id = R.string.no_location_title))
+                    Text(
+                        stringResource(id = R.string.no_location_title),
+                        style = MaterialTheme.typography.bodyLarge
+                    )
                 },
                 text = {
-                    Text(stringResource(id = R.string.no_location_message))
+                    Text(
+                        stringResource(id = R.string.no_location_message),
+                        style = MaterialTheme.typography.bodyLarge
+                    )
                 },
                 confirmButton = {
 
@@ -534,13 +628,33 @@ fun LocationNotSelectedDialog(
                     Button(
                         onClick = onDismiss
                     ) {
-                        Text(stringResource(id = R.string.dismiss))
+                        Text(
+                            stringResource(id = R.string.dismiss),
+                            style = MaterialTheme.typography.bodyLarge
+                        )
                     }
                 }
             )
         }
     }
 }
+
+@Composable
+fun HelpDrawingDialog(
+    navController: NavController,
+    showHelp: Boolean,
+    onDismiss: () -> Unit,
+) {
+    if (showHelp) {
+        HelpBottomSheet(
+            navController = navController,
+            visible = true,
+            onDismiss = onDismiss,
+            expandSection = "draw"
+        )
+    }
+}
+
 
 @Composable
 private fun DrawingControls(
@@ -550,9 +664,14 @@ private fun DrawingControls(
     onToggleVisibility: () -> Unit,
     toggleBottomSheet: () -> Unit,
 ) {
+
+    //legg til overlay første gang tegning brukes
+
     Box(modifier = Modifier.fillMaxSize()) {
         Column(modifier = Modifier.align(Alignment.BottomStart)) {
-            Box(modifier = Modifier.width(270.dp).height(200.dp)) {
+            Box(modifier = Modifier
+                .width(270.dp)
+                .height(200.dp)) {
 
                 if (isPolygonVisible) {
                     DrawingControlButton(
@@ -620,7 +739,7 @@ private fun DrawingControlButton(
     label: String,
     onClick: () -> Unit,
     containerColor: Color,
-    contentColor: Color
+    contentColor: Color,
 ) {
     Card(
         modifier = modifier
@@ -653,7 +772,6 @@ private fun DrawingControlButton(
 }
 
 
-
 // hentet fra https://stackoverflow.com/questions/70598043/how-to-use-custom-icon-of-google-maps-marker-in-compose
 
 @Composable
@@ -663,15 +781,12 @@ fun MapMarker(
     snippet: String? = null,
     state: MarkerState,
     draggable: Boolean = true,
+    displayLabel: Boolean = false,
 ) {
-
-    val iconResourceId =
-        R.drawable.baseline_location_pin_24
-
-    val tintColor = orange.toArgb()
-
-    val icon =
-        bitmapDescriptor(context, iconResourceId, width = 120, height = 120, tint = tintColor)
+    val icon = remember(title) {
+        val iconBitmap = createLabelledMarkerBitmap(context, title, displayLabel)
+        BitmapDescriptorFactory.fromBitmap(iconBitmap)
+    }
 
     if (snippet != null) {
         Marker(
@@ -691,27 +806,81 @@ fun MapMarker(
     }
 }
 
-fun bitmapDescriptor(
+fun createLabelledMarkerBitmap(
     context: Context,
-    vectorResId: Int,
-    width: Int = 100,
-    height: Int = 100,
-    tint: Int? = null,
-): BitmapDescriptor? {
-    val drawable = ContextCompat.getDrawable(context, vectorResId) ?: return null
+    label: String,
+    displayLabel: Boolean = false,
+): Bitmap {
+    val iconSize = 120
+    val padding = 20
 
-    if (tint != null) {
-        drawable.setTint(tint)
+    if (displayLabel) {
+        val textPaint = Paint().apply {
+            color = orange.toArgb() // <-- Your orange
+            textSize = 50f
+            isAntiAlias = true
+            textAlign = Paint.Align.CENTER
+        }
+
+        val bgPaint = Paint().apply {
+            color = Color.Black.copy(alpha = 0.6f).toArgb() // light orange background
+            isAntiAlias = true
+        }
+
+        val fontMetrics = textPaint.fontMetrics
+        val textHeight = (fontMetrics.descent - fontMetrics.ascent).toInt()
+        val baseline = -fontMetrics.ascent
+
+        val labelPadding = 16
+        val labelWidth = max(
+            textPaint.measureText(label).toInt() + labelPadding * 2,
+            iconSize
+        )
+        val height = textHeight + iconSize + padding + labelPadding
+
+        val bitmap = Bitmap.createBitmap(labelWidth, height, Bitmap.Config.ARGB_8888)
+        val canvas = Canvas(bitmap)
+
+        // Draw background behind label
+        val rect = RectF(
+            0f,
+            0f,
+            labelWidth.toFloat(),
+            textHeight + labelPadding.toFloat()
+        )
+        canvas.drawRoundRect(rect, 20f, 20f, bgPaint)
+
+        // Draw the label text
+        canvas.drawText(
+            label,
+            labelWidth / 2f,
+            baseline + labelPadding / 2f,
+            textPaint
+        )
+
+        // Draw the marker icon
+        val drawable = ContextCompat.getDrawable(context, R.drawable.baseline_location_pin_24)
+        drawable?.setTint(orange.toArgb()) // <-- Your orange again
+        drawable?.setBounds(
+            (labelWidth - iconSize) / 2,
+            textHeight + labelPadding + padding,
+            (labelWidth + iconSize) / 2,
+            textHeight + iconSize + labelPadding + padding
+        )
+        drawable?.draw(canvas)
+
+        return bitmap
+    } else {
+        val bitmap = Bitmap.createBitmap(iconSize, iconSize, Bitmap.Config.ARGB_8888)
+        val canvas = Canvas(bitmap)
+
+        val drawable = ContextCompat.getDrawable(context, R.drawable.baseline_location_pin_24)
+        drawable?.setTint(orange.toArgb())
+        drawable?.setBounds(0, 0, iconSize, iconSize)
+        drawable?.draw(canvas)
+
+        return bitmap
     }
-
-    val originalBitmap = createBitmap(drawable.intrinsicWidth, drawable.intrinsicHeight)
-
-    val canvas = Canvas(originalBitmap)
-    drawable.setBounds(0, 0, canvas.width, canvas.height)
-    drawable.draw(canvas)
-
-    val scaledBitmap = originalBitmap.scale(width, height, false)
-    return BitmapDescriptorFactory.fromBitmap(scaledBitmap)
 }
 
 fun mapUseLocation(

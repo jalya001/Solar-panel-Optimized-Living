@@ -14,3 +14,7 @@ Input field (kun tall) logikk:
 Google maps custom marker logikk:
 
 - Henvisning ligger i filen "MapScreen.kt"
+
+Onboarding screen:
+
+- Henvisning ligger i filen "OnBoardScreen.kt"

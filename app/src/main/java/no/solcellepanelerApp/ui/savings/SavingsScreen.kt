@@ -10,12 +10,10 @@ import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
-
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.BoxWithConstraints
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
-
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxSize
@@ -28,7 +26,6 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
-
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedCard
 import androidx.compose.material3.Text
@@ -74,6 +71,7 @@ import com.airbnb.lottie.compose.rememberLottieComposition
 import com.google.accompanist.flowlayout.FlowRow
 import no.solcellepanelerApp.R
 import no.solcellepanelerApp.model.price.ChartType
+import no.solcellepanelerApp.ui.onboarding.OnboardingUtils
 import no.solcellepanelerApp.ui.reusables.AppScaffoldController
 import no.solcellepanelerApp.ui.reusables.IconTextRow
 import no.solcellepanelerApp.ui.reusables.SimpleTutorialOverlay
@@ -101,6 +99,7 @@ fun SavingsScreen(
     val deviceIcons = savingsViewModel.deviceIcons
 
     var showOverlay by remember { mutableStateOf(true) }
+    val onboardingUtils = remember { OnboardingUtils(context) }
 
     val animatedEnergy = animateFloatAsState(
         targetValue = currentEnergy.toFloat(),
@@ -129,16 +128,33 @@ fun SavingsScreen(
             yearlyTitle
         appScaffoldController.setTopBar(screenTitle)
     }
-
+    LaunchedEffect(Unit) {
+        if (!onboardingUtils.isSavingsOverlayShown()) {
+            showOverlay = true
+            onboardingUtils.setSavingsOverlayShown()
+        }
+    }
     LaunchedEffect(energyProduced, energyPrice) {
         savingsViewModel.initialize(energyProduced, energyPrice)
     }
 
     if (showOverlay) {
+        val title = stringResource(R.string.saving_overlay_title)
+        val body = stringResource(R.string.saving_overlay)
+        val message = buildAnnotatedString {
+            withStyle(style = MaterialTheme.typography.titleLarge.toSpanStyle()) {
+                append("$title\n\n")
+            }
+            withStyle(style = MaterialTheme.typography.bodyLarge.toSpanStyle()) {
+                append(body)
+            }
+        }
+
         SimpleTutorialOverlay(
             onDismiss = { showOverlay = false },
-            "Se hvor mye du sparer \n\n Trykk på de ulike enhetene for å se *trenger en god formulering* \n\nScroll opp for mer informasjon!"
+            message = message
         )
+
     }
 
     Box(
@@ -212,7 +228,9 @@ fun SavingsScreen(
                     if (currentEnergy < 0) {
                         IconTextRow(
                             iconRes = R.drawable.baseline_battery_charging_full_24,
-                            text = "Energy deficit! %.2f kWh".format(animatedEnergy),
+                            text = stringResource(R.string.energy_deficit) + " %.2f kWh".format(
+                                animatedEnergy
+                            ),
                             textStyle = MaterialTheme.typography.titleLarge,
                             modifier = Modifier.padding(16.dp),
                             textColor = MaterialTheme.colorScheme.error,
@@ -221,7 +239,9 @@ fun SavingsScreen(
                     } else {
                         IconTextRow(
                             iconRes = R.drawable.baseline_battery_charging_full_24,
-                            text = "%.2f kWh".format(animatedEnergy),
+                            text = stringResource(R.string.energy_produced) + " %.2f kWh".format(
+                                animatedEnergy
+                            ),
                             textStyle = MaterialTheme.typography.titleLarge,
                             modifier = Modifier.padding(16.dp),
                             textColor = energyColor,
@@ -376,8 +396,8 @@ fun EnergyFlowAnimationDown() {
             composition = composition,
             progress = { progress },
             modifier = Modifier
-                .fillMaxSize()
-                .padding(top = 20.dp)
+                .fillMaxWidth()
+                .aspectRatio(100.dp / 30.dp)
         )
     }
 }
@@ -510,7 +530,10 @@ fun Chart(data: Array<Double>, measure: String = "cm") {
                 val month = monthLabels.getOrNull(monthIndx) ?: "?"
                 val depth = it.y
                 Text(
-                    text = "Måned $month: %.1f %s".format(depth, measure),
+                    text = stringResource(R.string.month) + " $month: %.1f %s".format(
+                        depth,
+                        measure
+                    ),
                     style = MaterialTheme.typography.bodyMedium,
                     color = MaterialTheme.colorScheme.primary,
                     fontWeight = FontWeight.Bold
@@ -573,15 +596,16 @@ fun Chart(data: Array<Double>, measure: String = "cm") {
 fun MonthlyChartSection(
     title: String,
     data: Array<Double>,
-    unit: String
+    unit: String,
 ) {
     Column(modifier = Modifier.padding(vertical = 12.dp)) {
         Text(
             text = title,
-            style = MaterialTheme.typography.titleSmall.copy(
-                color = MaterialTheme.colorScheme.primary,
-                fontWeight = FontWeight.Bold
+            style = MaterialTheme.typography.headlineSmall.copy(
+                color = MaterialTheme.colorScheme.secondary,
+                fontWeight = FontWeight.ExtraLight
             ),
+            textAlign = TextAlign.Center,
             modifier = Modifier.padding(bottom = 8.dp)
         )
         Chart(data = data, measure = unit)
@@ -591,7 +615,7 @@ fun MonthlyChartSection(
 @Composable
 fun MultiLineChart(
     datasets: List<Pair<String, Array<Double>>>,
-    measure: String = "W/m²"
+    measure: String = "W/m²",
 ) {
     val monthLabels = listOf(
         "Jan", "Feb", "Mar", "Apr", "May", "Jun",
@@ -676,8 +700,10 @@ fun MultiLineChart(
         Text(
             text = stringResource(R.string.difference_info),
             modifier = Modifier.padding(top = 8.dp, bottom = 4.dp),
-            style = MaterialTheme.typography.titleMedium,
-            color = MaterialTheme.colorScheme.primary,
+            style = MaterialTheme.typography.headlineSmall.copy(
+                color = MaterialTheme.colorScheme.secondary,
+                fontWeight = FontWeight.ExtraLight
+            ),
             textAlign = TextAlign.Center
         )
 
