@@ -65,8 +65,12 @@ fun ExpandInfoSection(title: String, content: String, initiallyExpanded: Boolean
 }
 
 @Composable
-fun ExpandInfoSectionContent(title: String, content: @Composable () -> Unit) {
-    var expanded by remember { mutableStateOf(false) }
+fun ExpandInfoSectionContent(
+    title: String,
+    content: @Composable () -> Unit,
+    initiallyExpanded: Boolean = false
+) {
+    var expanded by remember { mutableStateOf(initiallyExpanded) }
 
     Card(
         onClick = { expanded = !expanded },

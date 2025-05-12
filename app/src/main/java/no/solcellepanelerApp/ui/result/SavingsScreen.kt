@@ -74,7 +74,6 @@ import com.airbnb.lottie.compose.animateLottieCompositionAsState
 import com.airbnb.lottie.compose.rememberLottieComposition
 import com.google.accompanist.flowlayout.FlowRow
 import no.solcellepanelerApp.R
-import no.solcellepanelerApp.model.electricity.ChartType
 import no.solcellepanelerApp.ui.font.FontScaleViewModel
 import no.solcellepanelerApp.ui.navigation.AppearanceBottomSheet
 import no.solcellepanelerApp.ui.navigation.BottomBar
@@ -694,7 +693,6 @@ fun Chart(data: Array<Double>, measure: String = "cm") {
         data.map { (it / max) * 100 }.toTypedArray()
     } else data
 
-    ChartType.LINE
     val selectedPoint = remember { mutableStateOf<Point?>(null) }
 
     val points = prosessData.mapIndexed { index, value ->

@@ -3,8 +3,8 @@
 
 
     <style name="Theme.MySplashScreen" parent="Theme.SplashScreen">
-        <item name="windowSplashScreenBackground">@color/background_dark</item>
-        <item name="windowSplashScreenAnimatedIcon">@drawable/sol_logo_dark</item>
+        <item name="windowSplashScreenBackground">@color/background_light</item>
+        <item name="windowSplashScreenAnimatedIcon">@drawable/splash_sol_logo_light</item>
         <item name="postSplashScreenTheme">@style/Theme.SolcellepanelerApp</item>
     </style>
 

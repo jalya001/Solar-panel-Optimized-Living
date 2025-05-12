@@ -29,7 +29,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import no.solcellepanelerApp.R
 
-
+// Composable when viewmodel is fetching data from API
 @Composable
 fun LoadingScreen() {
     Box(
@@ -50,6 +50,7 @@ fun LoadingScreen() {
     }
 }
 
+// Composable-template for errors
 @Composable
 fun ErrorScreenTemplate(
     icon: ImageVector,
@@ -75,6 +76,7 @@ fun ErrorScreenTemplate(
     }
 }
 
+// Composables for different types of errors
 @Composable fun ErrorScreen() =
     ErrorScreenTemplate(Icons.Default.ErrorOutline, stringResource(R.string.generic_error))
 

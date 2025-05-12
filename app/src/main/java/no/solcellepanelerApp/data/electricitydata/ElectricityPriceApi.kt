@@ -1,7 +1,6 @@
 package no.solcellepanelerApp.data.electricitydata
 
 import android.annotation.SuppressLint
-import android.util.Log
 import io.ktor.client.HttpClient
 import io.ktor.client.call.body
 import io.ktor.client.plugins.contentnegotiation.ContentNegotiation
@@ -16,8 +15,8 @@ class ElectricityPriceApi {
     private val client = HttpClient {
         install(ContentNegotiation) {
             json(Json {
-                ignoreUnknownKeys = true
-            }) //Ignore any unexpected fields in the JSON response
+                ignoreUnknownKeys = true    //Ignore any unexpected fields in the JSON response
+            })
         }
     }
 
@@ -30,7 +29,7 @@ class ElectricityPriceApi {
 
         val url =
             "https://www.hvakosterstrommen.no/api/v1/prices/${date.year}/${formattedMonth}-${formattedDay}_$priceArea.json"
-        Log.d("ElectricityPriceApi", "Fetching data from URL: $url")
+        println("ElectricityPriceApi, Fetching data from URL: $url")
         //Try to fetch data from the API, return it as a list of ElectricityPrice objects
         return try {
             client.get(url).body()
