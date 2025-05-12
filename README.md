@@ -7,7 +7,7 @@
 
 ### MEDLEMMER AV TEAM 37
 
-[aazann,saleemti[https://www.linkedin.com/in/saleem-toure-issifou/],mikass,anisai,jacobhl,amwarsam]
+[aazann,saleemti[https://www.linkedin.com/in/saleem-toure-issifou],mikass,anisai,jacobhl,amwarsam]
  
 ## 1. Introduksjon
 
