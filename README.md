@@ -7,7 +7,7 @@
 
 ### MEDLEMMER AV TEAM 37
 
-[aazann,[saleemti](https://www.linkedin.com/in/saleem-toure-issifou),mikass,anisai,jacobhl,amwarsam]
+[Aazan Nisar (aazann), Saleem Toure Issifou [(saleemti)](https://www.linkedin.com/in/saleem-toure-issifou), Mika Stenersen (mikass), Anisa Ifzal (anisai), Jacob He Ly (jacobhl), Abdirahman Mohamed Abdi Warsame (amwarsam)]
  
 ## 1. Introduksjon
 
