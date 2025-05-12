@@ -54,10 +54,6 @@ fun PriceScreen(
     contentPadding: PaddingValues,
     viewModel: PriceViewModel = viewModel(),
 ) {
-    val context = LocalContext.current
-    var showOverlay by remember { mutableStateOf(false) }
-    val onboardingUtils = remember { OnboardingUtils(context) }
-
     val scrollState = rememberScrollState()
     val selectedRegion by viewModel.region.stateFlow.collectAsState()
     val prices by viewModel.prices.stateFlow.collectAsState()
@@ -73,8 +69,8 @@ fun PriceScreen(
     }
 
     if (showPriceOverlay) {
-        val title = stringResource(R.string.map_overlay_title)
-        val body = stringResource(R.string.map_overlay)
+        val title = stringResource(R.string.price_overlay_title)
+        val body = stringResource(R.string.price_overlay)
         val message = buildAnnotatedString {
             withStyle(style = MaterialTheme.typography.titleLarge.toSpanStyle()) {
                 append("$title\n\n")
@@ -96,7 +92,7 @@ fun PriceScreen(
 
     LaunchedEffect(Unit) {
         if (!onboardingUtils.isPriceOverlayShown()) {
-            showOverlay = true
+            showPriceOverlay = true
             onboardingUtils.setPriceOverlayShown()
         }
     }
@@ -111,14 +107,6 @@ fun PriceScreen(
         withStyle(style = MaterialTheme.typography.bodyLarge.toSpanStyle()) {
             append(body)
         }
-    }
-
-    if (showOverlay) {
-        SimpleTutorialOverlay(
-            onDismiss = { showOverlay = false },
-            message = message
-
-        )
     }
 
     // Request location and set region once on permission
