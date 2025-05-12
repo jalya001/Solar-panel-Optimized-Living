@@ -7,7 +7,7 @@
     <string name="install_panels_desc">Enter your address and details — see your estimated power and savings from solar panels.</string>
     <string name="last_location"> Last location (trenger bedre navn)</string>
     <string name="prices"> Electricity prices </string>
-    <string name="live_energy"> Live energy %1$d:00</string>
+    <string name="live_energy"> Live Solar Energy %1$d:00</string>
     <string name="help">Help</string>
     <string name="appearance"> Appearance</string>
     <string name="dark_mode"> Dark mode  </string>
@@ -148,17 +148,30 @@
     <string name="tech_problems_title">Problems</string>
     <string name="tech_problems_content">Problems with app</string>
     <string name="how_to_draw">How to draw in the map</string>
-    <string name="how_to_draw_content">
-How to draw:\n
-        Tap on the map to place numbered markers. Place at least 3 points in a rectangle or polygon shape.\n\n
-        How to move a point:\n
-        Hold your finger on a marker for at least 3 seconds to drag and reposition it.\n
-        Alternatively, you can remove points and draw them again.\n\n
-        How to see your drawing:\n
-        Tap "Show area" to preview your selection.\n
-        When you are satisfied, tap "Confirm Drawing" to continue.
-</string>
-
+    <string name="how_to_draw1">
+         How to draw:
+     </string>
+    <string name="how_to_draw2">
+         Tap on the map to place numbered markers in order. Place at least 3 points in a rectangle or polygon shape.
+     </string>
+    <string name="how_to_draw3">
+         How to move a point:
+     </string>
+    <string name="how_to_draw4">
+         Hold your finger on a marker for at least 3 seconds to drag and reposition it.
+     </string>
+    <string name="how_to_draw5">
+         Alternatively, you can remove points and draw them again.
+     </string>
+    <string name="how_to_draw6">
+         How to see your drawing:
+     </string>
+    <string name="how_to_draw7">
+         Tap &quot;Show area&quot; to preview your selection.
+     </string>
+    <string name="how_to_draw8">
+         When you are satisfied, tap &quot;Confirm Drawing&quot; to continue.
+     </string>
 
     <string name="north">N</string>
     <string name="northeast">NE</string>
@@ -171,8 +184,11 @@ How to draw:\n
     <string name="roofAreaHelp">The total area of the roof suitable for solar panels, measured in square meters (m²).</string>
     <string name="roofAngleHelp">Also known as the slope. This is how steep the roof is. Panels perform best when angled toward the sun.</string>
     <string name="panelEfficencyHelp">How efficiently the panels convert sunlight into electricity. Usually between 16–20%.</string>
-    <string name="panelDirectionHelp">Direction (azimuth) shows which direction the panel is pointing – for example north, east, south or west.
-The animation shows how the sun moves across the sky during the day. How much solar energy the panel receives depends on whether it is facing the direction the sun is coming from.</string>
+    <string name="panelDirectionHelp">
+        Direction (azimuth) shows which direction the panel is pointing – for example north, east, south or west.
+        The animation shows how the sun moves across the sky during the day. How much solar energy the panel receives
+        depends on whether it is facing the direction the sun is coming from.
+    </string>
     <string name="more_info_solar_panels">Learn more about solar panels</string>
     <string name="monocrystalline">Monocrystalline</string>
     <string name="monocrystalline_efficiency">(18–23%)</string>
@@ -235,7 +251,7 @@ The animation shows how the sun moves across the sky during the day. How much so
     <string name="temp_factor">Temperature factor: %.2f%%</string>
     <string name="temp_factor_explanation">Temperature factor adjusts the estimated energy output based on average monthly temperature.</string>
     <string name="adj_radiation">Adjusted Radiation: %.2f kWh/m²</string>
-    <string name="adj_radiation_explanation">This is the amount of solar radiation your panels receive, adjust with snow,cloud, and temperature data for your location</string>
+    <string name="adj_radiation_explanation">This is the amount of solar radiation your panels receive, adjust with snow, cloud, and temperature data for your location</string>
     <string name="estimated_energy_prod">Estimated Energy Produced: \n%.2f kWh </string>
     <string name="estimated_powerpr_hour">Estimated Power Produced per Hour: \n%.2f kW</string>
     <string name="click_to_see_savings">Click to see Your Savings In %1$s</string>
@@ -281,28 +297,28 @@ The animation shows how the sun moves across the sky during the day. How much so
 
     <string name="onboard_title_2">What does the app do?</string>
     <string name="onboard_highlight_1">Save money:</string>
-    <string name="onboard_desc_2_1">Use solar energy instead of electricity from the grid.</string>
+    <string name="onboard_desc_2_1">Use solar energy instead of electricity from the grid.\n</string>
     <string name="onboard_highlight_2">Compare electricity prices:</string>
-    <string name="onboard_desc_2_2">View live electricity prices in your area.</string>
+    <string name="onboard_desc_2_2">View live electricity prices in your area.\n</string>
     <string name="onboard_highlight_3">Reduce carbon footprint:</string>
-    <string name="onboard_desc_2_3">Track how much CO₂ you’re saving.</string>
+    <string name="onboard_desc_2_3">Track how much CO₂ you’re saving.\n</string>
     <string name="onboard_highlight_4">Get insights:</string>
     <string name="onboard_desc_2_4">Visualize your potential savings over time.</string>
 
     <string name="onboard_title_3">How does it work?</string>
     <string name="onboard_how_1">Find address:</string>
-    <string name="onboard_how_desc_1">Choose your house on the map or search by address.</string>
+    <string name="onboard_how_desc_1">Choose your house on the map or search by address.\n</string>
     <string name="onboard_how_2">Fill in details:</string>
-    <string name="onboard_how_desc_2">Enter roof tilt, energy usage, and other info for accuracy.</string>
+    <string name="onboard_how_desc_2">Enter roof tilt, energy usage, and other info for accuracy.\n</string>
     <string name="onboard_how_3">Draw area (optional):</string>
-    <string name="onboard_how_desc_3">Mark where on your roof you want solar panels for better results.</string>
+    <string name="onboard_how_desc_3">Mark where on your roof you want solar panels for better results.\n</string>
     <string name="onboard_how_4">View results:</string>
     <string name="onboard_how_desc_4">See production estimates, savings, and environmental impact.</string>
 
     <string name="onboard_title_4">Location access</string>
     <string name="onboard_desc_4">Grant location access to find your nearest address and optimize the experience.</string>
     <string name="onboard_title_5">Change appearance</string>
-    <string name="onboard_desc_5">Ps. Click on the appearance button in the bottom right to change language, theme and font size.</string>
+    <string name="onboard_desc_5">PS: Click on &quot;Appearance&quot; in the bottom right to change language, theme and font size.</string>
 
 
     <string name="hide_area">Hide\nArea</string>
@@ -330,14 +346,14 @@ The animation shows how the sun moves across the sky during the day. How much so
     <string name="y_axis_name">Electricity price (NOK/kWh)</string>
     <string name="change_time_arrows">Use the arrows to change the time</string>
     <string name="time">Time:</string>
-    <string name="price_now">Current electricity price in the region:</string>
+    <string name="price_now">Current electricity price in</string>
     <string name="highest_price">Highest price</string>
     <string name="lowest_price">Lowest price</string>
     <string name="price_now_card">Price now</string>
     <string name="future_price_prefix">Price in</string>
     <string name="price_suffix_part1">hour</string>
     <string name="price_suffix_part2">s</string>
-    <string name="past_price_prefix">Price for</string>
+    <string name="past_price_prefix">Price</string>
     <string name="past_price_suffix">ago</string>
     <string name="oslo">Oslo/Eastern Norway</string>
     <string name="kristiansand">Kristiansand/Southern Norway</string>
@@ -349,27 +365,34 @@ The animation shows how the sun moves across the sky during the day. How much so
     <string name="overlay_bottom_message">Click anywhere to continue</string>
     <string name="map_overlay_title">Map Overview</string>
     <string name="map_overlay">
-    Search for your address, use device location, or tap the map to select a location
-</string>
+        Search for your address, use device location, or tap the map to select a location
+    </string>
 
     <string name="draw_overlay_title">Draw Your Area</string>
     <string name="map_draw_overlay">
-    Tap the map to start drawing your desired area\n\n
-    Tap the map to place markers\n\n
-    Place at least 3 markers in a geometric shape and in the correct order\n\n
-    Hold a marker for 3 seconds to move it\n\n
-    Tap &quot;Preview Area&quot; to see your drawing
-</string>
+        Tap the map to start drawing your desired area.\n\n
+        Tap the map to place markers.\n\n
+        Place at least 3 markers in the correct order and in a geometric shape to get your desired area.\n\n
+        Hold a marker for 3 seconds to move it.\n\n
+        Tap &quot;Preview Area&quot; to see your drawing.
+    </string>
 
     <string name="saving_overlay_title">See How Much You Save</string>
     <string name="saving_overlay">
-    Tap the different devices to see how much they contribute to energy savings\n\n
-    Scroll up for more information!
-</string>
+        Tap the different devices to see how much they contribute to energy savings\n\n
+        Scroll up for more information!\n\n
+        Tap the points on the graph to see data for each month.
+    </string>
 
     <string name="home_overlay_title">Welcome to your home screen!</string>
     <string name="home_overlay">
-    Tap &quot;Find your solar potential&quot; to see how much you can save with solar panels!\n\n
-    Tap the electricity prices in the bottom right corner to get more details about energy costs\n\n
-</string>
+        Tap &quot;Find your solar potential&quot; to see how much you can save with solar panels based on your address!\n\n
+        Tap &quot;Check Electricity Prices&quot; to get more details about energy costs.\n\n
+        See your Live Solar Energy for your location, hour by hour.
+    </string>
+    <string name="price_overlay_title">Check electricity prices for today</string>
+    <string name="price_overlay">
+         Here you can see today\'s electricity prices, hour by hour.\n\n
+         Tap the arrows or the points on the graph to view electricity prices at different times of the day.
+    </string>
 </resources>

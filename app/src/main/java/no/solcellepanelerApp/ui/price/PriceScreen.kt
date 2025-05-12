@@ -54,6 +54,10 @@ fun PriceScreen(
     contentPadding: PaddingValues,
     viewModel: PriceViewModel = viewModel(),
 ) {
+    val context = LocalContext.current
+    var showOverlay by remember { mutableStateOf(false) }
+    val onboardingUtils = remember { OnboardingUtils(context) }
+
     val scrollState = rememberScrollState()
     val selectedRegion by viewModel.region.stateFlow.collectAsState()
     val prices by viewModel.prices.stateFlow.collectAsState()
@@ -88,6 +92,33 @@ fun PriceScreen(
     }
     LaunchedEffect(Unit) {
         viewModel.doFetchPrices()
+    }
+
+    LaunchedEffect(Unit) {
+        if (!onboardingUtils.isPriceOverlayShown()) {
+            showOverlay = true
+            onboardingUtils.setPriceOverlayShown()
+        }
+    }
+
+    val title = stringResource(R.string.price_overlay_title)
+    val body = stringResource(R.string.price_overlay)
+
+    val message = buildAnnotatedString {
+        withStyle(style = MaterialTheme.typography.titleLarge.toSpanStyle()) {
+            append("$title\n\n")
+        }
+        withStyle(style = MaterialTheme.typography.bodyLarge.toSpanStyle()) {
+            append(body)
+        }
+    }
+
+    if (showOverlay) {
+        SimpleTutorialOverlay(
+            onDismiss = { showOverlay = false },
+            message = message
+
+        )
     }
 
     // Request location and set region once on permission
@@ -137,6 +168,8 @@ fun PriceScreen(
     }
 }
 
+// Dropdown to select region in case user does not grant location permission - or just is curious
+// about electricity prices in Norway
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun RegionDropdown(
