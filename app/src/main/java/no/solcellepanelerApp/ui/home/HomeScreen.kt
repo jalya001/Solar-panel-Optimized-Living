@@ -104,29 +104,29 @@ fun HomeScreen(
             onDismiss = { showOverlay = false },
             message = message
         )
-
-        Column(
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(contentPadding),
-            //.background(Color.Blue),
-            horizontalAlignment = Alignment.CenterHorizontally,
-            verticalArrangement = Arrangement.Center,
+    }
+    Column(
+        modifier = Modifier
+            .fillMaxSize()
+            .padding(contentPadding),
+        //.background(Color.Blue),
+        horizontalAlignment = Alignment.CenterHorizontally,
+        verticalArrangement = Arrangement.Center,
+    ) {
+        SolarPanelInstallationCard(navController)
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            horizontalArrangement = Arrangement.spacedBy(1.dp),
         ) {
-            SolarPanelInstallationCard(navController)
-            Row(
-                modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.spacedBy(1.dp),
-            ) {
-                CurrentRadiationCard(homeViewModel, Modifier.weight(1f), currentTime)
-                ElectricityPriceCard(
-                    homeViewModel,
-                    navController,
-                    Modifier.weight(1f),
-                )
-            }
+            CurrentRadiationCard(homeViewModel, Modifier.weight(1f), currentTime)
+            ElectricityPriceCard(
+                homeViewModel,
+                navController,
+                Modifier.weight(1f),
+            )
         }
     }
+
 }
 
 @Composable
@@ -181,9 +181,7 @@ fun CurrentRadiationCard(
     val rimUiState by homeViewModel.rimUiState.collectAsState()
 
     MyDisplayCard(
-        modifier = Modifier
-            .weight(1f)
-            .height(400.dp),
+        modifier = modifier.height(400.dp),
         style = MaterialTheme.typography.displaySmall,
         content = {
             Column(
@@ -200,7 +198,7 @@ fun CurrentRadiationCard(
                 horizontalAlignment = Alignment.CenterHorizontally // Center text horizontally
             ) {
                 Text(
-                    text = stringResource(R.string.live_energy, currentTime),
+                    text = stringResource(R.string.live_energy, currentTime.hour),
                     style = MaterialTheme.typography.titleLarge,
                     color = MaterialTheme.colorScheme.secondary
 //                                color = MaterialTheme.colorScheme.tertiary Oransje fargen. bare å fjerne kommentaren her hvis dere vil bruke oransj d
@@ -245,9 +243,7 @@ fun ElectricityPriceCard(
     MyNavCard(
         route = "prices",
         navController = navController,
-        modifier = Modifier
-            .weight(1f)
-            .height(400.dp),
+        modifier = modifier.height(400.dp),
         style = MaterialTheme.typography.headlineSmall,
         content = {
             Column(

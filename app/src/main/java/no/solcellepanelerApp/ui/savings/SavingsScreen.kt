@@ -43,6 +43,7 @@ import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.graphicsLayer
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.text.buildAnnotatedString
@@ -98,6 +99,7 @@ fun SavingsScreen(
     val devices = savingsViewModel.devices
     val deviceIcons = savingsViewModel.deviceIcons
 
+    val context = LocalContext.current
     var showOverlay by remember { mutableStateOf(true) }
     val onboardingUtils = remember { OnboardingUtils(context) }
 

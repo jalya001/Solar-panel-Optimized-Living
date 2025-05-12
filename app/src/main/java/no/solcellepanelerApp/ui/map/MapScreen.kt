@@ -209,7 +209,6 @@ fun DisplayScreen(
 
     val cameraPositionState = viewModel.cameraPositionState
     val mapUiSettings = viewModel.mapUiSettings
-    var showDrawHelp by remember { mutableStateOf(false) }
 
     val coroutineScope = rememberCoroutineScope()
 
@@ -319,6 +318,7 @@ fun DisplayScreen(
         )
 
         ControlsColumn(
+            navController = navController,
             selectedCoordinates = selectedCoordinates,
             coordinates = coordinates,
             polygonData = polygonData,
@@ -372,6 +372,7 @@ fun DisplayScreen(
 
 @Composable
 fun ControlsColumn(
+    navController: NavController,
     selectedCoordinates: LatLng?,
     coordinates: LatLng?,
     polygonData: List<LatLng>,
@@ -387,6 +388,7 @@ fun ControlsColumn(
     viewModel: MapViewModel,
     onToggleBottomSheet: () -> Unit,
 ) {
+    var showDrawHelp by remember { mutableStateOf(false) }
     Column(
         modifier = Modifier
             .fillMaxWidth()
