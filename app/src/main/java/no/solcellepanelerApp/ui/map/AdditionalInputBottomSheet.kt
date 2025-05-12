@@ -104,6 +104,8 @@ private fun BottomSheetContent(
 ) {
     val focusManager = LocalFocusManager.current
     val decimalFormatter = DecimalFormatter()
+    val area by viewModel.areaState.stateFlow.collectAsState()
+    val efficiency by viewModel.efficiencyState.stateFlow.collectAsState()
 
     Column(
         modifier = Modifier
@@ -268,8 +270,6 @@ fun DirectionSlider(
     Spacer(modifier = Modifier.height(30.dp))
 
     SunAngleAnimation(angle = azimuth.toFloat())
-
-
 }
 
 @Composable

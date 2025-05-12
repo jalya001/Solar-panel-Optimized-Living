@@ -269,7 +269,16 @@ fun SavingsScreen(
                         HouseAnimation()
                         EnergyFlowDown()
 
-                        FlowRow(
+                        Text(
+                            text = stringResource(R.string.device_info),
+                            style = MaterialTheme.typography.headlineSmall.copy(
+                                color = MaterialTheme.colorScheme.secondary,
+                                fontWeight = FontWeight.ExtraLight
+                            ),
+                            modifier = Modifier.padding(bottom = 8.dp)
+                        )
+
+                                    FlowRow(
                             mainAxisSpacing = 12.dp,
                             crossAxisSpacing = 12.dp,
                         ) {

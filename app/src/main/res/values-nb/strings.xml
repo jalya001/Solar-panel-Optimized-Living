@@ -283,7 +283,7 @@ Animasjonen viser hvordan solen beveger seg over himmelen i løpet av dagen. Hvo
     <string name="washing_machine">Vaskemaskin</string>
     <string name="vacuum_cleaner">Støvsuger</string>
     <string name="dishwasher">Oppvaskmaskin</string>
-    <string name="device_info">Dette er enhetene du har koblet til, og deres månedlige energiforbruk:</string>
+    <string name="device_info">Dette er enhetene du har koblet til, og deres gjennomsnittlige månedlige energiforbruk:</string>
 
 
     <!-- Onboarding -->

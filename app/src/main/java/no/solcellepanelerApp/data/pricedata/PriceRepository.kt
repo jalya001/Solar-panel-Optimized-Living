@@ -23,7 +23,7 @@ class PriceRepository {
             getData = { prices.value[region.value] },
             setData = { newData -> prices.value[region.value] = newData },
             fetchData = {
-                api.fetchPrices(date, region.value.regionCode)
+                api.fetchPrices(date, region.value.regionCode).takeIf { it.isNotEmpty() }
             }
         )
         Log.d("PriceRepository", "Prices: ${prices.value[region.value]?.data}")
