@@ -76,8 +76,6 @@ fun Nav(
                 }
 
                 route?.contains("savings", ignoreCase = true) == true -> {
-                    appScaffoldController.clearTopBar()
-                    appScaffoldController.clearBottomBar()
                     appScaffoldController.enableOverlay("savings")
                 }
 
