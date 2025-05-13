@@ -249,9 +249,8 @@ class FrostApi {
         return when { // could probably use the pairs to simplify but idk how
             testLat <= centerLat && testLon <= centerLon -> Quadrant.SOUTHWEST
             testLat <= centerLat && testLon >= centerLon -> Quadrant.SOUTHEAST
-            testLat >= centerLat && testLon >= centerLon -> Quadrant.NORTHEAST // Gives warning, but it's clearer this way? Doesn't need to change if so.
-            testLat >= centerLat && testLon <= centerLon -> Quadrant.NORTHWEST
-            else -> Quadrant.NORTHWEST // idk how to avoid
+            testLon >= centerLon -> Quadrant.NORTHEAST
+            else -> Quadrant.NORTHWEST
         }
     }
 
@@ -270,7 +269,7 @@ class FrostApi {
         val surfaceDistance = radius * c
 
         return if (location1.elevation != null && location2.elevation != null) {
-            val heightDifference = (location2.elevation!! - location1.elevation!!) / 1000
+            val heightDifference = (location2.elevation - location1.elevation) / 1000
             sqrt(surfaceDistance.pow(2) + heightDifference.pow(2))
         } else {
             surfaceDistance
@@ -309,7 +308,7 @@ class FrostApi {
         elementUsableStations: Map<Quadrant, MutableList<String>>,
     ) {
         if (modes[element] == Mode.EXTRAPOLATION) { // patchwork idfc and should maybe have one for interpolation
-            val allListsSizeLessThanTwo = elementUsableStations.values?.all { it.size < 2 } ?: true
+            val allListsSizeLessThanTwo = elementUsableStations.values.all { it.size < 2 }
             if (!allListsSizeLessThanTwo) {
                 return
             }
@@ -325,14 +324,14 @@ class FrostApi {
                 exceeders[1]
             ))
         ) {
-            println("SET TO INTERPOLATION: " + element)
+            println("SET TO INTERPOLATION: $element")
             modes[element] = Mode.INTERPOLATION
         } else if (exceeders.size == 4) {
             modes[element] = Mode.FAIL
-            println("SET TO FAIL: " + element)
+            println("SET TO FAIL: $element")
         } else if (modes[element] != Mode.EXTRAPOLATION) {
             modes[element] = Mode.EXTRAPOLATION
-            println("SET TO EXTRAPOLATION: " + element)
+            println("SET TO EXTRAPOLATION: $element")
         }
     }
 
@@ -368,14 +367,14 @@ class FrostApi {
         for (i in 0..points) {
             val angle = startRad + (i / points.toDouble()) * (endRad - startRad)
             val lat = latPlusKm(center.latitude!!, cos(angle) * radius)
-            val lon = lonPlusKm(center.longitude!!, center.latitude!!, sin(angle) * radius)
+            val lon = lonPlusKm(center.longitude!!, center.latitude, sin(angle) * radius)
             sectorPoints.add(Pair(lat, lon))
         }
 
         for (i in points downTo 0) {
             val angle = startRad + (i / points.toDouble()) * (endRad - startRad)
             val lat = latPlusKm(center.latitude!!, cos(angle) * innerRadius)
-            val lon = lonPlusKm(center.longitude!!, center.latitude!!, sin(angle) * innerRadius)
+            val lon = lonPlusKm(center.longitude!!, center.latitude, sin(angle) * innerRadius)
             sectorPoints.add(Pair(lat, lon))
         }
 
@@ -409,7 +408,7 @@ class FrostApi {
             val circle = MutableList(points) { index ->
                 val angle = (index.toDouble() / points) * 2 * Math.PI
                 val lat = latPlusKm(center.latitude!!, cos(angle) * radius)
-                val lon = lonPlusKm(center.longitude!!, center.latitude!!, sin(angle) * radius)
+                val lon = lonPlusKm(center.longitude!!, center.latitude, sin(angle) * radius)
                 Pair(lat, lon)
             }
             polygons.add(circle)
@@ -472,7 +471,7 @@ class FrostApi {
             val weight = 1.0 / useDistance.toDouble().pow(2) // We know distance is never 0
             sum += weight
         }
-        return (1 / thisDistance.toDouble().pow(2)) / sum
+        return (1 / thisDistance.pow(2)) / sum
         // connect this weighing to determining if a quadrant is defunct, and thus whether to extrapolate, guesstimate, etc.
     }
 
@@ -489,8 +488,8 @@ class FrostApi {
         usableStations: Map<String, Map<Quadrant, MutableList<String>>>,
     ): MutableMap<String, MutableSet<Quadrant>> {
         val appendix: Map<String, Map<Quadrant, MutableList<Pair<String, Double>>>> =
-            elementConst.associateWith { element ->
-                Quadrant.values().associateWith { mutableListOf() }
+            elementConst.associateWith {
+                Quadrant.entries.associateWith { mutableListOf() }
             }
         val requestedQuadrants: MutableMap<String, MutableSet<Quadrant>> = mutableMapOf()
 
@@ -509,12 +508,12 @@ class FrostApi {
                 val distance = calculateDistance(center, firstLocationValue)
 
                 // MODE ACTIVATION: NEAREST
-                if (distance < 5 && modesData[elementid]!!.second == false) {
+                if (distance < 5 && !modesData[elementid]!!.second) {
                     modes[elementid] = Mode.NEAREST // can be set idempotently
                     val index = modesData[elementid]!!.first.binarySearchBy(distance) { it.second }
                     val insertionPoint = if (index < 0) -index - 1 else index
                     modesData[elementid]!!.first.add(insertionPoint, Pair(stationid, distance))
-                    println("SET " + elementid + " TO NEAREST")
+                    println("SET $elementid TO NEAREST")
                 }
 
                 appendix[elementid]!![quadrant]!!.add(Pair(stationid, distance))
@@ -685,25 +684,25 @@ class FrostApi {
 
         usableStations.forEach { (element, quadrants) ->
             println("mode of " + element + " is " + modes[element]!!.toString())
-            if (modes[element]!! == Mode.NEAREST && modesData[element]!!.second == false) {
+            if (modes[element]!! == Mode.NEAREST && !modesData[element]!!.second) {
                 println(modesData)
                 val stationid = modesData[element]!!.first[0].first
                 if (stationid in stationTimeData[element]!! && stationTimeData[element]!![stationid]!!.size == 12) {
-                    println("satisfied station " + stationid)
+                    println("satisfied station $stationid")
                     modesData[element] = Pair(modesData[element]!!.first, true)
                 } else {
                     if (modes[element] == Mode.NEAREST && modesData[element]!!.first[0].first == stationid) {
-                        println("popped station " + stationid)
+                        println("popped station $stationid")
                         modesData[element]!!.first.removeAt(0)
                     }
                 }
-                if (modesData[element]!!.second == false) {
+                if (!modesData[element]!!.second) {
                     if (modesData[element]!!.first.isNotEmpty()) {
-                        println("ELEMENT GOOD " + element)
+                        println("ELEMENT GOOD $element")
                         missingElements.add(element)
                         missingIds.add(modesData[element]!!.first[0].first)
                     } else {
-                        println("RESETTING " + element)
+                        println("RESETTING $element")
                         resetMode(modes, element, searchAdvancements[element]!!, usableStations[element]!!)
                     }
                 }
@@ -716,7 +715,7 @@ class FrostApi {
                             val stationid = stationQueues[element]!![quadrant]!![advancement - 1]
                             stationTimeData[element]!![stationid]?.let { data ->
                                 if (data.size == 12) {
-                                    println(stationid + " is usable")
+                                    println("$stationid is usable")
                                     usableQueue.add(stationid)
                                 } else {
                                     println("NON USABLE " + stationid + " SIZE OF " + data.size.toString())
@@ -914,7 +913,7 @@ class FrostApi {
                     println(tempGainedArray[index])
                     val originalTemp: Double? = prevs["mean(air_temperature P1M)"]?.getOrNull(index)
                         ?.let { it - tempGainedArray[index] }
-                    if (originalTemp == null) null
+                    //if (originalTemp == null) null // We don't need this?
                     if (tempGainedArray[index] > 0.0 || (originalTemp!! + tempGainedArray[index] < 5.0)) {
                         -tempGainedArray[index] * 0.08
                     } else {
@@ -936,67 +935,75 @@ class FrostApi {
 
         usableStations.forEach { (element, quadrants) ->
             val mode = modes[element]!!
-            if (mode == Mode.NEAREST) {
-                val nearestId = modesData[element]!!.first[0].first
-                println("NEAREST OF " + element + " THAT IS " + nearestId)
-                val monthArray = averageArray(stationTimeData[element]!![nearestId]!!, 12)
-                resultsFormatted[element] =
-                    monthArray // It isn't set to Mode.NEAREST without there being something, and it always gets set out if it turns out there isn't
-                dataElevation = stationLocations[nearestId]!!.elevation
-            } else if (mode == Mode.INTERPOLATION) {
-                val valuesHolder: MutableMap<String, Array<Double>> = mutableMapOf()
-                quadrants.forEach { (_, stations) ->
-                    if (stations.size > 0) {
-                        val station = stations[0]
-                        val monthData = stationTimeData[element]!![station]!!
-                        val monthArray = averageArray(monthData, 12)
-                        valuesHolder[station] = monthArray
-                    }
+            when (mode) {
+                Mode.NEAREST -> {
+                    val nearestId = modesData[element]!!.first[0].first
+                    println("NEAREST OF $element THAT IS $nearestId")
+                    val monthArray = averageArray(stationTimeData[element]!![nearestId]!!, 12)
+                    resultsFormatted[element] =
+                        monthArray // It isn't set to Mode.NEAREST without there being something, and it always gets set out if it turns out there isn't
+                    dataElevation = stationLocations[nearestId]!!.elevation
                 }
-                val averagePair = getIDWAverages(center, valuesHolder, stationLocations)
-                resultsFormatted[element] = averagePair.first
-                dataElevation = averagePair.second
-            } else if (mode == Mode.EXTRAPOLATION) {
-                println("EXTRAPOLATE " + element)
-                val intervalLength = 12 /*TBD: FIX .referenceTime.toIntervalBucket(interval)*/
-                val interceptsArray: Array<Pair<Double, Int>> =
-                    Array(intervalLength) { Pair(0.0, 0) } // index is month, sum to counter
-                var elevationSum: Double? = 0.0
-                var elevationCounter = 0
-                usableStations[element]!!.forEach { (_, stations) ->
-                    if (stations.size >= 2) {
-                        val distanceList: MutableList<Pair<Double, Array<Double>>> = mutableListOf()
-                        stations.forEach { stationid ->
-                            distanceList.add(
-                                Pair(
-                                    calculateDistance(
-                                        center,
-                                        stationLocations[stationid]!!
-                                    ),
-                                    averageArray(
-                                        stationTimeData[element]!![stationid]!!,
-                                        intervalLength
+                Mode.INTERPOLATION -> {
+                    val valuesHolder: MutableMap<String, Array<Double>> = mutableMapOf()
+                    quadrants.forEach { (_, stations) ->
+                        if (stations.size > 0) {
+                            val station = stations[0]
+                            val monthData = stationTimeData[element]!![station]!!
+                            val monthArray = averageArray(monthData, 12)
+                            valuesHolder[station] = monthArray
+                        }
+                    }
+                    val averagePair = getIDWAverages(center, valuesHolder, stationLocations)
+                    resultsFormatted[element] = averagePair.first
+                    dataElevation = averagePair.second
+                }
+                Mode.EXTRAPOLATION -> {
+                    println("EXTRAPOLATE $element")
+                    val intervalLength = 12 /*TBD: FIX .referenceTime.toIntervalBucket(interval)*/
+                    val interceptsArray: Array<Pair<Double, Int>> =
+                        Array(intervalLength) { Pair(0.0, 0) } // index is month, sum to counter
+                    var elevationSum: Double? = 0.0
+                    var elevationCounter = 0
+                    usableStations[element]!!.forEach { (_, stations) ->
+                        if (stations.size >= 2) {
+                            val distanceList: MutableList<Pair<Double, Array<Double>>> = mutableListOf()
+                            stations.forEach { stationid ->
+                                distanceList.add(
+                                    Pair(
+                                        calculateDistance(
+                                            center,
+                                            stationLocations[stationid]!!
+                                        ),
+                                        averageArray(
+                                            stationTimeData[element]!![stationid]!!,
+                                            intervalLength
+                                        )
                                     )
                                 )
-                            )
-                            if (stationLocations[stationid]!!.elevation == null) {
-                                elevationSum = null
-                            } else if (elevationSum != null) {
-                                elevationSum =
-                                    elevationSum!! + stationLocations[stationid]!!.elevation!!
+                                if (stationLocations[stationid]!!.elevation == null) {
+                                    elevationSum = null
+                                } else if (elevationSum != null) {
+                                    elevationSum =
+                                        elevationSum!! + stationLocations[stationid]!!.elevation!!
+                                }
+                                elevationCounter++
                             }
-                            elevationCounter++
+                            multiYLinearRegression(distanceList, interceptsArray)
                         }
-                        multiYLinearRegression(distanceList, interceptsArray)
                     }
+                    val averagedIntercepts = Array(intervalLength) { 0.0 }
+                    interceptsArray.forEachIndexed { index, pair ->
+                        val (sum, count) = pair
+                        averagedIntercepts[index] = sum / count.toDouble()
+                    }
+                    if (elevationSum != null) dataElevation = elevationSum!! / elevationCounter
+                    resultsFormatted[element] = averagedIntercepts
                 }
-                val averagedIntercepts = Array(intervalLength) { 0.0 }
-                interceptsArray.forEachIndexed { index, pair ->
-                    val (sum, count) = pair
-                    averagedIntercepts[index] = sum / count.toDouble()
+
+                Mode.FAIL -> {
+                    // Kotlin wants this
                 }
-                if (elevationSum != null) dataElevation = elevationSum!! / elevationCounter
-                resultsFormatted[element] = averagedIntercepts
             }
             if (mode != Mode.FAIL) {
                 if (dataElevation != null && interestElevation != null) {
@@ -1006,7 +1013,7 @@ class FrostApi {
                     println("elevation difference: $elevationDifference")
                     if (abs(elevationDifference) > 250) {
                         val adjuster = adjustBasedOnElement(element)
-                        resultsFormatted[element]!!.forEachIndexed { index, value ->
+                        resultsFormatted[element]!!.forEachIndexed { index, _ ->
                             val addition = adjuster(
                                 elevationDifference,
                                 index,
@@ -1078,7 +1085,7 @@ class FrostApi {
         val n = data.size
         val meanX = data.sumOf { it.first } / n
         val outputCount = data[0].second.size
-        val meanYs = Array<Double>(outputCount) { i -> data.sumOf { it.second[i] } / n }
+        val meanYs = Array(outputCount) { i -> data.sumOf { it.second[i] } / n }
 
         for (i in 0 until outputCount) {
             var numerator = 0.0

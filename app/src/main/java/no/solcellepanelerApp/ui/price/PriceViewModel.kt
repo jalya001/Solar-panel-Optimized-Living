@@ -20,7 +20,7 @@ class PriceViewModel : ViewModel() {
     private val _priceUiState = MutableStateFlow(UiState.LOADING)
     val priceUiState: StateFlow<UiState> = _priceUiState
 
-    val date = ZonedDateTime.now()
+    private val date = ZonedDateTime.now()
 
     fun setRegion(newRegion: Region) {
         region.value = newRegion
