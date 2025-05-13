@@ -32,12 +32,15 @@ graph TD
     D[ResultScreen]
     E[SavingScreen]
 
-    F[WeatherViewModel]
+    
     G[MapViewModel]
     H[PriceViewModel]
+    1[HomeViewModel]
+    2[ResultViewModel]
+    3[SavingViewModel]
 
     J[WeatherRepository]
-    K[MapRespository]
+    K[UserDataRespoistory]
     L[PriceRepository]
     
    
@@ -47,18 +50,21 @@ graph TD
     P[PriceDataSource]
 
 
-    A --> |Observerer | F
-    A --> |Observerer | H
+    A --> |Observerer | 1
     B --> |Observerer | H
     C --> |Observerer | G
-    D --> |Observerer | F
-    D --> |Observerer | G
-    E --> |Observerer | F
+    D --> |Observerer | 2
+    E --> |Observerer | 3
 
 
-
-    F --> |Observerer | J
+    1 --> |Observerer | J
+    1 --> |Observerer | L
+    2 --> |Observerer | L
+    2 --> |Observerer | K
+    2 --> |Observerer | J
+    3 --> |Observerer | J
     G --> |Observerer | K
+    G --> |Observerer | L
     H --> |Observerer | L
 
     J --> |Observerer | M
