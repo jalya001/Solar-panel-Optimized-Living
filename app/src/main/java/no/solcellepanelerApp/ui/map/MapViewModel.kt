@@ -41,7 +41,8 @@ class MapViewModel : ViewModel() {
     val directionState = userDataRepository.directionState
     val efficiencyState = userDataRepository.efficiencyState
 
-    val region = priceRepository.region // Seems like a waste to import pricerepo just for this, but oh well
+    val region =
+        priceRepository.region // Seems like a waste to import pricerepo just for this, but oh well
 
     var areaInputText by mutableStateOf("")
         private set
@@ -99,13 +100,14 @@ class MapViewModel : ViewModel() {
             try {
                 val result = userDataRepository.getCoordinates(address)
                 if (result.isNotEmpty()) {
-                    coordinatesState.value = LatLng(result.first().lat.toDouble(), result.first().lon.toDouble())
+                    coordinatesState.value =
+                        LatLng(result.first().lat.toDouble(), result.first().lon.toDouble())
                 } else {
-                    _snackbarMessages.emit("Adresse ikke funnet, prøv igjen.")
+                    _snackbarMessages.emit("No results found for the address.")
                 }
             } catch (e: Exception) {
                 Log.e("MapViewModel", "Error fetching coordinates", e)
-                _snackbarMessages.emit("Noe gikk galt ved henting av koordinater.")
+                _snackbarMessages.emit("Error fetching coordinates. Try again")
             }
         }
     }
@@ -125,7 +127,7 @@ class MapViewModel : ViewModel() {
 
     fun startDrawing() {
         _drawingEnabled.value = true
-        Log.d("drawing is :",drawingEnabled.toString())
+        Log.d("drawing is :", drawingEnabled.toString())
 
         selectedCoordinates = null
         removePoints()

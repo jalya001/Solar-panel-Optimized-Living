@@ -2,7 +2,6 @@
     <string name="app_name">SolcellepanelerApp</string>
 
     <!--Home Screen-->
-    <string name="home"> Home</string>
     <string name="install_panels_title">Find Your \n Solar Potential!</string>
     <string name="install_panels_desc">Enter your address and details — see your estimated power and savings from solar panels.</string>
     <string name="last_location"> Last location (trenger bedre navn)</string>
@@ -395,4 +394,7 @@
          Here you can see today\'s electricity prices, hour by hour.\n\n
          Tap the arrows or the points on the graph to view electricity prices at different times of the day.
     </string>
+    <string name="error_fetching_coordinates">Something went wrong while fetching the coordinates</string>
+    <string name="_header">Place at least 3 markers to see the area</string>
+    <string name="draw_area_header">Place at least 3 markers to see the area</string>
 </resources>

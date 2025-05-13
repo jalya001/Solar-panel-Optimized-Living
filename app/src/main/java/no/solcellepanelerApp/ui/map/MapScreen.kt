@@ -21,7 +21,6 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
@@ -65,11 +64,9 @@ import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
-import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.Density
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.zIndex
@@ -93,10 +90,8 @@ import kotlinx.coroutines.launch
 import no.solcellepanelerApp.MainActivity
 import no.solcellepanelerApp.R
 import no.solcellepanelerApp.ui.font.FontSizeState
-import no.solcellepanelerApp.ui.navigation.HelpBottomSheet
-import no.solcellepanelerApp.ui.onboarding.OnboardingUtils
 import no.solcellepanelerApp.ui.navigation.AppScaffoldController
-import no.solcellepanelerApp.ui.reusables.SimpleTutorialOverlay
+import no.solcellepanelerApp.ui.navigation.HelpBottomSheet
 import no.solcellepanelerApp.ui.theme.darkGrey
 import no.solcellepanelerApp.ui.theme.lightBlue
 import no.solcellepanelerApp.ui.theme.lightGrey
@@ -258,12 +253,15 @@ fun DisplayScreen(
             }
         }
 
-        SearchBar(
-            address = viewModel.address,
-            onAddressChange = { viewModel.address = it },
-            onSearch = { viewModel.fetchCoordinates(viewModel.address) },
-            viewModel = viewModel
-        )
+        if (!drawingEnabled) {
+            SearchBar(
+                address = viewModel.address,
+                onAddressChange = { viewModel.address = it },
+                onSearch = { viewModel.fetchCoordinates(viewModel.address) },
+                viewModel = viewModel
+            )
+        }
+
 
         ControlsColumn(
             navController = navController,
@@ -342,13 +340,33 @@ fun ControlsColumn(
     Column(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(16.dp)
+//            .padding(16.dp)
             .zIndex(1f),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        Spacer(modifier = Modifier.height(80.dp))
+        if (drawingEnabled) {
+            Text(
+                text = if (isPolygonVisible)
+                    stringResource(R.string.area_drawn) + " $areaText m²"
+                else
+                    stringResource(R.string.draw_area_header),
+                style = MaterialTheme.typography.headlineMedium,
+                color = MaterialTheme.colorScheme.tertiary,
+                textAlign = TextAlign.Center,
+                modifier = Modifier
+                    .zIndex(1f)
+                    .background(
+                        color = MaterialTheme.colorScheme.background,
+                    )
+                    .fillMaxWidth()
+                    .padding(top = 20.dp)
+            )
+        }
+        Spacer(modifier = Modifier.height(20.dp))
 
         if (selectedCoordinates != null) {
+            Spacer(modifier = Modifier.height(60.dp))
+
             Button(
                 onClick = onConfirmLocation
             ) {
@@ -357,20 +375,7 @@ fun ControlsColumn(
             }
         }
 
-        if (isPolygonVisible) {
-            Text(
-                text = stringResource(R.string.area_drawn) + " $areaText m²",
-                style = MaterialTheme.typography.bodyLarge,
-                color = MaterialTheme.colorScheme.tertiary,
-                modifier = Modifier
-                    .zIndex(1f)
-                    .background(
-                        color = MaterialTheme.colorScheme.background.copy(alpha = 0.7f),
-                        shape = RoundedCornerShape(20.dp)
-                    )
-                    .padding(8.dp)
-            )
-        }
+
 
         if (!drawingEnabled) {
             Box(

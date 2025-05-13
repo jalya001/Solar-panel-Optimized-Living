@@ -2,7 +2,6 @@
     <string name="app_name">SolcellepanelerApp</string>
 
     <!--Home Screen-->
-    <string name="home"> Hjemme</string>
     <string name="install_panels_title">Finn ditt \n solcellepotensial!</string>
     <string name="install_panels_desc">Legg inn adresse og detaljer — se estimert strøm og besparelse med solcellepaneler.</string>
     <string name="last_location">Siste posisjon (trenger bedre navn)</string>
@@ -398,4 +397,6 @@
          Her kan du se strømprisene i dag, time for time.\n\n
          Trykk på pilene eller puktene på grafen for å se strømpriser for ulike tidspunkter på dagen.
      </string>
+    <string name="error_fetching_coordinates">Noe gikk galt ved henting av koordinater</string>
+    <string name="draw_area_header">Lag minimum 3 punkter for å se areal</string>
 </resources>
