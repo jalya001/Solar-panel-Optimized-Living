@@ -5,8 +5,11 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalDensity
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
@@ -20,6 +23,8 @@ import no.solcellepanelerApp.ui.navigation.AppScaffoldController
 import no.solcellepanelerApp.ui.navigation.Nav
 import no.solcellepanelerApp.ui.onboarding.OnboardingScreen
 import no.solcellepanelerApp.ui.onboarding.OnboardingUtils
+import no.solcellepanelerApp.ui.navigation.AppScaffold
+import no.solcellepanelerApp.ui.navigation.AppScaffoldController
 import no.solcellepanelerApp.ui.theme.SolcellepanelerAppTheme
 
 
