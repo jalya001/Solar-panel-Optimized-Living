@@ -99,13 +99,18 @@ graph TD
 
 #### Komponenter:
 
-    MapScreenViewModel: Konverterer adresser til koordinater.
+    HomeViewModel: Henter stråling fra Rim (FROST API), og velger riktig data for riktig tid. 
+    
+    MapViewModel: Konverterer adresser til koordinater, og behandler tegning av areal i Kart.
 
-    WeatherDataViewModel: Henter værdata (temperatur, skydekke).
+    ResultViewModel: Henter værdata (temperatur, skydekke), beregner korrekt data og energiproduksjon.
 
-    PriceScreenViewModel: Henter strømpriser per region.
+    PriceViewModel: Henter strømpriser per region.
 
+    SavingsViewModel: Behadler enheter som bruker kan koble til.
 
+    FontScaleViewModel: Behandler textstørrelse mellom skjermene.
+    
 #### Viktige mønstre:
 
     Dependency Injection: ViewModels injiserer repositories.
@@ -116,12 +121,12 @@ graph TD
 
 #### Komponenter:
 
-    HomeData(Strømpris): Henter strømpriser fra API  med ElectricityPriceApi og lagrer priser for dagen i ElectricityPriceRespository.
+    Strømpris: Henter strømpriser fra API  med ElectricityPriceApi og lagrer priser for dagen i PriceRespository.
 
-    Mapdata : Henter lat og long fra en adresse og lagrer i en repository som heter AdressRespository.
+    Map : Henter lat og long fra en adresse med AdressApi og lagrer i en repository som heter UserDataRepository, henter også eleveation på samme måte.
     
-    WeatherData: Henter fra FROST API med FrostDataSource (temperatur, snødekke, sydekke) og lagrer den i WeatherRespository, 
-    henter global innstråling  via PVGIS API med PVGISapi og lagrer i WeatherRepository.
+    WeatherData: Henter fra FROST API med FrostApi (temperatur, snødekke, sydekke) og lagrer den i WeatherRespository, 
+    henter global innstråling  via PVGIS med PVGISapi og lagrer i WeatherRepository.
 
 
 
@@ -151,10 +156,14 @@ graph TD
 
     Geocoder API: 
         INPUT: adresse
-        OUTPUT: adresse til koordinater.
+        OUTPUT: koordinater til adresse.
+
+    Geocoder API: 
+        INPUT: koordinater
+        OUTPUT: høyde til koordinater.
 
     Strømpris-API: 
-        INPUT:
+        INPUT: Region, dato
         OUTPUT: Regionale priser (f.eks. Nord-Norge).
 
 ## 4. Designvalg
