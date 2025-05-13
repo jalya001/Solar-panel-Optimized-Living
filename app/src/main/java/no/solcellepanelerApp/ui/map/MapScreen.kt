@@ -128,14 +128,7 @@ fun MapScreen(
             onboardingUtils.setMapOverlayShown()
         }
     }
-    val message = stringResource(R.string.address_not_found)
 
-//    LaunchedEffect(trigger) {
-//        if (trigger > lastShownTrigger) {
-//            snackbarHostState.showSnackbar(message)
-//            lastShownTrigger = trigger
-//        }
-//    }
     if (showMapOverlay) {
         val title = stringResource(R.string.map_overlay_title)
         val body = stringResource(R.string.map_overlay)
@@ -182,6 +175,7 @@ fun MapScreen(
         DisplayScreen(
             viewModel = viewModel,
             navController = navController,
+            onStartDrawing = { showDrawOverlay = true }
         )
     }
 }
@@ -190,6 +184,7 @@ fun MapScreen(
 fun DisplayScreen(
     viewModel: MapViewModel,
     navController: NavController,
+    onStartDrawing: () -> Unit,
 ) {
     val context = LocalContext.current
     val activity = context as? MainActivity
@@ -358,7 +353,8 @@ fun DisplayScreen(
             onDismissDialog = { viewModel.showMissingLocationDialog = false },
             onTogglePolygonVisibility = { viewModel.togglePolygonVisibility() },
             viewModel = viewModel,
-            onToggleBottomSheet = { viewModel.showBottomSheet = true }
+            onToggleBottomSheet = { viewModel.showBottomSheet = true },
+            onStartDrawing = onStartDrawing,
         )
 
         AdditionalInputBottomSheet(
@@ -387,6 +383,7 @@ fun ControlsColumn(
     onTogglePolygonVisibility: () -> Unit,
     viewModel: MapViewModel,
     onToggleBottomSheet: () -> Unit,
+    onStartDrawing: () -> Unit,
 ) {
     var showDrawHelp by remember { mutableStateOf(false) }
     Column(
@@ -460,6 +457,9 @@ fun ControlsColumn(
         }
 
         if (drawingEnabled) {
+            LaunchedEffect(key1 = drawingEnabled) {
+                if (drawingEnabled) onStartDrawing()
+            }
             Box(
                 modifier = Modifier
                     .fillMaxSize()
@@ -498,7 +498,7 @@ fun ControlsColumn(
                     viewModel = viewModel,
                     isPolygonVisible = isPolygonVisible,
                     toggleBottomSheet = onToggleBottomSheet,
-                    onToggleVisibility = onTogglePolygonVisibility
+                    onToggleVisibility = onTogglePolygonVisibility,
                 )
             }
 
@@ -667,13 +667,13 @@ private fun DrawingControls(
     toggleBottomSheet: () -> Unit,
 ) {
 
-    //legg til overlay første gang tegning brukes
-
     Box(modifier = Modifier.fillMaxSize()) {
         Column(modifier = Modifier.align(Alignment.BottomStart)) {
-            Box(modifier = Modifier
-                .width(270.dp)
-                .height(200.dp)) {
+            Box(
+                modifier = Modifier
+                    .width(270.dp)
+                    .height(200.dp)
+            ) {
 
                 if (isPolygonVisible) {
                     DrawingControlButton(

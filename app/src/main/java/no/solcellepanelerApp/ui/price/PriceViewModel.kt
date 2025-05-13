@@ -7,8 +7,8 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 import no.solcellepanelerApp.data.pricedata.PriceRepository
 import no.solcellepanelerApp.model.price.Region
-import no.solcellepanelerApp.model.reusables.UiState
 import no.solcellepanelerApp.model.price.fetchPrices
+import no.solcellepanelerApp.model.reusables.UiState
 import java.time.ZonedDateTime
 
 class PriceViewModel : ViewModel() {

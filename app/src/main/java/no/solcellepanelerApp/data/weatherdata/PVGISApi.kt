@@ -1,6 +1,7 @@
 package no.solcellepanelerApp.data.weatherdata
 
-import kotlinx.serialization.*
+import kotlinx.serialization.SerialName
+import kotlinx.serialization.Serializable
 
 class PVGISApi {
     @Serializable

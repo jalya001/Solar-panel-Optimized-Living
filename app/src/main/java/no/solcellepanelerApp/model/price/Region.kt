@@ -4,6 +4,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.res.stringResource
 import no.solcellepanelerApp.R
 
+// Enum class representing electricity price regions with corresponding region codes
 enum class Region(val regionCode: String) {
     OSLO("NO1"),
     KRISTIANSAND("NO2"),
@@ -12,6 +13,7 @@ enum class Region(val regionCode: String) {
     BERGEN("NO5")
 }
 
+// Returns localized display name for a given region
 @Composable
 fun getRegionName(region: Region): String {
     return when (region) {

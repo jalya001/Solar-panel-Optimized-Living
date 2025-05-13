@@ -1,33 +1,32 @@
 package no.solcellepanelerApp.ui.map
 
 import android.Manifest
-import no.solcellepanelerApp.MainActivity
+import android.content.Context
+import android.content.pm.PackageManager
+import android.location.Location
 import android.util.Log
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
+import androidx.compose.runtime.snapshots.SnapshotStateList
+import androidx.core.content.ContextCompat
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.google.android.gms.maps.model.CameraPosition
 import com.google.android.gms.maps.model.LatLng
 import com.google.maps.android.SphericalUtil
+import com.google.maps.android.compose.CameraPositionState
+import com.google.maps.android.compose.MapUiSettings
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.launch
-import no.solcellepanelerApp.data.userdata.UserDataRepository
-
-import android.content.Context
-import android.content.pm.PackageManager
-import android.location.Location
-import androidx.compose.runtime.snapshots.SnapshotStateList
-import androidx.core.content.ContextCompat
-import com.google.android.gms.maps.model.CameraPosition
-import com.google.maps.android.compose.CameraPositionState
-import com.google.maps.android.compose.MapUiSettings
+import no.solcellepanelerApp.MainActivity
 import no.solcellepanelerApp.data.pricedata.PriceRepository
+import no.solcellepanelerApp.data.userdata.UserDataRepository
 import java.math.BigDecimal
 import kotlin.math.ceil
 import no.solcellepanelerApp.util.fetchCoordinates as activityToCoordinates

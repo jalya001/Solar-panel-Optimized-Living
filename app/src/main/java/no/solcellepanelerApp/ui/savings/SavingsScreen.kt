@@ -71,7 +71,6 @@ import com.airbnb.lottie.compose.animateLottieCompositionAsState
 import com.airbnb.lottie.compose.rememberLottieComposition
 import com.google.accompanist.flowlayout.FlowRow
 import no.solcellepanelerApp.R
-import no.solcellepanelerApp.model.price.ChartType
 import no.solcellepanelerApp.ui.onboarding.OnboardingUtils
 import no.solcellepanelerApp.ui.reusables.AppScaffoldController
 import no.solcellepanelerApp.ui.reusables.IconTextRow
@@ -269,7 +268,16 @@ fun SavingsScreen(
                         HouseAnimation()
                         EnergyFlowDown()
 
-                        FlowRow(
+                        Text(
+                            text = stringResource(R.string.device_info),
+                            style = MaterialTheme.typography.headlineSmall.copy(
+                                color = MaterialTheme.colorScheme.secondary,
+                                fontWeight = FontWeight.ExtraLight
+                            ),
+                            modifier = Modifier.padding(bottom = 8.dp)
+                        )
+
+                                    FlowRow(
                             mainAxisSpacing = 12.dp,
                             crossAxisSpacing = 12.dp,
                         ) {
@@ -315,7 +323,7 @@ fun SavingsScreen(
 
                                         IconTextRow(
                                             iconRes = iconRes,
-                                            text = name,
+                                            text = stringResource(name),
                                             textStyle = MaterialTheme.typography.bodyMedium,
                                         )
 
@@ -457,7 +465,6 @@ fun Chart(data: Array<Double>, measure: String = "cm") {
         data.map { (it / max) * 100 }.toTypedArray()
     } else data
 
-    ChartType.LINE
     val selectedPoint = remember { mutableStateOf<Point?>(null) }
 
     val points = prosessData.mapIndexed { index, value ->

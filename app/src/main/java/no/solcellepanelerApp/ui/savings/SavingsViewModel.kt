@@ -1,10 +1,9 @@
 package no.solcellepanelerApp.ui.savings
 
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.StateFlow
-import no.solcellepanelerApp.ui.result.ResultViewModel.MonthlyCalculationResult
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 import no.solcellepanelerApp.R
 import no.solcellepanelerApp.data.weatherdata.WeatherRepository
@@ -15,8 +14,8 @@ class SavingsViewModel : ViewModel() {
     val calculationResults = weatherRepository.calculationResults
     val weatherDataFlow = weatherRepository.weatherData
 
-    private val _connectedDevices = MutableStateFlow<MutableMap<String, Double>>(mutableMapOf())
-    val connectedDevices: StateFlow<Map<String, Double>> = _connectedDevices
+    private val _connectedDevices = MutableStateFlow<MutableMap<Int, Double>>(mutableMapOf())
+    val connectedDevices: StateFlow<Map<Int, Double>> = _connectedDevices
 
     private val _currentEnergy = MutableStateFlow(0.0)
     val currentEnergy: StateFlow<Double> = _currentEnergy
@@ -24,7 +23,15 @@ class SavingsViewModel : ViewModel() {
     private val _savings = MutableStateFlow(0.0)
     val savings: StateFlow<Double> = _savings
 
-    private val preConnected = listOf("Fridge", "TV", "Laptop")
+    private val preConnected = listOf(
+        R.string.fridge,
+        R.string.tv,
+        R.string.laptop,
+        R.string.microwave,
+        R.string.dishwasher,
+        R.string.washing_machine,
+        R.string.vacuum_cleaner
+    )
 
     init {
         viewModelScope.launch {
@@ -32,29 +39,29 @@ class SavingsViewModel : ViewModel() {
     }
 
     val devices = listOf(
-        "El-Car" to 100.0,
-        "Fridge" to 30.0,
-        "Heater" to 60.0,
-        "Laptop" to 10.0,
-        "Washing Machine" to 20.0,
-        "TV" to 15.0,
-        "Air Conditioner" to 50.0,
-        "Microwave" to 25.0,
-        "Dishwasher" to 35.0,
-        "Vacuum Cleaner" to 8.0
+        R.string.el_car to 100.0,
+        R.string.fridge to 30.0,
+        R.string.heater to 60.0,
+        R.string.laptop to 10.0,
+        R.string.washing_machine to 20.0,
+        R.string.tv to 15.0,
+        R.string.air_conditioner to 50.0,
+        R.string.microwave to 25.0,
+        R.string.dishwasher to 35.0,
+        R.string.vacuum_cleaner to 8.0
     )
 
     val deviceIcons = mapOf(
-        "Fridge" to R.drawable.kitchen_24px,
-        "Washing Machine" to R.drawable.local_laundry_service_24px,
-        "TV" to R.drawable.tv_24px,
-        "Laptop" to R.drawable.laptop_windows_24px,
-        "Air Conditioner" to R.drawable.mode_fan_24px,
-        "Heater" to R.drawable.fireplace_24px,
-        "Microwave" to R.drawable.microwave_24px,
-        "Dishwasher" to R.drawable.dishwasher_24px,
-        "El-Car" to R.drawable.directions_car_24px,
-        "Vacuum Cleaner" to R.drawable.vacuum_24px,
+        R.string.fridge to R.drawable.kitchen_24px,
+        R.string.washing_machine to R.drawable.local_laundry_service_24px,
+        R.string.tv to R.drawable.tv_24px,
+        R.string.laptop to R.drawable.laptop_windows_24px,
+        R.string.air_conditioner to R.drawable.mode_fan_24px,
+        R.string.heater to R.drawable.fireplace_24px,
+        R.string.microwave to R.drawable.microwave_24px,
+        R.string.dishwasher to R.drawable.dishwasher_24px,
+        R.string.el_car to R.drawable.directions_car_24px,
+        R.string.vacuum_cleaner to R.drawable.vacuum_24px,
     )
 
     fun initialize(energyProduced: Double, energyPrice: Double) {
@@ -68,7 +75,7 @@ class SavingsViewModel : ViewModel() {
         _savings.value = energyProduced * energyPrice
     }
 
-    fun toggleDevice(name: String) {
+    fun toggleDevice(name: Int) {
         val value = devices.find { it.first == name }?.second ?: return
         val currentMap = _connectedDevices.value.toMutableMap()
 
