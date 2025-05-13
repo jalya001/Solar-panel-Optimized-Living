@@ -7,11 +7,11 @@ plugins {
 }
 
 android {
-    namespace = "no.solcellepanelerApp"
+    namespace = "no.SOL"
     compileSdk = 35
 
     defaultConfig {
-        applicationId = "no.solcellepanelerApp"
+        applicationId = "no.SOL"
         minSdk = 26
         targetSdk = 35
         versionCode = 1

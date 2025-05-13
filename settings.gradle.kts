@@ -19,6 +19,6 @@ dependencyResolutionManagement {
     }
 }
 
-rootProject.name = "SolcellepanelerApp"
+rootProject.name = "SOL"
 include(":app")
  

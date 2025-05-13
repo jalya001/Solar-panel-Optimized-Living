@@ -5,9 +5,9 @@
     <style name="Theme.MySplashScreen" parent="Theme.SplashScreen">
         <item name="windowSplashScreenBackground">@color/background_light</item>
         <item name="windowSplashScreenAnimatedIcon">@drawable/splash_sol_logo_light</item>
-        <item name="postSplashScreenTheme">@style/Theme.SolcellepanelerApp</item>
+        <item name="postSplashScreenTheme">@style/Theme.SOL</item>
     </style>
 
-    <style name="Theme.SolcellepanelerApp" parent="android:Theme.Material.Light.NoActionBar" />
+    <style name="Theme.SOL" parent="android:Theme.Material.Light.NoActionBar" />
 
 </resources>
