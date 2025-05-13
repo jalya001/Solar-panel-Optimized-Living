@@ -1,10 +1,7 @@
-INNHOLD
-    Beskrivelse og diagrammer, vi anbefaler å generere dem med
-    Mermaid som vist på forelesning. Se kravene til modellering
-    lenger ned i dette dokumentet. Ha med hvorfor diagrammet er
-    valgt og hva dere ønsker å med det.
-MODELING
-Class Diagram 1st draft
+## INNHOLD
+#### Denne filen innholder klassediagrammer for hele appen, sekveksdiagrammer, beskerivelser og usecase for appen.
+### MODELING
+#### Klassediagarm for appen i begynnelse:
 ```mermaid
 
     classDiagram
@@ -181,7 +178,7 @@ Class Diagram 1st draft
 
 
 
-Class Diagram later draft
+#### Klassediagram for slutten av projekt
 ```mermaid
 
     classDiagram
@@ -353,7 +350,10 @@ Class Diagram later draft
     PVGISApiDataSource --> Energy
 
  ```
-MapScreen: Find Adress
+#### MapScreen: Find Address
+        
+Dette diagrammet viser hvordan brukeren søker etter en adresse. MapScreen sender forespørselen til MapViewModel, som henter koordinater gjennom AddressRepository og en ekstern datakilde.<br>
+Hvis alt går bra, vises koordinatene på kartet. Ved feil vises en feilmelding til brukeren.
 ```mermaid
     sequenceDiagram
 
@@ -390,8 +390,10 @@ MapScreen: Find Adress
 ```
     
     
-MapScreen: DrawArea
+#### MapScreen: Tegn område
 
+Diagrammet viser hvordan brukeren kan klikke på kartet for å tegne et polygon (område).<br>
+Brukeren kan deretter se arealet, legge inn helling og effektivitet, og redigere punktene (fjerne siste eller alle). Dersom et gyldig polygon er tegnet, kan brukeren gå videre til resultatsiden. Hvis ikke, vises en feilmelding.
 ```mermaid
     sequenceDiagram
 
@@ -437,7 +439,10 @@ MapScreen: DrawArea
     end
 
 ```
-PriceScreen: fetching prices and display
+#### PriceScreen: Hent og vis strømpriser
+
+Dette diagrammet beskriver hvordan strømpriser hentes og vises. Når skjermen åpnes eller brukeren velger en annen region, hentes prisdata via PriceScreenViewModel og Repository.<br>
+Brukeren kan også åpne hjelpeskjermen eller endre utseendet via bunnmenyen.
 ```mermaid
 sequenceDiagram
 actor User
@@ -480,7 +485,11 @@ BottomBar ->> AppearanceBottomSheet: Show appearance settings
 
 
 ```
-ResultScreen: DisplayResult
+##### ResultScreen: Vis resultater
+
+Diagrammet viser hvordan appen bruker værdata og strømpriser for å beregne solenergi-produksjon basert på brukerens input (areal, helling, plassering). <br>
+Resultatene vises på ResultScreen, der brukeren kan se månedlige eller totale besparelser og produksjon.
+
 ```mermaid
 sequenceDiagram
     participant User
@@ -513,4 +522,8 @@ sequenceDiagram
     ResultContent->>User: User can toggle months or view savings
 
 ```
+##### USECASE: 
+Denne use case-diagrammet viser de sentrale funksjonalitetene i applikasjonen og hvordan ulike aktører samhandler med systemet.<br>
+Diagrammet hjelper til med å gi en oversikt over hva brukerne kan gjøre i appen, og hvilke komponenter eller moduler som er involvert i hver prosess.
+
 ![Alt text](UseCaeT37.svg)
