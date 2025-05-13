@@ -1,7 +1,7 @@
 # “SOL – Solar panel Optimized Living”
 
 ### **Team 37 | IN2000-V25**
-Sist oppdatert: 05.05.2025
+Sist oppdatert: 13.05.2025
 ## 1. Introduksjon
 
 Dette dokumentet beskriver arkitekturen for “SOL – Solar panel Optimized Living” som  bruker Frost, HvakosterStrømmen API og PVGIS API for å beregne energiprodukjson gjennom hele året, lønnsomheten til solcellepaneler, og viser hvilke elektriske apparater som kan brukes med kun energien som produseres av panelene. Appen følger MVVM (Model-View-ViewModel) og bruker moderne Android Jetpack-komponenter som Compose.
