@@ -115,6 +115,11 @@ Geocoder API brukes til å hente geografiske koordinater (breddegrad og lengdegr
 API brukes til å hente strømpris for førkjellige områder.
 
     Bruksområde: Brukes i PriceScreen, og viser pris og brukes for å lage grafer med prisene.
+#### g. YCharts
+
+Denne bibliotek brukses for å lage grafer som viser data.
+
+    Bruksområde: Brukes i PriceScreen og SavingScreen, og viser væredata, pris og vise energi.
 ## 6. Forbedringsmuligheter
 
 Dette prosjektet har potensiale til å implementere flere funksjoner som:
