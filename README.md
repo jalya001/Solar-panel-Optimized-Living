@@ -11,7 +11,7 @@
  
 ## 1. Introduksjon
 
-SOL Solar panel Optimized Living er en Android-applikasjon som er utviklet for å hjelpe brukere med å estimere effektiviteten og økonomiske besparelser ved installasjon av solcellepaneler. Appen kombinerer klimadata, takspesifikasjoner og solenergi-beregninger for å gi brukeren en nøyaktig vurdering av solcelleanleggets potensial.
+<b>SOL</b> Solar panel Optimized Living er en Android-applikasjon som er utviklet for å hjelpe brukere med å estimere effektiviteten og økonomiske besparelser ved installasjon av solcellepaneler. Appen kombinerer klimadata, takspesifikasjoner og solenergi-beregninger for å gi brukeren en nøyaktig vurdering av solcelleanleggets potensial.
 
 Ved å bruke ekstern API-integrasjon, som Frost API for værdata og andre relevante kilder for strømpriser og støtteordninger, kan brukeren få et godt grunnlag for å vurdere lønnsomheten ved solcelleinstallasjon på sin eiendom. Appen gir brukeren muligheten til å hente kartkoordinater for en spesifisert adresse, og deretter beregne forventet solenergiutnyttelse basert på takflatenes vinkel, areal, og den gjennomsnittlige solinnstrålingen i området.
 
