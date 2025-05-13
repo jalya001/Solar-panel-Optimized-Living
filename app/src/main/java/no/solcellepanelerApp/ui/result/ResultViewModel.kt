@@ -187,7 +187,7 @@ class ResultViewModel : ViewModel() {
     }
 */
     fun calculateSavedCO2(energy: Double): Double {
-        val norwayEmissionFactor = 0.03 //0.03 kg CO2/kWh
+        val norwayEmissionFactor = 0.018 //0.018 kg CO2/kWh
         val norwaySavedCO2 = energy * norwayEmissionFactor
 
         return norwaySavedCO2
