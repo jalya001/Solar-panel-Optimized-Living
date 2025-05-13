@@ -5,11 +5,8 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalDensity
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
@@ -35,7 +32,7 @@ class MainActivity : ComponentActivity() {
         val languageCode = LanguageUtils.getSavedLanguage(this) ?: "en"
         LanguageUtils.setLanguage(this, languageCode)
         installSplashScreen()
-        //onboardingUtils.resetAllOnboardingStates() //for testing
+        onboardingUtils.resetAllOnboardingStates() //for testing
         enableEdgeToEdge()
         setContent {
             SolcellepanelerAppTheme {

@@ -65,11 +65,9 @@ import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
-import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.Density
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.zIndex
@@ -94,9 +92,7 @@ import no.solcellepanelerApp.MainActivity
 import no.solcellepanelerApp.R
 import no.solcellepanelerApp.ui.font.FontSizeState
 import no.solcellepanelerApp.ui.navigation.HelpBottomSheet
-import no.solcellepanelerApp.ui.onboarding.OnboardingUtils
 import no.solcellepanelerApp.ui.navigation.AppScaffoldController
-import no.solcellepanelerApp.ui.reusables.SimpleTutorialOverlay
 import no.solcellepanelerApp.ui.theme.darkGrey
 import no.solcellepanelerApp.ui.theme.lightBlue
 import no.solcellepanelerApp.ui.theme.lightGrey
@@ -410,9 +406,7 @@ fun ControlsColumn(
         }
 
         if (drawingEnabled) {
-            LaunchedEffect(key1 = drawingEnabled) {
-                if (drawingEnabled) onStartDrawing()
-            }
+            onStartDrawing()
             Box(
                 modifier = Modifier
                     .fillMaxSize()
