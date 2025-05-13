@@ -3,7 +3,7 @@ package no.solcellepanelerApp.model.map
 
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
-
+// warnings are for variable name but cant change because of api call
 @Serializable
 data class GeocodingResponse(
     val place_id: Long,

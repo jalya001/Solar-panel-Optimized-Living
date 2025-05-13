@@ -76,7 +76,7 @@ class OnboardingUtils(private val context: Context) {
             .putBoolean("price_overlay_shown", true)
             .apply()
     }
-
+// warning here but only because it is for testing
     fun resetAllOnboardingStates() { //for testing
         context.getSharedPreferences("onboarding", Context.MODE_PRIVATE)
             .edit()

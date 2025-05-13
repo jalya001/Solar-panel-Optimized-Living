@@ -155,7 +155,7 @@ fun ElectricityPriceChart(prices: List<ElectricityPrice>) {
                                     )
                                 )
                             ),
-                            selectionHighlightPopUp = SelectionHighlightPopUp { offset, point ->
+                            selectionHighlightPopUp = SelectionHighlightPopUp { _, point ->
                                 selectedPoint.value = point
                             }
                         )

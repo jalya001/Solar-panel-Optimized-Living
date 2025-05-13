@@ -49,10 +49,10 @@ class MapViewModel : ViewModel() {
 
     fun initializeArea() {
         val area = areaState.value
-        if (area == 0.0) {
-            areaInputText = ""
+        areaInputText = if (area == 0.0) {
+            ""
         } else {
-            areaInputText = BigDecimal(area).stripTrailingZeros().toPlainString()
+            BigDecimal(area).stripTrailingZeros().toPlainString()
         }
     }
 

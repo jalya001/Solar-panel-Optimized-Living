@@ -140,7 +140,7 @@ suspend fun fetchCoordinates(
         null
     }
 }
-
+// warning here because not used
 @SuppressLint("MissingPermission")
 @Composable
 fun rememberLocationWithPermission(

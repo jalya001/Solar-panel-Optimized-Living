@@ -27,11 +27,10 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalContext
+
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
-import androidx.compose.ui.text.buildAnnotatedString
-import androidx.compose.ui.text.withStyle
+
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
@@ -42,8 +41,7 @@ import no.solcellepanelerApp.model.price.getRegionName
 import no.solcellepanelerApp.model.reusables.UiState
 import no.solcellepanelerApp.ui.handling.ErrorScreen
 import no.solcellepanelerApp.ui.handling.LoadingScreen
-import no.solcellepanelerApp.ui.onboarding.OnboardingUtils
-import no.solcellepanelerApp.ui.reusables.SimpleTutorialOverlay
+
 import no.solcellepanelerApp.util.RequestLocationPermission
 import java.time.ZoneId
 import java.time.ZonedDateTime
