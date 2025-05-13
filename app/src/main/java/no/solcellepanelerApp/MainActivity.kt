@@ -10,6 +10,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalDensity
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.lifecycle.viewmodel.compose.viewModel
@@ -20,8 +21,8 @@ import no.solcellepanelerApp.ui.language.LanguageUtils
 import no.solcellepanelerApp.ui.navigation.Nav
 import no.solcellepanelerApp.ui.onboarding.OnboardingScreen
 import no.solcellepanelerApp.ui.onboarding.OnboardingUtils
-import no.solcellepanelerApp.ui.reusables.AppScaffold
-import no.solcellepanelerApp.ui.reusables.AppScaffoldController
+import no.solcellepanelerApp.ui.navigation.AppScaffold
+import no.solcellepanelerApp.ui.navigation.AppScaffoldController
 import no.solcellepanelerApp.ui.theme.SolcellepanelerAppTheme
 
 
@@ -34,7 +35,7 @@ class MainActivity : ComponentActivity() {
         val languageCode = LanguageUtils.getSavedLanguage(this) ?: "en"
         LanguageUtils.setLanguage(this, languageCode)
         installSplashScreen()
-//        onboardingUtils.resetAllOnboardingStates() //for testing
+        //onboardingUtils.resetAllOnboardingStates() //for testing
         enableEdgeToEdge()
         setContent {
             SolcellepanelerAppTheme {
@@ -53,9 +54,8 @@ class MainActivity : ComponentActivity() {
         val navController = rememberNavController()
         val fontScaleViewModel: FontScaleViewModel = viewModel()
 
-        val appScaffoldController = remember { AppScaffoldController() }
-        var showHelp by remember { mutableStateOf(false) }
-        var showAppearance by remember { mutableStateOf(false) }
+        val context = LocalContext.current
+        val appScaffoldController = remember { AppScaffoldController(context) }
 
         val systemFontScale = LocalDensity.current.fontScale
         val effectiveFontScale = systemFontScale * fontScaleViewModel.fontScale.floatValue
@@ -65,12 +65,8 @@ class MainActivity : ComponentActivity() {
         ) {
             AppScaffold(
                 navController = navController,
-                appScaffoldController = appScaffoldController,
+                controller = appScaffoldController,
                 fontScaleViewModel = fontScaleViewModel,
-                showHelp = showHelp,
-                onHelpChange = { showHelp = it },
-                showAppearance = showAppearance,
-                onAppearanceChange = { showAppearance = it }
             ) { padding ->
                 Nav(
                     navController = navController,
@@ -93,8 +89,4 @@ class MainActivity : ComponentActivity() {
             }
         }
     }
-
-
 }
-
-

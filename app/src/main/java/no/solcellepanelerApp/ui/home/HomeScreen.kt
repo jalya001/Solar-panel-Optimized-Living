@@ -68,40 +68,10 @@ fun HomeScreen(
     val isLoading by homeViewModel.isLoading.collectAsState()
     val currentTime by homeViewModel.currentTime.collectAsState()
 
-    val onboardingUtils = remember { OnboardingUtils(context) }
-
-    var showOverlay by remember { mutableStateOf(false) }
-//    showOverlay = true //testing
-
-    LaunchedEffect(Unit) {
-        if (!onboardingUtils.isHomeOverlayShown()) {
-            showOverlay = true
-            onboardingUtils.setHomeOverlayShown()
-        }
-    }
-
     if (isLoading) {
         LoadingScreen()
         return
     }
-
-//    if (showOverlay) {
-//        val title = stringResource(R.string.home_overlay_title)
-//        val body = stringResource(R.string.home_overlay)
-//        val message = buildAnnotatedString {
-//            withStyle(style = MaterialTheme.typography.titleLarge.toSpanStyle()) {
-//                append("$title\n\n")
-//            }
-//            withStyle(style = MaterialTheme.typography.bodyLarge.toSpanStyle()) {
-//                append(body)
-//            }
-//        }
-//
-//        SimpleTutorialOverlay(
-//            onDismiss = { showOverlay = false },
-//            message = message
-//        )
-//    }
 
     Column(
         modifier = Modifier

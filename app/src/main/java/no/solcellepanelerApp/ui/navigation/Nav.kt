@@ -38,7 +38,6 @@ import no.solcellepanelerApp.ui.map.MapScreen
 import no.solcellepanelerApp.ui.onboarding.OnboardingScreen
 import no.solcellepanelerApp.ui.price.PriceScreen
 import no.solcellepanelerApp.ui.result.ResultScreen
-import no.solcellepanelerApp.ui.reusables.AppScaffoldController
 import no.solcellepanelerApp.ui.savings.SavingsScreen
 import no.solcellepanelerApp.ui.theme.isDarkThemeEnabled
 
@@ -57,25 +56,34 @@ fun Nav(
 
     LaunchedEffect(navController) {
         navController.currentBackStackEntryFlow.collect { backStackEntry ->
-            when (val route = backStackEntry.destination.route) {
-                "home" -> {
+            val route = backStackEntry.destination.route
+            when {
+                route == "home" -> {
                     appScaffoldController.setCustomTopBar { HomeTopBar(isDarkTheme = isDarkThemeEnabled()) }
                     appScaffoldController.reinstateBottomBar()
+                    appScaffoldController.enableOverlay("home")
                 }
 
-                "onboarding" -> {
+                route == "onboarding" -> {
                     appScaffoldController.clearTopBar()
                     appScaffoldController.clearBottomBar()
                 }
 
-                in titles.keys -> {
+                route in titles.keys -> {
                     appScaffoldController.setTopBar(titles[route] ?: "")
                     appScaffoldController.reinstateBottomBar()
+                    appScaffoldController.enableOverlay(route ?: "")
+                }
+
+                route?.contains("savings", ignoreCase = true) == true -> {
+                    appScaffoldController.clearTopBar()
+                    appScaffoldController.clearBottomBar()
+                    appScaffoldController.enableOverlay("savings")
                 }
 
                 else -> {
-                    appScaffoldController.setTopBar("")
-                    appScaffoldController.reinstateBottomBar()
+                    appScaffoldController.clearTopBar()
+                    appScaffoldController.clearBottomBar()
                 }
             }
         }

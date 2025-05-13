@@ -84,6 +84,7 @@ class OnboardingUtils(private val context: Context) {
             .putBoolean("map_overlay_shown", false)
             .putBoolean("draw_overlay_shown", false)
             .putBoolean("savings_overlay_shown", false)
+            .putBoolean("price_overlay_shown", false)
             .putBoolean("home_overlay_shown", false)
             .apply()
     }

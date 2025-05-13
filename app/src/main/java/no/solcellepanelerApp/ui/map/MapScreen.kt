@@ -95,7 +95,7 @@ import no.solcellepanelerApp.R
 import no.solcellepanelerApp.ui.font.FontSizeState
 import no.solcellepanelerApp.ui.navigation.HelpBottomSheet
 import no.solcellepanelerApp.ui.onboarding.OnboardingUtils
-import no.solcellepanelerApp.ui.reusables.AppScaffoldController
+import no.solcellepanelerApp.ui.navigation.AppScaffoldController
 import no.solcellepanelerApp.ui.reusables.SimpleTutorialOverlay
 import no.solcellepanelerApp.ui.theme.darkGrey
 import no.solcellepanelerApp.ui.theme.lightBlue
@@ -112,59 +112,12 @@ fun MapScreen(
     contentPadding: PaddingValues,
     viewModel: MapViewModel = viewModel(),
 ) {
-    var showMapOverlay by remember { mutableStateOf(true) }
-    var showDrawOverlay by remember { mutableStateOf(false) }
-    val context = LocalContext.current
-    val onboardingUtils = remember { OnboardingUtils(context) }
-
     LaunchedEffect(Unit) {
         viewModel.snackbarMessages.collect { message ->
             appScaffoldController.showSnackbar(message)
         }
     }
-    LaunchedEffect(Unit) {
-        if (!onboardingUtils.isMapOverlayShown()) {
-            showMapOverlay = true
-            onboardingUtils.setMapOverlayShown()
-        }
-    }
 
-    if (showMapOverlay) {
-        val title = stringResource(R.string.map_overlay_title)
-        val body = stringResource(R.string.map_overlay)
-        val message = buildAnnotatedString {
-            withStyle(style = MaterialTheme.typography.titleLarge.toSpanStyle()) {
-                append("$title\n\n")
-            }
-            withStyle(style = MaterialTheme.typography.bodyLarge.toSpanStyle()) {
-                append(body)
-            }
-        }
-
-        SimpleTutorialOverlay(
-            onDismiss = { showMapOverlay = false },
-            message = message
-        )
-
-    }
-
-    if (showDrawOverlay) {
-        val title = stringResource(R.string.draw_overlay_title)
-        val body = stringResource(R.string.map_draw_overlay)
-        val message = buildAnnotatedString {
-            withStyle(style = MaterialTheme.typography.titleLarge.toSpanStyle()) {
-                append("$title\n\n")
-            }
-            withStyle(style = MaterialTheme.typography.bodyLarge.toSpanStyle()) {
-                append(body)
-            }
-        }
-
-        SimpleTutorialOverlay(
-            onDismiss = { showDrawOverlay = false },
-            message = message
-        )
-    }
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -175,7 +128,7 @@ fun MapScreen(
         DisplayScreen(
             viewModel = viewModel,
             navController = navController,
-            onStartDrawing = { showDrawOverlay = true }
+            onStartDrawing = { appScaffoldController.enableOverlay("draw") }
         )
     }
 }

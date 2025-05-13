@@ -71,10 +71,8 @@ import com.airbnb.lottie.compose.animateLottieCompositionAsState
 import com.airbnb.lottie.compose.rememberLottieComposition
 import com.google.accompanist.flowlayout.FlowRow
 import no.solcellepanelerApp.R
-import no.solcellepanelerApp.ui.onboarding.OnboardingUtils
-import no.solcellepanelerApp.ui.reusables.AppScaffoldController
+import no.solcellepanelerApp.ui.navigation.AppScaffoldController
 import no.solcellepanelerApp.ui.reusables.IconTextRow
-import no.solcellepanelerApp.ui.reusables.SimpleTutorialOverlay
 import no.solcellepanelerApp.ui.theme.ThemeMode
 import no.solcellepanelerApp.ui.theme.ThemeState
 
@@ -97,10 +95,6 @@ fun SavingsScreen(
 
     val devices = savingsViewModel.devices
     val deviceIcons = savingsViewModel.deviceIcons
-
-    val context = LocalContext.current
-    var showOverlay by remember { mutableStateOf(true) }
-    val onboardingUtils = remember { OnboardingUtils(context) }
 
     val animatedEnergy = animateFloatAsState(
         targetValue = currentEnergy.toFloat(),
@@ -129,33 +123,9 @@ fun SavingsScreen(
             yearlyTitle
         appScaffoldController.setTopBar(screenTitle)
     }
-    LaunchedEffect(Unit) {
-        if (!onboardingUtils.isSavingsOverlayShown()) {
-            showOverlay = true
-            onboardingUtils.setSavingsOverlayShown()
-        }
-    }
+
     LaunchedEffect(energyProduced, energyPrice) {
         savingsViewModel.initialize(energyProduced, energyPrice)
-    }
-
-    if (showOverlay) {
-        val title = stringResource(R.string.saving_overlay_title)
-        val body = stringResource(R.string.saving_overlay)
-        val message = buildAnnotatedString {
-            withStyle(style = MaterialTheme.typography.titleLarge.toSpanStyle()) {
-                append("$title\n\n")
-            }
-            withStyle(style = MaterialTheme.typography.bodyLarge.toSpanStyle()) {
-                append(body)
-            }
-        }
-
-        SimpleTutorialOverlay(
-            onDismiss = { showOverlay = false },
-            message = message
-        )
-
     }
 
     Box(
