@@ -23,15 +23,15 @@ class ResultViewModel : ViewModel() {
     private val userDataRepository = UserDataRepository.UserDataRepositoryProvider.instance
     private val priceRepository = PriceRepository.PriceRepositoryProvider.instance
 
-    val coordinatesState = userDataRepository.coordinatesState
-    val areaState = userDataRepository.areaState
-    val angleState = userDataRepository.angleState // Make into int all the way
-    val directionState = userDataRepository.directionState
-    val efficiencyState = userDataRepository.efficiencyState
+    private val coordinatesState = userDataRepository.coordinatesState
+    private val areaState = userDataRepository.areaState
+    private val angleState = userDataRepository.angleState // Make into int all the way
+    private val directionState = userDataRepository.directionState
+    private val efficiencyState = userDataRepository.efficiencyState
     //val selectedRegionState = userDataRepository.selectedRegionState
     val height = userDataRepository.height
 
-    val weatherDataFlow = weatherRepository.weatherData
+    private val weatherDataFlow = weatherRepository.weatherData
 
     private var hasInitialized = false
 
@@ -58,6 +58,7 @@ class ResultViewModel : ViewModel() {
                 val lon = coordinates.longitude
 
                 weatherRepository.getPanelWeatherData(lat, lon, height.value, angleState.value.toInt() , directionState.value.toInt())
+                Log.d("ResultViewModel",weatherDataFlow.value.toString())
 
                 if (weatherDataFlow.value!!.isEmpty()) {
                     _errorScreen.value = { NoDataErrorScreen() }

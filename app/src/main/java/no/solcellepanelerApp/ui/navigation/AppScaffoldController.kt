@@ -6,6 +6,7 @@ import androidx.annotation.StringRes
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import no.solcellepanelerApp.R
@@ -62,8 +63,8 @@ class AppScaffoldController(context: Context) {
     var showAppearance by mutableStateOf(false)
 
     var showOverlay by mutableStateOf(false)
-    var overlayTitle by mutableStateOf(-1)
-    var overlayBody by mutableStateOf(-1)
+    var overlayTitle by mutableIntStateOf(-1)
+    var overlayBody by mutableIntStateOf(-1)
 
     val snackbarHostState = SnackbarHostState()
 
