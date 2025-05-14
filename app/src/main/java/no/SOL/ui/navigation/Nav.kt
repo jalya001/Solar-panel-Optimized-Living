@@ -167,7 +167,7 @@ fun BottomBar(
                     contentDescription = "Information"
                 )
             },
-            label = { Text("Info", style = MaterialTheme.typography.bodyLarge) },
+            label = { Text("Info", style = MaterialTheme.typography.bodyMedium) },
             selected = false,
             onClick = {
                 if (navController.currentDestination?.route != "info_screen") {
@@ -184,7 +184,7 @@ fun BottomBar(
             label = {
                 Text(
                     stringResource(id = R.string.home_bottom_bar),
-                    style = MaterialTheme.typography.bodyLarge
+                    style = MaterialTheme.typography.bodyMedium
                 )
             },
             selected = false,
@@ -204,7 +204,7 @@ fun BottomBar(
             label = {
                 Text(
                     stringResource(id = R.string.appearance),
-                    style = MaterialTheme.typography.bodyLarge
+                    style = MaterialTheme.typography.bodyMedium
                 )
             },
             selected = false,
