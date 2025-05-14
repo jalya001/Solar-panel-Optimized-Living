@@ -121,8 +121,6 @@ fun OnboardingScreen(onFinished: () -> Unit) {
             }
         }
     })
-
-
 }
 
 @Preview(showBackground = true)

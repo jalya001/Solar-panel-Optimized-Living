@@ -111,6 +111,7 @@ fun mapLocationToRegion(location: Location): Region {
     val lon = location.longitude
 
     return when {
+        /*
         // Østlandet / Oslo (NO1)
         lat in 59.5..61.5 && lon in 9.0..12.5 -> Region.OSLO
         // Sørlandet / Kristiansand (NO2)
@@ -122,6 +123,14 @@ fun mapLocationToRegion(location: Location): Region {
         // Vestlandet / Bergen (NO5)
         lat in 60.0..61.5 && lon in 4.5..6.5 -> Region.BERGEN
         // Fallback hvis vi ikke finner match
+        else -> Region.OSLO
+        */
+
+        // This new approach is better because it divides the world like the Tordesillas treaty
+        lat > 65.0 -> Region.TROMSO
+        lat > 62.0 -> Region.TRONDHEIM
+        lat < 59.15 && lon < 9.3 -> Region.KRISTIANSAND
+        lon < 7.5 -> Region.BERGEN
         else -> Region.OSLO
     }
 }
