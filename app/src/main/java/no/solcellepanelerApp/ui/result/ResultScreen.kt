@@ -44,6 +44,7 @@ import no.solcellepanelerApp.ui.handling.LoadingScreen
 import no.solcellepanelerApp.ui.reusables.DataCard
 import no.solcellepanelerApp.ui.reusables.IconTextRow
 import no.solcellepanelerApp.ui.reusables.SavingsMonth_Card
+import java.time.LocalDate
 
 @Composable
 fun ResultScreen(
@@ -144,7 +145,8 @@ private fun MonthDataDisplay(
     showAllMonths: Boolean,
 ) {
     var expanded by remember { mutableStateOf(false) }
-    var selectedMonthIndex by remember { mutableIntStateOf(0) }
+    val currentMonth = LocalDate.now().monthValue - 1 // Because monthValue is 1-12
+    var selectedMonthIndex by remember { mutableIntStateOf(currentMonth) }
     val temperatureFactors =
         resultViewModel.temperatureFactors.collectAsState().value ?: emptyList()
     val calculationResults =
