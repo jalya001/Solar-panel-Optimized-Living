@@ -38,10 +38,12 @@ import androidx.compose.ui.unit.dp
 import androidx.core.content.ContextCompat
 import no.solcellepanelerApp.R
 import no.solcellepanelerApp.model.onboarding.OnBoardModel
+import no.solcellepanelerApp.model.price.Region
 import no.solcellepanelerApp.ui.language.LangSwitch
 import no.solcellepanelerApp.ui.reusables.ModeCard
 import no.solcellepanelerApp.ui.theme.ThemeMode
 import no.solcellepanelerApp.ui.theme.ThemeState
+import no.solcellepanelerApp.util.rememberLocationWithPermission
 
 
 @Composable
@@ -49,15 +51,15 @@ fun OnboardingGraphUI(onBoardModel: OnBoardModel) {
     val isDark = isSystemInDarkTheme()
     var triggerLocationFetch by remember { mutableStateOf(false) }
 
-//    var region: Region? by remember { mutableStateOf(null) }
-//    val (currentLocation, locationGranted) = if (triggerLocationFetch) {
-//        rememberLocationWithPermission(
-//            triggerRequest = true,
-//            onRegionDetermined = { region = it }
-//        )
-//    } else {
-//        Pair(null, false)
-//    }
+    var region: Region? by remember { mutableStateOf(null) }
+    val (currentLocation, locationGranted) = if (triggerLocationFetch) {
+        rememberLocationWithPermission(
+            triggerRequest = true,
+            onRegionDetermined = { region = it }
+        )
+    } else {
+        Pair(null, false)
+    }
 
     val imageRes = when (onBoardModel) {
         is OnBoardModel.FirstPage -> if (isDark) R.drawable.onboard_logo_dark else R.drawable.onboard_logo_light
