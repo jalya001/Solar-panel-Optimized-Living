@@ -161,7 +161,7 @@ fun DisplayScreen(
 
     RequestLocationPermission { region ->
         viewModel.region.value = region
-        viewModel.locationPermissionGranted = true
+        viewModel.checkLocationPermission(context)
     }
 
     LaunchedEffect(locationPermissionGranted) {
@@ -173,6 +173,8 @@ fun DisplayScreen(
     LaunchedEffect(Unit) {
         viewModel.checkLocationPermission(context)
     }
+
+    Log.d("MapScreen","Location permission: $locationPermissionGranted")
 
     Box(modifier = Modifier.fillMaxSize()) {
         GoogleMap(
