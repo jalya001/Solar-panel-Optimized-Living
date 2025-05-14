@@ -120,9 +120,11 @@ class MapViewModel : ViewModel() {
     }
 
     fun checkLocationPermission(context: Context) {
+        Log.d("MapViewModel","Location permission before: $locationPermissionGranted")
         locationPermissionGranted = ContextCompat.checkSelfPermission(
             context, Manifest.permission.ACCESS_FINE_LOCATION
         ) == PackageManager.PERMISSION_GRANTED
+        Log.d("MapViewModel","Location permission after: $locationPermissionGranted")
     }
 
     fun startDrawing() {
