@@ -96,7 +96,9 @@ fun MyNavCard(
             .size(size),
         onClick = {
             if (route != "") {
-                navController.navigate(route)
+                navController.navigate(route) {
+                    launchSingleTop = true
+                }
             }
         },
 
