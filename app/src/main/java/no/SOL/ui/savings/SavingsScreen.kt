@@ -162,7 +162,9 @@ fun SavingsScreen(
                                         .copy(fontWeight = FontWeight.ExtraLight)
                                 ) {
                                     append(stringResource(R.string.monthly_savings_suffix_part1))
+                                    append(" ")
                                     append(month)
+                                    append(" ")
                                     append(stringResource(R.string.monthly_savings_suffix_part2))
                                 }
                             },
