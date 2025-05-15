@@ -15,20 +15,20 @@ Aazan Nisar (aazann), [Saleem Toure Issifou](https://www.linkedin.com/in/saleem-
 
 Ved å bruke ekstern API-integrasjon, som Frost API for værdata og andre relevante kilder for strømpriser og støtteordninger, kan brukeren få et godt grunnlag for å vurdere lønnsomheten ved solcelleinstallasjon på sin eiendom. Appen gir brukeren muligheten til å hente kartkoordinater for en spesifisert adresse, og deretter beregne forventet solenergiutnyttelse basert på takflatenes vinkel, areal, og den gjennomsnittlige solinnstrålingen i området.
 
-Appen kan være spesielt nyttig for boligeiere, hytteeiere og profesjonelle solcelleinstallatører som ønsker å få oversikt over den potensielle strømproduksjonen og besparelsene ved å investere i solenergi. Med funksjoner som kartvisualisering, beregning av energiproduksjon og besparelser på strømregningen, samt muligheten for å tegne takflater på kartet, gir Solcellepaneller App et praktisk og brukervennlig verktøy for å optimalisere bruken av solenergi.
+Appen kan være spesielt nyttig for boligeiere, hytteeiere og profesjonelle solcelleinstallatører som ønsker å få oversikt over den potensielle strømproduksjonen og besparelsene ved å investere i solenergi. Med funksjoner som kartvisualisering, beregning av energiproduksjon og besparelser på strømregningen, samt muligheten for å tegne takflater på kartet, gir SOL et praktisk og brukervennlig verktøy for å optimalisere bruken av solenergi.
 <div style="display: flex; gap: 10px; align-items: center;">
   <img src="https://github.uio.no/IN2000-V25/team-37/assets/11510/3b6830b5-0c26-4932-80de-82c784f265e5" alt="house" width="200"/>
   
 </div>
 ## 2. Funksjonalieter
 
-    Kartvisning: Brukeren kan legge inn en adresse som konverteres til GPS-koordinater, og plassere en markør på kartet.
+    Kartvisning: Brukeren kan legge inn en adresse som konverteres til GPS-koordinater, og plassere en markør på kartet
 
-    Kalkulering av solenergi: Basert på takdetaljer (vinkel, effektivitet) og klimadata, beregner appen forventet solenergi i kWh.
+    Kalkulering av solenergi: Basert på takdetaljer (vinkel, effektivitet) og klimadata, beregner appen forventet solenergi i kWh
 
-    API-integrasjon: Appen bruker eksterne API-er som Frost API for værdata og PVGIS API for solenergiestimat.
+    API-integrasjon: Appen bruker eksterne API-er som Frost API for værdata og PVGIS API for solenergiestimat
 
-    Resultatvisning: Appen viser resulater av kalkulering med grafer
+    Resultatvisning: Appen viser resulater av kalkulasjoner med grafer
     
 
 ###  Krav for å kjøre appen
@@ -36,29 +36,29 @@ Appen kan være spesielt nyttig for boligeiere, hytteeiere og profesjonelle solc
   For å kjøre appen på din lokale maskin, trenger du følgende:
    #### Krav:
 
-    Android Studio.
+    Android Studio
 
-    Android Emulator eller en fysisk Android-enhet.
+    Android Emulator eller en fysisk Android-enhet
+    
+    Minimum API-nivå 26 (Android 8.0)
 
-    Minimum API-nivå 26 (Android 8.0) for å kjøre appen.
+    Internettilgang for API-forespørsler
 
-    Internettilgang for API-forespørsler.
-
-    Enhetsposisjon brukes i appen, men ikke nødvendig.
+    Enhetsposisjon brukes i appen, men ikke nødvendig
 
 ## 3. API:
 
 Appen bruker flere eksterne API-er som krever API-nøkler for tilgang:
 
-    Google Maps API for kartvisning.
+    Google Maps API for kartvisning
 
-    Geocoder API for koordinater.
+    Geocoder API for koordinater
 
-    HvakosterStrømmenAPI for strømpris.
+    HvaKosterStrømmen API for strømpris
 
-    Frost API for værdata.
+    Frost API for værdata
 
-    PVGIS API for solenergiestimat.
+    PVGIS API for solenergiestimat
 
 ## 4. Kjøring av Appen
 #### Steg a: Klon prosjektet
@@ -78,6 +78,7 @@ Appen bruker flere eksterne API-er som krever API-nøkler for tilgang:
 #### Steg d: Kjør appen
 
     Velg en Android-emulator eller fysisk enhet, og klikk på "Run" i Android Studio for å kjøre appen.
+
 ## 5. In depth: Libraries og APier
 
 Appen bruker flere biblioteker for å håndtere ulike oppgaver som UI-komponenter, API-kommunikasjon og datalagring. Her er en liste over de viktigste avhengighetene:
@@ -99,7 +100,7 @@ ViewModel og LiveData fra Android Jetpack gir en arkitekturell tilnærming til �
 
     Bruksområde: Brukes til tilstandshåndtering i appens ViewModel-lag for å sikre at UI er i synk med dataene.
 
-#### d. Maps SDK
+#### d. Google Maps SDK
 
 Google Maps SDK for Android gir muligheten til å integrere Google Maps i Android-applikasjoner, som muliggjør visning av kart, geokoding (adresse til koordinater) og plassering av markører.
 
@@ -110,27 +111,30 @@ Google Maps SDK for Android gir muligheten til å integrere Google Maps i Androi
 Geocoder API brukes til å hente geografiske koordinater (breddegrad og lengdegrad) basert på en adresse, og omvendt.
 
     Bruksområde: Brukes i MapScreen for å konvertere brukerens adresse til koordinater.
+
 #### f. HvaKosterStrømmen API
 
-API brukes til å hente strømpris for førkjellige områder.
+HvaKosterStrømmen API brukes til å hente strømpris for førkjellige områder i Norge.
 
-    Bruksområde: Brukes i PriceScreen, og viser pris og brukes for å lage grafer med prisene.
+    Bruksområde: Brukes i PriceScreen for å vise pris og lage graf som representerer prisene.
+
 #### g. YCharts
 
-Denne bibliotek brukses for å lage grafer som viser data.
+Dette biblioteket brukes for å lage grafer som viser data.
 
-    Bruksområde: Brukes i PriceScreen og SavingScreen, og viser væredata, pris og vise energi.
+    Bruksområde: Brukes i PriceScreen og SavingScreen for å vise væredata og pris.
+
 ## 6. Forbedringsmuligheter
 
 Dette prosjektet har potensiale til å implementere flere funksjoner som:
 
-    Offline lagring av brukerdata for bedre tilgjengelighet.
+    Offline lagring av brukerdata for bedre tilgjengelighet
 
-    Flere API-integrasjoner for mer detaljert solenergi-estimat.
+    Flere API-integrasjoner for mer detaljert solenergi-estimat
 
     Analyser for å gi brukeren anbefalinger om takvinkel og effektivitetsinnstillinger for optimal solenergiutnyttelse
 
-    Lagring av Posisjoner 
+    Lagring av posisjoner 
 
     Implementering av horisontal modus i appen
 
