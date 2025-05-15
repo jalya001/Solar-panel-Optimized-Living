@@ -17,7 +17,8 @@
     <string name="close"> Close</string>
     <string name="live_prices">Check electricity prices!</string>
     <string name="reset">Reset</string>
-    <string name="location_perm_title">Location Permission Already Granted</string>
+    <string name="location_perm_true_title">Location Permission Already Granted</string>
+    <string name="location_perm_false_title">Location Permission Not Granted</string>
     <string name="location_perm_content">If you want to change location permissions, go to settings.</string>
     <string name="settings">Go to Settings</string>
     <string name="change_location_settings">Change Location Settings</string>

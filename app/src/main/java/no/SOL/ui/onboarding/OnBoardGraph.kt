@@ -229,7 +229,7 @@ fun OnboardingGraphUI(onBoardModel: OnBoardModel) {
                     onDismissRequest = { showDialog = false },
                     title = {
                         Text(
-                            stringResource(R.string.location_perm_title),
+                            stringResource(R.string.location_perm_true_title),
                             style = MaterialTheme.typography.bodyLarge
                         )
                     },

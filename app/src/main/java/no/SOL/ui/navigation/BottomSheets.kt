@@ -4,6 +4,8 @@ import android.content.Intent
 import android.content.pm.PackageManager
 import android.net.Uri
 import android.provider.Settings
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -29,6 +31,7 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -96,19 +99,40 @@ fun HelpBottomSheet(
                 ) {
                     item {
                         val context = LocalContext.current
-                        val locationGranted = ContextCompat.checkSelfPermission(
-                            context,
-                            android.Manifest.permission.ACCESS_FINE_LOCATION
-                        ) == PackageManager.PERMISSION_GRANTED
+                        val locationGranted by remember(context) {
+                            mutableStateOf(
+                                ContextCompat.checkSelfPermission(
+                                    context,
+                                    android.Manifest.permission.ACCESS_FINE_LOCATION
+                                ) == PackageManager.PERMISSION_GRANTED
+                            )
+                        }
 
                         var showDialog by remember { mutableStateOf(false) }
+
+                        val permissionLauncher = rememberLauncherForActivityResult(
+                            contract = ActivityResultContracts.RequestPermission()
+                        ) { isGranted ->
+                            if (!isGranted) {
+                                showDialog = true
+                            }
+                        }
+
+                        LaunchedEffect(triggerLocationFetch) {
+                            if (triggerLocationFetch) {
+                                permissionLauncher.launch(android.Manifest.permission.ACCESS_FINE_LOCATION)
+                                triggerLocationFetch = false
+                            }
+                        }
 
                         if (showDialog) {
                             androidx.compose.material3.AlertDialog(
                                 onDismissRequest = { showDialog = false },
                                 title = {
                                     Text(
-                                        stringResource(R.string.location_perm_title),
+                                        if (locationGranted)
+                                        stringResource(R.string.location_perm_true_title)
+                                        else stringResource(R.string.location_perm_false_title),
                                         style = MaterialTheme.typography.bodyLarge
                                     )
                                 },

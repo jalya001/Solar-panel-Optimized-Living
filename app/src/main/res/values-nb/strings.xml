@@ -18,7 +18,8 @@
     <string name="prod">Produksjon</string>
     <string name="live_prices">Se strømprisene!</string>
     <string name="reset">Tilbakestill</string>
-    <string name="location_perm_title">Lokasjonstillatelse er allerede aktivert</string>
+    <string name="location_perm_true_title">Lokasjonstillatelse er allerede gitt</string>
+    <string name="location_perm_false_title">Lokasjonstillatelser er ikke gitt</string>
     <string name="location_perm_content">For å endre posisjonstilgang, åpne innstillinger</string>
     <string name="settings">Gå til Innstillinger</string>
     <string name="change_location_settings">Endre posisjonsinnstillinger</string>
