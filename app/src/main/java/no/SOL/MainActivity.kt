@@ -20,10 +20,19 @@ import no.SOL.ui.navigation.AppScaffoldController
 import no.SOL.ui.navigation.Nav
 import no.SOL.ui.onboarding.OnboardingScreen
 import no.SOL.ui.onboarding.OnboardingUtils
+import no.SOL.ui.reusables.ReplaceVowelsUI
 import no.SOL.ui.theme.SOLTheme
+import java.nio.ByteBuffer
+import java.nio.charset.StandardCharsets
 
 
 class MainActivity : ComponentActivity() {
+    companion object {
+        init {
+            System.loadLibrary("SOL")
+        }
+    }
+    external fun replaceVowelsWithK(buffer: ByteBuffer, length: Int)
 
     private val onboardingUtils by lazy { OnboardingUtils(this) }
 
@@ -36,11 +45,23 @@ class MainActivity : ComponentActivity() {
         enableEdgeToEdge()
         setContent {
             SOLTheme {
-                if (onboardingUtils.isOnboardingCompleted()) {
+                ReplaceVowelsUI { input ->
+                    val bytes = input.toByteArray(StandardCharsets.UTF_8)
+                    val directBuffer = ByteBuffer.allocateDirect(bytes.size)
+                    directBuffer.put(bytes)
+                    directBuffer.rewind()
+
+                    replaceVowelsWithK(directBuffer, bytes.size)
+
+                    val resultBytes = ByteArray(bytes.size)
+                    directBuffer.get(resultBytes)
+                    String(resultBytes, StandardCharsets.UTF_8)
+                }
+                /*if (onboardingUtils.isOnboardingCompleted()) {
                     App()
                 } else {
                     ShowOnboardingScreen()
-                }
+                }*/
             }
         }
     }
