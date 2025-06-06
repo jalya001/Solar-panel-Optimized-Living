@@ -1,3 +1,4 @@
+/*
 #include <jni.h>
 #include <cstring>
 #include <cctype>
@@ -17,6 +18,29 @@ Java_no_SOL_MainActivity_replaceVowelsWithK(
         char lower = std::tolower(c);
         if (lower == 'a' || lower == 'e' || lower == 'i' || lower == 'o' || lower == 'u') {
             data[i] = 'k';
+        }
+    }
+}
+*/
+
+
+#include <jni.h>
+#include <cctype>
+
+extern "C"
+JNIEXPORT void JNICALL
+Java_no_SOL_MainActivity_replaceVowelsWithK(JNIEnv* env, jobject /* this */, jobject buffer) {
+    char* buf = (char*) env->GetDirectBufferAddress(buffer);
+    if (buf == nullptr) return;
+
+    jlong capacity = env->GetDirectBufferCapacity(buffer);
+    if (capacity <= 0) return;
+
+    for (jlong i = 0; i < capacity; i++) {
+    char c = buf[i];
+    if (c == 'a' || c == 'e' || c == 'i' || c == 'o' || c == 'u' ||
+        c == 'A' || c == 'E' || c == 'I' || c == 'O' || c == 'U') {
+            buf[i] = 'k';
         }
     }
 }

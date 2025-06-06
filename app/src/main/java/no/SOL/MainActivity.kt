@@ -2,6 +2,96 @@ package no.SOL
 
 import android.os.Bundle
 import androidx.activity.ComponentActivity
+import androidx.lifecycle.lifecycleScope
+import kotlinx.coroutines.launch
+import java.nio.ByteBuffer
+import okhttp3.OkHttpClient
+import okhttp3.Request
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
+
+class MainActivity : ComponentActivity() {
+    private val client = OkHttpClient()
+
+    companion object {
+        init {
+            System.loadLibrary("SOL")
+        }
+    }
+
+    external fun replaceVowelsWithK(buffer: ByteBuffer)
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+
+        lifecycleScope.launch {
+            try {
+                val url = "https://httpbin.org/json"
+
+                val buffer = fetchIntoExactBuffer(url)
+
+                buffer.flip()
+
+                replaceVowelsWithK(buffer)
+
+                val kCount = countKs(buffer)
+                println("Number of 'k's in buffer: $kCount")
+
+                val modifiedBytes = ByteArray(buffer.remaining())
+                buffer.get(modifiedBytes)
+
+                val modifiedString = String(modifiedBytes)
+                println("Modified string:\n$modifiedString")
+            } catch (e: Exception) {
+                e.printStackTrace()
+            }
+        }
+    }
+
+    private suspend fun fetchIntoExactBuffer(url: String): ByteBuffer = withContext(Dispatchers.IO) {
+        val request = Request.Builder().url(url).build()
+        client.newCall(request).execute().use { response ->
+            //if (!response.isSuccessful) throw Exception("HTTP error ${response.code}")
+
+            val contentLength = response.body?.contentLength() ?: -1L
+            if (contentLength <= 0 || contentLength > Int.MAX_VALUE) {
+                throw Exception("Invalid or unknown Content-Length: $contentLength")
+            }
+
+            val buffer = ByteBuffer.allocateDirect(contentLength.toInt())
+            val inputStream = response.body?.byteStream() ?: throw Exception("Null response body")
+
+            val tempArray = ByteArray(8192)
+            var totalRead = 0
+            while (totalRead < contentLength) {
+                val toRead = minOf(tempArray.size, contentLength.toInt() - totalRead)
+                val bytesRead = inputStream.read(tempArray, 0, toRead)
+                if (bytesRead == -1) break
+                buffer.put(tempArray, 0, bytesRead)
+                totalRead += bytesRead
+            }
+
+            inputStream.close()
+            buffer
+        }
+    }
+
+    fun countKs(buffer: ByteBuffer): Int {
+        var count = 0
+        val readOnlyBuffer = buffer.asReadOnlyBuffer()
+        readOnlyBuffer.position(0)
+        val limit = readOnlyBuffer.limit()
+        repeat(limit) {
+            if (readOnlyBuffer.get().toChar() == 'k') count++
+        }
+        return count
+    }
+}
+
+
+/*
+import android.os.Bundle
+import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.compose.runtime.Composable
@@ -32,7 +122,7 @@ class MainActivity : ComponentActivity() {
             System.loadLibrary("SOL")
         }
     }
-    external fun replaceVowelsWithK(buffer: ByteBuffer, length: Int)
+    //external fun replaceVowelsWithK(buffer: ByteBuffer, length: Int)
 
     private val onboardingUtils by lazy { OnboardingUtils(this) }
 
@@ -45,7 +135,7 @@ class MainActivity : ComponentActivity() {
         enableEdgeToEdge()
         setContent {
             SOLTheme {
-                ReplaceVowelsUI { input ->
+                /*ReplaceVowelsUI { input ->
                     val bytes = input.toByteArray(StandardCharsets.UTF_8)
                     val directBuffer = ByteBuffer.allocateDirect(bytes.size)
                     directBuffer.put(bytes)
@@ -56,12 +146,12 @@ class MainActivity : ComponentActivity() {
                     val resultBytes = ByteArray(bytes.size)
                     directBuffer.get(resultBytes)
                     String(resultBytes, StandardCharsets.UTF_8)
-                }
-                /*if (onboardingUtils.isOnboardingCompleted()) {
+                }*/
+                if (onboardingUtils.isOnboardingCompleted()) {
                     App()
                 } else {
                     ShowOnboardingScreen()
-                }*/
+                }
             }
         }
     }
@@ -108,3 +198,5 @@ class MainActivity : ComponentActivity() {
         }
     }
 }
+
+*/
