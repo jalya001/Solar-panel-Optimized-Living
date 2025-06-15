@@ -1,8 +1,8 @@
 # SOL Solar panel Optimized Living
 
 <div style="display: flex; gap: 10px; align-items: center;">
-  <img src="https://github.uio.no/IN2000-V25/team-37/assets/11510/964b112e-85d7-4898-8f33-0fbe402b8724" alt="circular_logo_light" width="200"/>
-  <img src="https://github.uio.no/IN2000-V25/team-37/assets/11510/5183e63f-e4dd-4462-8839-16379b009269" alt="circular_logo_dark" width="200"/>
+  <img src="https://raw.githubusercontent.com/jalya001/team-37/refs/heads/main/app/src/main/res/drawable/circular_logo_light.png?token=GHSAT0AAAAAADFWFGVEN7VQSJVVBHFUZ6222CO37UA" alt="circular_logo_light" width="200"/>
+  <img src="https://raw.githubusercontent.com/jalya001/team-37/refs/heads/main/app/src/main/res/drawable/circular_logo_dark.png?token=GHSAT0AAAAAADFWFGVFZADAWO6VJXO72OWQ2CO37EQ" alt="circular_logo_dark" width="200"/>
 </div>
 
 ### MEDLEMMER AV TEAM 37
