@@ -1,8 +1,8 @@
 # SOL Solar panel Optimized Living
 
 <div style="display: flex; gap: 10px; align-items: center;">
-  <img src="https://raw.githubusercontent.com/jalya001/team-37/refs/heads/main/app/src/main/res/drawable/circular_logo_light.png?token=GHSAT0AAAAAADFWFGVEN7VQSJVVBHFUZ6222CO37UA" alt="circular_logo_light" width="200"/>
-  <img src="https://raw.githubusercontent.com/jalya001/team-37/refs/heads/main/app/src/main/res/drawable/circular_logo_dark.png?token=GHSAT0AAAAAADFWFGVFZADAWO6VJXO72OWQ2CO37EQ" alt="circular_logo_dark" width="200"/>
+  <img src="https://github.com/user-attachments/assets/529f4c44-8856-45c8-bbbd-a09390057304" alt="circular_logo_light" width="200"/>
+  <img src="https://github.com/user-attachments/assets/30237466-45e2-4b38-b79f-78eb4f86db40" alt="circular_logo_dark" width="200"/>
 </div>
 
 ### MEDLEMMER AV TEAM 37
@@ -17,9 +17,9 @@ Ved å bruke ekstern API-integrasjon, som Frost API for værdata og andre releva
 
 Appen kan være spesielt nyttig for boligeiere, hytteeiere og profesjonelle solcelleinstallatører som ønsker å få oversikt over den potensielle strømproduksjonen og besparelsene ved å investere i solenergi. Med funksjoner som kartvisualisering, beregning av energiproduksjon og besparelser på strømregningen, samt muligheten for å tegne takflater på kartet, gir SOL et praktisk og brukervennlig verktøy for å optimalisere bruken av solenergi.
 <div style="display: flex; gap: 10px; align-items: center;">
-  <img src="https://github.uio.no/IN2000-V25/team-37/assets/11510/3b6830b5-0c26-4932-80de-82c784f265e5" alt="house" width="200"/>
-  
+  <img src="https://github.com/user-attachments/assets/abc9faaa-5069-45ed-ad95-43bfdd5d3ea8" alt="house" width="200"/>
 </div>
+
 ## 2. Funksjonalieter
 
     Kartvisning: Brukeren kan legge inn en adresse som konverteres til GPS-koordinater, og plassere en markør på kartet
