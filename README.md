@@ -16,6 +16,9 @@ Aazan Nisar (aazann), [Saleem Toure Issifou](https://www.linkedin.com/in/saleem-
 Ved å bruke ekstern API-integrasjon, som Frost API for værdata og andre relevante kilder for strømpriser og støtteordninger, kan brukeren få et godt grunnlag for å vurdere lønnsomheten ved solcelleinstallasjon på sin eiendom. Appen gir brukeren muligheten til å hente kartkoordinater for en spesifisert adresse, og deretter beregne forventet solenergiutnyttelse basert på takflatenes vinkel, areal, og den gjennomsnittlige solinnstrålingen i området.
 
 Appen kan være spesielt nyttig for boligeiere, hytteeiere og profesjonelle solcelleinstallatører som ønsker å få oversikt over den potensielle strømproduksjonen og besparelsene ved å investere i solenergi. Med funksjoner som kartvisualisering, beregning av energiproduksjon og besparelser på strømregningen, samt muligheten for å tegne takflater på kartet, gir SOL et praktisk og brukervennlig verktøy for å optimalisere bruken av solenergi.
+
+Vi har dokumentert ulike valg vi har tatt og en del av utviklingsprosessen i en rapport: [Link til rapport](https://uio-my.sharepoint.com/:w:/g/personal/saleemti_uio_no/Eei1519-jO9BmvReQEVQvbIBXEOvnDmD8KL4PdQf1XBh4g)
+
 <div style="display: flex; gap: 10px; align-items: center;">
   <img src="https://github.com/user-attachments/assets/abc9faaa-5069-45ed-ad95-43bfdd5d3ea8" alt="house" width="200"/>
 </div>
