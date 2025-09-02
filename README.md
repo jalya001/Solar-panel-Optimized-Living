@@ -46,6 +46,8 @@ Appen kan være spesielt nyttig for boligeiere, hytteeiere og profesjonelle solc
 
     Enhetsposisjon brukes i appen, men ikke nødvendig
 
+    En Google Maps API-nøkkel
+
 ## 3. API:
 
 Appen bruker flere eksterne API-er som krever API-nøkler for tilgang:
@@ -75,7 +77,11 @@ Appen bruker flere eksterne API-er som krever API-nøkler for tilgang:
 
     Når prosjektet er åpnet, vil Android Studio automatisk prøve å laste ned alle nødvendige avhengigheter via Gradle. Hvis dette ikke skjer automatisk, klikk på Sync Now.
 
-#### Steg d: Kjør appen
+#### Steg d: Legg til Google Maps API-nøkkel
+
+    Skriv inn din Google Maps API-nøkkel i riktig område.
+
+#### Steg e: Kjør appen
 
     Velg en Android-emulator eller fysisk enhet, og klikk på "Run" i Android Studio for å kjøre appen.
 
@@ -114,7 +120,7 @@ Geocoder API brukes til å hente geografiske koordinater (breddegrad og lengdegr
 
 #### f. HvaKosterStrømmen API
 
-HvaKosterStrømmen API brukes til å hente strømpris for førkjellige områder i Norge.
+HvaKosterStrømmen API brukes til å hente strømpris for forskjellige områder i Norge.
 
     Bruksområde: Brukes i PriceScreen for å vise pris og lage graf som representerer prisene.
 
@@ -126,7 +132,7 @@ Dette biblioteket brukes for å lage grafer som viser data.
 
 ## 6. Forbedringsmuligheter
 
-Dette prosjektet har potensiale til å implementere flere funksjoner som:
+Dette prosjektet har potensiale til å implementere flere funksjonaliteter som:
 
     Offline lagring av brukerdata for bedre tilgjengelighet
 
@@ -136,6 +142,6 @@ Dette prosjektet har potensiale til å implementere flere funksjoner som:
 
     Lagring av posisjoner 
 
-    Implementering av horisontal modus i appen
+    En horisontal modus i appen
 
     
