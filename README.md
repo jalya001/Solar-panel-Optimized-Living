@@ -51,6 +51,8 @@ Vi har dokumentert ulike valg vi har tatt og en del av utviklingsprosessen i en 
 
     En Google Maps API-nøkkel
 
+    En Frost MET API-nøkkel
+
 ## 3. API:
 
 Appen bruker flere eksterne API-er som krever API-nøkler for tilgang:
@@ -84,7 +86,11 @@ Appen bruker flere eksterne API-er som krever API-nøkler for tilgang:
 
     Skriv inn din Google Maps API-nøkkel i riktig område.
 
-#### Steg e: Kjør appen
+#### Steg e: Legg til Frost MET API-nøkkel
+
+    Skriv inn din Frost MET API-nøkkel i riktig område.
+
+#### Steg f: Kjør appen
 
     Velg en Android-emulator eller fysisk enhet, og klikk på "Run" i Android Studio for å kjøre appen.
 
