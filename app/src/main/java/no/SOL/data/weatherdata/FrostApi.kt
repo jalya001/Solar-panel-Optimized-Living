@@ -27,8 +27,7 @@ import kotlin.math.sqrt
  */
 
 class FrostApi {
-    private val basicAuth =
-        "4868c766-7477-484f-b767-6e5776a60a26:49ee1988-7461-4452-97a3-8ae5cbb133d7"
+    private val basicAuth = "frost api key here"
     private val encodedAuth = java.util.Base64.getEncoder().encodeToString(basicAuth.toByteArray())
     private val encode =
         { json: String -> URLEncoder.encode(json, StandardCharsets.UTF_8.toString()) }
