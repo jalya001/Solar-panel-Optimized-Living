@@ -19,6 +19,9 @@ Appen kan være spesielt nyttig for boligeiere, hytteeiere og profesjonelle solc
 
 Vi har dokumentert ulike valg vi har tatt og en del av utviklingsprosessen i en rapport: [Link til rapport](https://uio-my.sharepoint.com/:w:/g/personal/saleemti_uio_no/Eei1519-jO9BmvReQEVQvbIBXEOvnDmD8KL4PdQf1XBh4g)
 
+Vi har også en videogjennomgang av applikasjonen: [Link til video demo](https://uio-my.sharepoint.com/:v:/g/personal/saleemti_uio_no/IQB1tY8WK7mqSa75Q5HiplKpAQMLBVHdTKqpVBDZCOWIi48?e=ly3Vpn)
+
+
 <div style="display: flex; gap: 10px; align-items: center;">
   <img src="https://github.com/user-attachments/assets/abc9faaa-5069-45ed-ad95-43bfdd5d3ea8" alt="house" width="200"/>
 </div>
