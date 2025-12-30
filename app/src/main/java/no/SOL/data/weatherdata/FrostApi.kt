@@ -1,5 +1,6 @@
 package no.SOL.data.weatherdata
 
+import no.SOL.BuildConfig
 import kotlinx.serialization.KSerializer
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
@@ -23,11 +24,10 @@ import kotlin.math.sqrt
 /*
  * This code is not good and could be a lot better, but it is also not as bad as it seems.
  * For an explanation on the latter, see our report.
- * For an explanation on the former, see FrostApi.md.
  */
 
 class FrostApi {
-    private val basicAuth = "frost api key here"
+    private val basicAuth = BuildConfig.FROST_API_KEY
     private val encodedAuth = java.util.Base64.getEncoder().encodeToString(basicAuth.toByteArray())
     private val encode =
         { json: String -> URLEncoder.encode(json, StandardCharsets.UTF_8.toString()) }

@@ -1,3 +1,5 @@
+import com.android.build.gradle.internal.cxx.configure.gradleLocalProperties
+
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
@@ -7,11 +9,29 @@ plugins {
     alias(libs.plugins.kotlin.serialization)
 }
 
+val frostApiKey: String = gradleLocalProperties(rootDir, providers)
+    .getProperty("FROST_API_KEY")
+    .orEmpty()
+
+val geocoderApiKey: String = gradleLocalProperties(rootDir, providers)
+    .getProperty("GEOCODER_API_KEY")
+    .orEmpty()
+
+val googleMapsApiKey: String = gradleLocalProperties(rootDir, providers)
+    .getProperty("GOOGLE_MAPS_API_KEY")
+    .orEmpty()
+
 android {
+    buildFeatures {
+        buildConfig = true
+    }
     namespace = "no.SOL"
     compileSdk = 35
 
     defaultConfig {
+        buildConfigField("String", "FROST_API_KEY", "\"$frostApiKey\"")
+        buildConfigField("String", "GEOCODER_API_KEY", "\"$geocoderApiKey\"")
+        manifestPlaceholders["GOOGLE_MAPS_API_KEY"] = googleMapsApiKey
         applicationId = "no.SOL"
         minSdk = 26
         targetSdk = 35

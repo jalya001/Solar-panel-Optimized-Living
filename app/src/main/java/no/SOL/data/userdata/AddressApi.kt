@@ -1,5 +1,6 @@
 package no.SOL.data.userdata
 
+import no.SOL.BuildConfig
 import android.util.Log
 import io.ktor.client.HttpClient
 import io.ktor.client.call.body
@@ -25,7 +26,7 @@ class AddressApi {
             // Make the API call
             val response: String = client.get(url) {
                 parameter("q", address)
-                parameter("api_key", "67dab2cc641e1191424678kjm036d35")
+                parameter("api_key", BuildConfig.GEOCODER_API_KEY)
                 parameter("format", "json")
             }.body()
 
