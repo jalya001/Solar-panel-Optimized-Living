@@ -55,6 +55,8 @@ Vi har også en videogjennomgang av applikasjonen: [Link til video demo](https:/
     En Google Maps API-nøkkel
 
     En Frost MET API-nøkkel
+    
+    En Geocoder API-nøkkel
 
 ## 3. API:
 
@@ -85,15 +87,11 @@ Appen bruker flere eksterne API-er som krever API-nøkler for tilgang:
 
     Når prosjektet er åpnet, vil Android Studio automatisk prøve å laste ned alle nødvendige avhengigheter via Gradle. Hvis dette ikke skjer automatisk, klikk på Sync Now.
 
-#### Steg d: Legg til Google Maps API-nøkkel
+#### Steg d: Legg til dine API-nøkkeler
 
-    Skriv inn din Google Maps API-nøkkel i riktig område.
+    Åpne local.properties og skriv inn verdiene til FROST_API_KEY, GOOGLE_MAPS_API_KEY, og GEOCODER_API_KEY.
 
-#### Steg e: Legg til Frost MET API-nøkkel
-
-    Skriv inn din Frost MET API-nøkkel i riktig område.
-
-#### Steg f: Kjør appen
+#### Steg e: Kjør appen
 
     Velg en Android-emulator eller fysisk enhet, og klikk på "Run" i Android Studio for å kjøre appen.
 
